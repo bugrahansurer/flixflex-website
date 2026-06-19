@@ -13,9 +13,9 @@ interface FlixFlexLogoProps {
 }
 
 const sizeMap = {
-  sm: { mark: "w-7 h-7  text-[10px]", text: "text-base" },
-  md: { mark: "w-9 h-9  text-xs",     text: "text-lg"  },
-  lg: { mark: "w-11 h-11 text-sm",    text: "text-xl"  },
+  sm: { mark: "w-8 h-8  text-[10px]", text: "text-base" },
+  md: { mark: "w-10 h-10  text-xs", text: "text-lg" },
+  lg: { mark: "w-12 h-12 text-sm", text: "text-xl" },
 }
 
 export function FlixFlexLogo({ className, size = "md", logoUrl, logoHeight, transparent }: FlixFlexLogoProps) {
@@ -39,7 +39,7 @@ export function FlixFlexLogo({ className, size = "md", logoUrl, logoHeight, tran
           {/* Mor mark */}
           <motion.span
             className={cn(
-              "relative flex items-center justify-center",
+              "ff-shape-container relative flex items-center justify-center",
               "bg-[var(--ff-purple)] text-white font-bold tracking-tight",
               "transition-shadow duration-300",
               "group-hover:shadow-[0_0_20px_rgba(255, 79, 216,0.5)]",

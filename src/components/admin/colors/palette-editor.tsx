@@ -608,6 +608,52 @@ function ShapeVariantPicker({
   )
 }
 
+// ── Radius slider ──────────────────────────────────
+// Controls the corner radius (px) used by the "rounded" shape variant.
+function RadiusSlider({
+  label,
+  value,
+  onChange,
+}: {
+  label: string
+  value: number
+  onChange: (v: number) => void
+}) {
+  return (
+    <div className="ff-card bg-[#f7f7f5] border border-[#E0E0E0] p-4 space-y-3">
+      <div className="flex items-center justify-between">
+        <label className="text-[11px] font-bold text-[#333333]">{label}</label>
+        <span className="text-[12px] font-mono font-bold text-[var(--ff-purple)]">{value}px</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={() => onChange(Math.max(0, value - 1))}
+          className="ff-shape-button w-8 h-8 flex items-center justify-center bg-[#ff4fd8] text-white border border-[#E0E0E0] hover:bg-[#dc2db6]"
+        >
+          <Minus size={14} />
+        </button>
+        <input
+          type="range"
+          min={0}
+          max={48}
+          step={1}
+          value={value}
+          onChange={(e) => onChange(parseInt(e.target.value))}
+          className="flex-1 accent-[var(--ff-purple)]"
+        />
+        <button
+          type="button"
+          onClick={() => onChange(Math.min(48, value + 1))}
+          className="ff-shape-button w-8 h-8 flex items-center justify-center bg-[#ff4fd8] text-white border border-[#E0E0E0] hover:bg-[#dc2db6]"
+        >
+          <Plus size={14} />
+        </button>
+      </div>
+    </div>
+  )
+}
+
 // ── Mobile navbar picker ───────────────────────────
 function MobileNavbarPicker({
   enabled,
@@ -1216,12 +1262,26 @@ export function PaletteEditor({ initial }: PaletteEditorProps) {
                 value={settings.buttonShape}
                 onChange={(v) => patchSettings({ buttonShape: v })}
               />
+              {settings.buttonShape === "rounded" && (
+                <RadiusSlider
+                  label="Buton Yuvarlaklığı (radius)"
+                  value={settings.buttonRadius ?? 12}
+                  onChange={(v) => patchSettings({ buttonRadius: v })}
+                />
+              )}
               <ShapeVariantPicker
                 title="Konteyner Köşeleri"
                 description="Kartlar, paneller, section bloklarına uygulanır."
                 value={settings.containerShape}
                 onChange={(v) => patchSettings({ containerShape: v })}
               />
+              {settings.containerShape === "rounded" && (
+                <RadiusSlider
+                  label="Konteyner Yuvarlaklığı (radius)"
+                  value={settings.containerRadius ?? 16}
+                  onChange={(v) => patchSettings({ containerRadius: v })}
+                />
+              )}
             </Tabs.Content>
 
             <Tabs.Content value="mobile" className="space-y-6">

@@ -457,8 +457,18 @@ const SITE_SETTINGS = [
   { key: "site_favicon",          value: "",                                        type: "string" },
   { key: "site_meta_title",       value: "FlixFlex — Next-Gen Marketing Agency",    type: "string" },
   { key: "site_meta_description", value: "Modern ve performans odaklı pazarlama çözümleri.", type: "string" },
-  { key: "social_instagram",      value: "https://instagram.com/flixflex",          type: "string" },
-  { key: "social_linkedin",       value: "https://linkedin.com/company/flixflex",   type: "string" },
+  { key: "site_address",          value: "Levent, İstanbul · Türkiye",              type: "string" },
+  // Footer/social are now managed as a dynamic list (add/remove platforms).
+  {
+    key: "site_social_links",
+    type: "json",
+    value: JSON.stringify([
+      { platform: "instagram", label: "Instagram", url: "https://instagram.com/flixflex" },
+      { platform: "linkedin",  label: "LinkedIn",  url: "https://linkedin.com/company/flixflex" },
+      { platform: "x",         label: "X",         url: "https://x.com/flixflex" },
+      { platform: "youtube",   label: "YouTube",   url: "https://youtube.com/@flixflex" },
+    ]),
+  },
 ]
 
 // ── Wildcard permission set for Super Admin ───────

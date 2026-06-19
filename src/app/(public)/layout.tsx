@@ -13,10 +13,14 @@ export default async function PublicLayout({
 }: {
   children: React.ReactNode
 }) {
-  const settingsData = prisma 
+  const settingsData = prisma
     ? await prisma.siteSetting.findMany({
         where: {
-          key: { in: ["site_logo", "site_logo_white", "site_logo_height", "site_logo_mobile_height"] }
+          key: { in: [
+            "site_logo", "site_logo_white", "site_logo_height", "site_logo_mobile_height",
+            "site_name", "site_tagline", "site_email", "site_phone", "site_address",
+            "site_social_links",
+          ] }
         }
       })
     : []

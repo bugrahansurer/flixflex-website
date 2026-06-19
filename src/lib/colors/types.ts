@@ -84,6 +84,11 @@ export interface ThemeSettings {
   fontBodySize:         number
   /** Base font size for headings (px) */
   fontHeadingSize:      number
+
+  /** Corner radius (px) used when buttonShape = "rounded" */
+  buttonRadius:         number
+  /** Corner radius (px) used when containerShape = "rounded" */
+  containerRadius:      number
 }
 
 export const DEFAULT_THEME_SETTINGS: ThemeSettings = {
@@ -94,6 +99,8 @@ export const DEFAULT_THEME_SETTINGS: ThemeSettings = {
   mobileNavbarVariant: "dock",
   fontBodySize:        16,
   fontHeadingSize:     32,
+  buttonRadius:        12,
+  containerRadius:     16,
 }
 
 export interface ColorPalette {

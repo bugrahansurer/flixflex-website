@@ -2,17 +2,28 @@
 
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { ArrowUpRight, Mail, MapPin } from "@/lib/icons"
+import { ArrowUpRight, Mail, MapPin, Phone } from "@/lib/icons"
 import { staggerContainer, fadeInUp } from "@/lib/animations"
 import { cn } from "@/lib/utils"
-import { FOOTER_COLUMNS, SOCIAL_LINKS } from "./footer-data"
+import { FOOTER_COLUMNS } from "./footer-data"
 import { SocialIcon } from "./social-icon"
+import { parseSocialLinks } from "@/lib/social-platforms"
 import { BackToTop } from "./back-to-top"
 import { FlixFlexLogo } from "../navbar/logo"
 import { StarField } from "@/components/ui/star-field"
 
 
 export function FlixFlexFooter({ siteSettings = {} }: { siteSettings?: Record<string, string> }) {
+  // ── DB-backed identity / contact (managed in /admin/ayarlar/site) ──
+  const siteName = siteSettings.site_name || "FlixFlex"
+  const tagline =
+    siteSettings.site_tagline ||
+    "Hız. Güç. Esneklik. Markaları bir sonraki seviyeye taşıyan next-gen reklam ajansı."
+  const email = siteSettings.site_email || "hello@flixflex.com"
+  const phone = siteSettings.site_phone || ""
+  const address = siteSettings.site_address || "Levent, İstanbul · Türkiye"
+  const socialLinks = parseSocialLinks(siteSettings.site_social_links)
+
   return (
 
     <>
@@ -62,8 +73,7 @@ export function FlixFlexFooter({ siteSettings = {} }: { siteSettings?: Record<st
                 />
               </div>
               <p className="text-sm text-[var(--foreground-muted)] leading-relaxed max-w-xs mb-6">
-                Hız. Güç. Esneklik. Markaları bir sonraki seviyeye taşıyan
-                next-gen reklam ajansı.
+                {tagline}
               </p>
 
               {/* Contact mini */}
@@ -71,15 +81,26 @@ export function FlixFlexFooter({ siteSettings = {} }: { siteSettings?: Record<st
                 <li className="flex items-center gap-2 text-[var(--foreground-muted)]">
                   <Mail size={14} className="text-[var(--ff-charcoal)]" />
                   <a
-                    href="mailto:hello@flixflex.com"
+                    href={`mailto:${email}`}
                     className="hover:text-[var(--foreground)] transition-colors"
                   >
-                    hello@flixflex.com
+                    {email}
                   </a>
                 </li>
-                <li className="flex items-center gap-2 text-[var(--foreground-muted)]">
-                  <MapPin size={14} className="text-[var(--ff-charcoal)]" />
-                  <span>Levent, İstanbul · Türkiye</span>
+                {phone && (
+                  <li className="flex items-center gap-2 text-[var(--foreground-muted)]">
+                    <Phone size={14} className="text-[var(--ff-charcoal)]" />
+                    <a
+                      href={`tel:${phone.replace(/\s+/g, "")}`}
+                      className="hover:text-[var(--foreground)] transition-colors"
+                    >
+                      {phone}
+                    </a>
+                  </li>
+                )}
+                <li className="flex items-start gap-2 text-[var(--foreground-muted)]">
+                  <MapPin size={14} className="text-[var(--ff-charcoal)] mt-0.5 shrink-0" />
+                  <span className="whitespace-pre-line">{address}</span>
                 </li>
               </ul>
             </motion.div>
@@ -117,37 +138,39 @@ export function FlixFlexFooter({ siteSettings = {} }: { siteSettings?: Record<st
           <div className="mt-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             {/* Copyright */}
             <p className="text-xs text-[var(--foreground-faint)] tracking-wide">
-              © {new Date().getFullYear()} FlixFlex Reklam Ajansı.{" "}
+              © {new Date().getFullYear()} {siteName} Reklam Ajansı.{" "}
               <span className="text-[var(--foreground-muted)]">Tüm hakları saklıdır.</span>
             </p>
 
             {/* Social */}
-            <ul className="flex items-center gap-2.5">
-              {SOCIAL_LINKS.map((social) => (
-                <li key={social.label}>
-                  <a
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={social.label}
-                    className={cn(
-                      "ff-shape-button w-9 h-9 flex items-center justify-center",
-                      "border border-[var(--border)] text-[var(--foreground-muted)]",
-                      "hover:border-[var(--ff-purple)] hover:text-[var(--ff-purple)]",
-                      "hover:bg-[rgba(var(--ff-purple)/0.08)]",
-                      "transition-colors duration-200"
-                    )}
-                  >
-                    <SocialIcon icon={social.icon} />
-                  </a>
-                </li>
-              ))}
-            </ul>
+            {socialLinks.length > 0 && (
+              <ul className="flex flex-wrap items-center gap-2.5">
+                {socialLinks.map((social, i) => (
+                  <li key={`${social.platform}-${i}`}>
+                    <a
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={social.label}
+                      className={cn(
+                        "ff-shape-button w-9 h-9 flex items-center justify-center",
+                        "border border-[var(--border)] text-[var(--foreground-muted)]",
+                        "hover:border-[var(--ff-purple)] hover:text-[var(--ff-purple)]",
+                        "hover:bg-[rgba(var(--ff-purple)/0.08)]",
+                        "transition-colors duration-200"
+                      )}
+                    >
+                      <SocialIcon platform={social.platform} />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
 
             {/* Locale */}
             <div className="flex items-center gap-2 text-[11px] text-[var(--foreground-faint)]">
               <span className="ff-shape-container w-1.5 h-1.5 bg-[var(--ff-purple)] animate-pulse" />
-              <span>FlixFlex · İstanbul, Türkiye</span>
+              <span>{siteName} · İstanbul, Türkiye</span>
             </div>
           </div>
         </div>

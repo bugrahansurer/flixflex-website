@@ -74,6 +74,8 @@ export const themeSettingsSchema = z.object({
   mobileNavbarVariant: z.enum(["dock", "minimal"]),
   fontBodySize: z.number().min(8).max(32).default(16),
   fontHeadingSize: z.number().min(12).max(120).default(32),
+  buttonRadius: z.number().min(0).max(48).default(12),
+  containerRadius: z.number().min(0).max(48).default(16),
 })
 
 // ── Font-name schema ─────────────────────────────

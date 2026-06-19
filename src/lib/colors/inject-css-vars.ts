@@ -20,10 +20,10 @@ import type React from "react"
 //   rounded → r=10, no clip
 //   hex     → r=0,  hexagonal clip-path
 //   bevel   → r=0,  cut-corner clip-path (sci-fi)
-function shapeTokens(variant: ShapeVariant): { radius: string; clip: string } {
+function shapeTokens(variant: ShapeVariant, radius = 12): { radius: string; clip: string } {
   switch (variant) {
     case "rounded":
-      return { radius: "24px", clip: "none" }
+      return { radius: `${radius}px`, clip: "none" }
     case "hex":
       // Horizontal hexagon — corners 14% in on each side
       return {
@@ -53,8 +53,8 @@ export function cssVarsFromPalette(
   fonts: { display: string; body: string },
   customFonts: { name: string; url: string }[] = []
 ): string {
-  const button = shapeTokens(settings.buttonShape ?? "sharp")
-  const container = shapeTokens(settings.containerShape ?? "sharp")
+  const button = shapeTokens(settings.buttonShape ?? "sharp", settings.buttonRadius ?? 12)
+  const container = shapeTokens(settings.containerShape ?? "sharp", settings.containerRadius ?? 16)
 
   // Generate @font-face for custom fonts
   const fontFaces = customFonts.map(f => `
@@ -143,8 +143,8 @@ export function paletteToStyleObject(
   settings: ThemeSettings,
   fonts?: { display: string; body: string }
 ): React.CSSProperties & Record<string, string> {
-  const button = shapeTokens(settings.buttonShape ?? "sharp")
-  const container = shapeTokens(settings.containerShape ?? "sharp")
+  const button = shapeTokens(settings.buttonShape ?? "sharp", settings.buttonRadius ?? 12)
+  const container = shapeTokens(settings.containerShape ?? "sharp", settings.containerRadius ?? 16)
   return {
     "--font-display": fonts ? `"${fonts.display}", system-ui, sans-serif` : "inherit",
     "--font-body": fonts ? `"${fonts.body}", system-ui, sans-serif` : "inherit",

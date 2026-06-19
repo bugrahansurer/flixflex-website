@@ -10,6 +10,7 @@ import {
   Database,
   KeyRound,
   Wrench,
+  FileText,
   ArrowUpRight,
 } from "@/lib/icons"
 import { hasEnv } from "@/lib/env"
@@ -85,6 +86,13 @@ const TILES: SettingsTile[] = [
     description: "Siteyi geçici olarak ziyaretçilere kapat.",
     icon: Wrench,
     href: "/admin/ayarlar/bakim",
+  },
+  {
+    slug: "politikalar",
+    title: "Politikalar",
+    description: "Gizlilik, KVKK, çerez ve kullanım şartları metinleri.",
+    icon: FileText,
+    href: "/admin/ayarlar/politikalar",
   },
 ]
 

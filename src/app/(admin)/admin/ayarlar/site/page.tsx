@@ -31,13 +31,17 @@ async function saveSettings(formData: FormData) {
 
   const entries = Array.from(formData.entries())
 
+  // Keys whose values are JSON-encoded (parsed back on read via getSetting).
+  const jsonKeys = new Set(["site_social_links"])
+
   try {
     for (const [key, value] of entries) {
       if (typeof value === "string") {
+        const type = jsonKeys.has(key) ? "json" : "string"
         await prisma.siteSetting.upsert({
           where: { key },
-          update: { value },
-          create: { key, value, type: "string" },
+          update: { value, type },
+          create: { key, value, type },
         })
       }
     }

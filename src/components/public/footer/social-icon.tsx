@@ -1,21 +1,12 @@
-import { Instagram, Linkedin, Twitter, Youtube } from "@/lib/icons"
-import type { SocialLink } from "./footer-data"
-
-const iconMap = {
-  instagram: Instagram,
-  linkedin:  Linkedin,
-  x:         Twitter,
-  youtube:   Youtube,
-  behance:   Twitter, // lucide doesn't ship Behance — placeholder
-} as const
+import { getSocialIcon } from "@/lib/social-platforms"
 
 export function SocialIcon({
-  icon,
+  platform,
   size = 16,
 }: {
-  icon: SocialLink["icon"]
+  platform: string
   size?: number
 }) {
-  const Icon = iconMap[icon] ?? Twitter
+  const Icon = getSocialIcon(platform)
   return <Icon size={size} aria-hidden />
 }

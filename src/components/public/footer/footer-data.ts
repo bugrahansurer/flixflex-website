@@ -42,16 +42,6 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
   },
 ]
 
-export interface SocialLink {
-  label: string
-  href:  string
-  icon:  "instagram" | "linkedin" | "x" | "youtube" | "behance"
-}
-
-export const SOCIAL_LINKS: SocialLink[] = [
-  { label: "Instagram", href: "https://instagram.com/flixflex", icon: "instagram" },
-  { label: "LinkedIn",  href: "https://linkedin.com/company/flixflex", icon: "linkedin" },
-  { label: "X",         href: "https://x.com/flixflex",          icon: "x" },
-  { label: "YouTube",   href: "https://youtube.com/@flixflex",   icon: "youtube" },
-  { label: "Behance",   href: "https://behance.net/flixflex",    icon: "behance" },
-]
+// Social links now live in the DB (site_settings → `site_social_links`) and
+// are managed from /admin/ayarlar/site. The catalog + defaults moved to
+// `@/lib/social-platforms`. See parseSocialLinks() for the runtime shape.

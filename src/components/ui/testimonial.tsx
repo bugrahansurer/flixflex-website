@@ -169,7 +169,7 @@ export function TestimonialCarousel({
               onClick={() => go(dir)}
               aria-label={label}
               className={cn(
-                "ff-shape-container w-10 h-10 flex items-center justify-center",
+                "ff-shape-button w-10 h-10 flex items-center justify-center",
                 "border border-[var(--border)]",
                 "text-[var(--foreground-muted)]",
                 "hover:border-[var(--ff-purple)] hover:text-[var(--ff-purple)]",
