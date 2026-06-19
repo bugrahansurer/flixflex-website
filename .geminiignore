@@ -1,0 +1,33 @@
+# Efficiency First: Only focus on logic and schema
+node_modules/
+.next/
+dist/
+build/
+out/
+.turbo/
+.env*
+!.env.example
+.claude/
+.codex/
+.vercel/
+.idea/
+.vscode/
+*.log
+.DS_Store
+Thumbs.db
+scratch/
+test.txt
+package-lock.json
+
+# Static Assets (Exclude heavy binary files)
+public/fonts/
+public/logo/
+public/*.svg
+public/*.png
+public/*.jpg
+public/*.ico
+
+# Build Artifacts & Git
+.git/
+.npmrc
+*.tsbuildinfo

@@ -1,0 +1,310 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String     @id @default(cuid())
+  email     String     @unique
+  name      String?
+  password  String
+  image     String?
+  isActive  Boolean    @default(true)
+  lastLogin DateTime?
+  roleId    String
+  // ── Two-factor authentication (TOTP) ──
+  twoFactorEnabled     Boolean  @default(false)
+  twoFactorSecret      String?  // encrypted base32 TOTP secret
+  twoFactorBackupCodes String[] @default([]) // sha256 hashes of one-time backup codes
+  twoFactorLastUsedStep Int?    // last consumed TOTP time-step — blocks replay
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  auditLogs AuditLog[]
+  role      Role       @relation(fields: [roleId], references: [id])
+
+  @@map("users")
+}
+
+model ApiKey {
+  id          String    @id @default(cuid())
+  name        String
+  prefix      String    // short public identifier shown in the UI (e.g. ffk_ab12cd)
+  hashedKey   String    // sha256 hash of the full secret key (never stored in plaintext)
+  scopes      String[]  @default([])
+  isActive    Boolean   @default(true)
+  lastUsedAt  DateTime?
+  createdById String?
+  createdAt   DateTime  @default(now())
+
+  @@map("api_keys")
+}
+
+model Role {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  description String?
+  isSystem    Boolean      @default(false)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  permissions Permission[]
+  users       User[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id       String  @id @default(cuid())
+  roleId   String
+  resource String
+  action   String
+  scope    String?
+  role     Role    @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, resource, action])
+  @@map("permissions")
+}
+
+model BlogPost {
+  id              String    @id @default(cuid())
+  title           String
+  slug            String    @unique
+  excerpt         String?
+  content         String
+  coverImage      String?   // real cover image URL
+  coverGradient   String?   // fallback gradient class when no cover image
+  template        String    @default("classic")
+  category        String?
+  tags            String[]
+  readTime        Int       @default(5)
+  author          String?
+  aiGenerated     Boolean   @default(false)
+  aiOutline       Json?
+  status          String    @default("draft")
+  publishedAt     DateTime?
+  metaTitle       String?
+  metaDescription String?
+  ogImage         String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@map("blog_posts")
+}
+
+model Page {
+  id              String        @id @default(cuid())
+  slug            String        @unique
+  title           String
+  description     String?
+  sections        Json          @default("[]")
+  isPublished     Boolean       @default(false)
+  publishedAt     DateTime?
+  metaTitle       String?
+  metaDescription String?
+  ogImage         String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  versions        PageVersion[]
+
+  @@map("pages")
+}
+
+model PageVersion {
+  id        String   @id @default(cuid())
+  pageId    String
+  sections  Json
+  version   Int
+  note      String?
+  createdAt DateTime @default(now())
+  page      Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@map("page_versions")
+}
+
+model ColorPalette {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  isActive    Boolean  @default(false)
+  isSystem    Boolean  @default(false)
+  createdBy   String?
+  colors      Json
+  settings    Json     @default("{}")
+  fontDisplay String   @default("Syne")
+  fontBody    String   @default("DM Sans")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("color_palettes")
+}
+
+model PortfolioItem {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  client      String?
+  clientLogo  String?
+  category    String
+  description String?
+  content     String?
+  coverImage  String
+  images      String[]
+  tags        String[]
+  results     Json?
+  gradient    String   @default("from-[#1A1A1A] via-[#2A1A3A] to-[#3D1A5C]")
+  accentColor String   @default("#FF4FD8")
+  tall        Boolean  @default(false)
+  narrativeParagraphs Json?
+  sidebarItems Json?
+  resultStats Json?
+  year        Int?
+  isPublished Boolean  @default(false)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  services    Service[] @relation("PortfolioServices")
+
+  @@map("portfolio_items")
+}
+
+model Service {
+  id           String          @id @default(cuid())
+  slug         String          @unique
+  title        String
+  description  String
+  body         String
+  icon         String          @default("Globe")
+  features     String[]
+  processSteps Json            @default("[]")
+  deliverables String[]
+  isPublished  Boolean         @default(false)
+  order        Int             @default(0)
+  metaTitle    String?
+  metaDescription String?
+  coverImage   String?
+  accentColor  String?
+  gradient     String?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  parentId     String?
+  parent       Service?        @relation("ServiceHierarchy", fields: [parentId], references: [id])
+  children     Service[]       @relation("ServiceHierarchy")
+  portfolios   PortfolioItem[] @relation("PortfolioServices")
+
+  @@map("services")
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String
+  action     String
+  resource   String
+  resourceId String?
+  metadata   Json?
+  ip         String?
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@map("audit_logs")
+}
+
+model SiteSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  type      String   @default("string")
+  updatedAt DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  company   String?
+  service   String?
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("contact_submissions")
+}
+
+model Media {
+  id            String       @id @default(cuid())
+  title         String?
+  type          String
+  mimeType      String?
+  size          Int?
+  url           String
+  thumbnail     String?
+  muxUploadId   String?      @unique
+  muxAssetId    String?      @unique
+  muxPlaybackId String?      @unique
+  muxStatus     String?
+  width         Int?
+  height        Int?
+  duration      Float?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  folderId      String?
+  folder        MediaFolder? @relation(fields: [folderId], references: [id])
+
+  @@map("media")
+}
+
+model MediaFolder {
+  id        String        @id @default(cuid())
+  name      String
+  parentId  String?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  media     Media[]
+  parent    MediaFolder?  @relation("SubFolders", fields: [parentId], references: [id], onDelete: Cascade)
+  children  MediaFolder[] @relation("SubFolders")
+
+  @@unique([name, parentId])
+  @@map("media_folders")
+}
+
+model CustomFont {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  url       String
+  fileName  String
+  createdAt DateTime @default(now())
+
+  @@map("custom_fonts")
+}
+
+model Appointment {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  phone       String
+  subject     String   @default("Ön Görüşme")
+  date        DateTime
+  notes       String?
+  meetLink    String?
+  status      String   @default("pending") // pending, approved, cancelled, completed
+  isRead      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("appointments")
+}
+
+model BlockedSlot {
+  id        String   @id @default(cuid())
+  date      DateTime @unique
+  reason    String?
+  createdAt DateTime @default(now())
+
+  @@map("blocked_slots")
+}
+
+

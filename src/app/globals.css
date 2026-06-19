@@ -1,0 +1,842 @@
+/* Fonts loaded via next/font/google in src/app/layout.tsx */
+/* CSS variables: --font-syne, --font-dm-sans (auto-injected by next/font) */
+
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* Bridge: keep the v3-style tailwind.config.ts working under v4 */
+@config "../../tailwind.config.ts";
+
+/* v4 source scanning — explicit since @config alone doesn't propagate content paths */
+@source "../**/*.{ts,tsx,js,jsx,mdx}";
+@source "../../src/**/*.{ts,tsx,js,jsx,mdx}";
+
+/* v4 dark mode trigger — equivalent to v3 darkMode: "class" */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --ff-purple: #FF4FD8;
+  --ff-purple-hover: #dc2db6;
+  --ff-purple-dark: #dd2bb7;
+  --ff-purple-light: #ff4fd833;
+  --ff-purple-muted: rgba(255, 79, 216, 0.12);
+  --ff-purple-border: rgba(255, 79, 216, 0.25);
+  --ff-purple-glow: rgba(255, 79, 216, 0.35);
+  --ff-charcoal: #D6FF3B;
+  --ff-charcoal-light: #D6FF380D;
+  --ff-charcoal-dark: #D6FF3B80;
+  --background: #F7F7F5;
+  --background-alt: #F0F0F0;
+  --surface: #FFFFFF;
+  --surface-elevated: #FFFFFF;
+  --foreground: #0D0D0D;
+  --foreground-muted: #888888;
+  --foreground-faint: #010000;
+  --border: #CCCCCC;
+  --border-strong: #DDDDDD;
+  --primary: var(--ff-purple);
+  --primary-hover: var(--ff-purple-hover);
+  --primary-muted: var(--ff-purple-muted);
+  --secondary: var(--ff-charcoal);
+  --success: #38ca6e;
+  --approve: #3384fd;
+  --warning: #e28b28;
+  --error: #e03434;
+  --font-display: var(--font-syne), 'Syne', sans-serif;
+  --font-body: var(--font-dm-sans), 'DM Sans', sans-serif;
+  --font-body-size: 16px;
+  --font-heading-size: 32px;
+  --container-max: 1280px;
+  --section-pad-v: 80px;
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+  --radius: 0px;
+
+  /* Theme shape tokens — overridden per active theme via ActivePaletteStyle */
+  --ff-shape-button-radius: 0;
+  --ff-shape-button-clip: none;
+  --ff-shape-container-radius: 0;
+  --ff-shape-container-clip: none;
+}
+
+.dark {
+  --background: #0C0C0C;
+  --background-alt: #111111;
+  --surface: #1A1A1A;
+  --surface-elevated: #222222;
+  --foreground: #F0F0F0;
+  --foreground-muted: #888888;
+  --foreground-faint: #555555;
+  --border: #2A2A2A;
+  --border-strong: #3A3A3A;
+  --ff-purple-muted: rgba(161, 52, 255, 0.15);
+  --ff-purple-border: rgba(161, 52, 255, 0.3);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+    /* Default to sharp for everything; theme-aware components opt-in
+       to shape via .ff-shape-button / .ff-shape-container */
+    border-radius: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-body);
+    font-size: var(--font-body-size);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--font-heading-size);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ff-purple);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: var(--ff-purple-muted);
+    color: var(--ff-purple);
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--surface);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--ff-purple);
+  }
+
+  /* Force Mux Player internal video to fill container */
+  mux-player {
+    display: block;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto !important;
+  }
+
+  mux-player::part(video) {
+    object-fit: cover !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  /* Target deeper shadow parts of media-chrome / mux-player */
+  mux-player::part(media-controller) {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  mux-player::part(container) {
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .ff-gradient-text {
+    background: linear-gradient(135deg, var(--ff-purple) 0%, var(--ff-purple-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .ff-gradient-text-white {
+    background: linear-gradient(135deg, #FFFFFF 0%, var(--ff-purple-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .ff-glow {
+    box-shadow: 0 0 30px var(--ff-purple-glow);
+  }
+
+  .ff-glow-sm {
+    box-shadow: 0 0 15px rgba(161, 52, 255, 0.2);
+  }
+
+  .ff-glow-lg {
+    box-shadow: 0 0 60px rgba(161, 52, 255, 0.3), 0 0 120px rgba(161, 52, 255, 0.15);
+  }
+
+  .ff-noise::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.035;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 128px 128px;
+    z-index: 0;
+  }
+
+  .ff-grid-bg {
+    background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .ff-dot-bg {
+    background-image: radial-gradient(var(--border) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .ff-container {
+    width: 100%;
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  @media (min-width: 768px) {
+    .ff-container {
+      padding: 0 40px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .ff-container {
+      padding: 0 80px;
+    }
+  }
+
+  .ff-section {
+    padding: var(--section-pad-v) 0;
+  }
+
+  .ff-underline {
+    position: relative;
+  }
+
+  .ff-underline::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--ff-purple);
+    transition: width var(--transition-base);
+  }
+
+  .ff-underline:hover::after,
+  .ff-underline.active::after {
+    width: 100%;
+  }
+}
+
+@layer components {
+  .ff-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    gap: 8px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 16px;
+    padding: 12px 28px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+    white-space: nowrap;
+    border-radius: var(--ff-shape-button-radius) !important;
+    clip-path: var(--ff-shape-button-clip);
+    text-transform: none;
+  }
+
+  .ff-btn:active {
+    transform: scale(0.97);
+  }
+
+  .ff-btn-primary {
+    background-color: var(--ff-purple);
+    color: #fff;
+    border-color: var(--ff-purple);
+  }
+
+  .ff-btn-primary:hover {
+    background-color: var(--ff-purple-hover);
+    box-shadow: 0 4px 20px var(--ff-purple-hover);
+  }
+
+  .ff-btn-secondary {
+    background-color: var(--ff-purple);
+    color: #fff;
+    border-color: var(--ff-purple);
+  }
+
+  .ff-btn-secondary:hover {
+    background-color: var(--ff-purple-muted);
+  }
+
+  .ff-btn-outline {
+    background-color: transparent;
+    color: var(--ff-purple);
+    border-color: var(--ff-purple);
+  }
+
+  .ff-btn-outline:hover {
+    background-color: var(--ff-purple-muted);
+  }
+
+  .ff-btn-ghost {
+    background-color: transparent;
+    color: var(--foreground);
+    border-color: transparent;
+  }
+
+  .ff-btn-ghost:hover {
+    background-color: var(--surface);
+  }
+
+  .ff-card {
+    background-color: var(--surface-elevated);
+    border: 1px solid var(--border);
+    padding: 24px;
+    transition: border-color var(--transition-base), box-shadow var(--transition-base);
+    border-radius: var(--ff-shape-container-radius) !important;
+    clip-path: var(--ff-shape-container-clip);
+  }
+
+  .ff-card:hover {
+    border-color: var(--ff-purple-border);
+  }
+
+  .ff-input {
+    width: 100%;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--foreground);
+    font-family: var(--font-body);
+    font-size: 14px;
+    padding: 12px 16px;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    outline: none;
+    /* Inputs stay sharp regardless of theme — rounding inputs hurts UX */
+    border-radius: 0;
+  }
+
+  .ff-input::placeholder {
+    color: var(--foreground-faint);
+  }
+
+  .ff-input:focus {
+    border-color: var(--ff-purple);
+    box-shadow: 0 0 0 3px var(--ff-purple-muted);
+  }
+
+  .ff-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    padding: 3px 10px;
+    border: 1px solid;
+    border-radius: 0;
+  }
+
+  .ff-badge-purple {
+    background-color: var(--ff-purple-muted);
+    border-color: var(--ff-purple-border);
+    color: var(--ff-purple);
+  }
+
+  .ff-badge-charcoal {
+    background-color: var(--ff-charcoal);
+    border-color: var(--ff-charcoal);
+    color: #fff;
+  }
+
+}
+
+@keyframes ff-fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ff-fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ff-pulse-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 15px rgba(161, 52, 255, 0.2);
+  }
+
+  50% {
+    box-shadow: 0 0 40px rgba(161, 52, 255, 0.5);
+  }
+}
+
+@keyframes ff-shimmer {
+  0% {
+    background-position: -200% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}
+
+@keyframes ff-float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes ff-spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ff-aurora {
+  from {
+    background-position: 50% 50%, 50% 50%;
+  }
+
+  to {
+    background-position: 350% 50%, 350% 50%;
+  }
+}
+
+.animate-ff-fadeInUp {
+  animation: ff-fadeInUp 0.6s ease forwards;
+}
+
+.animate-ff-fadeIn {
+  animation: ff-fadeIn 0.4s ease forwards;
+}
+
+.animate-ff-pulse-glow {
+  animation: ff-pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-ff-float {
+  animation: ff-float 4s ease-in-out infinite;
+}
+
+.animate-ff-shimmer {
+  animation: ff-shimmer 3s ease infinite;
+}
+
+.animate-ff-spin-slow {
+  animation: ff-spin-slow 8s linear infinite;
+}
+
+.animate-ff-aurora {
+  animation: ff-aurora 60s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── Theme-aware shape utility classes ──────────────────
+   Apply to any element that should follow the active theme's
+   button or container shape (sharp / rounded / hex / bevel).
+   !important on border-radius is necessary to override the
+   universal selector. */
+.ff-shape-button {
+  border-radius: var(--ff-shape-button-radius) !important;
+  -webkit-clip-path: var(--ff-shape-button-clip) !important;
+  clip-path: var(--ff-shape-button-clip) !important;
+  overflow: hidden;
+}
+
+.ff-shape-container {
+  border-radius: var(--ff-shape-container-radius) !important;
+  -webkit-clip-path: var(--ff-shape-container-clip) !important;
+  clip-path: var(--ff-shape-container-clip) !important;
+  overflow: hidden;
+}
+
+@utility animate-marquee-lr {
+  animation: marquee-lr var(--marquee-duration, 40s) linear infinite;
+}
+
+@utility animate-marquee-rl {
+  animation: marquee-rl var(--marquee-duration, 40s) linear infinite;
+}
+
+@utility animate-marquee-bounce {
+  animation: marquee-bounce var(--marquee-duration, 20s) ease-in-out infinite alternate;
+}
+
+@utility scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@keyframes marquee-lr {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes marquee-rl {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes marquee-bounce {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(calc(-1 * var(--scroll-width)), 0, 0);
+  }
+}
+
+/* ── 3D Poem Animation Scoped Styles ────────────────── */
+@keyframes left {
+  100% {
+    margin-left: -54000px;
+  }
+}
+
+@keyframes back {
+  100% {
+    margin-left: -54870px;
+  }
+}
+
+@keyframes right {
+  100% {
+    margin-left: -55740px;
+  }
+}
+
+@keyframes filter-animation {
+  0%, 100% {
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    filter: hue-rotate(100deg);
+  }
+}
+
+@keyframes zoom-in {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(2.5);
+  }
+}
+
+@keyframes blur {
+  0% {
+    filter: blur(0px);
+  }
+  100% {
+    filter: blur(3px);
+  }
+}
+
+@keyframes brightness {
+  0% {
+    filter: brightness(1) contrast(1);
+  }
+  100% {
+    filter: brightness(0.8) contrast(1.3);
+  }
+}
+
+@keyframes text-glow {
+  0%, 100% {
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+  }
+}
+
+.poem-animation-hero {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: black;
+  width: 100%;
+  min-height: 600px;
+  padding: 40px 0;
+}
+
+.poem-animation-hero .card {
+  display: flex;
+  align-items: center;
+  width: 1280px;
+  height: 720px;
+  margin: 0;
+  justify-content: center;
+}
+
+.poem-animation-hero .container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  padding: 0;
+  max-width: none;
+}
+
+.poem-animation-hero .container-full,
+.poem-animation-hero .content {
+  width: 1000px;
+  height: 562px;
+}
+
+.poem-animation-hero .backgroundImage {
+  position: absolute;
+  width: 1000px;
+  top: 0;
+  left: 0;
+}
+
+.poem-animation-hero .boyImage {
+  position: absolute;
+  width: 1000px;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  animation: 200s linear infinite blur;
+}
+
+.poem-animation-hero .content {
+  position: relative;
+  overflow: hidden;
+  border-radius: 40px;
+  animation: 200s linear infinite brightness;
+}
+
+.poem-animation-hero .container-full,
+.poem-animation-hero .face {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.poem-animation-hero .container-full {
+  margin: 0;
+  justify-content: center;
+  transform: scale(1);
+  animation: 200s linear infinite zoom-in;
+}
+
+.poem-animation-hero .cube,
+.poem-animation-hero .face {
+  width: 870px;
+  height: 190px;
+}
+
+.poem-animation-hero .cube {
+  position: relative;
+  transform-style: preserve-3d;
+  perspective: 480px;
+  perspective-origin: 51% 70%;
+}
+
+.poem-animation-hero .face,
+.poem-animation-hero .hue {
+  position: absolute;
+}
+
+.poem-animation-hero .face {
+  background: transparent;
+  border: 0 solid #000;
+  opacity: 0.5;
+}
+
+.poem-animation-hero .bottom,
+.poem-animation-hero .top {
+  width: 870px;
+  height: 870px;
+}
+
+.poem-animation-hero .face p {
+  white-space: nowrap;
+  overflow: hidden;
+  font-family: "Bebas Neue", var(--font-display), sans-serif;
+  font-weight: 400;
+  font-size: calc(6em + (190px / 10) * 0.7);
+  padding-top: 20px;
+  color: #fff;
+  line-height: 1;
+}
+
+.poem-animation-hero .face p span {
+  color: var(--ff-purple, #FF4FD8);
+}
+
+.poem-animation-hero .front {
+  transform: translateZ(435px);
+  display: none;
+}
+
+.poem-animation-hero .back {
+  transform: translateZ(-435px) rotateY(180deg) scaleX(-1);
+}
+
+.poem-animation-hero .left {
+  transform: translateX(-435px) rotateY(-90deg) scaleX(-1);
+}
+
+.poem-animation-hero .right {
+  transform: translateX(435px) rotateY(90deg) scaleX(-1);
+}
+
+.poem-animation-hero .top {
+  transform: translateY(-435px) rotateX(90deg) scaleY(-1);
+}
+
+.poem-animation-hero .bottom {
+  transform: translateY(-245px) rotateX(-90deg) scaleY(-1);
+}
+
+.poem-animation-hero .left p {
+  margin-left: 480px;
+  animation: 200s linear infinite left;
+}
+
+.poem-animation-hero .back p {
+  margin-left: -390px;
+  animation: 200s linear infinite back;
+}
+
+.poem-animation-hero .right p {
+  margin-left: -1260px;
+  animation: 200s linear infinite right;
+}
+
+.poem-animation-hero .hue {
+  top: 0;
+  left: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  mix-blend-mode: overlay;
+  background: radial-gradient(ellipse at center, #1e5799 0%, #7db9e8 100%);
+  opacity: 1;
+}
+
+.poem-animation-hero .hue.animated {
+  animation: 8s infinite filter-animation;
+}
+
+.poem-animation-hero .container-reflect {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 380px;
+  filter: blur(10px);
+}
+
+.poem-animation-hero .container-reflect .cube {
+  perspective-origin: 51% -30%;
+}
+
+.poem-animation-hero .container-reflect .back {
+  transform: translateZ(-435px) rotateY(180deg) scaleX(-1) scaleY(-1);
+}
+
+.poem-animation-hero .container-reflect .left {
+  transform: translateX(-435px) rotateY(-90deg) scaleX(-1) scaleY(-1);
+}
+
+.poem-animation-hero .container-reflect .right {
+  transform: translateX(435px) rotateY(90deg) scaleX(-1) scaleY(-1);
+}
+
+.poem-animation-hero .container-reflect p {
+  transform: scaleY(70%);
+}

@@ -1,0 +1,65 @@
+# ──────────────────────────────────────────────
+# FLIXFLEX.COM OpenCode Ignore — Efficiency Protocol
+# These paths are excluded from the agent context.
+# ──────────────────────────────────────────────
+
+# Dependencies & Build Artifacts
+node_modules/
+.next/
+dist/
+build/
+out/
+.turbo/
+*.tsbuildinfo
+
+# Environment & Secrets
+.env*
+!.env.example
+
+# Git & Version Control
+.git/
+
+# IDE & Editor Configs
+.idea/
+.vscode/
+
+# Package Lockfiles
+package-lock.json
+
+# Third-party Agent Configs (Not ours)
+.claude/
+.codex/
+.gemini/
+
+# Deployment
+.vercel/
+
+# Static Assets (Binary — Not Logic)
+public/fonts/
+public/logo/
+public/*.svg
+public/*.png
+public/*.jpg
+public/*.ico
+
+# Scratch / Temp
+scratch/
+
+# System Files
+*.log
+.DS_Store
+Thumbs.db
+
+# Config files (NPM)
+.npmrc
+
+# Third-party Component Design Imports
+21st.dev/
+
+# Database Backups (SQL dumps — no logical value)
+prisma/backups/
+
+# Scratch / One-off Files
+secret.txt
+query.sql
+install.cmd

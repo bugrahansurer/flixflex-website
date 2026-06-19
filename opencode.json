@@ -1,0 +1,24 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "username": "flixflex-com",
+  "default_agent": "orchestrator",
+  "shell": "/bin/zsh",
+  "logLevel": "INFO",
+  "instructions": ["AGENTS.md"],
+  "permission": {
+    "edit": "allow",
+    "bash": { "npm run *": "allow", "npx *": "allow", "git *": "allow", "*": "ask" },
+    "external_directory": { "/var/folders/**": "allow", "*": "ask" }
+  },
+  "agent": {
+    "orchestrator": { "mode": "primary", "color": "#00AEEF" },
+    "arch-analyst": { "mode": "subagent", "color": "#7B61FF" },
+    "comp-strategist": { "mode": "subagent", "color": "#00C9A7" },
+    "backend-sorcerer": { "mode": "subagent", "color": "#FF6B6B" },
+    "frontend-artist": { "mode": "subagent", "color": "#FFD93D" },
+    "stability-sentinel": { "mode": "subagent", "color": "#6BCB77" },
+    "security-sentry": { "mode": "subagent", "color": "#E74C3C" },
+    "guardian-qa": { "mode": "subagent", "color": "#4FC3F7" }
+  },
+  "compaction": { "auto": true, "tail_turns": 5 }
+}
