@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useEffect, useRef, useMemo } from "react"
+import Image from "next/image"
 import { sanitizeHtml } from "@/lib/sanitize"
 
 /**
@@ -48,22 +49,34 @@ export const PoemAnimation: React.FC<PoemAnimationProps> = ({
         >
           <div className="container-full">
             <div className="animated hue"></div>
-            <img
-              className="backgroundImage"
-              src={backgroundImageUrl}
-              alt="An old stone courtyard at dawn"
-              onError={(e) => {
-                ; (e.target as HTMLElement).style.display = "none"
-              }}
-            />
-            <img
-              className="boyImage"
-              src={boyImageUrl}
-              alt="A man and woman practicing with swords"
-              onError={(e) => {
-                ; (e.target as HTMLElement).style.display = "none"
-              }}
-            />
+            {backgroundImageUrl && (
+              <div className="backgroundImage" style={{ position: "absolute", inset: 0 }}>
+                <Image
+                  src={backgroundImageUrl}
+                  alt="An old stone courtyard at dawn"
+                  fill
+                  sizes="1000px"
+                  className="object-cover"
+                  onError={(e) => {
+                    ; (e.target as HTMLElement).style.display = "none"
+                  }}
+                />
+              </div>
+            )}
+            {boyImageUrl && (
+              <div className="boyImage" style={{ position: "absolute", inset: 0 }}>
+                <Image
+                  src={boyImageUrl}
+                  alt="A man and woman practicing with swords"
+                  fill
+                  sizes="1000px"
+                  className="object-cover"
+                  onError={(e) => {
+                    ; (e.target as HTMLElement).style.display = "none"
+                  }}
+                />
+              </div>
+            )}
 
             <div className="container">
               <div className="cube">

@@ -5,13 +5,15 @@ import { usePathname } from "next/navigation"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import type { NavLink } from "./nav-data"
+import { ServicesMegaMenuTrigger, type MegaMenuService } from "./services-mega-menu"
 
 interface DesktopNavProps {
-  links: NavLink[]
-  transparent?: boolean
+  links:             NavLink[]
+  transparent?:      boolean
+  megaMenuServices?: MegaMenuService[]
 }
 
-export function DesktopNav({ links, transparent }: DesktopNavProps) {
+export function DesktopNav({ links, transparent, megaMenuServices }: DesktopNavProps) {
   const pathname = usePathname()
 
   return (
@@ -21,6 +23,19 @@ export function DesktopNav({ links, transparent }: DesktopNavProps) {
           link.href === "/"
             ? pathname === "/"
             : pathname.startsWith(link.href)
+
+        // Render mega menu trigger for Hizmetler when services data is available
+        if (link.hasMegaMenu && megaMenuServices && megaMenuServices.length > 0) {
+          return (
+            <ServicesMegaMenuTrigger
+              key={link.href}
+              link={link}
+              services={megaMenuServices}
+              transparent={transparent ?? false}
+              index={i}
+            />
+          )
+        }
 
         return (
           <motion.li

@@ -183,6 +183,11 @@ export function ContactForm() {
         )}
       </AnimatePresence>
 
+      {/* Row 0: Form Title */}
+      <div className="flex flex-col gap-6 font-display text-2xl font-extrabold text-[var(--foreground)] leading-tight">
+        İletişim Formu
+      </div>
+
       {/* Row 1: Name + Email */}
       <div className="grid sm:grid-cols-2 gap-5">
         <FFInput
@@ -361,7 +366,7 @@ export function ContactForm() {
           disabled={isLoading}
           className={cn(
             "ff-shape-button",
-            "w-fit h-9 inline-flex items-center justify-center gap-2.5",
+            "w-fit h-9 inline-flex items-center justify-center gap-2.5 mt-6",
             "px-8 py-4 text-[13px] font-medium",
             "bg-[var(--ff-purple)] text-white border border-[var(--ff-purple)]",
             "hover:bg-[var(--ff-purple)] hover:border-[var(--ff-purple)]",
@@ -391,11 +396,6 @@ export function ContactForm() {
           )}
         </button>
       </motion.div>
-
-      {/* Fine print */}
-      <p className="text-[11px] text-[var(--foreground-faint)] text-center leading-relaxed">
-        Spam göndermiyoruz. Bilgileriniz yalnızca bu talep kapsamında kullanılır.
-      </p>
     </form>
   )
 }

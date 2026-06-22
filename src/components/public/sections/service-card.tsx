@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { ArrowRight, Globe } from "@/lib/icons"
@@ -47,12 +48,12 @@ export function ServiceCard({ service, index }: ServiceCardProps) {
           {/* ── Cover image banner (admin-uploaded) ── */}
           {service.coverImage && (
             <div className="relative -mx-5 -mt-5 lg:-mx-6 lg:-mt-6 mb-5 h-32 overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={service.coverImage}
                 alt={service.title}
-                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                loading="lazy"
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[var(--surface)]/50 to-transparent" />
             </div>

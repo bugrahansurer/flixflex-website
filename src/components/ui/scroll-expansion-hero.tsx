@@ -43,6 +43,7 @@ export const ScrollExpandMedia = ({
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
+    /* eslint-disable-next-line react-hooks/set-state-in-effect */
     setScrollProgress(0);
     setShowContent(false);
     setMediaFullyExpanded(false);
@@ -184,6 +185,7 @@ export const ScrollExpandMedia = ({
           src={bgImageSrc}
           alt='Background'
           fill
+          sizes="100vw"
           className='object-cover object-center'
           priority
         />
@@ -290,9 +292,9 @@ export const ScrollExpandMedia = ({
               <Image
                 src={mediaSrc}
                 alt={title || 'Media content'}
-                width={1280}
-                height={720}
-                className='w-full h-full object-cover rounded-[inherit]'
+                fill
+                sizes="100vw"
+                className='object-cover rounded-[inherit]'
               />
 
               <motion.div

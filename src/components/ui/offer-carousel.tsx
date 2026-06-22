@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Image from "next/image"
 import { motion, useInView } from "framer-motion"
 import { ArrowRight, Tag } from "@/lib/icons"
 import { cn } from "@/lib/utils"
@@ -39,11 +40,15 @@ function OfferCard({ offer }: { offer: Offer }) {
         scale={1.03}
       >
         {offer.imageSrc && (
-          <img
-            src={offer.imageSrc}
-            alt={offer.imageAlt}
-            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-          />
+          <div className="absolute inset-0">
+            <Image
+              src={offer.imageSrc}
+              alt={offer.imageAlt}
+              fill
+              sizes="(max-width: 768px) 240px, 300px"
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+            />
+          </div>
         )}
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 via-55% to-black/5 to-80% transition-opacity duration-500 group-hover:to-black/20" />
@@ -71,9 +76,11 @@ function OfferCard({ offer }: { offer: Offer }) {
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center overflow-hidden shrink-0">
                 {offer.brandLogoSrc && (
-                  <img
+                  <Image
                     src={offer.brandLogoSrc}
                     alt={offer.brandName}
+                    width={40}
+                    height={40}
                     className="w-10 h-10 object-contain"
                   />
                 )}
@@ -170,7 +177,7 @@ const OfferCarousel = React.forwardRef<HTMLDivElement, OfferCarouselProps>(
           <div
             ref={scrollRef}
             className="flex gap-4 md:gap-5 overflow-x-auto scrollbar-hide py-12 pb-20 px-1"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" as any }}
+            style={{ scrollbarWidth: "none" } as React.CSSProperties}
           >
             {duplicated.map((offer, i) => (
               <OfferCard key={`${offer.id}-${i}`} offer={offer} />
@@ -201,21 +208,38 @@ OfferCarousel.displayName = "OfferCarousel"
 
 export { OfferCarousel, OfferCard }
 
-export function DemoOfferCarousel({ items }: { items?: any[] }) {
+interface RawPortfolioItem {
+  id?: string | number
+  coverImage?: string
+  title?: string
+  category?: string
+  description?: string
+  clientLogo?: string
+  client?: string
+  year?: number | string
+  slug?: string
+}
+
+function toRaw(item: unknown, index: number): Offer {
+  const it = item as RawPortfolioItem
+  return {
+    id: it.id ?? index,
+    imageSrc: it.coverImage || "",
+    imageAlt: it.title || "",
+    tag: it.category || "Proje",
+    title: it.title || "",
+    description: it.description || "",
+    brandLogoSrc: it.clientLogo || "",
+    brandName: it.client || "FlixFlex",
+    promoCode: it.year?.toString() || "",
+    href: `/portfolio/${it.slug || "#"}`,
+  }
+}
+
+export function DemoOfferCarousel({ items }: { items?: unknown[] }) {
   const hasItems = items && items.length > 0
   const offers: Offer[] = hasItems
-    ? items.map((item, index) => ({
-      id: item.id || index,
-      imageSrc: item.coverImage || "",
-      imageAlt: item.title || "",
-      tag: item.category || "Proje",
-      title: item.title || "",
-      description: item.description || "",
-      brandLogoSrc: item.clientLogo || "",
-      brandName: item.client || "FlixFlex",
-      promoCode: item.year?.toString() || "",
-      href: `/portfolio/${item.slug || "#"}`,
-    }))
+    ? items.map((item, index) => toRaw(item, index))
     : []
 
   if (offers.length === 0) return null

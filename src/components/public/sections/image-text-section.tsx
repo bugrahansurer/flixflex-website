@@ -87,7 +87,6 @@ export function ImageTextSection({
                   src={imageUrl}
                   alt={imageAlt}
                   fill
-                  unoptimized
                   sizes="(min-width: 1024px) 50vw, 100vw"
                   className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
                 />

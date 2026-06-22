@@ -111,6 +111,7 @@ interface MediaCapsuleProps {
   mediaType?: "video" | "image"
   accentHex: string
   onExpand: () => void
+  width?: string
 }
 
 const capsuleVariants = {
@@ -127,7 +128,7 @@ const capsuleVariants = {
   }
 }
 
-function MediaCapsule({ url, mediaType, accentHex, onExpand }: MediaCapsuleProps) {
+function MediaCapsule({ url, mediaType, accentHex, onExpand, width = "3em" }: MediaCapsuleProps) {
   if (!url) return null
 
   const resolvedMediaType = getResolvedMediaType(url, mediaType)
@@ -136,15 +137,15 @@ function MediaCapsule({ url, mediaType, accentHex, onExpand }: MediaCapsuleProps
     <motion.span
       variants={capsuleVariants}
       className={cn(
-        "ff-shape-container relative inline-flex items-center justify-center align-middle",
+        "relative inline-flex items-center justify-center align-middle",
         "mx-1.5 md:mx-2.5",
-        "overflow-hidden",
-        "border border-[var(--border)] shadow-2xl",
+        "overflow-hidden rounded-[0.14em]",
+        "shadow-2xl",
         "cursor-pointer group/capsule select-none"
       )}
       style={{
-        width: "2.2em",
-        height: "1.3em"
+        width: width,
+        height: "1.05em"
       }}
       whileHover={{ scale: 1.06, y: -2 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -160,7 +161,7 @@ function MediaCapsule({ url, mediaType, accentHex, onExpand }: MediaCapsuleProps
       />
 
       {/* Media content */}
-      <div className="absolute inset-0 w-full h-full overflow-hidden bg-[var(--surface)]">
+      <div className="absolute inset-0 w-full h-full overflow-hidden rounded-[0.14em] bg-[var(--surface)]">
         {resolvedMediaType === "video" ? (
           <video
             src={url}
@@ -373,7 +374,7 @@ export function ModernManifestoSection({
       ref={containerRef}
       onMouseMove={handleMouseMove}
       className={cn(
-        "relative flex items-center justify-center w-full h-screen overflow-hidden",
+        "relative flex items-center justify-center w-full min-h-screen md:h-screen overflow-hidden py-24 md:py-0",
         // Background/text come from the resolved theme vars in `style` below;
         // keep only the structural classes here so the section adapts to the
         // active light/dark theme instead of being locked to a dark palette.
@@ -424,9 +425,9 @@ export function ModernManifestoSection({
             }
           }}
           className={cn(
-            "w-full text-center font-display font-extrabold",
-            "text-[clamp(3rem,6vw,6rem)]",
-            "leading-[2.1] tracking-[0.015em]"
+            "w-full text-justify [text-align-last:justify] font-display font-black",
+            "text-[clamp(1.8225rem,5.67vw,4.86rem)] md:text-[clamp(3rem,6vw,6rem)]",
+            "leading-[1.5] md:leading-[2.1] tracking-[0.015em] uppercase"
           )}
         >
           {segments.map((seg, idx) => {
@@ -444,6 +445,7 @@ export function ModernManifestoSection({
                   url={media?.url}
                   mediaType={media?.type}
                   accentHex={accentHex}
+                  width={seg.index === 2 ? "3em" : "2.4em"}
                   onExpand={() => {
                     const resolvedType = getResolvedMediaType(media?.url, media?.type)
                     setActiveMedia({ url: media?.url, type: resolvedType })

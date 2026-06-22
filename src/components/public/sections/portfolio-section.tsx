@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useMemo } from "react"
+import Image from "next/image"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { ArrowRight } from "@/lib/icons"
@@ -108,12 +109,12 @@ function PortfolioCard({
         >
           {coverImage ? (
             /* Admin-uploaded cover image */
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src={coverImage}
               alt={title}
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-              loading="lazy"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             />
           ) : (
             /* Fallback: gradient + client watermark when no cover image */

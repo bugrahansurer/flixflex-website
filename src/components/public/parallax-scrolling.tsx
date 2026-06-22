@@ -47,8 +47,6 @@ function ParallaxLayerView({
     [0, 1],
     [0, layer.speed * 300],
   )
-  const isExternal = layer.imageUrl.startsWith("http")
-
   return (
     <motion.div
       style={{ y, zIndex }}
@@ -58,8 +56,8 @@ function ParallaxLayerView({
         src={layer.imageUrl}
         alt={layer.alt || `Parallax layer ${index + 1}`}
         fill
+        sizes="100vw"
         className="object-cover"
-        unoptimized={isExternal}
         priority={index === 0}
       />
     </motion.div>

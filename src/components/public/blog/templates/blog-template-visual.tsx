@@ -4,6 +4,7 @@
 // Portfolio / campaign feel
 // ─────────────────────────────────────────────────────────
 
+import Image from "next/image"
 import { cn, formatDate } from "@/lib/utils"
 import { FFBadge } from "@/components/ui"
 import { CTASection } from "@/components/public/sections/cta-section"
@@ -81,8 +82,14 @@ export function BlogTemplateVisual({ post, related }: VisualTemplateProps) {
       >
         {post.coverImage && (
           <>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={post.coverImage} alt={post.title} loading="eager" className="absolute inset-0 w-full h-full object-cover" />
+            <Image
+              src={post.coverImage}
+              alt={post.title}
+              fill
+              sizes="100vw"
+              priority
+              className="object-cover"
+            />
             <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/30" />
           </>
         )}

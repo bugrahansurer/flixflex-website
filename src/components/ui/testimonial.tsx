@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Image from "next/image"
 import { motion, PanInfo, AnimatePresence } from "framer-motion"
 import { ChevronLeft, ChevronRight, Quote } from "@/lib/icons"
 import { cn } from "@/lib/utils"
@@ -112,9 +113,11 @@ export function TestimonialCarousel({
               {/* Author */}
               <div className="flex items-center gap-4">
                 {t.avatar ? (
-                  <img
+                  <Image
                     src={t.avatar}
                     alt={t.name}
+                    width={40}
+                    height={40}
                     className="w-10 h-10 object-cover grayscale"
                   />
                 ) : (

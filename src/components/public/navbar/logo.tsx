@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 
@@ -28,12 +29,21 @@ export function FlixFlexLogo({ className, size = "md", logoUrl, logoHeight, tran
       className={cn("group inline-flex items-center gap-2.5", className)}
     >
       {logoUrl ? (
-        <img
-          src={logoUrl}
-          alt="FlixFlex"
-          className="w-auto object-contain"
-          style={{ height: logoHeight || (size === "sm" ? 24 : size === "md" ? 32 : 40) }}
-        />
+        <div
+          className="relative"
+          style={{
+            height: logoHeight || (size === "sm" ? 24 : size === "md" ? 32 : 40),
+            width: logoHeight ? logoHeight * 4 : (size === "sm" ? 96 : size === "md" ? 128 : 160),
+          }}
+        >
+          <Image
+            src={logoUrl}
+            alt="FlixFlex"
+            fill
+            sizes="(max-width: 768px) 96px, 160px"
+            className="object-contain object-left"
+          />
+        </div>
       ) : (
         <>
           {/* Mor mark */}

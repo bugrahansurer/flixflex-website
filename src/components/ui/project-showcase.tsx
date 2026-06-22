@@ -2,6 +2,7 @@
 
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
+import Image from "next/image"
 import { ArrowUpRight } from "@/lib/icons"
 
 interface Project {
@@ -10,6 +11,14 @@ interface Project {
   year: string
   link: string
   image: string
+}
+
+interface PortfolioItem {
+  title?: string
+  description?: string
+  year?: number | string
+  slug?: string
+  coverImage?: string
 }
 
 const defaultProjects: Project[] = [
@@ -43,9 +52,10 @@ const defaultProjects: Project[] = [
   },
 ]
 
-export function ProjectShowcase({ items }: { items?: any[] }) {
-  const customProjects = items && items.length > 0 ? items.map((item) => ({
-    title: item.title,
+export function ProjectShowcase({ items }: { items?: unknown[] }) {
+  const typedItems = items as PortfolioItem[] | undefined
+  const customProjects = typedItems && typedItems.length > 0 ? typedItems.map((item) => ({
+    title: item.title ?? "",
     description: item.description || "Harika bir proje çalışması.",
     year: item.year?.toString() || "2024",
     link: `/portfolio/${item.slug || '#'}`,
@@ -140,11 +150,13 @@ export function ProjectShowcase({ items }: { items?: any[] }) {
       >
         <div className="relative w-[280px] h-[180px] bg-secondary rounded-xl overflow-hidden">
           {customProjects.map((project, index) => (
-            <img
+            <Image
               key={project.title}
               src={project.image || "/placeholder.svg"}
               alt={project.title}
-              className="absolute inset-0 w-full h-full object-cover transition-all duration-500 ease-out"
+              fill
+              sizes="280px"
+              className="object-cover transition-all duration-500 ease-out"
               style={{
                 opacity: hoveredIndex === index ? 1 : 0,
                 scale: hoveredIndex === index ? 1 : 1.1,
@@ -234,7 +246,7 @@ export function ProjectShowcase({ items }: { items?: any[] }) {
   )
 }
 
-export function DemoProjectShowcase({ items }: { items?: any[] }) {
+export function DemoProjectShowcase({ items }: { items?: unknown[] }) {
   return (
     <div className="w-full bg-background flex flex-col items-center justify-center p-4 md:p-10 py-20">
       <div className="w-full max-w-6xl">

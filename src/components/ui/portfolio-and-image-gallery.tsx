@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -125,6 +126,7 @@ export const RadialScrollGallery = forwardRef<
     const childrenCount = childrenNodes.length;
 
     useEffect(() => {
+      /* eslint-disable-next-line react-hooks/set-state-in-effect */
       setIsMounted(true);
 
       if (!childRef.current) return;
@@ -316,10 +318,19 @@ const defaultProjects = [
 { id: 5, title: "Desert", cat: "Travel", img: "https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?auto=format&fit=crop&w=400&q=80" },
 ];
 
-export function DemoRadialScrollGalleryBento({ items }: { items?: any[] }) {
-  const projects = items && items.length > 0 ? items.map((item, index) => ({
+interface GalleryItem {
+  id?: number | string
+  title?: string
+  category?: string
+  coverImage?: string
+  slug?: string
+}
+
+export function DemoRadialScrollGalleryBento({ items }: { items?: unknown[] }) {
+  const typedItems = (items as GalleryItem[] | undefined)
+  const projects = typedItems && typedItems.length > 0 ? typedItems.map((item, index) => ({
     id: item.id || index,
-    title: item.title,
+    title: item.title ?? "",
     cat: item.category || "Proje",
     img: item.coverImage || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=80",
     slug: item.slug
@@ -355,10 +366,12 @@ return (
               className="group relative w-[200px] h-[280px] sm:w-[240px] sm:h-[320px] overflow-hidden rounded-xl bg-card border border-border shadow-lg"
             >
               <div className="absolute inset-0 overflow-hidden">
-                <img
+                <Image
                   src={project.img}
                   alt={project.title}
-                  className={`h-full w-full object-cover transition-transform duration-700 ease-out ${
+                  fill
+                  sizes="(max-width: 640px) 200px, 240px"
+                  className={`object-cover transition-transform duration-700 ease-out ${
                     isActive ? 'scale-110 blur-0' : 'scale-100 blur-[1px] grayscale-[30%]'
                   }`}
                 />

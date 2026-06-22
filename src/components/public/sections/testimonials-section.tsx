@@ -164,29 +164,6 @@ export function TestimonialsSection() {
             interval={3500}
           />
         </motion.div>
-
-        {/* ── Trust strip ────────────────────────────── */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="mt-14 md:mt-20 flex flex-wrap items-center justify-center gap-x-10 gap-y-4"
-        >
-          {[
-            "50+ Memnun Marka",
-            "3 Yıl Deneyim",
-            "4.9 / 5 Ortalama Puan",
-          ].map((label) => (
-            <div
-              key={label}
-              className="flex items-center gap-2.5 text-[11px] font-semibold text-[var(--foreground-faint)]"
-            >
-              <span className="w-1.5 h-1.5 bg-[var(--ff-purple)] shrink-0" />
-              {label}
-            </div>
-          ))}
-        </motion.div>
       </div>
     </section>
   )

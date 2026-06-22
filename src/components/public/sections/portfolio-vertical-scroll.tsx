@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { useMemo, useRef, useState, useEffect } from "react"
+import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, BriefcaseBusiness } from "@/lib/icons"
 import { cn } from "@/lib/utils"
@@ -14,7 +15,7 @@ interface PortfolioItem {
   clientLogo?: string | null
   coverImage?: string
   category?: string
-  [key: string]: any
+  [key: string]: unknown
 }
 
 interface PortfolioVerticalScrollSectionProps {
@@ -102,11 +103,12 @@ function Card({ item, index }: { item: PortfolioItem; index: number }) {
     >
       {/* Background Cover Image */}
       <div className="absolute inset-0 z-0 overflow-hidden">
-        <img
+        <Image
           src={coverImage}
           alt={item.title}
-          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-          loading="lazy"
+          fill
+          sizes="(max-width: 768px) 100vw, 300px"
+          className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
         />
         {/* Dark contrast gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/25 to-transparent transition-opacity duration-300" />
@@ -119,10 +121,12 @@ function Card({ item, index }: { item: PortfolioItem; index: number }) {
           {/* Logo & Client */}
           <div className="flex items-center w-fit p-1 gap-2 bg-background/10 backdrop-blur-sm rounded-full border border-border/30">
             {item.clientLogo ? (
-              <img
+              <Image
                 src={item.clientLogo}
                 alt={item.client}
-                className="w-6 h-6 rounded-full object-contain"
+                width={24}
+                height={24}
+                className="rounded-full object-contain"
               />
             ) : (
               <div className="w-5 h-5 rounded-full bg-[var(--ff-purple)]/20 border border-[var(--ff-purple)]/40 flex items-center justify-center text-[10px] font-bold text-[var(--ff-purple)]">

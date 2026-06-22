@@ -11,13 +11,15 @@ import { DesktopNav } from "./desktop-nav"
 import { MobileMenu } from "./mobile-menu"
 import { NAV_LINKS } from "./nav-data"
 import { useUIStore } from "@/lib/ui-store"
+import type { MegaMenuService } from "./services-mega-menu"
 
 
 interface FlixFlexNavbarProps {
-  siteSettings?: Record<string, string>
+  siteSettings?:     Record<string, string>
+  megaMenuServices?: MegaMenuService[]
 }
 
-export function FlixFlexNavbar({ siteSettings = {} }: FlixFlexNavbarProps) {
+export function FlixFlexNavbar({ siteSettings = {}, megaMenuServices = [] }: FlixFlexNavbarProps) {
   const [scrolled, setScrolled] = React.useState(false)
   const [mobileOpen, setMobileOpen] = React.useState(false)
   const { scrollY } = useScroll()
@@ -58,7 +60,11 @@ export function FlixFlexNavbar({ siteSettings = {} }: FlixFlexNavbarProps) {
 
             {/* Desktop nav */}
             <nav aria-label="Ana navigasyon" className="hidden lg:block">
-              <DesktopNav links={NAV_LINKS} transparent={!scrolled} />
+              <DesktopNav
+                links={NAV_LINKS}
+                transparent={!scrolled}
+                megaMenuServices={megaMenuServices}
+              />
             </nav>
 
             {/* Right side actions */}

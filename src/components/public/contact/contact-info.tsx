@@ -103,7 +103,7 @@ export function ContactInfo() {
       className={cn(
         "ff-shape-container h-full flex flex-col gap-0",
         "border border-[var(--border)] bg-[var(--surface)]",
-        "p-8 lg:p-10"
+        "p-4 lg:p-6"
       )}
     >
       {/* Header */}
@@ -120,7 +120,7 @@ export function ContactInfo() {
       </motion.div>
 
       {/* Contact details */}
-      <motion.ul variants={staggerContainer} className="space-y-5 mb-8">
+      <motion.ul variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
         {[
           {
             icon: Mail,
@@ -137,13 +137,13 @@ export function ContactInfo() {
           {
             icon: MapPin,
             label: "Adres",
-            value: "Mutsan San. Sitesi İkitelli Sk. No:14 D:41, İstanbul, Türkiye",
+            value: "Mutsan Mh. İkitelli Sk. No:14 D:41, İstanbul",
             href: null,
           },
           {
             icon: Clock,
             label: "Çalışma Saatleri",
-            value: "Pzt – Cum · 09:00 – 18:00",
+            value: "Pazartesi – Cuma · 09:00 – 18:00",
             href: null,
           },
         ].map(({ icon: Icon, label, value, href }) => (
@@ -201,7 +201,7 @@ export function ContactInfo() {
         <p className="text-[10px] font-semibold tracking-[0.16em] uppercase text-[var(--foreground-faint)] mb-3">
           Sosyal Medya
         </p>
-        <ul className="space-y-2.5">
+        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {SOCIAL.map(({ label, href, icon: Icon, handle }) => (
             <li key={label}>
               <a

@@ -248,6 +248,7 @@ model Media {
   muxStatus     String?
   width         Int?
   height        Int?
+  blurDataUrl   String?
   duration      Float?
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt

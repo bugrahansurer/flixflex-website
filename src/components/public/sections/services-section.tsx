@@ -70,24 +70,10 @@ export function ServicesSection({ services }: ServicesSectionProps) {
             </div>
           </div>
         </div>
-        {/* ── Mobile horizontal scroll carousel ── */}
-        <div
-          className={cn(
-            "md:hidden",
-            "flex gap-4 overflow-x-auto",
-            "snap-x snap-mandatory",
-            "pb-4",
-            "[&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-          )}
-        >
+        {/* ── Mobile vertical stack ── */}
+        <div className={cn("md:hidden", "flex flex-col gap-4 pb-4")}>
           {services.map((service, i) => (
-            <div
-              key={service.slug}
-              className={cn(
-                "snap-start flex-shrink-0",
-                "w-[80vw] min-w-[260px] max-w-[320px]"
-              )}
-            >
+            <div key={service.slug} className="w-full">
               <ServiceCard service={service} index={i} />
             </div>
           ))}
