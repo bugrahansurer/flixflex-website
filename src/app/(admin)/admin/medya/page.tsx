@@ -509,7 +509,7 @@ export default function MediaPage() {
                       key={item.id}
                       draggable
                       onDragStart={(e) => onDragStart(e, item.id)}
-                      className="group relative ff-shape-container ff-card overflow-hidden transition-all duration-300 cursor-grab active:cursor-grabbing flex flex-col"
+                      className="group relative ff-shape-container ff-card p-0 overflow-hidden transition-all duration-300 cursor-grab active:cursor-grabbing flex flex-col"
                     >
                       {/* Preview Area */}
                       <div className="aspect-square h-26 relative overflow-hidden bg-[#f7f7f5] flex items-center justify-center">
