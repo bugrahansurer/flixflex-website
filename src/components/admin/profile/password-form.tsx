@@ -53,32 +53,33 @@ export function PasswordForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-      <div className="space-y-1.5">
-        <label className="text-[11px] font-semibold text-[#666666]">
-          Mevcut Şifre
-        </label>
-        <div className="relative">
-          <FFInput
-            type={showCurrent ? "text" : "password"}
-            className="bg-transparent border border-[#cccccc] focus:border-[#ff4fd8] text-[#333333] placeholder:text-[#999999]"
-            autoComplete="current-password"
-            {...register("currentPassword")}
-          />
-          <button
-            type="button"
-            onClick={() => setShowCurrent((v) => !v)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#666666] hover:text-[#ff4fd8]"
-            aria-label={showCurrent ? "Şifreyi gizle" : "Şifreyi göster"}
-          >
-            {showCurrent ? <EyeOff size={14} /> : <Eye size={14} />}
-          </button>
-        </div>
-        {errors.currentPassword && (
-          <p className="text-xs text-[#dc2626]">{errors.currentPassword.message}</p>
-        )}
-      </div>
 
-      <div className="grid md:grid-cols-2 gap-5">
+      <div className="grid md:grid-cols-3 gap-5">
+        <div className="space-y-1.5">
+          <label className="text-[11px] font-semibold text-[#666666]">
+            Mevcut Şifre
+          </label>
+          <div className="relative">
+            <FFInput
+              type={showCurrent ? "text" : "password"}
+              className="bg-transparent border border-[#cccccc] focus:border-[#ff4fd8] text-[#333333] placeholder:text-[#999999]"
+              autoComplete="current-password"
+              {...register("currentPassword")}
+            />
+            <button
+              type="button"
+              onClick={() => setShowCurrent((v) => !v)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#666666] hover:text-[#ff4fd8]"
+              aria-label={showCurrent ? "Şifreyi gizle" : "Şifreyi göster"}
+            >
+              {showCurrent ? <EyeOff size={14} /> : <Eye size={14} />}
+            </button>
+          </div>
+          {errors.currentPassword && (
+            <p className="text-xs text-[#dc2626]">{errors.currentPassword.message}</p>
+          )}
+        </div>
+
         <div className="space-y-1.5">
           <label className="text-[11px] font-semibold text-[#666666]">
             Yeni Şifre

@@ -6,31 +6,31 @@ import { cn } from "@/lib/utils"
 
 // ── Border variants ───────────────────────────────
 const borderVariants: Record<string, string> = {
-  none:     "border-0",
-  subtle:   "border border-[var(--border)]",
-  purple:   "border border-[rgba(255, 79, 216,0.35)]",
+  none: "border-0",
+  subtle: "border border-[var(--border)]",
+  purple: "border border-[rgba(255, 79, 216,0.35)]",
   charcoal: "border border-[#323232]",
-  white:    "border border-white/20",
+  white: "border border-white/20",
 }
 
 // ── Background variants ───────────────────────────
 const bgVariants: Record<string, string> = {
-  default:  "bg-[var(--surface-elevated)]",
-  dark:     "bg-[#111111]",
+  default: "bg-[var(--surface-elevated)]",
+  dark: "bg-[#111111]",
   charcoal: "bg-[#323232]",
-  purple:   "bg-[rgba(255, 79, 216,0.08)]",
-  glass:    "bg-white/5 backdrop-blur-sm",
+  purple: "bg-[rgba(255, 79, 216,0.08)]",
+  glass: "bg-white/5 backdrop-blur-sm",
   transparent: "bg-transparent",
 }
 
 // ── Padding variants ──────────────────────────────
 const paddingVariants: Record<string, string> = {
   none: "p-0",
-  xs:   "p-3",
-  sm:   "p-4 md:p-5",
-  md:   "p-5 md:p-6",
-  lg:   "p-6 md:p-8",
-  xl:   "p-8 md:p-12",
+  xs: "p-3",
+  sm: "p-4 md:p-5",
+  md: "p-5 md:p-6",
+  lg: "p-6 md:p-8",
+  xl: "p-8 md:p-12",
 }
 
 export interface FFContainerProps extends React.HTMLAttributes<HTMLDivElement> {

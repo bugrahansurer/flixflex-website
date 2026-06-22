@@ -43,7 +43,7 @@ export function QuickActions() {
         variants={staggerContainer}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-2 gap-3"
+        className="grid grid-cols-1 md:grid-cols-2 gap-3"
       >
         {ACTIONS.map((action) => {
           const Icon = action.icon
@@ -52,7 +52,7 @@ export function QuickActions() {
               <Link href={action.href}>
                 <TiltCard
                   variant="glass"
-                  className="flex flex-row items-start justify-between vertical-align: middle bg-[#F0F0F0] border border-[#cccccc]/30 gap-3 p-4 overflow-hidden"
+                  className="flex flex-row items-start justify-between vertical-align: middle gap-3 p-3 overflow-hidden"
                 >
                   {/* Left accent on hover */}
                   <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-[#ff4fd8] opacity-0 group-hover:opacity-100 transition-opacity duration-200" />

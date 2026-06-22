@@ -12,10 +12,22 @@ const prisma = new PrismaClient()
 
 // ── Default Super Admin credentials ───────────────
 const ADMIN_EMAIL = "admin@flixflex.com"
-const ADMIN_PASSWORD =
-  process.env.SEED_ADMIN_PASSWORD && process.env.SEED_ADMIN_PASSWORD.length > 0
-    ? process.env.SEED_ADMIN_PASSWORD
-    : "FlixFlex2026!"
+// SECURITY: production'da asla bilinen/sabit bir şifreyle admin oluşturma.
+// Gerçek şifre SEED_ADMIN_PASSWORD'tan gelmeli; production'da yoksa seed durur.
+// Geliştirme, yerel iş akışını bozmamak için bir varsayılan tutar (prod'da kullanılmaz).
+const ADMIN_PASSWORD = (() => {
+  const fromEnv = process.env.SEED_ADMIN_PASSWORD
+  if (fromEnv && fromEnv.length > 0) return fromEnv
+  if (process.env.NODE_ENV === "production") {
+    throw new Error(
+      "SEED_ADMIN_PASSWORD production'da zorunludur — bilinen varsayılan şifreyle admin oluşturulmayacak. Seed iptal edildi."
+    )
+  }
+  console.warn(
+    "[seed] SEED_ADMIN_PASSWORD tanımsız — yalnızca geliştirme için varsayılan şifre kullanılıyor. PRODUCTION'DA ASLA KULLANMAYIN."
+  )
+  return "FlixFlex2026!"
+})()
 
 // ── FlixFlex Default Color Palette ────────────────
 const FLIXFLEX_DEFAULT_PALETTE = {

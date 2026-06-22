@@ -22,7 +22,7 @@ export function ServicesContent({ items }: { items: ServiceCardItem[] }) {
 
   if (items.length === 0) {
     return (
-      <div className="ff-shape-container bg-[#f7f7f5] border border-[#cccccc] py-16 text-center">
+      <div className="ff-shape-container ff-card py-16 text-center">
         <p className="text-[#666666] text-sm">Henüz hizmet kaydı yok.</p>
       </div>
     )
@@ -41,45 +41,47 @@ export function ServicesContent({ items }: { items: ServiceCardItem[] }) {
           ))}
         </div>
       ) : (
-        <div className="ff-shape-container bg-[#f7f7f5] border border-[#cccccc] overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-[#f2f2f2] border-b border-[#cccccc] text-left">
-              <tr>
-                <th className="px-4 py-3 text-[10px] font-bold text-[#666666]">Hizmet</th>
-                <th className="px-4 py-3 text-[10px] font-bold text-[#666666]">Bağlı Portfolyo</th>
-                <th className="px-4 py-3 text-[10px] font-bold text-[#666666]">Durum</th>
-                <th className="px-4 py-3 text-[10px] font-bold text-[#666666] text-right">Aksiyonlar</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((item) => (
-                <tr key={item.id} className="border-b border-[#cccccc] last:border-0 hover:bg-[#f7f7f5] transition-colors">
-                  <td className="px-4 py-3">
-                    <Link href={`/admin/hizmetler/${item.slug}`} className="text-[13px] font-semibold hover:text-[#ff4fd8] transition-colors">
-                      {item.title}
-                    </Link>
-                    <p className="text-[11px] text-[#666666] mt-0.5">/hizmetler/{item.slug}</p>
-                  </td>
-                  <td className="px-4 py-3 text-[12px] text-[#666666]">
-                    {item.portfolios.length} proje
-                  </td>
-                  <td className="px-4 py-3">
-                    <Status published={item.isPublished} />
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex justify-end gap-1">
-                      <Link href={`/hizmetler/${item.slug}`} target="_blank" className="ff-shape-button border border-[#cccccc] w-7 h-7 flex items-center justify-center hover:border-[#ff4fd8] text-[#666666] hover:text-[#ff4fd8] transition-colors">
-                        <ExternalLink size={12} />
-                      </Link>
-                      <Link href={`/admin/hizmetler/${item.slug}`} className="ff-shape-button border border-[#cccccc] w-7 h-7 flex items-center justify-center hover:border-[#ff4fd8] text-[#666666] hover:text-[#ff4fd8] transition-colors">
-                        <Pencil size={12} />
-                      </Link>
-                    </div>
-                  </td>
+        <div className="ff-shape-container ff-card p-0 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[640px]">
+              <thead className="bg-[#f2f2f2] border-b border-[#cccccc] text-left">
+                <tr>
+                  <th className="px-4 py-3 text-[10px] font-bold text-[#666666]">Hizmet</th>
+                  <th className="px-4 py-3 text-[10px] font-bold text-[#666666]">Bağlı Portfolyo</th>
+                  <th className="px-4 py-3 text-[10px] font-bold text-[#666666]">Durum</th>
+                  <th className="px-4 py-3 text-[10px] font-bold text-[#666666] text-right">Aksiyonlar</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {items.map((item) => (
+                  <tr key={item.id} className="border-b border-[#cccccc] last:border-0 hover:bg-[#f7f7f5] transition-colors">
+                    <td className="px-4 py-3">
+                      <Link href={`/admin/hizmetler/${item.slug}`} className="text-[13px] font-semibold hover:text-[#ff4fd8] transition-colors">
+                        {item.title}
+                      </Link>
+                      <p className="text-[11px] text-[#666666] mt-0.5">/hizmetler/{item.slug}</p>
+                    </td>
+                    <td className="px-4 py-3 text-[12px] text-[#666666]">
+                      {item.portfolios.length} proje
+                    </td>
+                    <td className="px-4 py-3">
+                      <Status published={item.isPublished} />
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex justify-end gap-1">
+                        <Link href={`/hizmetler/${item.slug}`} target="_blank" className="ff-shape-button border border-[#cccccc] w-7 h-7 flex items-center justify-center hover:border-[#ff4fd8] text-[#666666] hover:text-[#ff4fd8] transition-colors">
+                          <ExternalLink size={12} />
+                        </Link>
+                        <Link href={`/admin/hizmetler/${item.slug}`} className="ff-shape-button border border-[#cccccc] w-7 h-7 flex items-center justify-center hover:border-[#ff4fd8] text-[#666666] hover:text-[#ff4fd8] transition-colors">
+                          <Pencil size={12} />
+                        </Link>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>
@@ -91,7 +93,7 @@ function ServiceCard({ item }: { item: ServiceCardItem }) {
 
   return (
     <div className={cn(
-      "ff-shape-container group relative bg-[#f7f7f5] border border-[#cccccc]",
+      "ff-shape-container ff-card p-0 group relative",
       "p-5 transition-all duration-200 hover:border-[#ff4fd8]",
       "flex flex-col"
     )}>

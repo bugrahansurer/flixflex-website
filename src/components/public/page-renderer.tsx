@@ -167,7 +167,7 @@ const SECTION_RENDERERS: Partial<Record<SectionType, (
     <section className="relative bg-[var(--background)] py-20 md:py-28">
       <div className="relative mx-auto max-w-[1440px] px-6 md:px-10 xl:px-16">
         <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-start">
-          <div className="ff-shape-container lg:col-span-7 border border-[var(--border)] bg-[var(--surface)] p-8 lg:p-10">
+          <div className="ff-shape-container ff-card lg:col-span-7">
             <ContactForm />
           </div>
           <div className="lg:col-span-5">
@@ -427,7 +427,7 @@ export function PageRenderer({ sections, portfolioItems, servicesItems, blogPost
     const isStoryScrollSelf = section.transition === "story-scroll"
     const prevSection = idx > 0 ? visibleSections[idx - 1] : null
     const isStoryScrollPrev = prevSection?.transition === "story-scroll"
-    
+
     const inStoryScroll = isStoryScrollSelf || isStoryScrollPrev
 
     let lastGroup = acc[acc.length - 1]

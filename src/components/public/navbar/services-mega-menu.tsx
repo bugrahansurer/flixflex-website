@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation"
 import {
   ArrowUpRight,
   ArrowRight,
+  ChevronDown,
   Search,
   Target,
   Film,
@@ -40,17 +41,19 @@ import type { NavLink } from "./nav-data"
 
 // ── Types ────────────────────────────────────────
 export interface MegaMenuSubService {
-  label:   string
-  href:    string
+  label: string
+  href: string
   iconKey: string
+  /** Optional one-line description shown under the label */
+  description?: string
 }
 
 export interface MegaMenuService {
-  id:          string
-  slug:        string
-  title:       string
+  id: string
+  slug: string
+  title: string
   description: string
-  iconKey?:    string
+  iconKey?: string
   subServices: MegaMenuSubService[]
 }
 
@@ -86,11 +89,15 @@ const panelVariants = {
 
 // ── Props ─────────────────────────────────────────
 interface ServicesMegaMenuTriggerProps {
-  link:        NavLink
-  services:    MegaMenuService[]
+  link: NavLink
+  services: MegaMenuService[]
   transparent: boolean
   /** index in the nav list (for stagger animation) */
-  index:       number
+  index: number
+  /** Current header height in px — panel sits right below it. */
+  headerHeight?: number
+  /** Reports open/close so the header can drop its transparency while open. */
+  onOpenChange?: (open: boolean) => void
 }
 
 // ── Component ─────────────────────────────────────
@@ -99,12 +106,20 @@ export function ServicesMegaMenuTrigger({
   services,
   transparent,
   index,
+  headerHeight,
+  onOpenChange,
 }: ServicesMegaMenuTriggerProps) {
-  const pathname    = usePathname()
-  const isActive    = pathname.startsWith(link.href)
+  const pathname = usePathname()
+  const isActive = pathname.startsWith(link.href)
   const [open, setOpen] = React.useState(false)
   const [mounted, setMounted] = React.useState(false)
-  const timerRef    = React.useRef<ReturnType<typeof setTimeout> | null>(null)
+  const timerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // Tell the header when we open/close so it can switch to a solid background
+  // (and back to transparent on close) while sitting over a hero section.
+  React.useEffect(() => {
+    onOpenChange?.(open)
+  }, [open, onOpenChange])
 
   // Mark mounted (for the body portal) + clear any pending close on unmount
   React.useEffect(() => {
@@ -160,6 +175,15 @@ export function ServicesMegaMenuTrigger({
         )}
       >
         <span className="relative z-10">{link.label}</span>
+        {/* Chevron — signals this item opens a mega menu; flips when open */}
+        <ChevronDown
+          size={13}
+          aria-hidden
+          className={cn(
+            "relative z-10 ml-1 shrink-0 transition-transform duration-300",
+            open && "rotate-180",
+          )}
+        />
         <span
           aria-hidden
           className={cn(
@@ -187,13 +211,15 @@ export function ServicesMegaMenuTrigger({
               aria-label="Hizmetler menüsü"
               onMouseEnter={cancelClose}
               onMouseLeave={scheduleClose}
-              // Header is h-20 (80px) at top, h-14 (56px) when scrolled
-              style={{ top: transparent ? 80 : 56 }}
+              // Sit flush under the header — its real height is passed in
+              // (80px tall at top, 56px when scrolled). Decoupled from
+              // `transparent` so it stays correct when the header goes solid.
+              style={{ top: headerHeight ?? (transparent ? 80 : 56) }}
               className={cn(
                 // Full-bleed: fixed, spans the entire viewport width
                 "fixed inset-x-0 z-[55]",
                 // Visual — solid background even when the navbar is transparent
-                "bg-[var(--background)]/95 backdrop-blur-xl",
+                "bg-[var(--background)]/65 backdrop-blur-md border-b border-[var(--border)]",
                 "border-y border-[var(--border)]",
                 "shadow-[0_24px_80px_rgba(0,0,0,0.22)]",
               )}
@@ -202,7 +228,7 @@ export function ServicesMegaMenuTrigger({
               <div className="mx-auto max-w-[1440px] px-6 md:px-10 xl:px-16 py-8">
                 <div className="flex gap-10">
                   {/* Services grid */}
-                  <div className="flex-1 min-w-0 grid grid-cols-3 gap-x-8 gap-y-4 divide-x divide-[var(--border)]">
+                  <div className="flex-1 min-w-0 grid grid-cols-3 gap-x-0 divide-x divide-[var(--border)]">
                     {services.map((service) => (
                       <ServiceColumn key={service.id} service={service} />
                     ))}
@@ -227,31 +253,35 @@ export function ServicesMegaMenuTrigger({
 // ── Service Column ────────────────────────────────
 function ServiceColumn({ service }: { service: MegaMenuService }) {
   return (
-    <div className="flex flex-col gap-0 p-4">
+    <div className="flex flex-col px-5 first:pl-0 last:pr-0">
       {/* Column header = parent service link */}
       <Link
         href={`/hizmetler/${service.slug}`}
-        className={cn(
-          "group flex items-center gap-2 mb-3",
-          "text-[11px] font-semibold tracking-[0.08em] uppercase",
-          "text-[var(--foreground-muted)]",
-          "transition-colors duration-200 hover:text-[var(--ff-purple)]",
-        )}
+        className="group/col mb-3 flex items-start gap-2.5 pb-3 border-b border-[var(--border)]"
       >
         <span
           className={cn(
-            "ff-shape-container flex h-6 w-6 shrink-0 items-center justify-center",
+            "ff-shape-container mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center",
             "bg-[var(--ff-purple-muted)] text-[var(--ff-purple)]",
-            "transition-colors duration-200 group-hover:bg-[var(--ff-purple)] group-hover:text-white",
+            "transition-colors duration-200 group-hover/col:bg-[var(--ff-purple)] group-hover/col:text-white",
           )}
         >
-          <Icon iconKey={service.iconKey} size={12} />
+          <Icon iconKey={service.iconKey} size={14} />
         </span>
-        <span>{service.title}</span>
-        <ArrowUpRight
-          size={11}
-          className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-        />
+        <span className="min-w-0 flex-1">
+          <span className="flex items-center gap-1 text-[13px] font-extrabold text-[var(--foreground)] transition-colors duration-200 group-hover/col:text-[var(--ff-purple)]">
+            <span className="truncate">{service.title}</span>
+            <ArrowUpRight
+              size={11}
+              className="shrink-0 -translate-x-1 opacity-0 transition-all duration-200 group-hover/col:translate-x-0 group-hover/col:opacity-100"
+            />
+          </span>
+          {service.description ? (
+            <span className="mt-0.5 block text-[10px] leading-snug text-[var(--foreground-faint)] line-clamp-1">
+              {service.description}
+            </span>
+          ) : null}
+        </span>
       </Link>
 
       {/* Sub-services list */}
@@ -267,37 +297,48 @@ function ServiceColumn({ service }: { service: MegaMenuService }) {
 }
 
 // ── Sub Service Item ──────────────────────────────
+// Card-style row: icon tile + title + optional one-line description.
 function SubServiceItem({ sub }: { sub: MegaMenuSubService }) {
   return (
     <li>
       <Link
         href={sub.href}
         className={cn(
-          "group/sub flex items-center gap-2 px-1 py-1.5",
-          "text-[11px] text-[var(--foreground-muted)]",
-          "transition-colors duration-200 hover:text-[var(--foreground)]",
-          "focus-visible:outline-[var(--ff-purple)] focus-visible:outline-2 focus-visible:outline-offset-1 rounded-sm",
+          "group/sub ff-shape-container flex items-start gap-2.5 p-2",
+          "transition-colors duration-200 hover:bg-[var(--background-alt)]",
+          "focus-visible:outline-[var(--ff-purple)] focus-visible:outline-2 focus-visible:outline-offset-1",
         )}
       >
         <span
           className={cn(
-            "ff-shape-container flex h-5 w-5 shrink-0 items-center justify-center",
-            "bg-[var(--background-alt)] text-[var(--foreground-faint)]",
+            "ff-shape-container flex h-8 w-8 shrink-0 items-center justify-center",
+            "bg-[var(--background-alt)]/30 border border-[var(--border)] text-[var(--foreground-muted)]",
             "transition-colors duration-200",
-            "group-hover/sub:bg-[var(--ff-purple-muted)] group-hover/sub:text-[var(--ff-purple)]",
+            "group-hover/sub:bg-[var(--ff-purple)] group-hover/sub:text-white",
           )}
         >
-          <Icon iconKey={sub.iconKey} size={10} />
+          <Icon iconKey={sub.iconKey} size={14} />
         </span>
-        <span className="truncate">{sub.label}</span>
-        <ArrowRight
-          size={10}
-          className={cn(
-            "ml-auto shrink-0 opacity-0 -translate-x-1",
-            "transition-all duration-200",
-            "group-hover/sub:opacity-60 group-hover/sub:translate-x-0",
-          )}
-        />
+        <span className="min-w-0 flex-1">
+          <span className="flex items-center gap-1">
+            <span className="truncate text-[12px] font-semibold text-[var(--foreground)] transition-colors duration-200 group-hover/sub:text-[var(--ff-purple)]">
+              {sub.label}
+            </span>
+            <ArrowRight
+              size={10}
+              className={cn(
+                "shrink-0 -translate-x-1 opacity-0",
+                "transition-all duration-200",
+                "group-hover/sub:translate-x-0 group-hover/sub:opacity-60",
+              )}
+            />
+          </span>
+          {sub.description ? (
+            <span className="mt-0.5 block text-[10px] leading-snug text-[var(--foreground-faint)] line-clamp-2">
+              {sub.description}
+            </span>
+          ) : null}
+        </span>
       </Link>
     </li>
   )

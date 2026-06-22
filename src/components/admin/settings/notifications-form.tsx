@@ -26,7 +26,7 @@ function ToggleRow({
   onChange: (v: boolean) => void
 }) {
   return (
-    <div className="ff-shape-container flex items-center justify-between gap-4 p-5 bg-[#F7F7F5] border border-[#CCCCCC]">
+    <div className="ff-shape-container flex items-center justify-between gap-4 p-3 bg-[#F7F7F5] border border-[#CCCCCC]">
       <div className="flex items-center gap-3">
         <span className="ff-shape-button w-10 h-10 flex items-center justify-center bg-[#F0F0F0] text-[var(--ff-purple)] border border-[#CCCCCC]">
           {icon}
@@ -79,8 +79,8 @@ export function NotificationsForm({ initialData }: { initialData: NotificationsD
   }
 
   return (
-    <div className="space-y-8 pb-20 max-w-3xl">
-      <div className="space-y-3">
+    <div className="space-y-8 pb-20">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <ToggleRow
           icon={<MessageSquare size={18} />}
           title="Yeni İletişim Mesajı"
@@ -114,7 +114,7 @@ export function NotificationsForm({ initialData }: { initialData: NotificationsD
         </p>
       </div>
 
-      <div className="ff-shape-container sticky bottom-4 z-20 flex items-center justify-end gap-4 p-4 bg-[#F7F7F5]/80 backdrop-blur-md border border-[#CCCCCC]">
+      <div className="ff-shape-container sticky bottom-4 z-20 flex flex-wrap items-center justify-end gap-2 sm:gap-4 p-4 bg-[#F7F7F5]/40 backdrop-blur-sm border border-[#CCCCCC]">
         <FFButton variant="ghost" disabled={loading} onClick={() => setData(initialData)}>
           Sıfırla
         </FFButton>

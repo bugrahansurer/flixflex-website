@@ -11,10 +11,10 @@ export const metadata: Metadata = {
 // Footer "Yasal" sütunundaki linklerle aynı slug'lar. Yeni bir politika
 // eklemek istersen buraya ekle + footer-data.ts'deki Yasal sütununa link koy.
 const LEGAL_PAGES: { slug: string; title: string }[] = [
-  { slug: "gizlilik-politikasi",    title: "Gizlilik Politikası" },
-  { slug: "kullanim-sartlari",      title: "Kullanım Şartları" },
-  { slug: "cerez-politikasi",       title: "Çerez Politikası" },
-  { slug: "kvkk-aydinlatma-metni",  title: "KVKK Aydınlatma Metni" },
+  { slug: "gizlilik-politikasi", title: "Gizlilik Politikası" },
+  { slug: "kullanim-sartlari", title: "Kullanım Şartları" },
+  { slug: "cerez-politikasi", title: "Çerez Politikası" },
+  { slug: "kvkk-aydinlatma-metni", title: "KVKK Aydınlatma Metni" },
 ]
 
 async function getPolicies(): Promise<PolicyEntry[]> {
@@ -34,12 +34,12 @@ async function getPolicies(): Promise<PolicyEntry[]> {
       defaultTitle: l.title,
       page: p
         ? {
-            id: p.id,
-            title: p.title,
-            isPublished: p.isPublished,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            sections: (p.sections as any) ?? [],
-          }
+          id: p.id,
+          title: p.title,
+          isPublished: p.isPublished,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          sections: (p.sections as any) ?? [],
+        }
         : null,
     }
   })
@@ -60,7 +60,7 @@ export default async function PolitikalarPage() {
       </nav>
 
       {/* ── Header ────────────────────────────── */}
-      <header className="mb-10 flex items-start justify-between gap-4">
+      <header className="mb-10 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
           <h1 className="font-display text-2xl font-extrabold text-[#333333] mb-2">
             Yasal <span className="text-[#ff4fd8]">Politikalar</span>
@@ -70,8 +70,8 @@ export default async function PolitikalarPage() {
             içeriklerini buradan düzenle. Değişiklikler kaydedildiğinde sitede anında yayınlanır.
           </p>
         </div>
-        <Link href="/admin/ayarlar" className="ff-btn bg-[#FF4FD8] text-white hover:bg-[#e041c0] text-[12px] h-10 px-4">
-          <ArrowLeft size={14} className="mr-2" />
+        <Link href="/admin/ayarlar" className="ff-btn self-start text-[#FF4FD8] text-[12px] hover:text-[#e041c0] transition-all duration-300 h-10 px-4">
+          <ArrowLeft size={14} className="-mr-1" />
           Geri Dön
         </Link>
       </header>

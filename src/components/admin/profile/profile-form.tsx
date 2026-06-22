@@ -71,7 +71,7 @@ export function ProfileForm({ initial }: ProfileFormProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-      <div className="grid md:grid-cols-2 gap-5">
+      <div className="grid md:grid-cols-3 gap-5">
         <div className="space-y-1.5">
           <label className="text-[11px] font-semibold text-[#666666]">
             Ad Soyad
@@ -90,21 +90,20 @@ export function ProfileForm({ initial }: ProfileFormProps) {
             <p className="text-xs text-[#dc2626]">{errors.email.message}</p>
           )}
         </div>
-      </div>
-
-      <div className="space-y-1.5">
-        <label className="text-[11px] font-semibold text-[#666666]">
-          Profil Görseli URL (opsiyonel)
-        </label>
-        <FFInput
-          {...register("image")}
-          placeholder="https://..."
-          className="bg-transparent border border-[#cccccc] focus:border-[#ff4fd8] text-[#333333] placeholder:text-[#999999]"
-          autoComplete="off"
-        />
-        {errors.image && (
-          <p className="text-xs text-[#dc2626]">{errors.image.message}</p>
-        )}
+        <div className="space-y-1.5">
+          <label className="text-[11px] font-semibold text-[#666666]">
+            Profil Görseli URL (opsiyonel)
+          </label>
+          <FFInput
+            {...register("image")}
+            placeholder="https://..."
+            className="bg-transparent border border-[#cccccc] focus:border-[#ff4fd8] text-[#333333] placeholder:text-[#999999]"
+            autoComplete="off"
+          />
+          {errors.image && (
+            <p className="text-xs text-[#dc2626]">{errors.image.message}</p>
+          )}
+        </div>
       </div>
 
       <AnimatePresence>

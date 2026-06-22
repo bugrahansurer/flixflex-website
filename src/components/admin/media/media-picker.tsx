@@ -188,7 +188,7 @@ export function MediaPicker({ onSelect, onClose, allowedTypes = ["image", "video
   // ── macOS Column View Actions ────────────────────
   const handleColumnFolderClick = async (folder: MediaFolder, colIndex: number) => {
     const nextColumns = columns.slice(0, colIndex + 1)
-    
+
     // Mark folder as selected in this column
     nextColumns[colIndex] = {
       ...nextColumns[colIndex],
@@ -245,7 +245,7 @@ export function MediaPicker({ onSelect, onClose, allowedTypes = ["image", "video
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] animate-in fade-in duration-200" />
         <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] max-w-5xl h-[85vh] bg-[#F7F7F5] border border-[#CCCCCC] shadow-2xl z-[101] flex flex-col ff-shape-container animate-in zoom-in-95 duration-150 overflow-hidden">
-          
+
           {/* ── Top Bar / Header ───────────────────────── */}
           <div className="p-4 px-6 border-b border-[#CCCCCC] bg-white flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -259,7 +259,7 @@ export function MediaPicker({ onSelect, onClose, allowedTypes = ["image", "video
               </div>
 
               {/* View Switcher Toggle */}
-              <div className="flex bg-[#F7F7F5] border border-[#CCCCCC] p-0.5 ff-shape-container shrink-0 ml-2">
+              <div className="ff-shape-button flex bg-[#F7F7F5] border border-[#CCCCCC] p-0.5 shrink-0 ml-2">
                 <button
                   type="button"
                   onClick={() => {
@@ -267,7 +267,7 @@ export function MediaPicker({ onSelect, onClose, allowedTypes = ["image", "video
                     setSelectedItem(null)
                   }}
                   className={cn(
-                    "w-8 h-8 flex items-center justify-center transition-all ff-shape-button",
+                    "ff-shape-button w-8 h-8 flex items-center justify-center transition-all",
                     viewMode === "grid" ? "bg-white border border-[#CCCCCC] text-[#ff4fd8] shadow-sm" : "text-[#666666] hover:text-[#ff4fd8]"
                   )}
                   title="Izgara Görünümü"
@@ -376,7 +376,7 @@ export function MediaPicker({ onSelect, onClose, allowedTypes = ["image", "video
                 {/* Files Grid */}
                 <div className="space-y-3">
                   <span className="text-[10px] font-bold text-[#666666] uppercase tracking-wider block">Dosyalar</span>
-                  
+
                   {filterItems(gridItems).length === 0 ? (
                     <div className="py-16 text-center border border-dashed border-[#CCCCCC] ff-shape-container bg-white text-xs text-[#999999]">
                       Burada dosya bulunamadı.
@@ -411,7 +411,7 @@ export function MediaPicker({ onSelect, onClose, allowedTypes = ["image", "video
                                 </div>
                               )}
                             </div>
-                            
+
                             {/* Title overlay */}
                             <div className="p-1 px-2 border-t border-[#E0E0E0] w-full bg-white h-7 flex items-center">
                               <span className="text-[10px] text-[#666666] truncate font-medium w-full text-left">{item.title || "Adsız"}</span>
@@ -505,7 +505,7 @@ export function MediaPicker({ onSelect, onClose, allowedTypes = ["image", "video
                 {selectedItem && (
                   <div className="w-80 border-r border-[#CCCCCC] flex flex-col shrink-0 h-full bg-[#f7f7f5] overflow-y-auto p-5 space-y-4">
                     <span className="text-[10px] font-bold text-[#666666] uppercase tracking-wider block border-b border-[#E0E0E0] pb-1.5">Önizleme</span>
-                    
+
                     {/* Media Thumbnail */}
                     <div className="aspect-video w-full ff-shape-container border border-[#E0E0E0] bg-white flex items-center justify-center overflow-hidden shadow-sm relative">
                       {selectedItem.type === "image" ? (

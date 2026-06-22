@@ -169,7 +169,7 @@ interface StatCardProps {
 }
 function StatCard({ icon: Icon, label, value, hint }: StatCardProps) {
   return (
-    <div className="ff-shape-container bg-[#F0F0F0] hover:bg-[#ff4fd8]/20 hover:border-[#ff4fd8]/50 border border-[#cccccc] p-5">
+    <div className="ff-shape-container ff-card">
       <div className="flex items-center justify-between mb-3">
         <span className="text-[11px] font-semibold text-[#0d0d0d]">
           {label}
@@ -198,10 +198,10 @@ function QuickAction({ href, icon: Icon, title, desc, primary }: QuickActionProp
     <Link
       href={href}
       className={cn(
-        "ff-shape-container group block p-5 border transition-all duration-200",
+        "ff-shape-container ff-card group block p-5 transition-all duration-200",
         primary
-          ? "bg-[#F0F0F0] border-[#CCCCCC] hover:bg-[#ff4fd8]/20 hover:border-[#ff4fd8]/50"
-          : "bg-[#F0F0F0] border-[#CCCCCC] hover:bg-[#ff4fd8]/20 hover:border-[#ff4fd8]/50"
+          ? " hover:bg-[#ff4fd8]/20 hover:border-[#ff4fd8]/50"
+          : " hover:bg-[#ff4fd8]/20 hover:border-[#ff4fd8]/50"
       )}
     >
       <div className="flex items-center justify-between mb-3">

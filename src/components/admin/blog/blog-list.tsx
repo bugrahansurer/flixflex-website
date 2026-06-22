@@ -103,7 +103,7 @@ export function BlogList({ initialPosts }: BlogListProps) {
         </div>
         <div className="flex items-center gap-2">
           <FFButton
-           className="bg-transparent border-[#ff4fd8] text-[#ff4fd8] hover:text-white hover:bg-[#ff4fd8]/90 hover:border-[#ff4fd8]/90"
+            className="bg-transparent border-[#ff4fd8] text-[#ff4fd8] hover:text-white hover:bg-[#ff4fd8]/90 hover:border-[#ff4fd8]/90"
             variant="outline"
             leftIcon={<Plus size={13} />}
             onClick={() => router.push("/admin/blog/yeni")}
@@ -120,7 +120,7 @@ export function BlogList({ initialPosts }: BlogListProps) {
       </div>
 
       {/* Filters */}
-      <div className="ff-shape-container bg-[#f7f7f5] border border-[#cccccc] p-4 space-y-4">
+      <div className="ff-shape-container ff-card space-y-4">
         {/* Status pills */}
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-1.5">
@@ -190,97 +190,99 @@ export function BlogList({ initialPosts }: BlogListProps) {
       </div>
 
       {/* Table */}
-      <div className="ff-shape-container bg-[#f7f7f5] border border-[#cccccc] overflow-hidden">
-        <table className="w-full">
-          <thead className="border-b border-[#cccccc]">
-            <tr className="text-left">
-              <Th>Başlık</Th>
-              <Th>Kategori</Th>
-              <Th>Durum</Th>
-              <Th>Tarih</Th>
-              <Th align="right">Aksiyonlar</Th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.map((p) => (
-              <tr
-                key={p.id}
-                className="border-b border-[#cccccc] last:border-0 hover:bg-[rgba(255, 79, 216,0.04)] transition-colors"
-              >
-                <td className="px-4 py-3">
-                  <div className="flex items-center gap-2">
-                    {p.aiGenerated && (
-                      <span title="AI tarafından üretildi">
-                        <Sparkles size={12} className="text-[#ff4fd8] shrink-0" />
-                      </span>
-                    )}
-                    <Link
-                      href={`/admin/blog/${p.slug}`}
-                      className="text-[13px] font-medium text-[#666666] hover:text-[#ff4fd8] transition-colors"
-                    >
-                      {p.title}
-                    </Link>
-                  </div>
-                  <p className="text-[11px] font-mono text-[#666666] mt-0.5">
-                    /{p.slug}
-                  </p>
-                </td>
-                <td className="px-4 py-3">
-                  <span className="text-[11px] text-[#666666]">
-                    {p.category}
-                  </span>
-                </td>
-                <td className="px-4 py-3">
-                  <span
-                    className={cn(
-                      "ff-shape-container inline-block px-2 py-0.5 text-[9px] font-semibold border",
-                      p.status === "published"
-                        ? "bg-green-500/10 text-green-500 border-green-500/40"
-                        : "bg-yellow-500/10 text-yellow-500 border-yellow-500/40"
-                    )}
-                  >
-                    {p.status === "published" ? "Yayında" : "Taslak"}
-                  </span>
-                </td>
-                <td className="px-4 py-3 text-[11px] text-[#666666]">
-                  {formatDate(p.publishedAt)}
-                </td>
-                <td className="px-4 py-3">
-                  <div className="flex items-center justify-end gap-1">
-                    <IconBtn
-                      label={p.status === "published" ? "Taslağa al" : "Yayınla"}
-                      onClick={() => toggleStatus(p)}
-                      disabled={busy === p.id}
-                    >
-                      {p.status === "published" ? <EyeOff size={13} /> : <Eye size={13} />}
-                    </IconBtn>
-                    <IconBtn
-                      label="Düzenle"
-                      onClick={() => router.push(`/admin/blog/${p.slug}`)}
-                    >
-                      <Pencil size={13} />
-                    </IconBtn>
-                    <IconBtn
-                      label="Sil"
-                      onClick={() => remove(p)}
-                      disabled={busy === p.id}
-                      danger
-                    >
-                      <Trash2 size={13} />
-                    </IconBtn>
-                  </div>
-                </td>
+      <div className="ff-shape-container ff-card p-0 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[680px]">
+            <thead className="bg-[#f5f5f5] border-b border-[#cccccc]">
+              <tr className="text-left">
+                <Th>Başlık</Th>
+                <Th>Kategori</Th>
+                <Th>Durum</Th>
+                <Th>Tarih</Th>
+                <Th align="right">Aksiyonlar</Th>
               </tr>
-            ))}
-            {filtered.length === 0 && (
-              <tr>
-                <td colSpan={5} className="px-4 py-12 text-center text-[12px] text-[var(--foreground-faint)]">
-                  Hiç yazı yok — filtreleri değiştir veya yeni yazı oluştur.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filtered.map((p) => (
+                <tr
+                  key={p.id}
+                  className="border-b border-[#cccccc] last:border-0 hover:bg-[rgba(255, 79, 216,0.04)] transition-colors"
+                >
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-2">
+                      {p.aiGenerated && (
+                        <span title="AI tarafından üretildi">
+                          <Sparkles size={12} className="text-[#ff4fd8] shrink-0" />
+                        </span>
+                      )}
+                      <Link
+                        href={`/admin/blog/${p.slug}`}
+                        className="text-[13px] font-medium text-[#666666] hover:text-[#ff4fd8] transition-colors"
+                      >
+                        {p.title}
+                      </Link>
+                    </div>
+                    <p className="text-[11px] font-mono text-[#666666] mt-0.5">
+                      /{p.slug}
+                    </p>
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className="text-[11px] text-[#666666]">
+                      {p.category}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <span
+                      className={cn(
+                        "ff-shape-container inline-block px-2 py-0.5 text-[9px] font-semibold border",
+                        p.status === "published"
+                          ? "bg-green-500/10 text-green-500 border-green-500/40"
+                          : "bg-yellow-500/10 text-yellow-500 border-yellow-500/40"
+                      )}
+                    >
+                      {p.status === "published" ? "Yayında" : "Taslak"}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 text-[11px] text-[#666666]">
+                    {formatDate(p.publishedAt)}
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center justify-end gap-1">
+                      <IconBtn
+                        label={p.status === "published" ? "Taslağa al" : "Yayınla"}
+                        onClick={() => toggleStatus(p)}
+                        disabled={busy === p.id}
+                      >
+                        {p.status === "published" ? <EyeOff size={13} /> : <Eye size={13} />}
+                      </IconBtn>
+                      <IconBtn
+                        label="Düzenle"
+                        onClick={() => router.push(`/admin/blog/${p.slug}`)}
+                      >
+                        <Pencil size={13} />
+                      </IconBtn>
+                      <IconBtn
+                        label="Sil"
+                        onClick={() => remove(p)}
+                        disabled={busy === p.id}
+                        danger
+                      >
+                        <Trash2 size={13} />
+                      </IconBtn>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+              {filtered.length === 0 && (
+                <tr>
+                  <td colSpan={5} className="px-4 py-12 text-center text-[12px] text-[var(--foreground-faint)]">
+                    Hiç yazı yok — filtreleri değiştir veya yeni yazı oluştur.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   )
@@ -291,7 +293,7 @@ function Th({ children, align = "left" }: { children: React.ReactNode; align?: "
   return (
     <th
       className={cn(
-        "px-4 py-3 text-[10px] uppercase tracking-[0.08em] font-semibold text-[#666666]",
+        "px-4 py-2 text-[11px] font-semibold text-[#666666]",
         align === "right" && "text-right"
       )}
     >

@@ -76,7 +76,7 @@ function GradientPicker({
   return (
     <div className="space-y-3">
       <span className="text-[11px] font-bold text-[#666666] uppercase tracking-wider block">Gradient Renk Sınıfı</span>
-      
+
       {/* Live Preview Banner */}
       <div
         style={{ background: currentBackground }}
@@ -232,9 +232,9 @@ function VisualMediaField({
   return (
     <div className={cn("space-y-1.5", className)}>
       <span className="text-[11px] font-bold text-[#666666] uppercase tracking-wider block">{label}</span>
-      
+
       {value ? (
-        <div className="relative group ff-shape-container border border-[#CCCCCC] overflow-hidden bg-[#f7f7f5] aspect-video flex items-center justify-center">
+        <div className="relative group ff-shape-container ff-card p-0 overflow-hidden aspect-video flex items-center justify-center">
           <img
             src={value}
             alt={label}
@@ -299,7 +299,7 @@ function VisualLogoField({
   return (
     <div className={cn("space-y-1.5", className)}>
       <span className="text-[11px] font-bold text-[#666666] uppercase tracking-wider block">{label}</span>
-      
+
       {value ? (
         <div className="relative group ff-shape-container border border-[#CCCCCC] p-4 bg-[#F7F7F5] w-full h-24 flex items-center justify-center">
           <img
@@ -571,9 +571,9 @@ export function PortfolioEditor({ mode, initial, services }: PortfolioEditorProp
           {/* ── Left Column: Project Info ─────────────────── */}
           <div className="lg:col-span-2 space-y-6">
             {/* General Info Card */}
-            <div className="bg-[#F7F7F5] border border-[#E0E0E0] ff-shape-container p-6 space-y-4">
+            <div className="ff-shape-container ff-card space-y-4">
               <h2 className="text-xs font-bold text-[#333333] uppercase tracking-wider border-b border-[#F0F0F0] pb-2">Proje Temel Bilgileri</h2>
-              
+
               <div className="grid md:grid-cols-2 gap-4">
                 <FormField label="Proje Başlığı" description="Örn: Trendyol ROAS Artışı">
                   <input className="ff-shape-container items-center justify-start w-full h-9 px-4 bg-transparent border border-[#CCCCCC] text-xs text-[#666666] placeholder:text-[#999999]" value={form.title} onChange={(e) => patch({ title: e.target.value })} placeholder="Başlık girin..." />
@@ -617,7 +617,7 @@ export function PortfolioEditor({ mode, initial, services }: PortfolioEditorProp
             </div>
 
             {/* Narrative Story Paragraphs */}
-            <div className="bg-[#F7F7F5] border border-[#E0E0E0] ff-shape-container p-6 space-y-4">
+            <div className="ff-shape-container ff-card space-y-4">
               <div className="flex items-center justify-between border-b border-[#F0F0F0] pb-2">
                 <h2 className="text-xs font-bold text-[#333333] uppercase tracking-wider">Proje Hikayesi</h2>
                 <button
@@ -660,7 +660,7 @@ export function PortfolioEditor({ mode, initial, services }: PortfolioEditorProp
             </div>
 
             {/* Challenge / Approach / Results Columns */}
-            <div className="bg-[#F7F7F5] border border-[#E0E0E0] ff-shape-container p-6 space-y-4">
+            <div className="ff-shape-container ff-card space-y-4">
               <h2 className="text-xs font-bold text-[#333333] uppercase tracking-wider border-b border-[#F0F0F0] pb-2">Zorluk / Yaklaşım / Sonuç Yapısı</h2>
               <div className="space-y-4">
                 {form.sidebarItems.map((item, index) => (
@@ -694,7 +694,7 @@ export function PortfolioEditor({ mode, initial, services }: PortfolioEditorProp
             </div>
 
             {/* Metrics & Results stats */}
-            <div className="bg-[#F7F7F5] border border-[#E0E0E0] ff-shape-container p-6 space-y-4">
+            <div className="ff-shape-container ff-card space-y-4">
               <div className="flex items-center justify-between border-b border-[#F0F0F0] pb-2">
                 <h2 className="text-xs font-bold text-[#333333] uppercase tracking-wider">Metrikler &amp; Başarı İstatistikleri</h2>
                 <button
@@ -773,9 +773,9 @@ export function PortfolioEditor({ mode, initial, services }: PortfolioEditorProp
           {/* ── Right Column: Assets & Config ──────────────── */}
           <aside className="space-y-6">
             {/* Visual Assets Card */}
-            <div className="bg-[#F7F7F5] border border-[#E0E0E0] ff-shape-container p-6 space-y-4">
+            <div className="ff-shape-container ff-card space-y-4">
               <h2 className="text-xs font-bold text-[#333333] uppercase tracking-wider border-b border-[#F0F0F0] pb-2">Görsel Varlıklar</h2>
-              
+
               <VisualMediaField
                 label="Kapak Görseli"
                 value={form.coverImage}
@@ -796,9 +796,9 @@ export function PortfolioEditor({ mode, initial, services }: PortfolioEditorProp
             </div>
 
             {/* Layout Settings Card */}
-            <div className="bg-[#F7F7F5] border border-[#E0E0E0] ff-shape-container p-6 space-y-4">
+            <div className="ff-shape-container ff-card space-y-4">
               <h2 className="text-xs font-bold text-[#333333] uppercase tracking-wider border-b border-[#F0F0F0] pb-2">Tasarım &amp; Akış Ayarları</h2>
-              
+
               <GradientPicker
                 value={form.gradient}
                 onChange={(val) => patch({ gradient: val })}
@@ -872,9 +872,9 @@ export function PortfolioEditor({ mode, initial, services }: PortfolioEditorProp
             </div>
 
             {/* Connected Services Grid Selector */}
-            <div className="bg-[#F7F7F5] border border-[#E0E0E0] ff-shape-container p-6 space-y-4">
+            <div className="ff-shape-container ff-card space-y-4">
               <h2 className="text-xs font-bold text-[#333333] uppercase tracking-wider border-b border-[#F0F0F0] pb-1">Bağlı Hizmetler</h2>
-              
+
               {services.length === 0 ? (
                 <div className="text-center py-4 text-xs text-[#999999]">Bağlanabilecek hizmet bulunmamaktadır.</div>
               ) : (

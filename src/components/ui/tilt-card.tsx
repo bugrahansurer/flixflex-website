@@ -32,8 +32,7 @@ export interface TiltCardProps {
 }
 
 const GLASS_CLASSES = [
-  "ff-shape-container group flex flex-col",
-  "bg-[var(--surface-elevated)]/10 backdrop-blur-sm border border-[var(--border)]/40",
+  "ff-shape-container ff-card p-0 group flex flex-col",
   "transition-[border-color,box-shadow] duration-300",
   "hover:border-[var(--ff-purple)]/40",
   "hover:shadow-[0_8px_40px_rgba(255, 79, 216,0.12)]",
@@ -150,7 +149,7 @@ export function TiltCard({
               top: `${spotlightPos.y}%`,
               transform: "translate(-50%, -50%)",
               background:
-                "radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 40%)",
+                "radial-gradient(circle, rgba(142, 142, 142, 0.15) 0%, transparent 40%)",
               transition: "opacity 0.3s",
               opacity: isHovered ? 1 : 0,
             }}

@@ -13,7 +13,7 @@ export function ViewToggle({
   onChange: (mode: ViewMode) => void
 }) {
   return (
-    <div className="ff-shape-container flex items-center justify-center px-1 border border-[#CCCCCC] bg-[#f7f7f5] overflow-hidden h-9">
+    <div className="ff-shape-button flex items-center justify-center px-1 border border-[#CCCCCC] bg-[#f7f7f5] overflow-hidden h-9">
       <button
         type="button"
         onClick={() => onChange("grid")}

@@ -4,11 +4,11 @@ import * as React from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import * as Dialog from "@radix-ui/react-dialog"
-import { 
-  Save, Loader2, Send, AlertTriangle, ArrowLeft, Check, 
-  Search, Target, Film, LayoutGrid, PenTool, Clapperboard, 
-  Camera, FileText, MessageCircle, Video, TrendingUp, Shapes, 
-  BookOpen, Lightbulb, Layout, Monitor, Code2, Zap, Sparkles, 
+import {
+  Save, Loader2, Send, AlertTriangle, ArrowLeft, Check,
+  Search, Target, Film, LayoutGrid, PenTool, Clapperboard,
+  Camera, FileText, MessageCircle, Video, TrendingUp, Shapes,
+  BookOpen, Lightbulb, Layout, Monitor, Code2, Zap, Sparkles,
   Scissors, Globe, BarChart3, Palette, MessageSquare, Fingerprint, Plus, Trash2, X, Image as ImageIcon
 } from "@/lib/icons"
 import { slugify, cn } from "@/lib/utils"
@@ -100,7 +100,7 @@ export function ServiceEditor({ mode, initial, allServices }: ServiceEditorProps
   const [deleteOpen, setDeleteOpen] = React.useState(false)
   const [deleteLoading, setDeleteLoading] = React.useState(false)
   const [deleteError, setDeleteError] = React.useState<string | null>(null)
-  
+
   const [form, setForm] = React.useState(() => ({
     title: initial?.title ?? "",
     slug: initial?.slug ?? "",
@@ -208,12 +208,12 @@ export function ServiceEditor({ mode, initial, allServices }: ServiceEditorProps
             Hizmet detay sayfası, alt hizmetler ve verilecek çıktılar bu form üzerinden yapılandırılır.
           </p>
         </div>
-        
+
         <div className="flex gap-2">
           {mode === "edit" && (
             <button
               type="button"
-              className="ff-shape-button px-4 h-9 border border-red-500/20 hover:border-red-500/40 text-red-500 hover:bg-red-500/10 font-bold text-[12px] flex items-center gap-1.5 transition-all disabled:opacity-50"
+              className="ff-shape-button px-3 h-9 border border-red-500/20 hover:border-red-500/40 text-red-500 hover:bg-red-500/10 font-bold text-[12px] flex items-center gap-1.5 transition-all disabled:opacity-50"
               disabled={busy}
               onClick={() => {
                 setDeleteError(null)
@@ -224,19 +224,19 @@ export function ServiceEditor({ mode, initial, allServices }: ServiceEditorProps
               Sil
             </button>
           )}
-          <button 
+          <button
             type="button"
-            className="ff-shape-button px-5 h-9 border border-[#CCCCCC] text-[#666666] hover:text-[#ff4fd8] hover:border-[#ff4fd8]/30 bg-white font-bold text-[12px] flex items-center gap-2 transition-colors disabled:opacity-50" 
-            disabled={busy} 
+            className="ff-shape-button px-3 h-9 border border-[#CCCCCC] text-[#666666] hover:text-[#ff4fd8] hover:border-[#ff4fd8]/30 bg-white font-bold text-[12px] flex items-center gap-2 transition-colors disabled:opacity-50"
+            disabled={busy}
             onClick={() => save(form.isPublished)}
           >
             {busy ? <Loader2 className="animate-spin" size={14} /> : <Save size={14} />}
             Taslağı Kaydet
           </button>
-          <button 
+          <button
             type="button"
-            className="ff-shape-button px-6 h-9 bg-[#ff4fd8] text-white font-bold text-[12px] flex items-center gap-2 hover:bg-[#ff4fd8]/90 transition-all disabled:opacity-50" 
-            disabled={busy} 
+            className="ff-shape-button px-3 h-9 bg-[#ff4fd8] text-white font-bold text-[12px] flex items-center gap-2 hover:bg-[#ff4fd8]/90 transition-all disabled:opacity-50"
+            disabled={busy}
             onClick={() => save(true)}
           >
             {busy ? <Loader2 className="animate-spin" size={14} /> : <Send size={14} />}
@@ -254,85 +254,85 @@ export function ServiceEditor({ mode, initial, allServices }: ServiceEditorProps
 
       {/* Main Grid */}
       <div className="grid lg:grid-cols-3 gap-6">
-        
+
         {/* Left Column (Main Form Content) */}
         <div className="lg:col-span-2 space-y-6">
-          
+
           {/* Card: Temel Bilgiler */}
-          <div className="bg-[#F7F7F5] border border-[#E0E0E0] p-6 space-y-4 ff-shape-container">
+          <div className="ff-shape-container ff-card space-y-4">
             <h3 className="text-xs font-bold text-[#ff4fd8] border-b border-[#F0F0F0] pb-2">Temel Bilgiler</h3>
-            
+
             <div className="grid md:grid-cols-2 gap-4">
               <FormField label="Hizmet Başlığı" description="Hizmetin public adıdır.">
-                <input 
-                  className={inputCls} 
-                  value={form.title} 
-                  onChange={(e) => patch({ title: e.target.value })} 
+                <input
+                  className={inputCls}
+                  value={form.title}
+                  onChange={(e) => patch({ title: e.target.value })}
                   placeholder="örn. Dijital Pazarlama Yönetimi"
                 />
               </FormField>
 
               <FormField label="Slug (URL Yolu)" description="Tarayıcıda görünecek adresi belirler.">
-                <input 
-                  className={inputCls} 
-                  value={form.slug} 
-                  onChange={(e) => { setSlugDirty(true); patch({ slug: e.target.value }) }} 
+                <input
+                  className={inputCls}
+                  value={form.slug}
+                  onChange={(e) => { setSlugDirty(true); patch({ slug: e.target.value }) }}
                   placeholder="dijital-pazarlama-yonetimi"
                 />
               </FormField>
             </div>
 
             <FormField label="Kısa Açıklama" description="Kartlarda ve listelerde görünecek özet açıklama.">
-              <textarea 
-                rows={3} 
-                className={cn(inputCls, "h-auto py-2.5")} 
-                value={form.description} 
-                onChange={(e) => patch({ description: e.target.value })} 
+              <textarea
+                rows={3}
+                className={cn(inputCls, "h-auto py-2.5")}
+                value={form.description}
+                onChange={(e) => patch({ description: e.target.value })}
                 placeholder="Veri odaklı ve yüksek dönüşümlü pazarlama stratejilerimiz..."
               />
             </FormField>
 
             <FormField label="Detay Sayfası Hero Metni" description="Hizmet detay sayfasının en üstünde yer alan ana açıklama paragrafı.">
-              <textarea 
-                rows={6} 
-                className={cn(inputCls, "h-auto py-2.5")} 
-                value={form.body} 
-                onChange={(e) => patch({ body: e.target.value })} 
+              <textarea
+                rows={6}
+                className={cn(inputCls, "h-auto py-2.5")}
+                value={form.body}
+                onChange={(e) => patch({ body: e.target.value })}
                 placeholder="Müşterilerinize sunduğunuz bu hizmetin tüm süreçlerini, detaylarını ve ne işe yaradığını geniş bir dille açıklayın..."
               />
             </FormField>
           </div>
 
           {/* Card: Görsel & Tasarım */}
-          <div className="bg-[#F7F7F5] border border-[#E0E0E0] p-6 space-y-5 ff-shape-container">
+          <div className="ff-shape-container ff-card space-y-4">
             <h3 className="text-xs font-bold text-[#ff4fd8] border-b border-[#F0F0F0] pb-2">Görsel & Tasarım</h3>
-            
-            <VisualMediaField 
-              label="Kapak Görseli" 
-              value={form.coverImage} 
-              onChange={(url) => patch({ coverImage: url })} 
+
+            <VisualMediaField
+              label="Kapak Görseli"
+              value={form.coverImage}
+              onChange={(url) => patch({ coverImage: url })}
             />
 
             <div className="grid md:grid-cols-2 gap-6 pt-2">
-              <AccentColorPicker 
-                value={form.accentColor} 
-                onChange={(color) => patch({ accentColor: color })} 
+              <AccentColorPicker
+                value={form.accentColor}
+                onChange={(color) => patch({ accentColor: color })}
               />
-              <GradientPicker 
-                value={form.gradient} 
-                onChange={(gradientClass) => patch({ gradient: gradientClass })} 
+              <GradientPicker
+                value={form.gradient}
+                onChange={(gradientClass) => patch({ gradient: gradientClass })}
               />
             </div>
           </div>
 
           {/* Card: Süreç Adımları */}
-          <div className="bg-[#F7F7F5] border border-[#E0E0E0] p-6 space-y-4 ff-shape-container">
+          <div className="ff-shape-container ff-card space-y-4">
             <div className="flex justify-between items-center border-b border-[#F0F0F0] pb-2">
               <h3 className="text-xs font-bold text-[#ff4fd8]">Süreç Adımları</h3>
               <button
                 type="button"
-                onClick={() => patch({ 
-                  processSteps: [...form.processSteps, { title: "", description: "" }] 
+                onClick={() => patch({
+                  processSteps: [...form.processSteps, { title: "", description: "" }]
                 })}
                 className="inline-flex items-center gap-1 text-[11px] font-bold text-[#ff4fd8] hover:underline"
               >
@@ -349,29 +349,29 @@ export function ServiceEditor({ mode, initial, allServices }: ServiceEditorProps
                   </div>
 
                   <div className="flex-1 grid gap-3">
-                    <input 
-                      className={cn(inputCls, "bg-white")} 
-                      placeholder="Adım Başlığı (örn. Keşif)" 
-                      value={step.title} 
-                      onChange={(e) => patch({ 
-                        processSteps: form.processSteps.map((x, i) => i === index ? { ...x, title: e.target.value } : x) 
-                      })} 
+                    <input
+                      className={cn(inputCls, "bg-white")}
+                      placeholder="Adım Başlığı (örn. Keşif)"
+                      value={step.title}
+                      onChange={(e) => patch({
+                        processSteps: form.processSteps.map((x, i) => i === index ? { ...x, title: e.target.value } : x)
+                      })}
                     />
-                    <textarea 
-                      rows={2} 
-                      className={cn(inputCls, "bg-white h-auto py-1.5")} 
-                      placeholder="Açıklama (Bu aşamada ne yapılır?)" 
-                      value={step.description} 
-                      onChange={(e) => patch({ 
-                        processSteps: form.processSteps.map((x, i) => i === index ? { ...x, description: e.target.value } : x) 
-                      })} 
+                    <textarea
+                      rows={2}
+                      className={cn(inputCls, "bg-white h-auto py-1.5")}
+                      placeholder="Açıklama (Bu aşamada ne yapılır?)"
+                      value={step.description}
+                      onChange={(e) => patch({
+                        processSteps: form.processSteps.map((x, i) => i === index ? { ...x, description: e.target.value } : x)
+                      })}
                     />
                   </div>
 
                   <button
                     type="button"
-                    onClick={() => patch({ 
-                      processSteps: form.processSteps.filter((_, i) => i !== index) 
+                    onClick={() => patch({
+                      processSteps: form.processSteps.filter((_, i) => i !== index)
                     })}
                     className="w-7 h-7 flex items-center justify-center border border-[#CCCCCC] hover:border-red-500/30 hover:bg-red-500/10 text-[#666666] hover:text-red-500 transition-all ff-shape-button shrink-0"
                     title="Adımı Kaldır"
@@ -390,18 +390,18 @@ export function ServiceEditor({ mode, initial, allServices }: ServiceEditorProps
           </div>
 
           {/* Card: Kart Özellikleri & Teslim Edilenler */}
-          <div className="bg-[#F7F7F5] border border-[#E0E0E0] p-6 grid md:grid-cols-2 gap-6 ff-shape-container">
-            <PremiumListField 
-              label="Hizmet Kartı Özellikleri" 
-              values={form.features} 
-              onChange={(values) => patch({ features: values })} 
+          <div className="ff-shape-container ff-card space-y-4">
+            <PremiumListField
+              label="Hizmet Kartı Özellikleri"
+              values={form.features}
+              onChange={(values) => patch({ features: values })}
               placeholder="Özellik yazın..."
             />
 
-            <PremiumListField 
-              label="Teslim Edilen Çıktılar" 
-              values={form.deliverables} 
-              onChange={(values) => patch({ deliverables: values })} 
+            <PremiumListField
+              label="Teslim Edilen Çıktılar"
+              values={form.deliverables}
+              onChange={(values) => patch({ deliverables: values })}
               placeholder="Teslimat çıktısı yazın..."
             />
           </div>
@@ -409,11 +409,11 @@ export function ServiceEditor({ mode, initial, allServices }: ServiceEditorProps
 
         {/* Right Column (Sidebar Settings) */}
         <aside className="space-y-6">
-          
+
           {/* Card: Hizmet Ayarları */}
-          <div className="bg-[#F7F7F5] border border-[#E0E0E0] p-6 space-y-4 ff-shape-container">
+          <div className="ff-shape-container ff-card space-y-4">
             <h3 className="text-xs font-bold text-[#ff4fd8] border-b border-[#F0F0F0] pb-2">Hizmet Ayarları</h3>
-            
+
             <FormField label="Hiyerarşi (Üst Hizmet)" description="Bir alt hizmet ise üst hizmetini seçin.">
               <select
                 className={cn(inputCls, "h-9 py-0 appearance-none bg-[image:var(--select-arrow)] bg-[position:right_10px_center] bg-no-repeat")}
@@ -454,11 +454,11 @@ export function ServiceEditor({ mode, initial, allServices }: ServiceEditorProps
             </div>
 
             <FormField label="Görüntüleme Sırası" description="Listelerdeki ağırlık (küçük olan önce gelir).">
-              <input 
-                type="number" 
-                className={inputCls} 
-                value={form.order} 
-                onChange={(e) => patch({ order: Number(e.target.value) })} 
+              <input
+                type="number"
+                className={inputCls}
+                value={form.order}
+                onChange={(e) => patch({ order: Number(e.target.value) })}
               />
             </FormField>
 
@@ -468,10 +468,10 @@ export function ServiceEditor({ mode, initial, allServices }: ServiceEditorProps
                 <span className="text-[10px] text-[#666666] block">Hizmet public listelerde görünsün.</span>
               </div>
               <label className="relative inline-flex items-center cursor-pointer select-none">
-                <input 
-                  type="checkbox" 
-                  checked={form.isPublished} 
-                  onChange={(e) => patch({ isPublished: e.target.checked })} 
+                <input
+                  type="checkbox"
+                  checked={form.isPublished}
+                  onChange={(e) => patch({ isPublished: e.target.checked })}
                   className="sr-only peer"
                 />
                 <div className="w-9 h-5 bg-[#CCCCCC] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#ff4fd8]"></div>
@@ -480,24 +480,24 @@ export function ServiceEditor({ mode, initial, allServices }: ServiceEditorProps
           </div>
 
           {/* Card: SEO Meta Verileri */}
-          <div className="bg-[#F7F7F5] border border-[#E0E0E0] p-6 space-y-4 ff-shape-container">
+          <div className="ff-shape-container ff-card space-y-4">
             <h3 className="text-xs font-bold text-[#ff4fd8] border-b border-[#F0F0F0] pb-2">Arama Motoru (SEO)</h3>
-            
+
             <FormField label="Meta Başlık" description="Arama motorlarında sayfa başlığı olarak görünür.">
-              <input 
-                className={inputCls} 
-                value={form.metaTitle} 
-                onChange={(e) => patch({ metaTitle: e.target.value })} 
+              <input
+                className={inputCls}
+                value={form.metaTitle}
+                onChange={(e) => patch({ metaTitle: e.target.value })}
                 placeholder={form.title || "Meta sayfa başlığı"}
               />
             </FormField>
 
             <FormField label="Meta Açıklama" description="Arama motorlarında sayfa özeti olarak listelenir.">
-              <textarea 
-                rows={3} 
-                className={cn(inputCls, "h-auto py-2.5")} 
-                value={form.metaDescription} 
-                onChange={(e) => patch({ metaDescription: e.target.value })} 
+              <textarea
+                rows={3}
+                className={cn(inputCls, "h-auto py-2.5")}
+                value={form.metaDescription}
+                onChange={(e) => patch({ metaDescription: e.target.value })}
                 placeholder={form.description || "Meta açıklama metni"}
               />
             </FormField>
@@ -510,7 +510,7 @@ export function ServiceEditor({ mode, initial, allServices }: ServiceEditorProps
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 animate-in fade-in duration-200" />
           <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl h-[70vh] bg-[#F7F7F5] border border-[#CCCCCC] shadow-2xl flex flex-col z-50 overflow-hidden outline-none animate-in zoom-in-95 duration-200 ff-shape-container">
-            
+
             {/* Dialog Header */}
             <div className="p-4 px-6 border-b border-[#CCCCCC] bg-white flex items-center justify-between shrink-0">
               <div className="space-y-0.5">
@@ -519,8 +519,8 @@ export function ServiceEditor({ mode, initial, allServices }: ServiceEditorProps
                   Hizmeti temsil edecek modern bir Lucide ikonu belirleyin.
                 </Dialog.Description>
               </div>
-              <button 
-                onClick={() => setIconPickerOpen(false)} 
+              <button
+                onClick={() => setIconPickerOpen(false)}
                 className="p-1.5 border border-[#E0E0E0] bg-white hover:bg-red-500/10 hover:border-red-500/20 hover:text-red-500 transition-colors ff-shape-button"
               >
                 <X size={14} />
@@ -562,8 +562,8 @@ export function ServiceEditor({ mode, initial, allServices }: ServiceEditorProps
                         }}
                         className={cn(
                           "aspect-square border flex flex-col items-center justify-center p-2.5 hover:border-[#ff4fd8] hover:shadow-sm transition-all ff-shape-container gap-1.5 relative group bg-[#f7f7f5]/40",
-                          isSelected 
-                            ? "border-[#ff4fd8] bg-white ring-4 ring-[#ff4fd8]/10 scale-95" 
+                          isSelected
+                            ? "border-[#ff4fd8] bg-white ring-4 ring-[#ff4fd8]/10 scale-95"
                             : "border-[#CCCCCC] bg-white"
                         )}
                         title={key}
@@ -606,8 +606,8 @@ export function ServiceEditor({ mode, initial, allServices }: ServiceEditorProps
           <Dialog.Overlay className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" />
           <Dialog.Content className="fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white border border-[#E0E0E0] p-6 shadow-2xl ff-shape-container animate-in zoom-in-95 duration-200 overflow-hidden outline-none">
             <Dialog.Close asChild>
-              <button 
-                className="absolute top-3 right-3 w-7 h-7 flex items-center justify-center text-[#666666] hover:text-[#333333] transition-colors" 
+              <button
+                className="absolute top-3 right-3 w-7 h-7 flex items-center justify-center text-[#666666] hover:text-[#333333] transition-colors"
                 aria-label="Kapat"
               >
                 <X size={14} />
@@ -625,7 +625,7 @@ export function ServiceEditor({ mode, initial, allServices }: ServiceEditorProps
             {hasChildren ? (
               <div className="space-y-4">
                 <Dialog.Description className="text-xs text-[#666666] leading-relaxed">
-                  <strong className="text-[#333333]">{form.title}</strong> hizmetine bağlı alt hizmetler bulunmaktadır. 
+                  <strong className="text-[#333333]">{form.title}</strong> hizmetine bağlı alt hizmetler bulunmaktadır.
                   Veri bütünlüğünü korumak adına, alt hizmetleri olan bir ana hizmetin silinmesine izin verilmez.
                 </Dialog.Description>
                 <div className="p-3 bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold ff-shape-container leading-relaxed">
@@ -722,9 +722,9 @@ function VisualMediaField({
   return (
     <div className={cn("space-y-1.5", className)}>
       <span className="text-[11px] font-bold text-[#666666] block">{label}</span>
-      
+
       {value ? (
-        <div className="relative group ff-shape-container border border-[#CCCCCC] overflow-hidden bg-[#f7f7f5] aspect-video max-w-md flex items-center justify-center">
+        <div className="relative group ff-shape-container ff-card overflow-hidden aspect-video max-w-md flex items-center justify-center">
           <img
             src={value}
             alt={label}
@@ -845,7 +845,7 @@ function GradientPicker({
   return (
     <div className="space-y-2">
       <span className="text-[11px] font-bold text-[#666666] block">Gradient Arka Plan</span>
-      
+
       {/* Live Preview Banner */}
       <div
         style={{ background: currentBackground }}

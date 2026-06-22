@@ -5,7 +5,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { signOut } from "next-auth/react"
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
-import { Search, Bell, ChevronRight, User, Settings, LogOut } from "@/lib/icons"
+import { Search, Bell, ChevronRight, User, Settings, LogOut, Menu } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 import type { SessionUser } from "@/lib/auth/types"
 
@@ -48,9 +48,11 @@ function useBreadcrumbs() {
 // ── Props ─────────────────────────────────────────
 interface AdminTopbarProps {
   user: SessionUser
+  /** Opens the mobile navigation drawer (only shown below `lg`). */
+  onMenuClick?: () => void
 }
 
-export function AdminTopbar({ user }: AdminTopbarProps) {
+export function AdminTopbar({ user, onMenuClick }: AdminTopbarProps) {
   const breadcrumbs = useBreadcrumbs()
 
   return (
@@ -62,32 +64,50 @@ export function AdminTopbar({ user }: AdminTopbarProps) {
         "bg-[#FfFfFf]/80 backdrop-blur-sm border-b border-[#E0E0E0]",
       )}
     >
-      {/* Breadcrumbs */}
-      <nav aria-label="Breadcrumb" className="flex items-center gap-1 overflow-x-auto whitespace-nowrap py-1">
-        {breadcrumbs.map((crumb, i) => (
-          <React.Fragment key={crumb.href}>
-            {i > 0 && (
-              <ChevronRight
-                size={11}
-                className="text-[#999999] shrink-0 mx-0.5"
-                aria-hidden="true"
-              />
-            )}
-            {crumb.isLast ? (
-              <span className="px-2.5 py-1 border border-[#ff4fd8] bg-[#ff4fd8]/10 text-[#ff4fd8] text-[11px] font-bold ff-shape-button inline-flex items-center justify-center select-none">
-                {crumb.label}
-              </span>
-            ) : (
-              <Link
-                href={crumb.href}
-                className="px-2.5 py-1 border border-[#E0E0E0] bg-[#f7f7f5]/60 hover:bg-[#ff4fd8]/5 hover:border-[#ff4fd8]/30 hover:text-[#ff4fd8] text-[#666666] text-[11px] font-bold transition-all duration-150 ff-shape-button inline-flex items-center justify-center cursor-pointer"
-              >
-                {crumb.label}
-              </Link>
-            )}
-          </React.Fragment>
-        ))}
-      </nav>
+      {/* Left group: mobile menu trigger + breadcrumbs */}
+      <div className="flex items-center gap-2 min-w-0">
+        {/* Hamburger — opens the drawer on mobile only */}
+        <button
+          type="button"
+          onClick={onMenuClick}
+          aria-label="Menüyü aç"
+          className={cn(
+            "ff-shape-button lg:hidden shrink-0 w-9 h-9 flex items-center justify-center",
+            "border border-[#E0E0E0] text-[#666666]",
+            "hover:border-[#ff4fd8] hover:text-[#ff4fd8]",
+            "transition-colors duration-150"
+          )}
+        >
+          <Menu size={18} />
+        </button>
+
+        {/* Breadcrumbs */}
+        <nav aria-label="Breadcrumb" className="flex items-center gap-1 overflow-x-auto whitespace-nowrap py-1">
+          {breadcrumbs.map((crumb, i) => (
+            <React.Fragment key={crumb.href}>
+              {i > 0 && (
+                <ChevronRight
+                  size={11}
+                  className="hidden sm:block text-[#999999] shrink-0 mx-0.5"
+                  aria-hidden="true"
+                />
+              )}
+              {crumb.isLast ? (
+                <span className="px-2.5 py-1 border border-[#ff4fd8] bg-[#ff4fd8]/10 text-[#ff4fd8] text-[11px] font-bold ff-shape-button inline-flex items-center justify-center select-none">
+                  {crumb.label}
+                </span>
+              ) : (
+                <Link
+                  href={crumb.href}
+                  className="px-2.5 py-1 border border-[#E0E0E0] bg-[#f7f7f5]/60 hover:bg-[#ff4fd8]/5 hover:border-[#ff4fd8]/30 hover:text-[#ff4fd8] text-[#666666] text-[11px] font-bold transition-all duration-150 ff-shape-button hidden sm:inline-flex items-center justify-center cursor-pointer"
+                >
+                  {crumb.label}
+                </Link>
+              )}
+            </React.Fragment>
+          ))}
+        </nav>
+      </div>
 
       {/* Right controls */}
       <div className="flex items-center gap-1.5 shrink-0">
@@ -96,7 +116,7 @@ export function AdminTopbar({ user }: AdminTopbarProps) {
           type="button"
           aria-label="Ara"
           className={cn(
-            "ff-shape-button w-9 h-9 flex items-center justify-center",
+            "ff-shape-button hidden sm:flex w-9 h-9 items-center justify-center",
             "border border-[#E0E0E0] text-[#666666]",
             "hover:border-[#ff4fd8] hover:text-[#ff4fd8]",
             "transition-colors duration-150"
@@ -216,7 +236,7 @@ export function AdminTopbar({ user }: AdminTopbarProps) {
               type="button"
               aria-label="Kullanıcı menüsü"
               className={cn(
-                "ff-shape-button flex items-center justify-start min-w-20 w-fit gap-1 h-9 px-1",
+                "ff-shape-button flex items-center justify-start md:min-w-20 w-fit gap-1 h-9 px-0 md:px-1",
                 "border border-[#E0E0E0] text-[#666666]",
                 "hover:border-[#FF4FD8] hover:text-[#FF4FD8]",
                 "transition-colors duration-150"
@@ -224,8 +244,8 @@ export function AdminTopbar({ user }: AdminTopbarProps) {
             >
               <span
                 className={cn(
-                  "w-6 h-6 flex items-center justify-center rounded-full shrink-0",
-                  "bg-[#FF4FD8] text-white text-[9px] font-bold font-display"
+                  "ff-shape-button w-9 h-9 md:w-6 md:h-6 flex items-center justify-center shrink-0",
+                  "bg-[#FF4FD8]/10 border border-[#FF4FD8]/10 text-[#FF4FD8] text-[10px] font-bold font-display"
                 )}
               >
                 {user.initials}

@@ -22,6 +22,7 @@ interface FlixFlexNavbarProps {
 export function FlixFlexNavbar({ siteSettings = {}, megaMenuServices = [] }: FlixFlexNavbarProps) {
   const [scrolled, setScrolled] = React.useState(false)
   const [mobileOpen, setMobileOpen] = React.useState(false)
+  const [megaOpen, setMegaOpen] = React.useState(false)
   const { scrollY } = useScroll()
   const setAppointmentModalOpen = useUIStore((state) => state.setAppointmentModalOpen)
 
@@ -30,6 +31,11 @@ export function FlixFlexNavbar({ siteSettings = {}, megaMenuServices = [] }: Fli
     setScrolled(y > 12)
   })
 
+  // The header looks solid when scrolled OR while the mega menu is open — a
+  // transparent bar floating above a solid mega panel looks disconnected.
+  // Height (and the mega panel offset) still follow `scrolled` only.
+  const solid = scrolled || megaOpen
+
   return (
     <>
       <motion.header
@@ -37,7 +43,7 @@ export function FlixFlexNavbar({ siteSettings = {}, megaMenuServices = [] }: Fli
         className={cn(
           "fixed top-0 inset-x-0 z-50",
           "transition-all duration-300",
-          scrolled
+          solid
             ? "bg-[var(--background)]/65 backdrop-blur-md border-b border-[var(--border)]"
             : "bg-transparent"
         )}
@@ -53,16 +59,18 @@ export function FlixFlexNavbar({ siteSettings = {}, megaMenuServices = [] }: Fli
             {/* Logo */}
             <FlixFlexLogo
               size={scrolled ? "sm" : "md"}
-              logoUrl={scrolled ? siteSettings.site_logo : (siteSettings.site_logo_transparent || siteSettings.site_logo_white)}
+              logoUrl={solid ? siteSettings.site_logo : (siteSettings.site_logo_transparent || siteSettings.site_logo_white)}
               logoHeight={siteSettings.site_logo_height ? parseInt(siteSettings.site_logo_height) : undefined}
-              transparent={!scrolled}
+              transparent={!solid}
             />
 
             {/* Desktop nav */}
             <nav aria-label="Ana navigasyon" className="hidden lg:block">
               <DesktopNav
                 links={NAV_LINKS}
-                transparent={!scrolled}
+                transparent={!solid}
+                headerHeight={scrolled ? 56 : 80}
+                onMegaOpenChange={setMegaOpen}
                 megaMenuServices={megaMenuServices}
               />
             </nav>
@@ -71,7 +79,7 @@ export function FlixFlexNavbar({ siteSettings = {}, megaMenuServices = [] }: Fli
             <div className="flex items-center gap-2 md:gap-3">
               <div className={cn(
                 "hidden md:flex",
-                !scrolled && "[--foreground-muted:theme(colors.white/0.7)] [--border:theme(colors.white/0.15)]"
+                !solid && "[--foreground-muted:theme(colors.white/0.7)] [--border:theme(colors.white/0.15)]"
               )}>
                 <ThemeToggle />
               </div>
@@ -84,7 +92,7 @@ export function FlixFlexNavbar({ siteSettings = {}, megaMenuServices = [] }: Fli
                     "ff-shape-button",
                     "group inline-flex items-center justify-center gap-1.5 cursor-pointer",
                     "px-4 py-2 text-[11px] font-medium transition-colors duration-300",
-                    scrolled
+                    solid
                       ? "bg-[var(--ff-purple)] text-white border border-[var(--ff-purple)] hover:bg-[var(--ff-purple-hover)] hover:border-[var(--ff-purple-hover)] hover:shadow-[0_6px_24px_rgba(255,79,216,0.4)]"
                       : "bg-white/10 backdrop-blur-md text-white border border-white/20 hover:bg-white/20 hover:border-white/40"
                   )}
@@ -105,7 +113,7 @@ export function FlixFlexNavbar({ siteSettings = {}, megaMenuServices = [] }: Fli
                 aria-expanded={mobileOpen}
                 className={cn(
                   "ff-shape-button lg:hidden w-9 h-9 flex items-center justify-center transition-all duration-300",
-                  scrolled
+                  solid
                     ? "border border-[var(--foreground-faint)] text-[var(--foreground-faint)] hover:border-[var(--ff-purple)] hover:text-[var(--ff-purple)]"
                     : "border border-white/20 text-white/80 hover:border-white hover:text-white bg-white/5"
                 )}

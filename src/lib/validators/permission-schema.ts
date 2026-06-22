@@ -5,9 +5,12 @@
 import { z } from "zod"
 import { RESOURCE_LIST, ACTION_LIST } from "@/lib/rbac/permissions"
 
+// Kaynak/işlem değerlerini kanonik RBAC listelerine göre whitelist'le; böylece
+// API hiçbir zaman tanımsız bir kaynağı veya tehlikeli "*" joker'ini yazamaz
+// (hasPermission() "*"'ı tam yetki olarak yorumladığından bu bir privesc yüzeyi).
 const permissionItemSchema = z.object({
-  resource: z.string().min(1, "Kaynak adı boş olamaz"),
-  action:   z.string().min(1, "İşlem adı boş olamaz"),
+  resource: z.string().refine((v) => RESOURCE_LIST.includes(v), "Geçersiz kaynak adı"),
+  action:   z.string().refine((v) => ACTION_LIST.includes(v), "Geçersiz işlem adı"),
   scope:    z.string().nullable().optional(),
 })
 

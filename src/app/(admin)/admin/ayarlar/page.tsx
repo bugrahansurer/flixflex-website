@@ -134,10 +134,10 @@ export default function AyarlarPage() {
       </header>
 
       {/* ── Tiles grid ───────────────────────── */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2">
         {TILES.map((tile) => {
           const Icon = tile.icon
-          const className = `ff-shape-container group relative flex flex-col gap-4 p-3 <md:p-4></md:p-4> bg-[#F0F0F0] border border-[#CCCCCC] transition-colors duration-200 ${tile.href
+          const className = `ff-shape-container ff-card group relative flex flex-col gap-4 p-3 <md:p-4></md:p-4> transition-colors duration-200 ${tile.href
             ? "hover:bg-[#F7F7F5] cursor-pointer"
             : "cursor-default opacity-90"
             }`
@@ -146,7 +146,7 @@ export default function AyarlarPage() {
             <>
               {/* Top row */}
               <div className="flex items-start justify-between gap-3">
-                <span className="ff-shape-button w-10 h-10 flex items-center justify-center bg-[#F0F0F0] border border-[#CCCCCC] text-[#0D0D0D] group-hover:bg-[var(--ff-purple)] group-hover:border-[var(--ff-purple)] group-hover:text-white transition-colors duration-200">
+                <span className="ff-shape-button w-9 h-9 flex items-center justify-center bg-[#ff4fd8]/10 border border-[#ff4fd8]/30 text-[#ff4fd8] group-hover:bg-[var(--ff-purple)] group-hover:border-[var(--ff-purple)] group-hover:text-white transition-colors duration-200">
                   <Icon size={18} strokeWidth={1.75} />
                 </span>
                 <div className="flex items-center gap-2">
@@ -200,7 +200,7 @@ export default function AyarlarPage() {
       </div>
 
       {/* ── Helper note ───────────────────────── */}
-      <div className="ff-shape-container items-center justify-content mt-4 p-2 px-4 border border-[#CCCCCC] bg-[#F0F0F0] flex items-start gap-3">
+      <div className="ff-shape-button ff-card items-center justify-content mt-4 p-2 px-3 flex items-start gap-3">
         <Settings size={14} className="text-[#FF4FD8] shrink-0 mt-0.5" />
         <div className="text-xs text-[#0D0D0D] leading-relaxed">
           <p>

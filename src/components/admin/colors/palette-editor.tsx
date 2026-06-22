@@ -14,10 +14,10 @@
 import * as React from "react"
 import * as Popover from "@radix-ui/react-popover"
 import * as Tabs from "@radix-ui/react-tabs"
-import { HexColorPicker } from "react-colorful"
+import { RgbaColorPicker } from "react-colorful"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Menu, LayoutGrid, Square, Hexagon, Scissors, Smartphone, Layers, MoreHorizontal, Trash2, ChevronLeft, RotateCcw, Save, X, Check } from "@/lib/icons"
+import { Menu, LayoutGrid, Square, Hexagon, Scissors, Smartphone, Layers, MoreHorizontal, Trash2, ChevronLeft, RotateCcw, Save, X, Check, Sun, Moon } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 import { checkWCAG } from "@/lib/utils"
 import { FFBadge } from "@/components/ui"
@@ -49,21 +49,130 @@ const FONT_OPTIONS = [
   "Manrope"
 ]
 
-// ── Helpers ───────────────────────────────────────────────
+// ── Color parsing helpers ─────────────────────────────────
+// Colors are stored as a plain #hex while fully opaque, and switch to
+// rgba(...) once an alpha < 1 is picked. These convert between that string
+// form and the { r, g, b, a } object the react-colorful RGBA picker uses.
 
-/** Extract a plain #hex from a value that may be hex or rgba */
-function toPickerHex(value: string | undefined | null): string {
-  if (!value) return "[var(--ff-purple)]"
-  if (/^#[0-9a-fA-F]{6}$/.test(value)) return value
-  // Try to parse rgba — use a neutral fallback if not hex-extractable
-  const m = value.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/)
-  if (m) {
-    const r = parseInt(m[1]).toString(16).padStart(2, "0")
-    const g = parseInt(m[2]).toString(16).padStart(2, "0")
-    const b = parseInt(m[3]).toString(16).padStart(2, "0")
-    return `#${r}${g}${b}`
+interface Rgba {
+  r: number
+  g: number
+  b: number
+  a: number
+}
+
+const FALLBACK_RGBA: Rgba = { r: 255, g: 79, b: 216, a: 1 }
+
+function clampInt(n: number, min = 0, max = 255): number {
+  if (Number.isNaN(n)) return min
+  return Math.min(max, Math.max(min, Math.round(n)))
+}
+
+function clampAlpha(n: number): number {
+  if (Number.isNaN(n)) return 1
+  return Math.min(1, Math.max(0, n))
+}
+
+/** Parse #hex (3/6/8), rgb() or rgba() into { r, g, b, a }. */
+function parseRgba(value: string | undefined | null): Rgba {
+  if (!value) return { ...FALLBACK_RGBA }
+  const v = value.trim()
+
+  const hex = v.match(/^#([0-9a-f]{3,8})$/i)
+  if (hex) {
+    let h = hex[1]
+    if (h.length === 3) h = h.split("").map((c) => c + c).join("")
+    if (h.length === 6 || h.length === 8) {
+      return {
+        r: parseInt(h.slice(0, 2), 16),
+        g: parseInt(h.slice(2, 4), 16),
+        b: parseInt(h.slice(4, 6), 16),
+        a: h.length === 8 ? Math.round((parseInt(h.slice(6, 8), 16) / 255) * 100) / 100 : 1,
+      }
+    }
   }
-  return "[var(--ff-purple)]"
+
+  const rgb = v.match(/rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*(?:,\s*([\d.]+)\s*)?\)/i)
+  if (rgb) {
+    return {
+      r: clampInt(parseFloat(rgb[1])),
+      g: clampInt(parseFloat(rgb[2])),
+      b: clampInt(parseFloat(rgb[3])),
+      a: rgb[4] !== undefined ? clampAlpha(parseFloat(rgb[4])) : 1,
+    }
+  }
+
+  return { ...FALLBACK_RGBA }
+}
+
+function toHex2(n: number): string {
+  return clampInt(n).toString(16).padStart(2, "0")
+}
+
+/** { r, g, b, a } → "#rrggbb" when opaque, "rgba(...)" when translucent. */
+function rgbaToCss({ r, g, b, a }: Rgba): string {
+  if (a >= 1) return `#${toHex2(r)}${toHex2(g)}${toHex2(b)}`
+  return `rgba(${clampInt(r)}, ${clampInt(g)}, ${clampInt(b)}, ${Math.round(a * 100) / 100})`
+}
+
+/** 6-digit #hex (alpha ignored), for the HEX text input. */
+function rgbToHex({ r, g, b }: Rgba): string {
+  return `#${toHex2(r)}${toHex2(g)}${toHex2(b)}`
+}
+
+// Tiny checkerboard so swatches/previews reveal transparency.
+const CHECKER_BG =
+  "repeating-conic-gradient(#cfcfcf 0% 25%, #ffffff 0% 50%) 50% / 12px 12px"
+
+// ── Picker sub-inputs ─────────────────────────────────────
+
+/** A single numeric channel (R/G/B 0-255 or A% 0-100). */
+function ChannelInput({
+  label,
+  value,
+  max,
+  onCommit,
+}: {
+  label: string
+  value: number
+  max: number
+  onCommit: (n: number) => void
+}) {
+  return (
+    <label className="flex flex-col items-center gap-1">
+      <input
+        type="number"
+        min={0}
+        max={max}
+        value={value}
+        onChange={(e) => onCommit(Number(e.target.value))}
+        className="ff-shape-container w-full text-[11px] font-mono text-center bg-white border border-[#E0E0E0] px-1 py-1 outline-none focus:border-[#FF4FD8] text-[#333333]"
+      />
+      <span className="text-[9px] font-semibold text-[#666666]">{label}</span>
+    </label>
+  )
+}
+
+/** HEX text field with a local draft so partial typing isn't clobbered. */
+function HexInput({ value, onCommit }: { value: string; onCommit: (hex: string) => void }) {
+  const [draft, setDraft] = React.useState(value)
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- prop sync
+  React.useEffect(() => { setDraft(value) }, [value])
+  function commit() {
+    const v = draft.trim()
+    if (/^#?[0-9a-fA-F]{6}$/.test(v)) onCommit(v.startsWith("#") ? v : `#${v}`)
+    else setDraft(value)
+  }
+  return (
+    <input
+      value={draft}
+      onChange={(e) => setDraft(e.target.value)}
+      onBlur={commit}
+      onKeyDown={(e) => { if (e.key === "Enter") commit() }}
+      className="ff-shape-container flex-1 min-w-0 text-[11px] font-mono uppercase bg-white border border-[#E0E0E0] px-2 py-1 outline-none focus:border-[#FF4FD8] text-[#333333]"
+      spellCheck={false}
+    />
+  )
 }
 
 // ── Field descriptor ──────────────────────────────────────
@@ -120,20 +229,29 @@ interface ColorFieldProps {
   allowRgba?: boolean
 }
 
-function ColorField({ label, hint, value, onChange, allowRgba }: ColorFieldProps) {
+function ColorField({ label, hint, value, onChange }: ColorFieldProps) {
   const [inputVal, setInputVal] = React.useState(value)
 
   // Keep local input in sync when parent resets
   // eslint-disable-next-line react-hooks/set-state-in-effect -- prop sync — refactor pending design review
   React.useEffect(() => { setInputVal(value) }, [value])
 
+  // Alpha is supported on every field now, so accept hex (3/6/8) and rgb/rgba.
   function commitInput(raw: string) {
     const trimmed = raw.trim()
-    const hexOk = /^#[0-9a-fA-F]{6}$/.test(trimmed)
-    const rgbaOk = allowRgba && /^rgba?\(/.test(trimmed)
+    const hexOk = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.test(trimmed)
+    const rgbaOk = /^rgba?\(/i.test(trimmed)
     if (hexOk || rgbaOk) {
       onChange(trimmed)
     }
+  }
+
+  // Current value as an { r, g, b, a } object for the picker + numeric inputs.
+  const rgba = parseRgba(value)
+  function applyRgba(next: Rgba) {
+    const css = rgbaToCss(next)
+    onChange(css)
+    setInputVal(css)
   }
 
   return (
@@ -145,7 +263,7 @@ function ColorField({ label, hint, value, onChange, allowRgba }: ColorFieldProps
             type="button"
             aria-label={`${label} rengini seç`}
             className="ff-shape-button w-9 h-9 flex-shrink-0 border-2 border-[#E0E0E0] hover:border-[#FF4FD8] transition-colors"
-            style={{ backgroundColor: value }}
+            style={{ background: `linear-gradient(${value}, ${value}), ${CHECKER_BG}` }}
           />
         </Popover.Trigger>
         <Popover.Portal>
@@ -153,15 +271,28 @@ function ColorField({ label, hint, value, onChange, allowRgba }: ColorFieldProps
             side="right"
             align="start"
             sideOffset={8}
-            className="z-50 bg-[#F7F7F5] border border-[#E0E0E0] p-3 shadow-xl"
+            className="ff-shape-container z-50 w-[228px] space-y-3 bg-[#F7F7F5] border border-[#E0E0E0] p-3 shadow-xl"
           >
-            <HexColorPicker
-              color={toPickerHex(value)}
-              onChange={(hex) => {
-                onChange(hex)
-                setInputVal(hex)
-              }}
-            />
+            {/* Visual picker — saturation, hue + alpha sliders */}
+            <RgbaColorPicker color={rgba} onChange={applyRgba} />
+
+            {/* HEX */}
+            <div className="flex items-center gap-2">
+              <span className="text-[9px] font-bold w-7 shrink-0 text-[#666666]">HEX</span>
+              <HexInput
+                value={rgbToHex(rgba)}
+                onCommit={(hex) => applyRgba({ ...parseRgba(hex), a: rgba.a })}
+              />
+            </div>
+
+            {/* R / G / B / Opacity */}
+            <div className="grid grid-cols-4 gap-1.5">
+              <ChannelInput label="R" value={rgba.r} max={255} onCommit={(n) => applyRgba({ ...rgba, r: clampInt(n) })} />
+              <ChannelInput label="G" value={rgba.g} max={255} onCommit={(n) => applyRgba({ ...rgba, g: clampInt(n) })} />
+              <ChannelInput label="B" value={rgba.b} max={255} onCommit={(n) => applyRgba({ ...rgba, b: clampInt(n) })} />
+              <ChannelInput label="A%" value={Math.round(rgba.a * 100)} max={100} onCommit={(n) => applyRgba({ ...rgba, a: clampAlpha(n / 100) })} />
+            </div>
+
             <Popover.Arrow className="fill-[#E0E0E0]" />
           </Popover.Content>
         </Popover.Portal>
@@ -203,12 +334,16 @@ function LivePreview({
   colors,
   settings,
   fonts,
+  mode,
+  onModeChange,
 }: {
   colors: ColorTokens
   settings: ThemeSettings
   fonts: { display: string; body: string }
+  mode: "light" | "dark"
+  onModeChange: (mode: "light" | "dark") => void
 }) {
-  const styleVars = paletteToStyleObject(colors, settings, fonts)
+  const styleVars = paletteToStyleObject(colors, settings, fonts, mode)
 
   // Inject Google Fonts via a stable <link> element — only updates when
   // the font names actually change, not on every parent re-render.
@@ -240,118 +375,142 @@ function LivePreview({
   }, [])
 
   return (
-    <div
-      className="ff-shape-container border border-[#E0E0E0] overflow-hidden"
-      style={styleVars as React.CSSProperties}
-    >
-      {/* Mini navbar */}
+    <div className="space-y-3">
+      {/* Light / Dark preview toggle — lets dark-mode color edits be seen */}
+      <div className="ff-shape-button inline-flex p-0.5 border border-[#E0E0E0] bg-[#f7f7f5]">
+        {([
+          { v: "light", label: "Açık", Icon: Sun },
+          { v: "dark", label: "Koyu", Icon: Moon },
+        ] as const).map(({ v, label, Icon }) => (
+          <button
+            key={v}
+            type="button"
+            onClick={() => onModeChange(v)}
+            className={cn(
+              "ff-shape-button inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold transition-colors",
+              mode === v ? "bg-[#ff4fd8] text-white" : "text-[#666666] hover:text-[#ff4fd8]"
+            )}
+          >
+            <Icon size={12} />
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {/* Preview surface */}
       <div
-        className="flex items-center justify-between px-4 py-2 border-b"
-        style={{
-          backgroundColor: "var(--ff-charcoal)",
-          borderColor: "var(--border)",
-        }}
+        className="ff-shape-container border border-[#E0E0E0] overflow-hidden"
+        style={styleVars as React.CSSProperties}
       >
-        <span
-          className="text-[11px] font-bold"
-          style={{ color: "var(--ff-purple)" }}
+        {/* Mini navbar */}
+        <div
+          className="flex items-center justify-between px-4 py-2 border-b"
+          style={{
+            backgroundColor: "var(--ff-charcoal)",
+            borderColor: "var(--border)",
+          }}
         >
-          FlixFlex
-        </span>
-        <div className="flex gap-3">
-          {["Anasayfa", "Blog", "İletişim"].map((item) => (
-            <span
-              key={item}
-              className="text-[10px]"
-              style={{ color: "#FFFFFF99" }}
+          <span
+            className="text-[11px] font-bold"
+            style={{ color: "var(--ff-purple)" }}
+          >
+            FlixFlex
+          </span>
+          <div className="flex gap-3">
+            {["Anasayfa", "Blog", "İletişim"].map((item) => (
+              <span
+                key={item}
+                className="text-[10px]"
+                style={{ color: "#FFFFFF99" }}
+              >
+                {item}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Hero strip */}
+        <div
+          className="px-4 py-5 text-center"
+          style={{ backgroundColor: "var(--background)" }}
+        >
+          <p
+            className="text-[13px] font-bold mb-2"
+            style={{ color: "var(--foreground)", fontFamily: "var(--font-display)" }}
+          >
+            Dijital Reklamda Yeni Dönem
+          </p>
+          <p
+            className="text-[10px] mb-3"
+            style={{ color: "var(--foreground-muted)", fontFamily: "var(--font-body)" }}
+          >
+            Hız, güç ve esneklik bir arada.
+          </p>
+          <button
+            type="button"
+            className="ff-shape-button text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 border"
+            style={{
+              backgroundColor: "var(--ff-purple)",
+              borderColor: "var(--ff-purple)",
+              color: "#fff",
+            }}
+          >
+            Başlayın
+          </button>
+        </div>
+
+        {/* Card row */}
+        <div
+          className="px-4 py-4 grid grid-cols-2 gap-3"
+          style={{ backgroundColor: "var(--background-alt)" }}
+        >
+          {["Kart A", "Kart B"].map((title) => (
+            <div
+              key={title}
+              className="ff-shape-container p-3 border"
+              style={{
+                backgroundColor: "var(--surface-elevated)",
+                borderColor: "var(--border)",
+              }}
             >
-              {item}
+              <p
+                className="text-[11px] font-bold mb-1"
+                style={{ color: "var(--foreground)" }}
+              >
+                {title}
+              </p>
+              <p
+                className="text-[9px]"
+                style={{ color: "var(--foreground-muted)" }}
+              >
+                İçerik metni örneği buraya gelir.
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* Status badges */}
+        <div
+          className="px-4 py-2 flex gap-2 border-t"
+          style={{
+            backgroundColor: "var(--surface)",
+            borderColor: "var(--border)",
+          }}
+        >
+          {[
+            { label: "Başarılı", color: "var(--success)" },
+            { label: "Uyarı", color: "var(--warning)" },
+            { label: "Hata", color: "var(--error)" },
+          ].map(({ label, color }) => (
+            <span
+              key={label}
+              className="ff-shape-button flex items-center justify-center h-6 text-[9px] px-2 font-semibold border"
+              style={{ color, borderColor: color, backgroundColor: `${color}20` }}
+            >
+              {label}
             </span>
           ))}
         </div>
-      </div>
-
-      {/* Hero strip */}
-      <div
-        className="px-4 py-5 text-center"
-        style={{ backgroundColor: "var(--background)" }}
-      >
-        <p
-          className="text-[13px] font-bold mb-2"
-          style={{ color: "#0d0d0d", fontFamily: "var(--font-display)" }}
-        >
-          Dijital Reklamda Yeni Dönem
-        </p>
-        <p
-          className="text-[10px] mb-3"
-          style={{ color: "var(--foreground-muted)", fontFamily: "var(--font-body)" }}
-        >
-          Hız, güç ve esneklik bir arada.
-        </p>
-        <button
-          type="button"
-          className="ff-shape-button text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 border"
-          style={{
-            backgroundColor: "var(--ff-purple)",
-            borderColor: "var(--ff-purple)",
-            color: "#fff",
-          }}
-        >
-          Başlayın
-        </button>
-      </div>
-
-      {/* Card row */}
-      <div
-        className="px-4 py-4 grid grid-cols-2 gap-3"
-        style={{ backgroundColor: "var(--background-alt)" }}
-      >
-        {["Kart A", "Kart B"].map((title) => (
-          <div
-            key={title}
-            className="ff-shape-container p-3 border"
-            style={{
-              backgroundColor: "var(--surface-elevated)",
-              borderColor: "var(--border)",
-            }}
-          >
-            <p
-              className="text-[11px] font-bold mb-1"
-              style={{ color: "var(--foreground)" }}
-            >
-              {title}
-            </p>
-            <p
-              className="text-[9px]"
-              style={{ color: "var(--foreground-muted)" }}
-            >
-              İçerik metni örneği buraya gelir.
-            </p>
-          </div>
-        ))}
-      </div>
-
-      {/* Status badges */}
-      <div
-        className="px-4 py-2 flex gap-2 border-t"
-        style={{
-          backgroundColor: "var(--surface)",
-          borderColor: "var(--border)",
-        }}
-      >
-        {[
-          { label: "Başarılı", color: "var(--success)" },
-          { label: "Uyarı", color: "var(--warning)" },
-          { label: "Hata", color: "var(--error)" },
-        ].map(({ label, color }) => (
-          <span
-            key={label}
-            className="ff-shape-container text-[9px] px-2 py-0.5 font-semibold uppercase tracking-wider border"
-            style={{ color, borderColor: color, backgroundColor: `${color}20` }}
-          >
-            {label}
-          </span>
-        ))}
       </div>
     </div>
   )
@@ -369,7 +528,7 @@ function WcagPanel({ colors }: { colors: ColorTokens }) {
 
   return (
     <div className="space-y-2">
-      <p className="text-[10px] uppercase tracking-widest font-semibold text-[var(--foreground-faint)]">
+      <p className="text-[10px] font-semibold text-[var(--foreground-faint)]">
         WCAG Kontrast Kontrolü
       </p>
       {combos.map(({ label, fg, bg }) => {
@@ -802,6 +961,9 @@ export function PaletteEditor({ initial }: PaletteEditorProps) {
   )
   const [fontDisplay, setFontDisplay] = React.useState(initial.fontDisplay || "Syne")
   const [fontBody, setFontBody] = React.useState(initial.fontBody || "DM Sans")
+  // Which theme the live preview renders. Switching the color tab to
+  // "Aydınlık/Karanlık Renkler" syncs this so dark edits are visible.
+  const [previewMode, setPreviewMode] = React.useState<"light" | "dark">("light")
   const [saving, setSaving] = React.useState(false)
   const [activating, setActivating] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
@@ -1014,7 +1176,7 @@ export function PaletteEditor({ initial }: PaletteEditorProps) {
       </div>
 
       {/* Name + description */}
-      <div className="ff-card bg-[#F7F7F5] border border-[#E0E0E0] grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="ff-card grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col gap-1.5">
           <label className="text-[11px] font-semibold tracking-widest uppercase text-[#666666]">
             Tema Düzeni Adı
@@ -1047,8 +1209,13 @@ export function PaletteEditor({ initial }: PaletteEditorProps) {
       {/* Two-column editor layout */}
       <div className="grid grid-cols-1 xl:grid-cols-[1fr_360px] gap-6 items-start">
         {/* Left — color fields */}
-        <div className="ff-card bg-[#F7F7F5] border border-[#E0E0E0] space-y-0">
-          <Tabs.Root defaultValue="light">
+        <div className="ff-card space-y-0">
+          <Tabs.Root
+            defaultValue="light"
+            onValueChange={(v) => {
+              if (v === "light" || v === "dark") setPreviewMode(v)
+            }}
+          >
             <Tabs.List className="flex border-b border-[#E0E0E0] mb-4 flex-wrap">
               {[
                 { value: "light", label: "Aydınlık Renkler" },
@@ -1299,7 +1466,7 @@ export function PaletteEditor({ initial }: PaletteEditorProps) {
 
         {/* Right — live preview + WCAG */}
         <div className="space-y-4 xl:sticky xl:top-6">
-          <div className="ff-card bg-[#f7f7f5] border border-[#E0E0E0] space-y-4">
+          <div className="ff-card space-y-4">
             <p className="text-[10px] font-semibold text-[#666666]">
               Canlı Önizleme
             </p>
@@ -1307,10 +1474,12 @@ export function PaletteEditor({ initial }: PaletteEditorProps) {
               colors={colors}
               settings={settings}
               fonts={{ display: fontDisplay, body: fontBody }}
+              mode={previewMode}
+              onModeChange={setPreviewMode}
             />
           </div>
 
-          <div className="ff-card bg-[#f7f7f5] border border-[#E0E0E0]">
+          <div className="ff-card">
             <WcagPanel colors={colors} />
           </div>
         </div>
@@ -1326,8 +1495,7 @@ export function PaletteEditor({ initial }: PaletteEditorProps) {
       {/* Sticky save bar */}
       <div
         className={cn(
-          "ff-shape-container sticky bottom-2 z-10 flex items-center justify-center w-full gap-3 py-4 px-6 transition-all",
-          "bg-[#f7f7f5]/60 backdrop-blur-sm border border-[#E0E0E0]/50  ",
+          "sticky bottom-2 z-10 flex items-center justify-center w-full gap-3 transition-all",
           isDirty && "border-[#E0E0E0] shadow-[0_-4px_20px_rgba(255, 79, 216,0.1)]",
         )}
       >
@@ -1336,7 +1504,7 @@ export function PaletteEditor({ initial }: PaletteEditorProps) {
             Kaydedilmemiş değişiklikler var.
           </span>
         )}
-        <div className="ml-auto flex items-center gap-3">
+        <div className="ff-shape-container bg-[#f7f7f5]/60 backdrop-blur-sm border border-[#E0E0E0]/50 p-4 ml-auto flex items-center gap-3">
           <button
             type="button"
             onClick={handleCancel}
@@ -1378,7 +1546,7 @@ export function PaletteEditor({ initial }: PaletteEditorProps) {
               disabled={activating}
               className="ff-btn ff-btn-outline h-9 bg-[var(--approve)]/10 text-[var(--approve)] border border-[var(--approve)]/30 text-[12px] disabled:opacity-40"
             >
-              <Check size={14} className="mr-1" />  
+              <Check size={14} className="mr-1" />
               {activating ? "..." : "Aktif Et"}
             </button>
           )}

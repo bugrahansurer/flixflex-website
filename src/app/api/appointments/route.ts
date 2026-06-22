@@ -175,6 +175,14 @@ export async function POST(req: NextRequest) {
       { status: 201 }
     )
   } catch (err) {
+    // Concurrent double-book caught atomically by the partial-unique index
+    // (appointments_active_date_unique) → return a clean 409 instead of 500.
+    if (err && typeof err === "object" && (err as { code?: string }).code === "P2002") {
+      return NextResponse.json(
+        { ok: false, message: "Bu randevu saati az önce doldu. Lütfen başka bir saat seçin." },
+        { status: 409 }
+      )
+    }
     console.error("[FlixFlex Appointment] Unexpected error:", err)
     return NextResponse.json(
       { ok: false, message: "Randevu oluşturulurken beklenmedik bir hata oluştu. Lütfen tekrar deneyin." },

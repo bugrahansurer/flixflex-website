@@ -207,12 +207,12 @@ export function PermissionMatrix({
         {!isLocked && (
           <button
             onClick={toggleAll}
-            className="text-[11px] font-semibold tracking-[0.07em] uppercase text-[var(--ff-purple)] hover:text-[#8B1FE8] transition-colors flex items-center gap-1.5"
+            className="text-[11px] font-semibold text-[var(--ff-purple)] hover:text-[#8B1FE8] transition-colors flex items-center gap-1.5"
           >
             {checked.size === totalAvailable ? (
-              <><CheckSquare className="w-3.5 h-3.5" /> Hepsini Kaldır</>
+              <><CheckSquare className="w-4 h-4" /> Hepsini Kaldır</>
             ) : (
-              <><Square className="w-3.5 h-3.5" /> Hepsini Seç</>
+              <><Square className="w-4 h-4" /> Hepsini Seç</>
             )}
           </button>
         )}
@@ -237,7 +237,7 @@ export function PermissionMatrix({
                       <button
                         onClick={() => toggleCol(action)}
                         className={cn(
-                          "w-4 h-4 border transition-colors",
+                          "ff-shape-button w-4 h-4 border transition-colors",
                           isColAllChecked(action)
                             ? "bg-[var(--ff-purple)] border-[var(--ff-purple)]"
                             : "bg-transparent border-[var(--border)] hover:border-[var(--ff-purple)]"
@@ -313,7 +313,7 @@ export function PermissionMatrix({
                         {available ? (
                           isLocked ? (
                             isChecked ? (
-                              <span className="inline-flex items-center justify-center w-5 h-5 bg-[var(--ff-purple)/0.2] border border-[var(--ff-purple)/0.3]">
+                              <span className="ff-shape-button inline-flex items-center justify-center w-5 h-5 bg-[var(--ff-purple)]/10 border border-[var(--ff-purple)]/30">
                                 <svg viewBox="0 0 10 8" className="w-3 h-3" fill="none">
                                   <path d="M1 4L4 7L9 1" stroke="var(--ff-purple)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
@@ -325,9 +325,9 @@ export function PermissionMatrix({
                             <button
                               onClick={() => toggle(resource, action)}
                               className={cn(
-                                "w-5 h-5 border transition-colors",
+                                "ff-shape-button w-4 h-4 border transition-colors",
                                 isChecked
-                                  ? "bg-[var(--ff-purple)] border-[var(--ff-purple)]"
+                                  ? "bg-[var(--ff-purple)]/10 border-[var(--ff-purple)]/30"
                                   : "bg-transparent border-[var(--border)] hover:border-[var(--ff-purple)]"
                               )}
                               aria-label={`${resource}:${action}`}
@@ -336,7 +336,7 @@ export function PermissionMatrix({
                             >
                               {isChecked && (
                                 <svg viewBox="0 0 10 8" className="w-full h-full p-0.5" fill="none">
-                                  <path d="M1 4L4 7L9 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                  <path d="M1 4L4 7L9 1" stroke="var(--ff-purple)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                               )}
                             </button>

@@ -88,11 +88,11 @@ export function SecurityForm({ initiallyEnabled }: { initiallyEnabled: boolean }
   }
 
   return (
-    <div className="max-w-2xl space-y-6 pb-20">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {/* Status header */}
       <div
         className={cn(
-          "ff-shape-container p-6 border flex items-center gap-4",
+          "ff-shape-container p-3 border flex items-center gap-4",
           enabled ? "bg-[#16a34a]/8 border-[#16a34a]/30" : "bg-[#F7F7F5] border-[#CCCCCC]"
         )}
       >
@@ -137,14 +137,14 @@ export function SecurityForm({ initiallyEnabled }: { initiallyEnabled: boolean }
           </div>
           <div>
             <h4 className="font-display text-sm font-bold text-[#333333] mb-2">2. Kodu doğrula</h4>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3">
               <input
                 value={code}
                 onChange={(e) => setCode(e.target.value.replace(/\s/g, ""))}
                 inputMode="numeric"
                 maxLength={6}
                 placeholder="6 haneli kod"
-                className="ff-shape-container w-40 px-3 py-2.5 text-sm font-mono tracking-widest bg-white border border-[#CCCCCC] text-[#333333] outline-none focus:border-[#ff4fd8]"
+                className="ff-shape-container w-full sm:w-40 px-3 py-2.5 text-sm font-mono tracking-widest bg-white border border-[#CCCCCC] text-[#333333] outline-none focus:border-[#ff4fd8]"
               />
               <FFButton onClick={verifyEnable} disabled={loading || code.length !== 6} leftIcon={loading ? <Loader2 className="animate-spin" size={15} /> : undefined}>
                 Doğrula ve Etkinleştir
@@ -181,12 +181,12 @@ export function SecurityForm({ initiallyEnabled }: { initiallyEnabled: boolean }
         <div className="ff-shape-container p-6 bg-[#F7F7F5] border border-[#CCCCCC] space-y-3">
           <h4 className="font-display text-sm font-bold text-[#333333]">2FA&apos;yı devre dışı bırak</h4>
           <p className="text-[12px] text-[#666666]">Onaylamak için mevcut bir doğrulama kodu veya yedek kod girin.</p>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
             <input
               value={disableCode}
               onChange={(e) => setDisableCode(e.target.value.replace(/\s/g, ""))}
               placeholder="Kod"
-              className="ff-shape-container w-48 px-3 py-2.5 text-sm font-mono bg-white border border-[#CCCCCC] text-[#333333] outline-none focus:border-[#ff4fd8]"
+              className="ff-shape-container w-full sm:w-48 px-3 py-2.5 text-sm font-mono bg-white border border-[#CCCCCC] text-[#333333] outline-none focus:border-[#ff4fd8]"
             />
             <FFButton
               variant="ghost"

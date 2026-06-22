@@ -46,7 +46,7 @@ export default async function IletisimPage() {
             <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-start">
               {/* Form panel */}
               <div
-                className="ff-shape-container lg:col-span-7 border border-[var(--border)] bg-[var(--surface)] p-8 lg:p-10"
+                className="ff-shape-container ff-card lg:col-span-7"
               >
                 {/* Panel header */}
                 <div className="mb-8">

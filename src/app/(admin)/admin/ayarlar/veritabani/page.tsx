@@ -80,14 +80,14 @@ export default async function VeritabaniPage() {
       </header>
 
       {/* Connection card */}
-      <div className="ff-shape-container p-6 bg-[#F7F7F5] border border-[#CCCCCC] mb-6 flex items-center justify-between gap-4 max-w-3xl">
-        <div className="flex items-center gap-3">
-          <span className="ff-shape-button w-11 h-11 flex items-center justify-center bg-[#F0F0F0] text-[var(--ff-purple)] border border-[#CCCCCC]">
+      <div className="ff-shape-container p-3 bg-[#F7F7F5] border border-[#CCCCCC] mb-6 flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-3 min-w-0">
+          <span className="ff-shape-button w-11 h-11 flex items-center justify-center bg-[#F0F0F0] text-[var(--ff-purple)] border border-[#CCCCCC] shrink-0">
             <Database size={20} />
           </span>
-          <div>
+          <div className="min-w-0">
             <h3 className="font-display text-base font-bold text-[#333333]">PostgreSQL</h3>
-            <p className="text-[12px] text-[#666666] font-mono">{host}</p>
+            <p className="text-[12px] text-[#666666] font-mono break-all">{host}</p>
           </div>
         </div>
         {connected ? (
@@ -103,7 +103,7 @@ export default async function VeritabaniPage() {
 
       {/* Counts grid */}
       {connected && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {counts.map((row) => {
             const Icon = row.icon
             return (

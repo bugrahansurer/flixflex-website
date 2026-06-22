@@ -80,13 +80,13 @@ export default async function ThemePage() {
           href="/admin/theme/yeni"
           className="ff-btn ff-btn-primary text-[13px]"
         >
-          <Plus size={14} /> 
+          <Plus size={14} />
           Tema Oluştur
         </Link>
       </div>
 
       {/* Palette grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {palettes.map((palette) => {
           const swatches = swatchColors(palette)
           const wcag = checkWCAG(palette.colors.primary, palette.colors.background)
@@ -94,7 +94,7 @@ export default async function ThemePage() {
           return (
             <div
               key={palette.id}
-              className="ff-card bg-[#f7f7f5] border border-[#CCCCCC] hover:shadow-xs p-4 relative flex flex-col gap-4"
+              className="ff-card hover:shadow-xs p-4 relative flex flex-col gap-4"
             >
               {/* Badges */}
               <div className="flex items-center gap-2 flex-wrap">

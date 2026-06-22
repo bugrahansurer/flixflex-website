@@ -82,7 +82,7 @@ export function SiteSettingsForm({ initialSettings, saveAction }: SiteSettingsFo
   return (
     <form onSubmit={handleSave} className="space-y-8">
       {/* ── Section: Genel ──────────────────── */}
-      <section className="ff-card bg-[#f7f7f5] border border-[#CCCCCC] p-6 md:p-8 space-y-6">
+      <section className="ff-card space-y-6">
         <div className="flex items-center gap-3 pb-4 border-b border-[#CCCCCC]">
           <Globe size={18} className="text-[#ff4fd8]" />
           <h2 className="font-display text-lg text-[#333333] font-bold">Genel Bilgiler</h2>
@@ -95,7 +95,7 @@ export function SiteSettingsForm({ initialSettings, saveAction }: SiteSettingsFo
               value={settings.site_name || ""}
               onChange={(e) => updateSetting("site_name", e.target.value)}
               placeholder="Örn: FlixFlex"
-              className="w-full h-9 bg-transparent border border-[#CCCCCC] focus:border-[#ff4fd8] text-xs text-[#333333] placeholder:text-[#999999]"
+              className="w-full h-9 bg-transparent text-[#333333]"
             />
           </div>
           <div className="space-y-2">
@@ -104,7 +104,7 @@ export function SiteSettingsForm({ initialSettings, saveAction }: SiteSettingsFo
               value={settings.site_tagline || ""}
               onChange={(e) => updateSetting("site_tagline", e.target.value)}
               placeholder="Örn: Next-Gen Reklam Ajansı"
-              className="w-full h-9 bg-transparent border border-[#CCCCCC] focus:border-[#ff4fd8] text-xs text-[#333333] placeholder:text-[#999999]"
+              className="w-full h-9 bg-transparent text-[#333333]"
             />
           </div>
           <div className="space-y-2">
@@ -113,7 +113,7 @@ export function SiteSettingsForm({ initialSettings, saveAction }: SiteSettingsFo
               value={settings.site_email || ""}
               onChange={(e) => updateSetting("site_email", e.target.value)}
               placeholder="merhaba@domain.com"
-              className="w-full h-9 bg-transparent border border-[#CCCCCC] focus:border-[#ff4fd8] text-xs text-[#333333] placeholder:text-[#999999]"
+              className="w-full h-9 bg-transparent text-[#333333]"
             />
           </div>
           <div className="space-y-2">
@@ -122,7 +122,7 @@ export function SiteSettingsForm({ initialSettings, saveAction }: SiteSettingsFo
               value={settings.site_phone || ""}
               onChange={(e) => updateSetting("site_phone", e.target.value)}
               placeholder="+90 ..."
-              className="w-full h-9 bg-transparent border border-[#CCCCCC] focus:border-[#ff4fd8] text-xs text-[#333333] placeholder:text-[#999999]"
+              className="w-full h-9 bg-transparent text-[#333333]"
             />
           </div>
           <div className="space-y-2 md:col-span-2">
@@ -131,7 +131,7 @@ export function SiteSettingsForm({ initialSettings, saveAction }: SiteSettingsFo
               value={settings.site_address || ""}
               onChange={(e) => updateSetting("site_address", e.target.value)}
               placeholder="Şirket merkezi adresi..."
-              className="w-full bg-transparent border border-[#CCCCCC] p-3 text-sm text-[#333333] placeholder:text-[#999999] focus:outline-none focus:border-[#ff4fd8] transition-colors resize-y"
+              className="w-full bg-transparent text-[#333333] resize-y"
               rows={3}
             />
           </div>
@@ -141,23 +141,23 @@ export function SiteSettingsForm({ initialSettings, saveAction }: SiteSettingsFo
               value={settings.site_working_hours || ""}
               onChange={(e) => updateSetting("site_working_hours", e.target.value)}
               placeholder="Örn: Pzt - Cum: 09:00 - 18:00"
-              className="w-full h-9 bg-transparent border border-[#CCCCCC] focus:border-[#ff4fd8] text-xs text-[#333333] placeholder:text-[#999999]"
+              className="w-full h-9 bg-transparent text-[#333333]"
             />
           </div>
           <div className="space-y-2">
             <label className="text-[11px] font-bold text-[#333333]">Vergi Dairesi / No</label>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <FFInput
                 value={settings.site_tax_office || ""}
                 onChange={(e) => updateSetting("site_tax_office", e.target.value)}
                 placeholder="Daire"
-                className="w-full h-9 bg-transparent border border-[#CCCCCC] focus:border-[#ff4fd8] text-xs text-[#333333] placeholder:text-[#999999]"
+                className="w-full h-9 bg-transparent text-[#333333]"
               />
               <FFInput
                 value={settings.site_tax_number || ""}
                 onChange={(e) => updateSetting("site_tax_number", e.target.value)}
                 placeholder="Numara"
-                className="w-full h-9 bg-transparent border border-[#CCCCCC] focus:border-[#ff4fd8] text-xs text-[#333333] placeholder:text-[#999999]"
+                className="w-full h-9 bg-transparent text-[#333333]"
               />
             </div>
           </div>
@@ -165,7 +165,7 @@ export function SiteSettingsForm({ initialSettings, saveAction }: SiteSettingsFo
       </section>
 
       {/* ── Section: Görsel ─────────────────── */}
-      <section className="ff-card bg-[#f7f7f5] border border-[#CCCCCC] p-6 md:p-8 space-y-6">
+      <section className="ff-card space-y-6">
         <div className="flex items-center gap-3 pb-4 border-b border-[#CCCCCC]">
           <ImageIcon size={18} className="text-[var(--ff-purple)]" />
           <h2 className="font-display text-lg text-[#333333] font-bold">Marka Görselleri</h2>
@@ -226,7 +226,7 @@ export function SiteSettingsForm({ initialSettings, saveAction }: SiteSettingsFo
       </section>
 
       {/* ── Section: SEO ────────────────────── */}
-      <section className="ff-card bg-[#f7f7f5] border border-[#CCCCCC] p-6 md:p-8 space-y-6">
+      <section className="ff-card space-y-6">
         <div className="flex items-center gap-3 pb-4 border-b border-[#CCCCCC]">
           <Search size={18} className="text-[var(--ff-purple)]" />
           <h2 className="font-display text-lg text-[#333333] font-bold">SEO & Meta</h2>
@@ -247,7 +247,7 @@ export function SiteSettingsForm({ initialSettings, saveAction }: SiteSettingsFo
             <textarea
               value={settings.site_meta_description || ""}
               onChange={(e) => updateSetting("site_meta_description", e.target.value)}
-              className="ff-shape-container w-full min-h-[100px] bg-transparent border border-[#CCCCCC] p-3 text-sm text-[#333333] placeholder:text-[#999999] focus:outline-none focus:border-[#ff4fd8] transition-colors resize-y"
+              className="ff-shape-button w-full min-h-[100px] bg-transparent border border-[#CCCCCC] p-3 text-sm text-[#333333] placeholder:text-[#999999] focus:outline-none focus:border-[#ff4fd8] transition-colors resize-y"
               placeholder="Site hakkında kısa açıklama..."
             />
           </div>
@@ -255,8 +255,8 @@ export function SiteSettingsForm({ initialSettings, saveAction }: SiteSettingsFo
       </section>
 
       {/* ── Section: Sosyal ─────────────────── */}
-      <section className="ff-card bg-[#f7f7f5] border border-[#CCCCCC] p-6 md:p-8 space-y-6">
-        <div className="flex items-center justify-between gap-3 pb-4 border-b border-[#CCCCCC]">
+      <section className="ff-card space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#CCCCCC]">
           <div className="flex items-center gap-3">
             <Layout size={18} className="text-[#FF4FD8]" />
             <h2 className="font-display text-lg text-[#333333] font-bold">Sosyal Medya</h2>
@@ -264,7 +264,7 @@ export function SiteSettingsForm({ initialSettings, saveAction }: SiteSettingsFo
           <button
             type="button"
             onClick={addSocial}
-            className="inline-flex items-center gap-1.5 h-9 px-3 bg-[#FF4FD8] text-white text-[12px] font-semibold hover:bg-[#e041c0] transition-colors"
+            className="ff-shape-button inline-flex items-center gap-1.5 h-9 px-3 bg-[#FF4FD8] text-white text-[12px] font-semibold hover:bg-[#e041c0] transition-colors"
           >
             <Plus size={14} /> Platform Ekle
           </button>
@@ -283,13 +283,13 @@ export function SiteSettingsForm({ initialSettings, saveAction }: SiteSettingsFo
             {socialLinks.map((link, i) => (
               <div key={i} className="flex flex-col sm:flex-row gap-2 sm:items-center">
                 <div className="flex items-center gap-2 sm:w-48 shrink-0">
-                  <span className="ff-shape-container w-9 h-9 shrink-0 flex items-center justify-center border border-[#CCCCCC] bg-white text-[#333333]">
+                  <span className="ff-shape-button w-9 h-9 shrink-0 flex items-center justify-center border border-[#CCCCCC] bg-white text-[#333333]">
                     <SocialIcon platform={link.platform} size={16} />
                   </span>
                   <select
                     value={link.platform}
                     onChange={(e) => updateSocial(i, { platform: e.target.value })}
-                    className="ff-shape-container w-full h-9 bg-transparent border border-[#CCCCCC] focus:border-[#ff4fd8] focus:outline-none text-xs text-[#333333] px-2"
+                    className="ff-shape-button w-full h-9 bg-transparent border border-[#CCCCCC] focus:border-[#ff4fd8] focus:outline-none text-xs text-[#333333] px-2"
                   >
                     {SOCIAL_PLATFORMS.map((p) => (
                       <option key={p.key} value={p.key}>{p.label}</option>
@@ -310,7 +310,7 @@ export function SiteSettingsForm({ initialSettings, saveAction }: SiteSettingsFo
                   type="button"
                   onClick={() => removeSocial(i)}
                   aria-label="Sil"
-                  className="w-9 h-9 shrink-0 flex items-center justify-center border border-[#CCCCCC] text-[#999999] hover:border-red-400 hover:text-red-500 transition-colors"
+                  className="ff-shape-button w-9 h-9 shrink-0 flex items-center justify-center border border-[#CCCCCC] text-[#999999] hover:border-red-400 hover:text-red-500 transition-colors"
                 >
                   <Trash2 size={14} />
                 </button>
@@ -322,8 +322,8 @@ export function SiteSettingsForm({ initialSettings, saveAction }: SiteSettingsFo
 
       {/* ── Actions ────────────────────────── */}
       <div className="flex justify-end pt-4">
-        <FFButton type="submit" size="lg" className="px-10 h-12" disabled={isSaving}>
-          {isSaving ? <Loader2 className="animate-spin mr-2" size={16} /> : <Save size={16} className="mr-2" />}
+        <FFButton type="submit" size="lg" className="px-4 h-10" disabled={isSaving}>
+          {isSaving ? <Loader2 className="animate-spin" size={16} /> : <Save size={16} className="mr-0" />}
           Ayarları Kaydet
         </FFButton>
       </div>

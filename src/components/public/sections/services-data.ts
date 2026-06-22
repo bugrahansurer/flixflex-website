@@ -25,6 +25,8 @@ export interface SubServiceItem {
   href: string
   /** Lucide icon identifier string */
   iconKey: string
+  /** Optional one-line description shown in the mega menu */
+  description?: string
 }
 
 export interface Service {

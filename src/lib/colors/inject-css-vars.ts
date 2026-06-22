@@ -137,14 +137,54 @@ ${fontImport}
 
 /**
  * Inline-style version for scoped preview containers.
+ *
+ * `mode` selects which semantic tokens to emit:
+ *   • "light" (default) — the light-mode tokens (`:root` equivalent)
+ *   • "dark"            — the dark-mode overrides, mirroring the `.dark`
+ *                         block in cssVarsFromPalette (dark.* values, with
+ *                         secondary falling back to the light value when unset)
+ *
+ * This lets a scoped preview show either theme without relying on a global
+ * `.dark` class — the inline vars fully drive the look.
  */
 export function paletteToStyleObject(
   colors: ColorTokens,
   settings: ThemeSettings,
-  fonts?: { display: string; body: string }
+  fonts?: { display: string; body: string },
+  mode: "light" | "dark" = "light"
 ): React.CSSProperties & Record<string, string> {
   const button = shapeTokens(settings.buttonShape ?? "sharp", settings.buttonRadius ?? 12)
   const container = shapeTokens(settings.containerShape ?? "sharp", settings.containerRadius ?? 16)
+
+  const semantic =
+    mode === "dark"
+      ? {
+          background:      colors.dark.background,
+          backgroundAlt:   colors.dark.backgroundAlt,
+          surface:         colors.dark.surface,
+          surfaceElevated: colors.dark.surfaceElevated,
+          foreground:      colors.dark.foreground,
+          foregroundMuted: colors.dark.foregroundMuted,
+          foregroundFaint: colors.dark.foregroundFaint,
+          border:          colors.dark.border,
+          borderStrong:    colors.dark.borderStrong,
+          charcoal:        colors.dark.secondary ?? colors.secondary,
+          charcoalLight:   colors.dark.secondaryLight ?? colors.secondaryLight,
+        }
+      : {
+          background:      colors.background,
+          backgroundAlt:   colors.backgroundAlt,
+          surface:         colors.surface,
+          surfaceElevated: colors.surfaceElevated,
+          foreground:      colors.foreground,
+          foregroundMuted: colors.foregroundMuted,
+          foregroundFaint: colors.foregroundFaint,
+          border:          colors.border,
+          borderStrong:    colors.borderStrong,
+          charcoal:        colors.secondary,
+          charcoalLight:   colors.secondaryLight,
+        }
+
   return {
     "--font-display": fonts ? `"${fonts.display}", system-ui, sans-serif` : "inherit",
     "--font-body": fonts ? `"${fonts.body}", system-ui, sans-serif` : "inherit",
@@ -154,17 +194,18 @@ export function paletteToStyleObject(
     "--ff-purple-hover": colors.primaryHover,
     "--ff-purple-muted": colors.primaryMuted,
     "--ff-purple-glow": colors.primaryGlow,
-    "--ff-charcoal": colors.secondary,
-    "--ff-charcoal-light": colors.secondaryLight,
-    "--background": colors.background,
-    "--background-alt": colors.backgroundAlt,
-    "--surface": colors.surface,
-    "--surface-elevated": colors.surfaceElevated,
-    "--foreground": colors.foreground,
-    "--foreground-muted": colors.foregroundMuted,
-    "--foreground-faint": colors.foregroundFaint,
-    "--border": colors.border,
-    "--border-strong": colors.borderStrong,
+    "--ff-charcoal": semantic.charcoal,
+    "--ff-charcoal-light": semantic.charcoalLight,
+    "--secondary": semantic.charcoal,
+    "--background": semantic.background,
+    "--background-alt": semantic.backgroundAlt,
+    "--surface": semantic.surface,
+    "--surface-elevated": semantic.surfaceElevated,
+    "--foreground": semantic.foreground,
+    "--foreground-muted": semantic.foregroundMuted,
+    "--foreground-faint": semantic.foregroundFaint,
+    "--border": semantic.border,
+    "--border-strong": semantic.borderStrong,
     "--success": colors.success,
     "--warning": colors.warning,
     "--error": colors.error,

@@ -78,8 +78,8 @@ export default async function UserDetailPage({ params }: Props) {
       </Link>
 
       {/* Header */}
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex items-center gap-4 min-w-0">
           {/* Avatar */}
           <div
             className="ff-shape-button w-12 h-12 flex items-center justify-center text-sm font-bold text-white flex-shrink-0"
@@ -87,8 +87,8 @@ export default async function UserDetailPage({ params }: Props) {
           >
             {initials}
           </div>
-          <div>
-            <div className="flex items-center gap-2">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
               <h1 className="font-display text-xl font-bold text-[#333333] truncate">
                 {user.name ?? user.email}
               </h1>
@@ -114,7 +114,7 @@ export default async function UserDetailPage({ params }: Props) {
             <h2 className="text-xs font-semibold text-[#888888]">
               Bilgileri Düzenle
             </h2>
-            <FFContainer className="bg-[#f7f7f5] border border-[#CCCCCC]" border="subtle" padding="lg">
+            <FFContainer className="ff-card" border="subtle" padding="lg">
               <UserForm
                 roles={roles}
                 initial={{
@@ -133,7 +133,7 @@ export default async function UserDetailPage({ params }: Props) {
             <h2 className="text-xs font-semibold text-[#888888]">
               Şifre Değiştir
             </h2>
-            <FFContainer className="bg-[#f7f7f5] border border-[#CCCCCC]" border="subtle" padding="lg">
+            <FFContainer className="ff-card" border="subtle" padding="lg">
               <ChangePasswordForm userId={user.id} />
             </FFContainer>
           </section>
@@ -146,7 +146,7 @@ export default async function UserDetailPage({ params }: Props) {
             <h2 className="text-xs font-semibold text-[#888888]">
               Hesap Bilgileri
             </h2>
-            <FFContainer className="bg-[#f7f7f5] border border-[#CCCCCC]" border="subtle" padding="md">
+            <FFContainer className="ff-card" border="subtle" padding="md">
               <dl className="space-y-3">
                 <div>
                   <dt className="text-[10px] font-semibold text-[#888888]">Rol</dt>
@@ -190,7 +190,7 @@ export default async function UserDetailPage({ params }: Props) {
               <Activity className="w-3.5 h-3.5" />
               Son Aktiviteler
             </h2>
-            <FFContainer className="bg-[#f7f7f5] border border-[#CCCCCC]" border="subtle" padding="none">
+            <FFContainer className="ff-card" border="subtle" padding="none">
               {auditLogs.length === 0 ? (
                 <div className="px-5 py-8 text-center">
                   <Clock className="w-6 h-6 text-[#888888] mx-auto mb-2" />

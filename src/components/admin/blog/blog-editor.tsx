@@ -268,7 +268,7 @@ export function BlogEditor({ mode, initial }: BlogEditorProps) {
                       type="button"
                       onClick={() => patch({ coverGradient: g })}
                       className={cn(
-                        "aspect-square bg-gradient-to-br border transition-all",
+                        "ff-shape-button aspect-square bg-gradient-to-br border transition-all",
                         g,
                         form.coverGradient === g ? "border-[var(--ff-purple)] ring-2 ring-[var(--ff-purple)]/40" : "border-[var(--border)]"
                       )}
@@ -330,7 +330,7 @@ export function BlogEditor({ mode, initial }: BlogEditorProps) {
                   type="button"
                   onClick={() => patch({ status: s })}
                   className={cn(
-                    "flex-1 px-3 py-2 text-[11px] uppercase tracking-[0.08em] border transition-colors",
+                    "ff-shape-button flex-1 px-3 py-2 text-[11px] uppercase tracking-[0.08em] border transition-colors",
                     form.status === s ? "bg-[var(--ff-purple)] text-white border-[var(--ff-purple)]" : "bg-transparent text-[var(--foreground-muted)] border-[var(--border)] hover:border-[var(--ff-purple)]"
                   )}
                 >
@@ -404,7 +404,7 @@ const inputCls = cn(
 
 function Card({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) {
   return (
-    <section className="ff-shape-container bg-[var(--surface)]/40 border border-[var(--border)] p-5">
+    <section className="ff-shape-container ff-card">
       <header className="mb-4">
         <h2 className="font-display text-sm font-bold text-[var(--foreground)]">{title}</h2>
         {subtitle && <p className="text-[11px] text-[var(--foreground-faint)] mt-0.5">{subtitle}</p>}

@@ -4,30 +4,80 @@
 // ═══════════════════════════════════════════════════════════
 
 import { NextRequest, NextResponse } from "next/server"
-import { requireAdmin } from "@/lib/ai/api-utils"
+import { z } from "zod"
+import net from "node:net"
+import dns from "node:dns/promises"
+import { requirePermission } from "@/lib/ai/api-utils"
 import nodemailer from "nodemailer"
 
+// ── Request validation ─────────────────────────────────────
+const testEmailSchema = z.object({
+  provider:   z.enum(["smtp", "resend", "mock"]).optional(),
+  from:       z.string().max(200).optional(),
+  resendKey:  z.string().max(300).optional(),
+  smtpHost:   z.string().max(255).optional(),
+  smtpPort:   z.string().max(10).optional(),
+  smtpUser:   z.string().max(255).optional(),
+  smtpPass:   z.string().max(500).optional(),
+  smtpSecure: z.string().max(10).optional(),
+  testEmail:  z.string().regex(/^[^@\s]+@[^@\s]+\.[^@\s]+$/, "Geçerli bir test e-posta adresi girin."),
+})
+
+// ── SSRF guard ─────────────────────────────────────────────
+// Reject SMTP hosts that resolve to loopback / private / link-local ranges
+// (incl. 169.254.169.254 cloud metadata). Denylist — public mail servers pass.
+function isBlockedIp(ip: string): boolean {
+  if (net.isIPv4(ip)) {
+    const [a, b] = ip.split(".").map(Number)
+    return (
+      a === 0 || a === 10 || a === 127 ||
+      (a === 169 && b === 254) ||
+      (a === 172 && b >= 16 && b <= 31) ||
+      (a === 192 && b === 168)
+    )
+  }
+  const lower = ip.toLowerCase()
+  return (
+    lower === "::1" ||
+    lower.startsWith("fc") || lower.startsWith("fd") || lower.startsWith("fe80") ||
+    lower.startsWith("::ffff:127.") || lower.startsWith("::ffff:10.") ||
+    lower.startsWith("::ffff:192.168.") || lower.startsWith("::ffff:169.254.")
+  )
+}
+
+async function assertPublicSmtpHost(host: string): Promise<void> {
+  const h = host.trim().toLowerCase().replace(/\.$/, "")
+  if (!h || h === "localhost" || h.endsWith(".localhost") || h.endsWith(".internal") || h.endsWith(".local")) {
+    throw new Error("blocked-host")
+  }
+  if (net.isIP(h)) {
+    if (isBlockedIp(h)) throw new Error("blocked-host")
+    return
+  }
+  // Resolve hostname; block only if a resolved address is internal. A DNS
+  // failure (typo'd host) is left to nodemailer to surface generically.
+  let records: { address: string }[]
+  try {
+    records = await dns.lookup(h, { all: true })
+  } catch {
+    return
+  }
+  if (records.some((r) => isBlockedIp(r.address))) throw new Error("blocked-host")
+}
+
 export async function POST(req: NextRequest) {
-  const gate = await requireAdmin()
+  const gate = await requirePermission("settings", "update")
   if (!gate.ok) return gate.response
 
   try {
-    const body = await req.json()
-    const {
-      provider,
-      from,
-      resendKey,
-      smtpHost,
-      smtpPort,
-      smtpUser,
-      smtpPass,
-      smtpSecure,
-      testEmail,
-    } = body
-
-    if (!testEmail) {
-      return NextResponse.json({ success: false, error: "Test e-posta adresi belirtilmedi." }, { status: 400 })
+    const parsed = testEmailSchema.safeParse(await req.json())
+    if (!parsed.success) {
+      return NextResponse.json(
+        { success: false, error: parsed.error.issues[0]?.message ?? "Geçersiz istek." },
+        { status: 400 }
+      )
     }
+    const { provider, from, resendKey, smtpHost, smtpPort, smtpUser, smtpPass, smtpSecure, testEmail } = parsed.data
 
     const fromAddress = from || "FlixFlex <onboarding@resend.dev>"
     const subject = `FlixFlex E-posta Entegrasyon Testi`
@@ -47,9 +97,19 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ success: false, error: "SMTP sunucusu yapılandırılması eksik (Sunucu adresi, kullanıcı adı veya şifre boş)." })
       }
 
+      // SSRF guard: block loopback / private / link-local (cloud metadata) hosts.
+      try {
+        await assertPublicSmtpHost(smtpHost)
+      } catch {
+        return NextResponse.json(
+          { success: false, error: "İzin verilmeyen SMTP sunucu adresi." },
+          { status: 400 }
+        )
+      }
+
       const transporter = nodemailer.createTransport({
         host: smtpHost,
-        port: parseInt(smtpPort) || 587,
+        port: parseInt(smtpPort ?? "587") || 587,
         secure: smtpSecure === "true",
         auth: {
           user: smtpUser,
@@ -60,10 +120,11 @@ export async function POST(req: NextRequest) {
       // Verify connection configuration
       try {
         await transporter.verify()
-      } catch (verifyErr: any) {
+      } catch (verifyErr) {
+        console.error("[Email Test] SMTP verify failed:", verifyErr)
         return NextResponse.json({
           success: false,
-          error: `SMTP Bağlantı/Kimlik Doğrulama Hatası: ${verifyErr.message || String(verifyErr)}`
+          error: "SMTP bağlantısı/kimlik doğrulaması başarısız. Sunucu adresi, port ve kimlik bilgilerini kontrol edin.",
         })
       }
 
@@ -117,11 +178,11 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ success: false, error: "Bilinmeyen e-posta sağlayıcısı." })
-  } catch (err: any) {
+  } catch (err) {
     console.error("[Email Test POST]", err)
     return NextResponse.json({
       success: false,
-      error: err instanceof Error ? err.message : String(err),
+      error: "Test e-postası gönderilirken bir hata oluştu.",
     })
   }
 }

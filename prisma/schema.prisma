@@ -21,6 +21,7 @@ model User {
   twoFactorSecret      String?  // encrypted base32 TOTP secret
   twoFactorBackupCodes String[] @default([]) // sha256 hashes of one-time backup codes
   twoFactorLastUsedStep Int?    // last consumed TOTP time-step — blocks replay
+  twoFactorPendingSecret String? // encrypted secret during (re)enrollment; promoted to twoFactorSecret on enable
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   auditLogs AuditLog[]

@@ -67,7 +67,7 @@ export default async function SiteAyarlariPage() {
       </nav>
 
       {/* ── Header ────────────────────────────── */}
-      <header className="mb-10 flex items-start justify-between gap-4">
+      <header className="mb-10 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
           <h1 className="font-display text-2xl font-extrabold text-[#333333] mb-2">
             Site <span className="text-[#ff4fd8]">Kimliği</span>
@@ -76,8 +76,8 @@ export default async function SiteAyarlariPage() {
             Markanızın dijital dünyadaki görünümünü buradan yönetin. Logo, başlık ve SEO ayarları tüm siteyi etkiler.
           </p>
         </div>
-        <Link href="/admin/ayarlar" className="ff-btn bg-[#FF4FD8] text-white hover:bg-[#e041c0] text-[12px] h-10 px-4">
-          <ArrowLeft size={14} className="mr-2" />
+        <Link href="/admin/ayarlar" className="ff-btn self-start text-[#FF4FD8] text-[12px] hover:text-[#e041c0] transition-all duration-300 h-10 px-4">
+          <ArrowLeft size={14} className="-mr-1" />
           Geri Dön
         </Link>
       </header>

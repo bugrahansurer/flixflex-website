@@ -4,6 +4,7 @@ import * as React from "react"
 import { Calendar as CalendarIcon, Clock, Search, ShieldAlert, Eye, EyeOff, Trash2, Filter, ChevronLeft, ChevronRight, Lock, Unlock } from "@/lib/icons"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
+import { FFSelect, FFSelectItem } from "@/components/ui/ff-select"
 
 // Constants matching public picker
 const WORKING_HOURS = ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"]
@@ -39,7 +40,7 @@ export default function AdminAppointmentsPage() {
   const [appointments, setAppointments] = React.useState<Appointment[]>([])
   const [blockedSlots, setBlockedSlots] = React.useState<BlockedSlot[]>([])
   const [loading, setLoading] = React.useState<boolean>(true)
-  
+
   // Filters/Searches for List Tab
   const [search, setSearch] = React.useState<string>("")
   const [statusFilter, setStatusFilter] = React.useState<string>("all")
@@ -270,9 +271,9 @@ export default function AdminAppointmentsPage() {
       app.name.toLowerCase().includes(search.toLowerCase()) ||
       app.email.toLowerCase().includes(search.toLowerCase()) ||
       app.phone.includes(search)
-    
+
     const matchesStatus = statusFilter === "all" ? true : app.status === statusFilter
-    
+
     return matchesSearch && matchesStatus
   })
 
@@ -286,14 +287,14 @@ export default function AdminAppointmentsPage() {
             Görüşme taleplerini takip edin ve müşteri rezervasyon takvimini özelleştirin
           </p>
         </div>
-        
+
         {/* Tab Selector */}
-        <div className="ff-shape-container flex bg-[#F7F7F5] p-1 rounded-sm w-fit border border-[#CCCCCC]">
+        <div className="ff-shape-button flex bg-[#F7F7F5] h-11 p-1 rounded-sm w-full sm:w-fit border border-[#CCCCCC]">
           <button
             type="button"
             onClick={() => setActiveTab("list")}
             className={cn(
-              "ff-shape-container px-4 py-1.5 text-xs font-semibold rounded-none cursor-pointer transition-colors",
+              "ff-shape-button flex-1 sm:flex-none px-4 py-1.5 text-xs font-semibold rounded-none cursor-pointer transition-colors",
               activeTab === "list" ? " bg-[#FF4FD8] text-[#f7f7f5] shadow-xs" : "text-[#666666] hover:text-[#333333]"
             )}
           >
@@ -303,7 +304,7 @@ export default function AdminAppointmentsPage() {
             type="button"
             onClick={() => setActiveTab("calendar")}
             className={cn(
-              "px-4 py-1.5 text-xs font-semibold rounded-none cursor-pointer transition-colors",
+              "flex-1 sm:flex-none px-4 py-1.5 text-xs font-semibold rounded-none cursor-pointer transition-colors",
               activeTab === "calendar" ? "ff-shape-container bg-[#FF4FD8] text-[#f7f7f5] shadow-xs" : "text-[#666666] hover:text-[#333333]"
             )}
           >
@@ -324,7 +325,7 @@ export default function AdminAppointmentsPage() {
         /* RANDVULARI LİSTELEME TAB'I */
         <div className="space-y-6">
           {/* Controls: Search + Status filter */}
-          <div className="ff-shape-container bg-[#F7F7F5] border border-[#E0E0E0] p-4 flex flex-col md:flex-row gap-4 items-center justify-between">
+          <div className="ff-shape-container ff-card flex flex-col md:flex-row gap-4 items-center justify-between">
             <div className="relative w-full md:max-w-md">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#999999]" size={15} />
               <input
@@ -337,18 +338,21 @@ export default function AdminAppointmentsPage() {
             </div>
 
             <div className="flex items-center gap-2 w-full md:w-auto">
-              <Filter size={14} className="text-[#666666]" />
-              <select
+              <Filter size={14} className="shrink-0 text-[#666666]" />
+              <FFSelect
                 value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="ff-shape-container text-xs text-[#333333] p-2 border border-[#E0E0E0] outline-none focus:border-[var(--ff-purple)] bg-white min-w-[150px]"
+                onValueChange={setStatusFilter}
+                size="sm"
+                fullWidth={false}
+                ariaLabel="Randevu durumu filtresi"
+                triggerClassName="flex-1 md:flex-none md:min-w-[180px] bg-white text-[#333333] border-[#E0E0E0]"
               >
-                <option value="all">Tüm Randevular</option>
-                <option value="pending">Bekleyenler</option>
-                <option value="approved">Onaylananlar</option>
-                <option value="completed">Tamamlananlar</option>
-                <option value="cancelled">İptal Edilenler</option>
-              </select>
+                <FFSelectItem value="all">Tüm Randevular</FFSelectItem>
+                <FFSelectItem value="pending">Bekleyenler</FFSelectItem>
+                <FFSelectItem value="approved">Onaylananlar</FFSelectItem>
+                <FFSelectItem value="completed">Tamamlananlar</FFSelectItem>
+                <FFSelectItem value="cancelled">İptal Edilenler</FFSelectItem>
+              </FFSelect>
             </div>
           </div>
 
@@ -458,7 +462,7 @@ export default function AdminAppointmentsPage() {
                                 </button>
                               </>
                             )}
-                            
+
                             {app.status === "approved" && (
                               <>
                                 <button
@@ -530,7 +534,7 @@ export default function AdminAppointmentsPage() {
         /* TAKVİM & SAAT KİLİTLEME TAB'I */
         <div className="grid lg:grid-cols-12 gap-4 items-start">
           {/* Left Column: Calendar UI */}
-          <div className="lg:col-span-5 bg-white border border-[#E0E0E0] p-6 ff-shape-container space-y-6">
+          <div className="lg:col-span-5 bg-white border border-[#E0E0E0] p-4 sm:p-6 ff-shape-container space-y-6">
             <div className="flex items-center justify-between border-b border-[#E0E0E0] pb-4">
               <h3 className="font-display font-extrabold text-[#333333] text-sm">
                 Takvim Seçimi
@@ -576,7 +580,7 @@ export default function AdminAppointmentsPage() {
                 {Array.from({ length: daysInMonth }).map((_, i) => {
                   const dayNum = i + 1
                   const checkDate = new Date(currentYear, currentMonth, dayNum)
-                  
+
                   // Weekend check
                   const dayOfWeek = checkDate.getDay()
                   const isWeekend = dayOfWeek === 0 || dayOfWeek === 6
@@ -604,7 +608,7 @@ export default function AdminAppointmentsPage() {
           </div>
 
           {/* Middle Column: Slot Blocker Grid */}
-          <div className="lg:col-span-4 bg-white border border-[#E0E0E0] p-6 ff-shape-container space-y-6">
+          <div className="lg:col-span-4 bg-white border border-[#E0E0E0] p-4 sm:p-6 ff-shape-container space-y-6">
             <h3 className="font-display font-extrabold text-[#333333] text-sm border-b border-[#E0E0E0] pb-4 flex items-center gap-1.5">
               <Clock size={16} className="text-[var(--ff-purple)]" />
               Zaman Kapatma / Kilit Paneli
@@ -693,7 +697,7 @@ export default function AdminAppointmentsPage() {
           </div>
 
           {/* Right Column: List of Blocked Slots */}
-          <div className="lg:col-span-3 bg-white border border-[#E0E0E0] p-6 ff-shape-container space-y-6">
+          <div className="lg:col-span-3 bg-white border border-[#E0E0E0] p-4 sm:p-6 ff-shape-container space-y-6">
             <h3 className="font-display font-extrabold text-[#333333] text-sm border-b border-[#E0E0E0] pb-4 flex items-center gap-1.5">
               <ShieldAlert size={16} className="text-red-500" />
               Bloke Edilmiş Saatler

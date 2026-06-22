@@ -23,8 +23,8 @@ import { cn } from "@/lib/utils"
 // ── Sizes ─────────────────────────────────────────────
 const triggerSizes = {
   sm: "h-9  px-3  py-1.5 text-[12px]",
-  md: "h-11 px-4  py-3   text-sm",
-  lg: "h-12 px-5  py-3   text-[15px]",
+  md: "h-9 px-4  py-3   text-sm",
+  lg: "h-9 px-5  py-3   text-[15px]",
 } as const
 
 // ── Trigger ───────────────────────────────────────────
@@ -84,7 +84,7 @@ function FFSelect({
         id={id}
         aria-label={ariaLabel}
         className={cn(
-          "ff-shape-container h-10 group inline-flex items-center justify-between gap-2",
+          "ff-shape-button h-10 group inline-flex items-center justify-between gap-2",
           "bg-[var(--surface)] text-[var(--foreground)]",
           "border border-[var(--border)]",
           "outline-none transition-[border-color,box-shadow,background-color] duration-150",
@@ -120,7 +120,7 @@ function FFSelect({
           position="popper"
           sideOffset={6}
           className={cn(
-            "z-[100] min-w-[var(--radix-select-trigger-width)] max-h-[60vh]",
+            "ff-shape-button z-[100] min-w-[var(--radix-select-trigger-width)] max-h-[60vh]",
             "overflow-hidden",
             "bg-[var(--surface-elevated)] text-[var(--foreground)]",
             "border border-[var(--border)] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.25)]",

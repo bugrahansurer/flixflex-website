@@ -70,16 +70,16 @@ export function ApiKeysForm({ initialKeys }: { initialKeys: ApiKeyRow[] }) {
   }
 
   return (
-    <div className="max-w-3xl space-y-8 pb-20">
+    <div className="space-y-4 pb-20">
       {/* Create */}
-      <div className="ff-shape-container p-6 bg-[#F7F7F5] border border-[#CCCCCC] space-y-4">
+      <div className="ff-shape-container ff-card space-y-4">
         <h3 className="font-display text-sm font-bold text-[#333333]">Yeni Anahtar Oluştur</h3>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Anahtar adı (örn: Mobil Uygulama)"
-            className="ff-shape-container flex-1 px-3 py-2.5 text-sm bg-white border border-[#CCCCCC] text-[#333333] placeholder:text-[#999999] outline-none focus:border-[#ff4fd8]"
+            className="ff-shape-button flex-1 px-3 py-2.5 text-sm bg-white border border-[#CCCCCC] text-[#333333] placeholder:text-[#999999] outline-none focus:border-[#ff4fd8]"
           />
           <FFButton onClick={createKey} disabled={creating} leftIcon={creating ? <Loader2 className="animate-spin" size={15} /> : <Plus size={15} />}>
             Oluştur
@@ -92,7 +92,7 @@ export function ApiKeysForm({ initialKeys }: { initialKeys: ApiKeyRow[] }) {
               <AlertTriangle size={14} />
               <span className="text-[12px] font-semibold">Bu anahtar yalnızca bir kez gösterilir — şimdi kopyalayın.</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
               <code className="flex-1 text-[12px] font-mono text-[#333333] bg-white border border-[#CCCCCC] px-3 py-2 break-all">{newKey}</code>
               <FFButton variant="ghost" onClick={copyKey} leftIcon={copied ? <Check size={14} /> : <Copy size={14} />}>
                 {copied ? "Kopyalandı" : "Kopyala"}

@@ -44,9 +44,10 @@ export async function ThemedNavbar() {
       description: s.description,
       iconKey:     s.iconKey,
       subServices: (s.subServices ?? []).map((sub) => ({
-        label:   sub.label,
-        href:    sub.href,
-        iconKey: sub.iconKey,
+        label:       sub.label,
+        href:        sub.href,
+        iconKey:     sub.iconKey,
+        description: sub.description,
       })),
     }))
   } catch {

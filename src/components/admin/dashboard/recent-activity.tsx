@@ -72,11 +72,11 @@ export function RecentActivity() {
         Son Aktiviteler
       </h2>
 
-      <div className="ff-shape-container bg-[#f7f7f5] border border-[#cccccc]">
+      <div className="ff-shape-container ff-card p-0">
         {/* Table header */}
         <div className={cn(
           "hidden md:grid grid-cols-[2fr_3fr_1fr] gap-4",
-          "px-3 py-2 bg-[#f2f2f2] border-b border-[#cccccc]",
+          "px-3 py-2 bg-[#f5f5f5] border-b border-[#cccccc]",
           "text-[10px] font-bold text-[#0d0d0d]"
         )}>
           <span>Kullanıcı</span>

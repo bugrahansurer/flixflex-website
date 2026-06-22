@@ -105,7 +105,7 @@ export function NewPageForm() {
       )}
 
       {/* Actions */}
-      <div className="flex items-center gap-3 pt-2">
+      <div className="flex flex-wrap items-center gap-3 pt-2">
         <FFButton
           type="submit"
           variant="primary"

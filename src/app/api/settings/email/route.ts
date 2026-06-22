@@ -4,12 +4,13 @@
 // ═══════════════════════════════════════════════════════════
 
 import { NextRequest, NextResponse } from "next/server"
-import { requireAdmin, jsonError } from "@/lib/ai/api-utils"
+import { requirePermission, jsonError } from "@/lib/ai/api-utils"
 import { getSetting, setSetting } from "@/lib/settings"
 import { encryptSecret, decryptSecret } from "@/lib/crypto"
 
 export async function GET() {
-  const gate = await requireAdmin()
+  // Secret-bearing settings — gate on the `settings` resource, NOT ai:create.
+  const gate = await requirePermission("settings", "read")
   if (!gate.ok) return gate.response
 
   const data = {
@@ -29,7 +30,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const gate = await requireAdmin()
+  const gate = await requirePermission("settings", "update")
   if (!gate.ok) return gate.response
 
   try {

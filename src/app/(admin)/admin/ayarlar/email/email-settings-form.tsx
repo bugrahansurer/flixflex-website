@@ -91,10 +91,10 @@ export function EmailSettingsForm({ initialSettings, saveAction }: EmailSettings
   }
 
   return (
-    <div className="space-y-8">
-      <form onSubmit={handleSave} className="space-y-8">
+    <div className="space-y-4">
+      <form onSubmit={handleSave} className="space-y-4">
         {/* ── Section: Provider & General ──────────────────── */}
-        <section className="ff-card bg-[#f7f7f5] border border-[#CCCCCC] p-6 md:p-8 space-y-6">
+        <section className="ff-card bg-[#f7f7f5] border border-[#CCCCCC] p-4 md:p-6 space-y-4">
           <div className="flex items-center gap-3 pb-4 border-b border-[#CCCCCC]">
             <Mail size={18} className="text-[#ff4fd8]" />
             <h2 className="font-display text-lg text-[#333333] font-bold">Sağlayıcı Ayarları</h2>
@@ -130,7 +130,7 @@ export function EmailSettingsForm({ initialSettings, saveAction }: EmailSettings
 
         {/* ── Section: SMTP Sunucusu ──────────────────────── */}
         {provider === "smtp" && (
-          <section className="ff-card bg-[#f7f7f5] border border-[#CCCCCC] p-6 md:p-8 space-y-6">
+          <section className="ff-card bg-[#f7f7f5] border border-[#CCCCCC] p-4 md:p-6 space-y-4">
             <div className="flex items-center gap-3 pb-4 border-b border-[#CCCCCC]">
               <Server size={18} className="text-[var(--ff-purple)]" />
               <h2 className="font-display text-lg text-[#333333] font-bold">SMTP Sunucu Detayları</h2>
@@ -147,7 +147,7 @@ export function EmailSettingsForm({ initialSettings, saveAction }: EmailSettings
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label className="text-[11px] font-bold text-[#333333]">Port</label>
                   <FFInput
@@ -192,7 +192,7 @@ export function EmailSettingsForm({ initialSettings, saveAction }: EmailSettings
 
         {/* ── Section: Resend API Entegrasyonu ───────────────── */}
         {provider === "resend" && (
-          <section className="ff-card bg-[#f7f7f5] border border-[#CCCCCC] p-6 md:p-8 space-y-6">
+          <section className="ff-card bg-[#f7f7f5] border border-[#CCCCCC] p-4 md:p-6 space-y-4">
             <div className="flex items-center gap-3 pb-4 border-b border-[#CCCCCC]">
               <KeyRound size={18} className="text-[#FF4FD8]" />
               <h2 className="font-display text-lg text-[#333333] font-bold">Resend API Ayarları</h2>
@@ -218,7 +218,7 @@ export function EmailSettingsForm({ initialSettings, saveAction }: EmailSettings
 
         {/* ── Actions ────────────────────────── */}
         <div className="flex justify-end pt-2">
-          <FFButton type="submit" size="lg" className="px-10 h-12" disabled={isSaving || isTesting}>
+          <FFButton type="submit" size="lg" className="px-4 h-10" disabled={isSaving || isTesting}>
             {isSaving ? <Loader2 className="animate-spin mr-2" size={16} /> : <Save size={16} className="mr-2" />}
             Ayarları Kaydet
           </FFButton>
@@ -226,9 +226,9 @@ export function EmailSettingsForm({ initialSettings, saveAction }: EmailSettings
       </form>
 
       {/* ── Section: Test Mail Gönderim Kutusu ─────────────── */}
-      <section className="ff-card bg-[#f0eff2] border border-[#ff4fd8]/30 p-6 md:p-8 space-y-6 relative overflow-hidden">
+      <section className="ff-card bg-[#f0eff2] border border-[#ff4fd8]/30 p-4 md:p-6 space-y-4 relative overflow-hidden">
         <div className="absolute right-0 top-0 w-24 h-24 bg-[#ff4fd8]/5 rounded-full blur-2xl pointer-events-none" />
-        
+
         <div className="flex items-center gap-3 pb-4 border-b border-[#CCCCCC]">
           <ShieldAlert size={18} className="text-[#ff4fd8]" />
           <div>

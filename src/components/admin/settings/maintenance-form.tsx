@@ -38,11 +38,11 @@ export function MaintenanceForm({ initialData }: { initialData: MaintenanceData 
   }
 
   return (
-    <div className="space-y-8 pb-20 max-w-3xl">
+    <div className="space-y-8 pb-20">
       {/* Toggle card */}
       <div
         className={cn(
-          "ff-shape-container p-6 border flex items-center justify-between gap-4 transition-colors",
+          "ff-shape-container p-3 border flex items-center justify-between gap-4 transition-colors",
           data.enabled
             ? "bg-[var(--warning)]/10 border-[var(--warning)]/40"
             : "bg-[#F7F7F5] border-[#CCCCCC]"
@@ -124,7 +124,7 @@ export function MaintenanceForm({ initialData }: { initialData: MaintenanceData 
       </div>
 
       {/* Actions */}
-      <div className="ff-shape-container sticky bottom-4 z-20 flex items-center justify-end gap-4 p-4 bg-[#F7F7F5]/80 backdrop-blur-md border border-[#CCCCCC]">
+      <div className="ff-shape-container sticky bottom-4 z-20 flex flex-wrap items-center justify-end gap-2 sm:gap-4 p-4 bg-[#F7F7F5]/40 backdrop-blur-sm border border-[#CCCCCC]">
         <FFButton variant="ghost" disabled={loading} onClick={() => setData(initialData)}>
           Sıfırla
         </FFButton>

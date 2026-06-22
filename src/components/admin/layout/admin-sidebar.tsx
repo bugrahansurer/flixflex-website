@@ -8,7 +8,6 @@ import { motion, AnimatePresence } from "framer-motion"
 import * as Tooltip from "@radix-ui/react-tooltip"
 import {
   LayoutDashboard,
-  FileText,
   BriefcaseBusiness,
   SquarePen,
   Sparkles,
@@ -17,16 +16,15 @@ import {
   Users,
   Settings,
   LogOut,
-  HardDrive,
   ExternalLink,
   CalendarDays,
-  IconPhotoVideo
+  IconPhotoVideo,
 } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 import type { SessionUser } from "@/lib/auth/types"
 import { hasPermission } from "@/lib/rbac/permissions"
 import { RESOURCES } from "@/lib/rbac/resources"
-import { IconDeviceLaptop, IconLayoutDashboard, IconServerSpark, IconStack } from "@tabler/icons-react"
+import { IconDeviceLaptop, IconServerSpark } from "@tabler/icons-react"
 
 // ── Nav items ─────────────────────────────────────
 // `resource` gates visibility — an item only shows if the user has
@@ -46,13 +44,25 @@ const NAV_ITEMS = [
   { label: "Ayarlar", href: "/admin/ayarlar", icon: Settings, exact: false, resource: RESOURCES.SETTINGS },
 ] as const
 
+type NavItem = (typeof NAV_ITEMS)[number]
+
 interface AdminSidebarProps {
   user: SessionUser
   siteLogo?: string
   logoHeight?: number
+  /** Whether the mobile overlay drawer is open (ignored on desktop). */
+  mobileOpen?: boolean
+  /** Called when the mobile drawer should close (backdrop tap / nav click). */
+  onMobileClose?: () => void
 }
 
-export function AdminSidebar({ user, siteLogo, logoHeight }: AdminSidebarProps) {
+export function AdminSidebar({
+  user,
+  siteLogo,
+  logoHeight,
+  mobileOpen = false,
+  onMobileClose,
+}: AdminSidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
   const [isHovered, setIsHovered] = React.useState(false)
@@ -67,39 +77,45 @@ export function AdminSidebar({ user, siteLogo, logoHeight }: AdminSidebarProps) 
     [user.permissions, isSuper]
   )
 
-  // Side effect: use isHovered as the 'expanded' state
+  // Desktop sidebar expands on hover.
   const collapsed = !isHovered
 
-  function isActive(item: (typeof NAV_ITEMS)[number]): boolean {
+  // Lock body scroll while the mobile drawer is open.
+  React.useEffect(() => {
+    if (!mobileOpen) return
+    const previous = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    return () => {
+      document.body.style.overflow = previous
+    }
+  }, [mobileOpen])
+
+  function isActive(item: NavItem): boolean {
     if (item.exact) return pathname === item.href
     return pathname.startsWith(item.href)
   }
 
-  return (
-    <Tooltip.Provider delayDuration={300} skipDelayDuration={100}>
-      <motion.nav
-        aria-label="Admin navigasyonu"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        className={cn(
-          "sticky top-0 h-screen z-40 w-fit shrink-0",
-          "flex flex-col",
-          "bg-[#0d0d0d] border-r border-[#2A2A2A]",
-          "overflow-hidden"
-        )}
-        animate={{ width: isHovered ? 240 : 64 }}
-        transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-      >
+  // ── Shared inner content ──────────────────────────
+  // Rendered both inside the desktop hover-sidebar (`expanded` follows hover)
+  // and inside the mobile drawer (`expanded` always true). `onNavigate` lets
+  // the mobile drawer close itself after a navigation.
+  // NOTE: called as a plain function (not <renderBody/>) so the subtree is
+  // inlined and reconciled normally — rendering it as a nested component would
+  // remount everything on every hover toggle.
+  const renderBody = (expanded: boolean, onNavigate?: () => void) => {
+    const isCollapsed = !expanded
+    return (
+      <>
         {/* Logo Section */}
         <div
           className={cn(
             "flex items-center border-b border-[var(--ff-purple)]/10",
-            "h-[8vh] px-6 shrink-0",
-            collapsed ? "justify-center" : "justify-start"
+            "h-[8vh] min-h-14 px-6 shrink-0",
+            isCollapsed ? "justify-center" : "justify-start"
           )}
         >
           <AnimatePresence initial={false}>
-            {!collapsed && (
+            {!isCollapsed && (
               <motion.div
                 key="logo-full"
                 initial={{ opacity: 0 }}
@@ -125,7 +141,7 @@ export function AdminSidebar({ user, siteLogo, logoHeight }: AdminSidebarProps) 
                 )}
               </motion.div>
             )}
-            {collapsed && siteLogo && (
+            {isCollapsed && siteLogo && (
               <motion.img
                 src={siteLogo}
                 alt="Logo"
@@ -147,6 +163,7 @@ export function AdminSidebar({ user, siteLogo, logoHeight }: AdminSidebarProps) 
               const linkContent = (
                 <Link
                   href={item.href}
+                  onClick={onNavigate}
                   target={"external" in item && item.external ? "_blank" : undefined}
                   className={cn(
                     "group flex items-center justify-start gap-3 w-full",
@@ -167,7 +184,7 @@ export function AdminSidebar({ user, siteLogo, logoHeight }: AdminSidebarProps) 
                     )}
                   />
                   <AnimatePresence initial={false}>
-                    {!collapsed && (
+                    {!isCollapsed && (
                       <motion.span
                         key="label"
                         initial={{ opacity: 0, x: -6 }}
@@ -183,13 +200,11 @@ export function AdminSidebar({ user, siteLogo, logoHeight }: AdminSidebarProps) 
                 </Link>
               )
 
-              if (collapsed) {
+              if (isCollapsed) {
                 return (
                   <li key={item.href}>
                     <Tooltip.Root>
-                      <Tooltip.Trigger asChild>
-                        {linkContent}
-                      </Tooltip.Trigger>
+                      <Tooltip.Trigger asChild>{linkContent}</Tooltip.Trigger>
                       <Tooltip.Portal>
                         <Tooltip.Content
                           side="right"
@@ -223,6 +238,7 @@ export function AdminSidebar({ user, siteLogo, logoHeight }: AdminSidebarProps) 
               <Link
                 href="/"
                 target="_blank"
+                onClick={onNavigate}
                 className={cn(
                   "flex items-center justify-center gap-3 w-full",
                   "h-10 px-2.5",
@@ -235,7 +251,7 @@ export function AdminSidebar({ user, siteLogo, logoHeight }: AdminSidebarProps) 
                   className="shrink-0 transition-transform duration-200 group-hover:scale-110"
                 />
                 <AnimatePresence initial={false}>
-                  {!collapsed && (
+                  {!isCollapsed && (
                     <motion.span
                       key="view-site-label"
                       initial={{ opacity: 0, x: -6 }}
@@ -250,7 +266,7 @@ export function AdminSidebar({ user, siteLogo, logoHeight }: AdminSidebarProps) 
                 </AnimatePresence>
               </Link>
             </Tooltip.Trigger>
-            {collapsed && (
+            {isCollapsed && (
               <Tooltip.Portal>
                 <Tooltip.Content
                   side="right"
@@ -269,7 +285,10 @@ export function AdminSidebar({ user, siteLogo, logoHeight }: AdminSidebarProps) 
         <div className="border-t border-[#2A2A2A] p-2 shrink-0">
           <button
             type="button"
-            onClick={() => router.push("/admin/profil")}
+            onClick={() => {
+              onNavigate?.()
+              router.push("/admin/profil")
+            }}
             className={cn(
               "w-full flex items-center gap-3",
               "px-2.5 h-12",
@@ -290,7 +309,7 @@ export function AdminSidebar({ user, siteLogo, logoHeight }: AdminSidebarProps) 
             </div>
 
             <AnimatePresence initial={false}>
-              {!collapsed && (
+              {!isCollapsed && (
                 <motion.div
                   key="user-info"
                   initial={{ opacity: 0 }}
@@ -309,7 +328,7 @@ export function AdminSidebar({ user, siteLogo, logoHeight }: AdminSidebarProps) 
               )}
             </AnimatePresence>
 
-            {!collapsed && (
+            {!isCollapsed && (
               <LogOut
                 size={13}
                 className="shrink-0 text-white group-hover:text-[var(--ff-purple)] transition-colors duration-150"
@@ -317,7 +336,54 @@ export function AdminSidebar({ user, siteLogo, logoHeight }: AdminSidebarProps) 
             )}
           </button>
         </div>
+      </>
+    )
+  }
+
+  return (
+    <Tooltip.Provider delayDuration={300} skipDelayDuration={100}>
+      {/* ── Desktop sidebar (hover to expand) ── */}
+      <motion.nav
+        aria-label="Admin navigasyonu"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        className={cn(
+          "sticky top-0 h-screen z-40 w-fit shrink-0",
+          "hidden lg:flex flex-col",
+          "bg-[#0d0d0d] border-r border-[#2A2A2A]",
+          "overflow-hidden"
+        )}
+        animate={{ width: isHovered ? 240 : 64 }}
+        transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+      >
+        {renderBody(!collapsed)}
       </motion.nav>
+
+      {/* ── Mobile backdrop ── */}
+      <div
+        aria-hidden="true"
+        onClick={onMobileClose}
+        className={cn(
+          "fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden",
+          "transition-opacity duration-300",
+          mobileOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        )}
+      />
+
+      {/* ── Mobile drawer (slide-in) ── */}
+      <nav
+        aria-label="Admin navigasyonu"
+        className={cn(
+          "fixed inset-y-0 left-0 z-50 w-[260px] max-w-[82vw]",
+          "flex flex-col lg:hidden",
+          "bg-[#0d0d0d] border-r border-[#2A2A2A]",
+          "overflow-hidden shadow-2xl",
+          "transition-transform duration-300 ease-out",
+          mobileOpen ? "translate-x-0" : "-translate-x-full"
+        )}
+      >
+        {renderBody(true, onMobileClose)}
+      </nav>
     </Tooltip.Provider>
   )
 }

@@ -11,9 +11,13 @@ interface DesktopNavProps {
   links:             NavLink[]
   transparent?:      boolean
   megaMenuServices?: MegaMenuService[]
+  /** Real header height (px) so the mega panel sits flush under it. */
+  headerHeight?:     number
+  /** Bubbles the mega menu open state up to the header. */
+  onMegaOpenChange?: (open: boolean) => void
 }
 
-export function DesktopNav({ links, transparent, megaMenuServices }: DesktopNavProps) {
+export function DesktopNav({ links, transparent, megaMenuServices, headerHeight, onMegaOpenChange }: DesktopNavProps) {
   const pathname = usePathname()
 
   return (
@@ -33,6 +37,8 @@ export function DesktopNav({ links, transparent, megaMenuServices }: DesktopNavP
               services={megaMenuServices}
               transparent={transparent ?? false}
               index={i}
+              headerHeight={headerHeight}
+              onOpenChange={onMegaOpenChange}
             />
           )
         }

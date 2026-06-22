@@ -68,7 +68,7 @@ export function IntegrationForm({ initialData }: { initialData: IntegrationsData
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Anthropic */}
-          <div className="ff-shape-container p-6 bg-[#F7F7F5] border border-[#CCCCCC] flex flex-col justify-between">
+          <div className="ff-shape-container ff-card">
             <div className="flex items-center gap-3 mb-6">
               <div className="ff-shape-button w-10 h-10 flex items-center justify-center bg-[var(--ff-purple)/0.1] text-[var(--ff-purple)] border border-[var(--ff-purple)/0.2]">
                 <Plug size={20} />
@@ -90,7 +90,7 @@ export function IntegrationForm({ initialData }: { initialData: IntegrationsData
           </div>
 
           {/* OpenAI */}
-          <div className="ff-shape-container p-6 bg-[#F7F7F5] border border-[#CCCCCC] flex flex-col justify-between">
+          <div className="ff-shape-container ff-card">
             <div className="flex items-center gap-3 mb-6">
               <div className="ff-shape-button w-10 h-10 flex items-center justify-center bg-green-500/10 text-green-500 border border-green-500/20">
                 <Plug size={20} />
@@ -112,7 +112,7 @@ export function IntegrationForm({ initialData }: { initialData: IntegrationsData
           </div>
 
           {/* Gemini */}
-          <div className="ff-shape-container p-6 bg-[#F7F7F5] border border-[#CCCCCC] flex flex-col justify-between">
+          <div className="ff-shape-container ff-card">
             <div className="flex items-center gap-3 mb-6">
               <div className="ff-shape-button w-10 h-10 flex items-center justify-center bg-blue-500/10 text-blue-500 border border-blue-500/20">
                 <Plug size={20} />
@@ -127,14 +127,14 @@ export function IntegrationForm({ initialData }: { initialData: IntegrationsData
               label="Google AI Key"
               type="password"
               placeholder="AIza..."
-              className="bg-transparent border border-[#CCCCCC] focus:border-[#ff4fd8] text-xs text-[#333333] placeholder:text-[#999999]" 
+              className="bg-transparent border border-[#CCCCCC] focus:border-[#ff4fd8] text-xs text-[#333333] placeholder:text-[#999999]"
               value={data.geminiKey}
               onChange={(e) => setData({ ...data, geminiKey: e.target.value })}
             />
           </div>
 
           {/* Default Model */}
-          <div className="ff-shape-container p-6 bg-[#F7F7F5] border border-[#CCCCCC] flex flex-col justify-between">
+          <div className="ff-shape-container ff-card">
             <div className="flex items-center gap-3 mb-6">
               <div className="ff-shape-button w-10 h-10 flex items-center justify-center bg-[#333333]/5 text-[#333333] border border-[#CCCCCC]">
                 <KeyRound size={20} />
@@ -182,7 +182,7 @@ export function IntegrationForm({ initialData }: { initialData: IntegrationsData
         </header>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="ff-shape-container p-6 bg-[#F7F7F5] border border-[#CCCCCC]">
+          <div className="ff-shape-container ff-card">
             <div className="flex items-center gap-3 mb-4">
               <Globe size={18} className="text-orange-500" />
               <h3 className="font-display text-sm font-bold text-[#333333]">Google Analytics</h3>
@@ -196,7 +196,7 @@ export function IntegrationForm({ initialData }: { initialData: IntegrationsData
             />
           </div>
 
-          <div className="ff-shape-container p-6 bg-[#F7F7F5] border border-[#CCCCCC]">
+          <div className="ff-shape-container ff-card">
             <div className="flex items-center gap-3 mb-4">
               <Globe size={18} className="text-blue-600" />
               <h3 className="font-display text-sm font-bold text-[#333333]">Google Tag Manager</h3>
@@ -210,7 +210,7 @@ export function IntegrationForm({ initialData }: { initialData: IntegrationsData
             />
           </div>
 
-          <div className="ff-shape-container p-6 bg-[#F7F7F5] border border-[#CCCCCC]">
+          <div className="ff-shape-container ff-card">
             <div className="flex items-center gap-3 mb-4">
               <Share2 size={18} className="text-blue-500" />
               <h3 className="font-display text-sm font-bold text-[#333333]">Meta Pixel</h3>
@@ -234,7 +234,7 @@ export function IntegrationForm({ initialData }: { initialData: IntegrationsData
         </header>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="ff-shape-container p-6 bg-[#F7F7F5] border border-[#CCCCCC]">
+          <div className="ff-shape-container ff-card">
             <div className="flex items-center gap-3 mb-4">
               <Mail size={18} className="text-green-500" />
               <h3 className="font-display text-sm font-bold text-[#333333]">Resend</h3>
@@ -251,7 +251,7 @@ export function IntegrationForm({ initialData }: { initialData: IntegrationsData
             />
           </div>
 
-          <div className="ff-shape-container p-6 bg-[#F7F7F5] border border-[#CCCCCC]">
+          <div className="ff-shape-container ff-card">
             <div className="flex items-center gap-3 mb-4">
               <Share2 size={18} className="text-[#333333]" />
               <h3 className="font-display text-sm font-bold text-[#333333]">Mailchimp</h3>
@@ -270,7 +270,7 @@ export function IntegrationForm({ initialData }: { initialData: IntegrationsData
       </section>
 
       {/* ── Footer Actions ───────────────────── */}
-      <div className="ff-shape-container sticky bottom-4 z-20 flex items-center justify-end gap-4 p-4 bg-[#F7F7F5]/80 backdrop-blur-md border border-[#CCCCCC]">
+      <div className="ff-shape-container sticky bottom-4 z-20 flex flex-wrap items-center justify-end gap-2 sm:gap-4 p-4 bg-[#F7F7F5]/40 backdrop-blur-sm border border-[#CCCCCC]">
         <p className="mr-auto text-[11px] text-[#666666] hidden md:block italic">
           * Değişiklikleri kaydetmeyi unutmayın.
         </p>

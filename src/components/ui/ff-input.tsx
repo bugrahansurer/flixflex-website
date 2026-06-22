@@ -46,9 +46,9 @@ const FFInput = React.forwardRef<HTMLInputElement, FFInputProps>(
             ref={ref}
             id={inputId}
             className={cn(
-              "ff-shape-container w-full text-sm text-[var(--foreground)]",
+              "ff-shape-button w-full text-sm text-[var(--foreground)]",
               "placeholder:text-[var(--foreground-faint)]",
-              "py-3 border outline-none rounded-none",
+              "h-10 border outline-none rounded-none",
               "transition-all duration-150",
               "focus:shadow-[0_0_0_3px_var(--ff-purple-muted)]",
               error && "border-red-500 focus:border-red-500 focus:shadow-[0_0_0_3px_rgba(220,38,38,0.1)]",
@@ -107,10 +107,10 @@ const FFTextarea = React.forwardRef<HTMLTextAreaElement, FFTextareaProps>(
           ref={ref}
           id={inputId}
           className={cn(
-            "ff-shape-container w-full text-sm text-[var(--foreground)]",
+            "ff-shape-button w-full text-sm text-[var(--foreground)]",
             "placeholder:text-[var(--foreground-faint)]",
             "bg-[var(--surface)] border border-[var(--border)]",
-            "px-4 py-3 outline-none rounded-none resize-y min-h-[120px]",
+            "h-9 px-4 py-2 outline-none rounded-none resize-y min-h-[120px]",
             "transition-all duration-150",
             "focus:border-[var(--ff-purple)] focus:shadow-[0_0_0_3px_var(--ff-purple-muted)]",
             error && "border-red-500 focus:border-red-500",

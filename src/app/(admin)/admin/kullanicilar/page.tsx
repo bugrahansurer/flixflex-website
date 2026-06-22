@@ -126,9 +126,12 @@ export default async function UsersPage({ searchParams }: Props) {
           )}
         </div>
       ) : (
-        <div className="ff-shape-container border border-[#CCCCCC] overflow-hidden">
+        <div className="ff-shape-container ff-card p-0 overflow-hidden">
+         {/* Horizontal scroll on small screens so the table never clips */}
+         <div className="overflow-x-auto">
+          <div className="min-w-[760px]">
           {/* Table header */}
-          <div className="grid grid-cols-[auto_1fr_1fr_auto_auto_auto_auto] gap-4 px-3 py-2 bg-[#f2f2f2] border-b border-[#CCCCCC] items-center">
+          <div className="grid grid-cols-[auto_1fr_1fr_auto_auto_auto_auto] gap-4 px-6 py-2 bg-[#f5f5f5] border-b border-[#CCCCCC] items-center">
             <span className="text-[10px] font-semibold text-[#888888] w-8" />
             <span className="text-[10px] font-semibold text-[#888888]">Kullanıcı</span>
             <span className="text-[10px] font-semibold text-[#888888]">E-posta</span>
@@ -209,6 +212,8 @@ export default async function UsersPage({ searchParams }: Props) {
               </div>
             )
           })}
+          </div>
+         </div>
         </div>
       )}
 

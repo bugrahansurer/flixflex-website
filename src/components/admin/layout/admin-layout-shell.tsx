@@ -13,29 +13,28 @@ interface AdminLayoutShellProps {
 }
 
 export function AdminLayoutShell({ user, siteLogo, logoHeight, children }: AdminLayoutShellProps) {
+  // Mobile drawer state. On desktop the sidebar is always visible (hover-expand);
+  // below `lg` it slides in as an overlay drawer controlled from the topbar's menu button.
+  const [mobileOpen, setMobileOpen] = React.useState(false)
+
   return (
     <div className="flex min-h-screen bg-[#F7F7F5] text-[var(--foreground)]">
-      {/* Fixed left sidebar */}
+      {/* Left sidebar — persistent on desktop, overlay drawer on mobile */}
       <AdminSidebar
         user={user}
         siteLogo={siteLogo}
         logoHeight={logoHeight}
+        mobileOpen={mobileOpen}
+        onMobileClose={() => setMobileOpen(false)}
       />
 
-      {/* Main column — offset by sidebar width.
-          will-change: margin lets the browser promote this layer and batch
-          the margin reflow with the sidebar transform, reducing paint cost. */}
-      <div
-        className="flex flex-col flex-1 min-w-0"
-      >
+      {/* Main column — offset by sidebar width on desktop, full width on mobile. */}
+      <div className="flex flex-col flex-1 min-w-0">
         {/* Sticky topbar */}
-        <AdminTopbar user={user} />
+        <AdminTopbar user={user} onMenuClick={() => setMobileOpen(true)} />
 
         {/* Page content */}
-        <main
-          id="admin-content"
-          className="flex-1 bg-[#F7F7F5]"
-        >
+        <main id="admin-content" className="flex-1 bg-[#F7F7F5]">
           {children}
         </main>
       </div>

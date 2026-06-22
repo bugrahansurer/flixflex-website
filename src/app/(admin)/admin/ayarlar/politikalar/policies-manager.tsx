@@ -7,7 +7,7 @@ import { Save, Loader2, ExternalLink, PenTool, Check, AlertTriangle } from "@/li
 import { toast } from "sonner"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Section = { id: string; type: string; order: number; visible?: boolean; props: Record<string, any>; [k: string]: any }
+type Section = { id: string; type: string; order: number; visible?: boolean; props: Record<string, any>;[k: string]: any }
 
 export interface PolicyEntry {
   slug: string
@@ -108,7 +108,7 @@ function PolicyCard({ entry }: { entry: PolicyEntry }) {
   }
 
   return (
-    <section className="ff-card bg-[#f7f7f5] border border-[#CCCCCC] p-6 md:p-8 space-y-5">
+    <section className="ff-card ff-card space-y-5">
       {/* Header row */}
       <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#CCCCCC]">
         <div className="flex items-center gap-2">
@@ -159,7 +159,7 @@ function PolicyCard({ entry }: { entry: PolicyEntry }) {
           onChange={(e) => setBody(e.target.value)}
           rows={10}
           spellCheck={false}
-          className="w-full bg-white border border-[#CCCCCC] p-3 text-[13px] leading-relaxed text-[#333333] placeholder:text-[#999999] focus:outline-none focus:border-[#ff4fd8] transition-colors resize-y font-mono"
+          className="ff-shape-container w-full bg-white border border-[#CCCCCC] p-3 text-[13px] leading-relaxed text-[#333333] placeholder:text-[#999999] focus:outline-none focus:border-[#ff4fd8] transition-colors resize-y font-mono"
           placeholder="<p>Politika metni...</p>"
         />
         <p className="text-[10px] text-[#999999] leading-relaxed">

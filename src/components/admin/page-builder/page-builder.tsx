@@ -15,8 +15,12 @@ import {
   Send,
   CheckCircle2,
   Clock,
+  Layers,
+  Layout,
+  Settings,
 } from "@/lib/icons"
 import { cn } from "@/lib/utils"
+import { toast } from "sonner"
 import { FFButton } from "@/components/ui/ff-button"
 import { usePageBuilder } from "@/store/page-builder"
 import { useUndoRedoKeys } from "@/hooks/use-history"
@@ -55,6 +59,8 @@ export function PageBuilder({ initialPage }: PageBuilderProps) {
   const isDirtyRef = useRef(isDirty)
   const [isSaving, setIsSaving] = useState(false)
   const [showPreview, setShowPreview] = useState(false)
+  // Below lg the 3-pane editor is tabbed — this picks the visible pane.
+  const [mobilePane, setMobilePane] = useState<"sections" | "canvas" | "properties">("canvas")
 
   useEffect(() => {
     isDirtyRef.current = isDirty
@@ -65,7 +71,7 @@ export function PageBuilder({ initialPage }: PageBuilderProps) {
     if (!currentPage) return
     setIsSaving(true)
     try {
-      await fetch(`/api/pages/${currentPage.id}`, {
+      const res = await fetch(`/api/pages/${currentPage.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -75,9 +81,14 @@ export function PageBuilder({ initialPage }: PageBuilderProps) {
           status: currentPage.status,
         }),
       })
+      // fetch HTTP 4xx/5xx'te reddetmez — başarıyı açıkça doğrula; aksi halde
+      // markSaved() çağrılmamalı ki "Kaydedilmemiş değişiklik" göstergesi
+      // doğru kalsın (sessiz veri kaybını önler).
+      if (!res.ok) throw new Error(`Kaydetme başarısız (HTTP ${res.status})`)
       markSaved()
     } catch (err) {
       console.error("[PageBuilder] Auto-save failed:", err)
+      toast.error("Değişiklikler kaydedilemedi. Lütfen tekrar deneyin.")
     } finally {
       setIsSaving(false)
     }
@@ -139,7 +150,7 @@ export function PageBuilder({ initialPage }: PageBuilderProps) {
     setIsSaving(true)
     try {
       // Save ALL changes (sections + title + description + status) atomik olarak
-      await fetch(`/api/pages/${p.id}`, {
+      const res = await fetch(`/api/pages/${p.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -149,10 +160,12 @@ export function PageBuilder({ initialPage }: PageBuilderProps) {
           status: "published",
         }),
       })
+      if (!res.ok) throw new Error(`Yayınlama başarısız (HTTP ${res.status})`)
       setStatus("published")
       markSaved()
     } catch (err) {
       console.error("[PageBuilder] Publish failed:", err)
+      toast.error("Sayfa yayınlanamadı. Lütfen tekrar deneyin.")
     } finally {
       setIsSaving(false)
     }
@@ -175,9 +188,9 @@ export function PageBuilder({ initialPage }: PageBuilderProps) {
   return (
     <div className="flex flex-col h-[calc(92vh)] bg-[#f7f7f5] overflow-hidden">
       {/* ── Top Toolbar ─────────────────────────────── */}
-      <header className="flex items-center gap-2 px-4 h-14 border-b border-[#CCCCCC] bg-[#f7f7f5] shrink-0">
+      <header className="flex items-center gap-2 px-4 h-14 border-b border-[#CCCCCC] bg-[#f7f7f5] shrink-0 overflow-x-auto">
         {/* Title input */}
-        <div className="flex-1 min-w-0 max-w-sm">
+        <div className="w-36 shrink-0 sm:flex-1 sm:w-auto sm:min-w-0 max-w-sm">
           <input
             className={cn(
               "w-full bg-transparent text-sm font-medium text-[#333333]",
@@ -205,7 +218,7 @@ export function PageBuilder({ initialPage }: PageBuilderProps) {
         </span>
 
         {/* Undo / Redo */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 shrink-0">
           <button
             onClick={undo}
             disabled={!canUndo}
@@ -236,7 +249,7 @@ export function PageBuilder({ initialPage }: PageBuilderProps) {
         <div className="w-px h-5 bg-[#CCCCCC]" />
 
         {/* Save state indicator */}
-        <div className="flex items-center gap-1.5 text-[11px] text-[#666666]">
+        <div className="hidden sm:flex items-center gap-1.5 text-[11px] text-[#666666]">
           {isSaving ? (
             <>
               <div className="w-3 h-3 border border-[#ff4fd8] border-t-transparent rounded-full animate-spin" />
@@ -256,13 +269,13 @@ export function PageBuilder({ initialPage }: PageBuilderProps) {
         </div>
 
         {/* Spacer */}
-        <div className="flex-1" />
+        <div className="hidden sm:block flex-1" />
 
         {/* Action buttons */}
         <button
           onClick={() => setShowPreview((v) => !v)}
           className={cn(
-            "ff-shape-button flex items-center gap-1.5 px-4 py-2 text-[11px] font-medium",
+            "ff-shape-button shrink-0 flex items-center gap-1.5 px-4 py-2 text-[11px] font-medium",
             "border transition-colors duration-150",
             showPreview
               ? "border-[#ff4fd8] text-[#ff4fd8] bg-[#ff4fd8]/10"
@@ -300,22 +313,66 @@ export function PageBuilder({ initialPage }: PageBuilderProps) {
           <LivePreview page={page} />
         </div>
       ) : (
-        <div className="flex flex-1 min-h-0 overflow-hidden">
-          {/* Left: Section Panel */}
-          <aside className="w-72 shrink-0 border-r border-[#CCCCCC] bg-[#f7f7f5] overflow-y-auto">
-            <SectionPanel />
-          </aside>
+        <>
+          {/* Mobile pane switcher — the 3-pane editor is tabbed below lg */}
+          <div className="lg:hidden flex shrink-0 border-b border-[#CCCCCC] bg-[#f7f7f5]">
+            {([
+              { key: "sections", label: "Bölümler", Icon: Layers },
+              { key: "canvas", label: "Tuval", Icon: Layout },
+              { key: "properties", label: "Özellikler", Icon: Settings },
+            ] as const).map(({ key, label, Icon }) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setMobilePane(key)}
+                className={cn(
+                  "flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 text-[11px] font-semibold border-b-2 transition-colors",
+                  mobilePane === key
+                    ? "border-[#ff4fd8] text-[#ff4fd8]"
+                    : "border-transparent text-[#666666] hover:text-[#333333]"
+                )}
+              >
+                <Icon size={14} />
+                {label}
+              </button>
+            ))}
+          </div>
 
-          {/* Center: Sortable Canvas */}
-          <main className="flex-1 min-w-0 overflow-y-auto bg-[#f7f7f5]">
-            <SortableCanvas />
-          </main>
+          <div className="flex flex-col lg:flex-row flex-1 min-h-0 overflow-hidden">
+            {/* Left: Section Panel */}
+            <aside
+              className={cn(
+                mobilePane === "sections" ? "block" : "hidden",
+                "lg:block min-h-0 w-full lg:w-72 flex-1 lg:flex-none",
+                "overflow-y-auto bg-[#f7f7f5] lg:border-r border-[#CCCCCC]",
+              )}
+            >
+              <SectionPanel />
+            </aside>
 
-          {/* Right: Property Editor */}
-          <aside className="w-80 shrink-0 border-l border-[#CCCCCC] bg-[#f7f7f5] overflow-y-auto">
-            <PropertyEditor />
-          </aside>
-        </div>
+            {/* Center: Sortable Canvas */}
+            <main
+              className={cn(
+                mobilePane === "canvas" ? "block" : "hidden",
+                "lg:block min-h-0 w-full flex-1 lg:min-w-[280px]",
+                "overflow-y-auto bg-[#f7f7f5]",
+              )}
+            >
+              <SortableCanvas />
+            </main>
+
+            {/* Right: Property Editor */}
+            <aside
+              className={cn(
+                mobilePane === "properties" ? "block" : "hidden",
+                "lg:block min-h-0 w-full lg:w-80 flex-1 lg:flex-none",
+                "overflow-y-auto bg-[#f7f7f5] lg:border-l border-[#CCCCCC]",
+              )}
+            >
+              <PropertyEditor />
+            </aside>
+          </div>
+        </>
       )}
     </div>
   )

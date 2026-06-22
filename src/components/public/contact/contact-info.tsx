@@ -9,7 +9,7 @@ import { staggerContainer, fadeInUp } from "@/lib/animations"
 // ── Decorative floating shapes (right-panel visual) ───────
 function ContactDecor() {
   return (
-    <div aria-hidden className="relative h-48 w-full mt-8 overflow-hidden">
+    <div aria-hidden className="relative h-48 w-full mt-4 overflow-hidden">
       {/* Outer border box */}
       <motion.div
         className="ff-shape-container absolute inset-4 border border-[rgba(255, 79, 216,0.22)]"
@@ -37,7 +37,7 @@ function ContactDecor() {
         )}
       >
         {/* Pulsing dot + label */}
-        <span className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-[var(--foreground-faint)]">
+        <span className="flex items-center gap-2 text-[10px] text-[var(--foreground-faint)]">
           <span className="w-1.5 h-1.5 bg-[var(--ff-purple)] animate-pulse" />
           Şu an müsaitiz
         </span>
@@ -53,7 +53,7 @@ function ContactDecor() {
             className="h-full bg-[var(--ff-purple)]"
           />
         </div>
-        <p className="text-[9px] uppercase tracking-widest text-[var(--foreground-faint)]">
+        <p className="text-[9px] text-[var(--foreground-faint)]">
           Yanıt oranı: 88%
         </p>
       </motion.div>
@@ -101,9 +101,7 @@ export function ContactInfo() {
       whileInView="visible"
       viewport={{ once: true, margin: "-60px" }}
       className={cn(
-        "ff-shape-container h-full flex flex-col gap-0",
-        "border border-[var(--border)] bg-[var(--surface)]",
-        "p-4 lg:p-6"
+        "ff-shape-container ff-card h-full flex flex-col gap-0",
       )}
     >
       {/* Header */}

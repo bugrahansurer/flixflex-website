@@ -59,7 +59,7 @@ export default async function ProfilPage() {
       </header>
 
       {/* ── Identity card ─────────────────────── */}
-      <section className="ff-shape-container mb-10 grid md:grid-cols-[auto_1fr] gap-6 items-start p-6 border border-[#cccccc] bg-[#f7f7f5]">
+      <section className="ff-shape-container ff-card mb-10 grid md:grid-cols-[auto_1fr] gap-6 items-start">
         {/* Avatar */}
         <div className="ff-shape-button w-10 h-10 flex items-center justify-center bg-[#ff4fd8]/10 border border-[#ff4fd8]/30 text-[#ff4fd8] font-display font-extrabold text-md tracking-tight">
           {initials(user.name, user.email)}
@@ -69,11 +69,11 @@ export default async function ProfilPage() {
         <div className="items-center grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 text-sm">
           <div className="flex items-start gap-2">
             <div>
-               <div className="flex items-start gap-1">
-               <User size={14} className="text-[#ff4fd8]" />
-               <p className="font-bold text-[11px] text-[#666666] mb-0.5">
-                 Ad Soyad
-               </p>
+              <div className="flex items-start gap-1">
+                <User size={14} className="text-[#ff4fd8]" />
+                <p className="font-bold text-[11px] text-[#666666] mb-0.5">
+                  Ad Soyad
+                </p>
               </div>
               <p className="text-[#333333] font-medium mt-1">
                 {user.name ?? "—"}
@@ -83,26 +83,26 @@ export default async function ProfilPage() {
 
           <div className="flex items-start gap-2">
             <div>
-               <div className="flex items-start gap-1">
-                 <Mail size={14} className="text-[#ff4fd8]" />
-                 <p className="font-bold text-[10px] text-[#666666] mb-0.5">
-                 E-posta
-                 </p>
-                </div>
-                <p className="text-[#333333] font-medium break-all mt-1">
-                  {user.email}
+              <div className="flex items-start gap-1">
+                <Mail size={14} className="text-[#ff4fd8]" />
+                <p className="font-bold text-[10px] text-[#666666] mb-0.5">
+                  E-posta
                 </p>
+              </div>
+              <p className="text-[#333333] font-medium break-all mt-1">
+                {user.email}
+              </p>
             </div>
           </div>
 
           <div className="flex items-start gap-2">
             <div>
-                <div className="flex items-start gap-1">
-                 <Shield size={14} className="text-[#ff4fd8]" />
-                 <p className="font-bold text-[10px] text-[#666666] mb-0.5">
-                Rol
-                 </p>
-                </div>
+              <div className="flex items-start gap-1">
+                <Shield size={14} className="text-[#ff4fd8]" />
+                <p className="font-bold text-[10px] text-[#666666] mb-0.5">
+                  Rol
+                </p>
+              </div>
               <p className="text-[#333333] font-medium mt-1">
                 {user.role.name}
               </p>
@@ -111,13 +111,13 @@ export default async function ProfilPage() {
 
           <div className="flex items-start gap-2">
             <div>
-                <div className="flex items-start gap-1">
-                 <Clock size={14} className="text-[#ff4fd8]" />
-                 <p className="font-bold text-[10px] text-[#666666] mb-0.5">
+              <div className="flex items-start gap-1">
+                <Clock size={14} className="text-[#ff4fd8]" />
+                <p className="font-bold text-[10px] text-[#666666] mb-0.5">
                   Son giriş
-                 </p>
-                </div>
-                <p className="text-[#333333] font-medium mt-1">
+                </p>
+              </div>
+              <p className="text-[#333333] font-medium mt-1">
                 {user.lastLogin
                   ? formatRelativeTime(user.lastLogin)
                   : "Henüz hiç"}
@@ -128,7 +128,7 @@ export default async function ProfilPage() {
       </section>
 
       {/* ── Form: Personal info ───────────────── */}
-      <section className="ff-shape-container mb-10 p-6 md:p-8 border border-[#cccccc]">
+      <section className="ff-shape-container ff-card mb-10">
         <div className="flex items-center gap-2 mb-6">
           <User size={16} className="text-[#ff4fd8]" />
           <h2 className="font-display text-xl font-bold text-[#333333]">
@@ -146,7 +146,7 @@ export default async function ProfilPage() {
       </section>
 
       {/* ── Form: Password ────────────────────── */}
-      <section className="ff-shape-container mb-10 p-6 md:p-8 border border-[#cccccc]">
+      <section className="ff-shape-container ff-card mb-10">
         <div className="flex items-center gap-2 mb-6">
           <KeyRound size={16} className="text-[#ff4fd8]" />
           <h2 className="font-display text-xl font-bold text-[#333333]">

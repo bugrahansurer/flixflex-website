@@ -101,7 +101,7 @@ function KpiCard({
     >
       <TiltCard
         variant="glass"
-        className="bg-[#f0f0f0] hover:bg-[#F7F7F5] border border-[#cccccc] p-3 overflow-hidden"
+        className="overflow-hidden"
       >
         {/* Top purple accent on hover */}
         <div className="absolute inset-x-0 top-0 h-px bg-[#ff4fd8] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

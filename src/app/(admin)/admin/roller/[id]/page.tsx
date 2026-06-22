@@ -58,7 +58,7 @@ export default async function RoleDetailPage({ params }: Props) {
       </Link>
 
       {/* Header */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 flex-wrap">
         <h1 className="font-display text-2xl font-bold text-[var(--foreground)]">
           {role.name}
         </h1>
@@ -72,8 +72,8 @@ export default async function RoleDetailPage({ params }: Props) {
       </div>
 
       {/* Role info form */}
-      <section className="max-w-2xl space-y-3">
-        <h2 className="text-xs font-semibold tracking-[0.08em] uppercase text-[var(--foreground-muted)]">
+      <section className="space-y-3">
+        <h2 className="text-xs font-semibold text-[var(--foreground-muted)]">
           Rol Bilgileri
         </h2>
         <FFContainer border="subtle" padding="lg">
@@ -90,7 +90,7 @@ export default async function RoleDetailPage({ params }: Props) {
 
       {/* Permission matrix */}
       <section className="space-y-3">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <h2 className="text-xs font-semibold tracking-[0.08em] uppercase text-[var(--foreground-muted)]">
             Yetki Matrisi
           </h2>

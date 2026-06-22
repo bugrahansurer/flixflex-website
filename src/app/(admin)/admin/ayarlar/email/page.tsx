@@ -91,7 +91,7 @@ export default async function EmailSettingsPage() {
       </nav>
 
       {/* ── Header ────────────────────────────── */}
-      <header className="mb-10 flex items-start justify-between gap-4">
+      <header className="mb-10 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
           <h1 className="font-display text-2xl font-extrabold text-[#333333] mb-2">
             E-posta <span className="text-[#ff4fd8]">Entegrasyonu</span>
@@ -100,8 +100,8 @@ export default async function EmailSettingsPage() {
             Sistem randevu onay bildirimlerini ve otomatik Google Meet toplantı davetlerini buradaki e-posta kanalı üzerinden iletir.
           </p>
         </div>
-        <Link href="/admin/ayarlar" className="ff-btn bg-[#FF4FD8] text-white hover:bg-[#e041c0] text-[12px] h-10 px-4">
-          <ArrowLeft size={14} className="mr-2" />
+        <Link href="/admin/ayarlar" className="ff-btn self-start text-[#FF4FD8] text-[12px] hover:text-[#dc2db6] transition-all duration-300 h-10 px-4">
+          <ArrowLeft size={14} className="-mr-1" />
           Geri Dön
         </Link>
       </header>

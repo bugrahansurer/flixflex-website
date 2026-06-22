@@ -247,8 +247,8 @@ export default function MediaPage() {
     if (ok > 0) {
       toast.success(
         `${ok} dosya yüklendi` +
-          (fail ? `, ${fail} başarısız` : "") +
-          (hasVideo ? " · videolar işleniyor olabilir" : "")
+        (fail ? `, ${fail} başarısız` : "") +
+        (hasVideo ? " · videolar işleniyor olabilir" : "")
       )
     } else {
       toast.error("Hiçbir dosya yüklenemedi")
@@ -309,7 +309,7 @@ export default function MediaPage() {
             Medya Kütüphanesi
           </h1>
           {/* Breadcrumbs */}
-          <div className="flex items-center gap-1 mt-1">
+          <div className="flex flex-wrap items-center gap-1 mt-1">
             <button
               onClick={() => navigateToFolder(null)}
               onDragOver={onDragOver}
@@ -334,16 +334,16 @@ export default function MediaPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-y-3 gap-x-2 sm:gap-x-3">
           {/* Sort Controls */}
-          <div className="flex items-center gap-2 border-r border-[#CCCCCC] pr-4">
-            <div className="flex bg-[#f7f7f5] p-1 ff-shape-button border border-[#CCCCCC]">
+          <div className="flex items-center gap-2 md:border-r md:border-[#CCCCCC] md:pr-4">
+            <div className="flex bg-[#f7f7f5] h-10 p-1 ff-shape-button border border-[#CCCCCC]">
               {(["createdAt", "title", "type", "size"] as const).map((field) => (
                 <button
                   key={field}
                   onClick={() => setSortBy(field)}
                   className={cn(
-                    "w-8 h-8 flex items-center justify-center transition-all ff-shape-button",
+                    "w-7.5 h-7.5 flex items-center justify-center transition-all ff-shape-button",
                     sortBy === field ? "bg-[#ff4fd8] text-white" : "text-[#666666] hover:text-[#ff4fd8]"
                   )}
                   title={field === "createdAt" ? "Tarih" : field === "title" ? "Ad" : field === "type" ? "Tür" : "Boyut"}
@@ -354,20 +354,20 @@ export default function MediaPage() {
             </div>
             <button
               onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
-              className="ff-shape-container w-10 h-10 flex items-center justify-center bg-[#f7f7f5] border border-[#CCCCCC] ff-shape-button text-[#666666] hover:text-[#ff4fd8] transition-all"
+              className="ff-shape-button w-9 h-9 flex items-center justify-center bg-[#f7f7f5] border border-[#CCCCCC] ff-shape-button text-[#666666] hover:text-[#ff4fd8] transition-all"
             >
               {sortOrder === "asc" ? <SortAsc size={16} /> : <SortDesc size={16} />}
             </button>
           </div>
 
-          {/* Filter Tabs */}
-          <div className="ff-shape-button hidden sm:flex p-1 border border-[#CCCCCC] bg-[#f7f7f5]">
+          {/* Filter Tabs — full-width segmented on mobile, inline on desktop */}
+          <div className="ff-shape-button order-last md:order-none flex w-full md:w-auto p-1 border border-[#CCCCCC] bg-[#f7f7f5]">
             {(["all", "folder", "image", "video"] as const).map((f) => (
               <button
                 key={f}
                 onClick={() => setFilter(f)}
                 className={cn(
-                  "ff-shape-button px-4 py-1.5 text-[11px] font-bold transition-all",
+                  "ff-shape-button flex-1 md:flex-none whitespace-nowrap h-7.5 px-3 sm:px-4 py-1 text-[11px] font-bold transition-all",
                   filter === f
                     ? "bg-[#ff4fd8] text-white"
                     : "text-[#666666] hover:text-[#ff4fd8]"
@@ -378,39 +378,42 @@ export default function MediaPage() {
             ))}
           </div>
 
-          <button
-            onClick={createFolder}
-            className="ff-shape-button inline-flex items-center gap-2 h-9 px-4 border border-[#CCCCCC] text-[#666666] font-bold text-[11px] hover:bg-[#f7f7f5] transition-all"
-          >
-            <FolderPlus size={16} />
-            <span className="hidden sm:inline">Klasör</span>
-          </button>
+          {/* Action buttons — stay grouped so they wrap as one unit on mobile */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <button
+              onClick={createFolder}
+              className="ff-shape-button inline-flex items-center gap-2 h-9 px-4 border border-[#CCCCCC] text-[#666666] font-bold text-[11px] hover:bg-[#f7f7f5] transition-all"
+            >
+              <FolderPlus size={16} />
+              <span className="hidden sm:inline">Klasör</span>
+            </button>
 
-          <button
-            onClick={handleSyncMux}
-            disabled={loading || uploading}
-            title="Mux'tan Videoları Çek"
-            className="ff-shape-button inline-flex items-center justify-center w-9 h-9 border border-[#CCCCCC] text-[#666666] hover:text-[#ff4fd8] transition-all disabled:opacity-50"
-          >
-            <RefreshCw size={16} className={cn(loading && "animate-spin")} />
-          </button>
+            <button
+              onClick={handleSyncMux}
+              disabled={loading || uploading}
+              title="Mux'tan Videoları Çek"
+              className="ff-shape-button inline-flex items-center justify-center w-9 h-9 border border-[#CCCCCC] text-[#666666] hover:text-[#ff4fd8] transition-all disabled:opacity-50"
+            >
+              <RefreshCw size={16} className={cn(loading && "animate-spin")} />
+            </button>
 
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            disabled={uploading}
-            className="ff-shape-button inline-flex items-center gap-2 h-9 px-6 bg-[#ff4fd8] text-white font-bold text-[12px] hover:bg-[#ff4fd8]/90 transition-all disabled:opacity-50"
-          >
-            {uploading ? <Loader2 className="animate-spin" size={16} /> : <Upload size={16} />}
-            {uploadCount ? `Yükleniyor ${uploadCount.done}/${uploadCount.total}` : "Yükle"}
-          </button>
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleUpload}
-            multiple
-            className="hidden"
-            accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.tiff"
-          />
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading}
+              className="ff-shape-button inline-flex items-center gap-2 h-9 px-6 bg-[#ff4fd8] text-white font-bold text-[12px] hover:bg-[#ff4fd8]/90 transition-all disabled:opacity-50"
+            >
+              {uploading ? <Loader2 className="animate-spin" size={16} /> : <Upload size={16} />}
+              {uploadCount ? `Yükleniyor ${uploadCount.done}/${uploadCount.total}` : "Yükle"}
+            </button>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleUpload}
+              multiple
+              className="hidden"
+              accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.tiff"
+            />
+          </div>
         </div>
       </div>
 
@@ -448,14 +451,14 @@ export default function MediaPage() {
                       setDragOverFolderId(null)
                     }}
                     className={cn(
-                      "group relative ff-shape-container overflow-hidden border transition-all duration-300 cursor-pointer flex flex-col",
+                      "group relative ff-shape-container ff-card p-0 overflow-hidden transition-all duration-300 cursor-pointer flex flex-col",
                       dragOverFolderId === folder.id
-                        ? "border-[#ff4fd8] bg-[rgba(255,79,216,0.05)] scale-[1.02] shadow-lg"
-                        : "border-[#CCCCCC] bg-[#f7f7f5] hover:border-[#ff4fd8] hover:shadow-md"
+                        ? "scale-[1.02] shadow-lg"
+                        : "hover:shadow-md"
                     )}
                   >
                     {/* Folder Icon Area */}
-                    <div className="aspect-square flex flex-col items-center justify-center h-26 bg-[#f7f7f5] group-hover:bg-[#f7f7f5] transition-colors relative">
+                    <div className="aspect-square flex flex-col items-center justify-center h-26 transition-colors relative">
                       <Folder size={36} className={cn(
                         "transition-all duration-300",
                         dragOverFolderId === folder.id ? "text-[#ff4fd8] scale-110" : "text-[#ff4fd8] opacity-80 group-hover:opacity-100 group-hover:scale-110"
@@ -473,7 +476,7 @@ export default function MediaPage() {
                     </div>
 
                     {/* Folder Info Area */}
-                    <div className="p-3 border-t border-[#CCCCCC] bg-[#f7f7f5] h-[64px] flex flex-col justify-center">
+                    <div className="p-3 border-t border-[#CCCCCC] h-[64px] flex flex-col justify-center">
                       <p className="text-[12px] font-bold text-[#333333] truncate">
                         {folder.name}
                       </p>
@@ -506,7 +509,7 @@ export default function MediaPage() {
                       key={item.id}
                       draggable
                       onDragStart={(e) => onDragStart(e, item.id)}
-                      className="group relative ff-shape-container overflow-hidden border border-[#CCCCCC] bg-[#f7f7f5] hover:border-[#ff4fd8] hover:shadow-md transition-all duration-300 cursor-grab active:cursor-grabbing flex flex-col"
+                      className="group relative ff-shape-container ff-card overflow-hidden transition-all duration-300 cursor-grab active:cursor-grabbing flex flex-col"
                     >
                       {/* Preview Area */}
                       <div className="aspect-square h-26 relative overflow-hidden bg-[#f7f7f5] flex items-center justify-center">
@@ -669,17 +672,17 @@ export default function MediaPage() {
             </div>
 
             {previewItem && (
-              <div className="mt-4 px-6 py-3 bg-white/5 backdrop-blur-xl border border-white/10 ff-shape-container text-white flex items-center gap-6 animate-ff-slideUp">
-                <div>
+              <div className="mt-4 max-w-[92vw] px-4 sm:px-6 py-3 bg-white/5 backdrop-blur-xl border border-white/10 ff-shape-container text-white flex flex-wrap items-center justify-center gap-x-4 gap-y-2 sm:gap-6 animate-ff-slideUp">
+                <div className="min-w-0">
                   <p className="text-sm font-bold opacity-60">Dosya Adı</p>
-                  <p className="text-md font-medium">{previewItem.title}</p>
+                  <p className="text-md font-medium truncate max-w-[70vw] sm:max-w-[16rem]">{previewItem.title}</p>
                 </div>
-                <div className="w-px h-8 bg-white/10" />
+                <div className="hidden sm:block w-px h-8 bg-white/10" />
                 <div>
                   <p className="text-sm font-bold opacity-60">Boyut</p>
                   <p className="text-md font-medium">{(previewItem.size / (1024 * 1024)).toFixed(2)} MB</p>
                 </div>
-                <div className="w-px h-8 bg-white/10" />
+                <div className="hidden sm:block w-px h-8 bg-white/10" />
                 <div>
                   <p className="text-sm font-bold opacity-60">Tür</p>
                   <p className="text-md font-medium">{previewItem.mimeType?.split('/').pop()}</p>
