@@ -24,7 +24,7 @@ export const BlogCard = memo(function BlogCard({ post, className }: BlogCardProp
       {/* Cover gradient */}
       <Link
         href={`/blog/${post.slug}`}
-        className="block relative overflow-hidden"
+        className="ff-shape-container block relative overflow-hidden"
         tabIndex={-1}
         aria-hidden
       >
@@ -71,7 +71,7 @@ export const BlogCard = memo(function BlogCard({ post, className }: BlogCardProp
       </Link>
 
       {/* Body */}
-      <div className="flex flex-col flex-1 p-5 md:p-6 gap-3">
+      <div className="flex flex-col flex-1 pt-3 gap-3">
         <h3 className="font-display font-bold text-base md:text-lg leading-snug tracking-tight text-[var(--foreground)] group-hover:text-[var(--ff-purple)] transition-colors duration-200 line-clamp-2">
           <Link href={`/blog/${post.slug}`}>
             {post.title}
