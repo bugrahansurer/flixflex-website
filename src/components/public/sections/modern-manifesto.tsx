@@ -89,6 +89,14 @@ type LineItem = WordItem | MediaItemTok
 interface FittedLine {
   items: LineItem[]
   fontPx: number
+  /** Extra letter-spacing (px) used ONLY as a fallback on lines that have no
+   *  media to stretch. Lines containing media keep this at 0 — their slack is
+   *  absorbed by widening the media instead, so the letters stay tight. */
+  letterSpacingPx: number
+  /** Per-item render width in px, parallel to `items`. Media items get an
+   *  explicit (widened) width so they fill the line's slack; words are null
+   *  (natural width). */
+  itemWidthsPx: (number | null)[]
 }
 
 // Inline media-capsule widths, in em (relative to each line's own font size).
@@ -109,11 +117,13 @@ function segmentsToItems(segments: Segment[]): LineItem[] {
   return items
 }
 
-// Partition items into EXACTLY `lineCount` contiguous lines, minimising the
-// widest line (balanced wrap). Balanced natural widths → similar per-line font
-// sizes once each line is fitted to full width, which reads as a clean, even
-// justified block instead of one giant line next to a tiny one. The item count
-// is small, so the O(n²·L) DP is trivially cheap.
+// Partition items into EXACTLY `lineCount` contiguous lines whose natural
+// widths are as EQUAL as possible (minimum variance). Equal widths matter for
+// the "equal height + full width" headline: with one shared font size, lines of
+// equal natural width all fill the container with only a tiny leftover gap, so
+// the per-line letter-spacing that closes that gap stays small and unobtrusive.
+// The item count is small (≈ a dozen), so brute-forcing every contiguous split
+// — C(n-1, L-1) combinations — is trivially cheap and finds the true optimum.
 function partitionBalanced(
   widths: number[],
   spaceW: number,
@@ -126,29 +136,43 @@ function partitionBalanced(
     for (let k = i; k <= j; k++) s += widths[k]
     return s + (j - i) * spaceW
   }
-  const memo = new Map<string, { cost: number; cut: number }>()
-  const solve = (i: number, k: number): { cost: number; cut: number } => {
-    if (k === 1) return { cost: lineWidth(i, n - 1), cut: n }
-    const key = `${i},${k}`
-    const cached = memo.get(key)
-    if (cached) return cached
-    let best = { cost: Infinity, cut: i + 1 }
-    // First line takes items i..j-1, leaving ≥ k-1 items for the rest.
-    for (let j = i + 1; j <= n - (k - 1); j++) {
-      const cost = Math.max(lineWidth(i, j - 1), solve(j, k - 1).cost)
-      if (cost < best.cost) best = { cost, cut: j }
+  if (L <= 1) return [Array.from({ length: n }, (_, i) => i)]
+
+  let bestCuts: number[] | null = null
+  let bestScore = Infinity
+  const cuts: number[] = new Array(L - 1)
+
+  const evaluate = () => {
+    const pts = [0, ...cuts, n]
+    const ws: number[] = []
+    for (let g = 0; g < L; g++) ws.push(lineWidth(pts[g], pts[g + 1] - 1))
+    const mean = ws.reduce((a, b) => a + b, 0) / L
+    const variance = ws.reduce((a, b) => a + (b - mean) ** 2, 0)
+    if (variance < bestScore) {
+      bestScore = variance
+      bestCuts = pts.slice()
     }
-    memo.set(key, best)
-    return best
   }
+
+  const place = (start: number, depth: number) => {
+    if (depth === L - 1) {
+      evaluate()
+      return
+    }
+    // Leave at least one item for each remaining line.
+    for (let c = start; c <= n - (L - 1 - depth); c++) {
+      cuts[depth] = c
+      place(c + 1, depth + 1)
+    }
+  }
+  place(1, 0)
+
+  const pts = bestCuts ?? [0, ...Array.from({ length: L - 1 }, (_, i) => i + 1), n]
   const groups: number[][] = []
-  let i = 0
-  for (let k = L; k > 0; k--) {
-    const cut = solve(i, k).cut
-    const g: number[] = []
-    for (let x = i; x < cut; x++) g.push(x)
-    groups.push(g)
-    i = cut
+  for (let g = 0; g < L; g++) {
+    const arr: number[] = []
+    for (let x = pts[g]; x < pts[g + 1]; x++) arr.push(x)
+    groups.push(arr)
   }
   return groups
 }
@@ -475,13 +499,14 @@ export function ModernManifestoSection({
     // separated by single spaces, media as fixed em-width boxes — so the fit is
     // pixel-accurate. `el.className` is copied so the ruler inherits the same
     // font-family/weight/uppercase/letter-spacing that affect glyph widths.
-    const measureRun = (run: LineItem[]): number => {
+    const measureRun = (run: LineItem[], letterSpacingPx = 0): number => {
       const ruler = document.createElement("div")
       ruler.setAttribute("aria-hidden", "true")
       ruler.className = el.className
       ruler.style.cssText =
         "position:absolute;left:-99999px;top:0;visibility:hidden;white-space:nowrap;display:inline-block;width:auto;"
       ruler.style.fontSize = `${REF_FONT}px`
+      ruler.style.letterSpacing = `${letterSpacingPx}px`
       run.forEach((it, idx) => {
         if (idx > 0) ruler.appendChild(document.createTextNode(" "))
         const s = document.createElement("span")
@@ -510,38 +535,79 @@ export function ModernManifestoSection({
       }
       retries = 0
 
-      // Per-item widths drive the balanced split; an approximate space width is
-      // fine here because the FINAL per-line font uses an exact line measurement.
+      // Per-item widths drive the split; an approximate space width is fine here
+      // because the final fill uses exact per-line measurements below.
       const widths = its.map((it) => measureRun([it]))
       const spaceApprox = REF_FONT * 0.28
 
+      // Break into 4 lines of as-equal-as-possible natural width.
       const groups = partitionBalanced(
         widths,
         spaceApprox,
         Math.min(TARGET_LINES, its.length),
       )
+      const lineRuns = groups.map((idxs) => idxs.map((i) => its[i]))
 
-      const fitted: FittedLine[] = groups.map((idxs) => {
-        const lineItems = idxs.map((i) => its[i])
-        const natural = measureRun(lineItems) // exact natural width @ REF_FONT
-        const raw = natural > 0 ? REF_FONT * (containerW / natural) : MIN_FONT
-        // Floor (not round) so the line never overshoots the right edge.
-        const fontPx = Math.max(
-          MIN_FONT,
-          Math.min(MAX_FONT, Math.floor(raw * 100) / 100),
-        )
-        return { items: lineItems, fontPx }
+      // Exact natural widths at REF_FONT (media at its natural em width).
+      const PROBE = 10
+      const nat = lineRuns.map((r) => measureRun(r, 0))
+
+      // ONE shared font size = the largest that still fits the WIDEST line at
+      // its natural width (so no line overflows and no media has to shrink).
+      // Equal font size ⇒ equal line height.
+      const maxNat = Math.max(...nat, 1)
+      const uniformFont = Math.max(
+        MIN_FONT,
+        Math.min(MAX_FONT, (REF_FONT * containerW) / maxNat),
+      )
+
+      const fitted: FittedLine[] = lineRuns.map((run, i) => {
+        // Slack = how much this line falls short of the full width at the
+        // shared font size, with media at its natural width.
+        const w0 = nat[i] * (uniformFont / REF_FONT)
+        const slack = Math.max(0, containerW - w0)
+
+        const itemWidthsPx: (number | null)[] = run.map(() => null)
+        const mediaPositions = run
+          .map((it, ii) => (it.kind === "media" ? ii : -1))
+          .filter((ii) => ii >= 0)
+
+        let letterSpacingPx = 0
+        if (mediaPositions.length > 0) {
+          // Preferred path: WIDEN the media to swallow the slack, so the words
+          // stay at their natural spacing (no letter-spacing). Slack is split
+          // evenly if a line has more than one media.
+          const extra = slack / mediaPositions.length
+          for (const ii of mediaPositions) {
+            const it = run[ii] as MediaItemTok
+            const basePx = (MEDIA_EM[it.index] ?? 2) * uniformFont
+            itemWidthsPx[ii] = basePx + extra
+          }
+        } else {
+          // Fallback (a line with NO media to stretch): close the gap with
+          // letter-spacing distributed over the line's internal slots.
+          const gaps = Math.max(1, (measureRun(run, PROBE) - nat[i]) / PROBE)
+          letterSpacingPx = Math.min(
+            slack / Math.max(1, gaps - 1),
+            uniformFont * 0.6,
+          )
+        }
+
+        return {
+          items: run,
+          fontPx: Math.round(uniformFont * 100) / 100,
+          letterSpacingPx: Math.round(letterSpacingPx * 100) / 100,
+          itemWidthsPx: itemWidthsPx.map((w) => (w == null ? null : Math.round(w * 100) / 100)),
+        }
       })
 
       setLines((prev) => {
+        const sig = (l: FittedLine) =>
+          `${l.fontPx}|${l.letterSpacingPx}|${l.itemWidthsPx.join(",")}`
         if (
           prev &&
           prev.length === fitted.length &&
-          prev.every(
-            (p, i) =>
-              p.fontPx === fitted[i].fontPx &&
-              p.items.length === fitted[i].items.length,
-          )
+          prev.every((p, i) => sig(p) === sig(fitted[i]))
         ) {
           return prev
         }
@@ -571,7 +637,7 @@ export function ModernManifestoSection({
     lastWidth = parent.clientWidth
 
     if (typeof document !== "undefined" && document.fonts?.ready) {
-      document.fonts.ready.then(fit).catch(() => {})
+      document.fonts.ready.then(fit).catch(() => { })
     }
 
     return () => {
@@ -618,16 +684,19 @@ export function ModernManifestoSection({
   // clip-and-slide reveal: an inline-block overflow-hidden wrapper (its width is
   // exactly the glyph width, so it never disturbs the per-line fit) clips the
   // inner span as it animates up from below.
-  const renderItem = (it: LineItem, key: React.Key) => {
+  const renderItem = (it: LineItem, key: React.Key, widthPx?: number | null) => {
     if (it.kind === "media") {
       const media = mediaMap[it.index]
+      // widthPx (when provided) is the fit-computed, widened width that makes
+      // this media absorb the line's slack; otherwise fall back to the natural
+      // em width.
       return (
         <MediaCapsule
           key={key}
           url={media?.url}
           mediaType={media?.type}
           accentHex={accentHex}
-          width={`${MEDIA_EM[it.index] ?? 2}em`}
+          width={widthPx != null ? `${widthPx}px` : `${MEDIA_EM[it.index] ?? 2}em`}
           onExpand={() => {
             const resolvedType = getResolvedMediaType(media?.url, media?.type)
             setActiveMedia({ url: media?.url, type: resolvedType })
@@ -730,49 +799,54 @@ export function ModernManifestoSection({
         >
           {lines
             ? lines.map((line, li) => (
-                <motion.div
-                  key={li}
-                  // Sized to fill the container width exactly; nowrap guarantees
-                  // it stays on a single line even at sub-pixel rounding.
-                  className="block whitespace-nowrap"
-                  style={{ fontSize: `${line.fontPx}px` }}
-                  variants={{
-                    hidden: {},
-                    visible: { transition: { staggerChildren: 0.04 } },
-                  }}
-                >
-                  {line.items.map((it, ii) => (
-                    <React.Fragment key={ii}>
-                      {ii > 0 ? " " : null}
-                      {renderItem(it, `l${li}-i${ii}`)}
-                    </React.Fragment>
-                  ))}
-                </motion.div>
-              ))
+              <motion.div
+                key={li}
+                // Shared font size (equal line height) + per-line letter-
+                // spacing that stretches the line to the full width. nowrap
+                // keeps it on one line; any trailing slack spills and is
+                // clipped by the section's overflow-hidden.
+                className="block whitespace-nowrap"
+                style={{
+                  fontSize: `${line.fontPx}px`,
+                  letterSpacing: `${line.letterSpacingPx}px`,
+                }}
+                variants={{
+                  hidden: {},
+                  visible: { transition: { staggerChildren: 0.04 } },
+                }}
+              >
+                {line.items.map((it, ii) => (
+                  <React.Fragment key={ii}>
+                    {ii > 0 ? " " : null}
+                    {renderItem(it, `l${li}-i${ii}`, line.itemWidthsPx[ii])}
+                  </React.Fragment>
+                ))}
+              </motion.div>
+            ))
             : (
-                // Pre-fit fallback (SSR / very first paint, before the ruler
-                // measurement runs): natural wrap at a viewport-scaled size so
-                // there is never a flash of tiny or broken text.
-                <div className="block" style={{ fontSize: "clamp(2.5rem, 9vw, 7rem)" }}>
-                  {items.map((it, ii) => (
-                    <React.Fragment key={ii}>
-                      {ii > 0 ? " " : null}
-                      {it.kind === "word" ? (
-                        <span className="inline-block align-bottom">{it.value}</span>
-                      ) : (
-                        <span
-                          className="inline-block"
-                          style={{
-                            width: `${MEDIA_EM[it.index] ?? 2}em`,
-                            height: "0.78em",
-                            verticalAlign: "-0.1em",
-                          }}
-                        />
-                      )}
-                    </React.Fragment>
-                  ))}
-                </div>
-              )}
+              // Pre-fit fallback (SSR / very first paint, before the ruler
+              // measurement runs): natural wrap at a viewport-scaled size so
+              // there is never a flash of tiny or broken text.
+              <div className="block" style={{ fontSize: "clamp(2.5rem, 9vw, 7rem)" }}>
+                {items.map((it, ii) => (
+                  <React.Fragment key={ii}>
+                    {ii > 0 ? " " : null}
+                    {it.kind === "word" ? (
+                      <span className="inline-block align-bottom">{it.value}</span>
+                    ) : (
+                      <span
+                        className="inline-block"
+                        style={{
+                          width: `${MEDIA_EM[it.index] ?? 2}em`,
+                          height: "0.78em",
+                          verticalAlign: "-0.1em",
+                        }}
+                      />
+                    )}
+                  </React.Fragment>
+                ))}
+              </div>
+            )}
         </motion.div>
 
         {/* Minimal Details Dashboard */}
