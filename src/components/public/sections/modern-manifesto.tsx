@@ -89,10 +89,11 @@ type LineItem = WordItem | MediaItemTok
 interface FittedLine {
   items: LineItem[]
   fontPx: number
-  /** Extra letter-spacing (px) used ONLY as a fallback on lines that have no
-   *  media to stretch. Lines containing media keep this at 0 — their slack is
-   *  absorbed by widening the media instead, so the letters stay tight. */
-  letterSpacingPx: number
+  /** Extra word-spacing (px) used ONLY on lines that have no media to stretch:
+   *  the slack is distributed into the gaps BETWEEN words (justify), keeping the
+   *  letters themselves tight. Lines containing media keep this at 0 — their
+   *  slack is absorbed by widening the media instead. */
+  wordSpacingPx: number
   /** Per-item render width in px, parallel to `items`. Media items get an
    *  explicit (widened) width so they fill the line's slack; words are null
    *  (natural width). */
@@ -499,14 +500,18 @@ export function ModernManifestoSection({
     // separated by single spaces, media as fixed em-width boxes — so the fit is
     // pixel-accurate. `el.className` is copied so the ruler inherits the same
     // font-family/weight/uppercase/letter-spacing that affect glyph widths.
-    const measureRun = (run: LineItem[], letterSpacingPx = 0): number => {
+    const measureRun = (run: LineItem[], wordSpacingPx = 0): number => {
       const ruler = document.createElement("div")
       ruler.setAttribute("aria-hidden", "true")
       ruler.className = el.className
       ruler.style.cssText =
         "position:absolute;left:-99999px;top:0;visibility:hidden;white-space:nowrap;display:inline-block;width:auto;"
       ruler.style.fontSize = `${REF_FONT}px`
-      ruler.style.letterSpacing = `${letterSpacingPx}px`
+      // Letters always stay tight (0). Lines without media are filled by adding
+      // WORD spacing (gaps between words), measured via this same param so the
+      // visible line matches the ruler exactly.
+      ruler.style.letterSpacing = "0px"
+      ruler.style.wordSpacing = `${wordSpacingPx}px`
       run.forEach((it, idx) => {
         if (idx > 0) ruler.appendChild(document.createTextNode(" "))
         const s = document.createElement("span")
@@ -572,11 +577,11 @@ export function ModernManifestoSection({
           .map((it, ii) => (it.kind === "media" ? ii : -1))
           .filter((ii) => ii >= 0)
 
-        let letterSpacingPx = 0
+        let wordSpacingPx = 0
         if (mediaPositions.length > 0) {
           // Preferred path: WIDEN the media to swallow the slack, so the words
-          // stay at their natural spacing (no letter-spacing). Slack is split
-          // evenly if a line has more than one media.
+          // stay at their natural spacing. Slack is split evenly if a line has
+          // more than one media.
           const extra = slack / mediaPositions.length
           for (const ii of mediaPositions) {
             const it = run[ii] as MediaItemTok
@@ -584,26 +589,27 @@ export function ModernManifestoSection({
             itemWidthsPx[ii] = basePx + extra
           }
         } else {
-          // Fallback (a line with NO media to stretch): close the gap with
-          // letter-spacing distributed over the line's internal slots.
-          const gaps = Math.max(1, (measureRun(run, PROBE) - nat[i]) / PROBE)
-          letterSpacingPx = Math.min(
-            slack / Math.max(1, gaps - 1),
-            uniformFont * 0.6,
-          )
+          // Fallback (a line with NO media): distribute the slack into the gaps
+          // BETWEEN words (word-spacing). The probe measures how many word gaps
+          // the line has; word-spacing has no trailing slot, so the line ends up
+          // flush on both edges with the letters left tight.
+          const spaces = Math.max(1, (measureRun(run, PROBE) - nat[i]) / PROBE)
+          // word-spacing is absolute px and the gap COUNT is font-independent,
+          // so this single value fills the slack exactly at the uniform font.
+          wordSpacingPx = slack / spaces
         }
 
         return {
           items: run,
           fontPx: Math.round(uniformFont * 100) / 100,
-          letterSpacingPx: Math.round(letterSpacingPx * 100) / 100,
+          wordSpacingPx: Math.round(wordSpacingPx * 100) / 100,
           itemWidthsPx: itemWidthsPx.map((w) => (w == null ? null : Math.round(w * 100) / 100)),
         }
       })
 
       setLines((prev) => {
         const sig = (l: FittedLine) =>
-          `${l.fontPx}|${l.letterSpacingPx}|${l.itemWidthsPx.join(",")}`
+          `${l.fontPx}|${l.wordSpacingPx}|${l.itemWidthsPx.join(",")}`
         if (
           prev &&
           prev.length === fitted.length &&
@@ -801,14 +807,15 @@ export function ModernManifestoSection({
             ? lines.map((line, li) => (
               <motion.div
                 key={li}
-                // Shared font size (equal line height) + per-line letter-
-                // spacing that stretches the line to the full width. nowrap
-                // keeps it on one line; any trailing slack spills and is
-                // clipped by the section's overflow-hidden.
+                // Shared font size (equal line height). Letters stay tight
+                // (letterSpacing 0); a line is filled either by widening its
+                // media or — when it has none — by word-spacing (gaps between
+                // words). nowrap keeps it on one line.
                 className="block whitespace-nowrap"
                 style={{
                   fontSize: `${line.fontPx}px`,
-                  letterSpacing: `${line.letterSpacingPx}px`,
+                  letterSpacing: "0px",
+                  wordSpacing: `${line.wordSpacingPx}px`,
                 }}
                 variants={{
                   hidden: {},
