@@ -567,21 +567,19 @@ export function ModernManifestoSection({
       )
 
       const fitted: FittedLine[] = lineRuns.map((run, i) => {
-        // Slack = how much this line falls short of the full width at the
-        // shared font size, with media at its natural width.
-        const w0 = nat[i] * (uniformFont / REF_FONT)
-        const slack = Math.max(0, containerW - w0)
-
         const itemWidthsPx: (number | null)[] = run.map(() => null)
         const mediaPositions = run
           .map((it, ii) => (it.kind === "media" ? ii : -1))
           .filter((ii) => ii >= 0)
 
+        let lineFont = uniformFont
         let wordSpacingPx = 0
+
         if (mediaPositions.length > 0) {
-          // Preferred path: WIDEN the media to swallow the slack, so the words
-          // stay at their natural spacing. Slack is split evenly if a line has
-          // more than one media.
+          // Media line: keep the shared font (equal height) and WIDEN the media
+          // to swallow the slack, so the words stay at their natural spacing.
+          const w0 = nat[i] * (uniformFont / REF_FONT)
+          const slack = Math.max(0, containerW - w0)
           const extra = slack / mediaPositions.length
           for (const ii of mediaPositions) {
             const it = run[ii] as MediaItemTok
@@ -589,19 +587,27 @@ export function ModernManifestoSection({
             itemWidthsPx[ii] = basePx + extra
           }
         } else {
-          // Fallback (a line with NO media): distribute the slack into the gaps
-          // BETWEEN words (word-spacing). The probe measures how many word gaps
-          // the line has; word-spacing has no trailing slot, so the line ends up
-          // flush on both edges with the letters left tight.
-          const spaces = Math.max(1, (measureRun(run, PROBE) - nat[i]) / PROBE)
-          // word-spacing is absolute px and the gap COUNT is font-independent,
-          // so this single value fills the slack exactly at the uniform font.
-          wordSpacingPx = slack / spaces
+          // No-media line: there is no visual to stretch, so GROW this line's
+          // own font until its words fill the width naturally (per-line fit,
+          // like the earlier edition). That closes the gap between words instead
+          // of opening a word-space. This line ends up a little taller than the
+          // media lines — intentional. If the font hits its cap, any residual
+          // slack is taken up by word-spacing.
+          lineFont = Math.max(
+            MIN_FONT,
+            Math.min(MAX_FONT, (REF_FONT * containerW) / nat[i]),
+          )
+          const w0 = nat[i] * (lineFont / REF_FONT)
+          const slack = Math.max(0, containerW - w0)
+          if (slack > 0.5) {
+            const spaces = Math.max(1, (measureRun(run, PROBE) - nat[i]) / PROBE)
+            wordSpacingPx = slack / spaces
+          }
         }
 
         return {
           items: run,
-          fontPx: Math.round(uniformFont * 100) / 100,
+          fontPx: Math.round(lineFont * 100) / 100,
           wordSpacingPx: Math.round(wordSpacingPx * 100) / 100,
           itemWidthsPx: itemWidthsPx.map((w) => (w == null ? null : Math.round(w * 100) / 100)),
         }
@@ -795,7 +801,7 @@ export function ModernManifestoSection({
             visible: { transition: { staggerChildren: 0.08 } },
           }}
           className={cn(
-            "w-full font-display font-black uppercase",
+            "w-full font-black uppercase",
             // Düz blok, sol hizalı. Her satır kendi font boyutuyla tam genişliğe
             // yaslanır; satır yüksekliği BBDO gibi sıkı.
             "block text-left",
