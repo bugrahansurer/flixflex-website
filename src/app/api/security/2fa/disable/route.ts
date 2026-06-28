@@ -4,7 +4,8 @@ import prisma from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 import { decryptSecret } from "@/lib/crypto"
 import { verifyTotp, hashBackupCode } from "@/lib/totp"
-import { rateLimit } from "@/lib/rate-limit"
+import { checkLimit, rateLimitResponse, TWO_FA_VERIFY } from "@/lib/rate-limit"
+import { logAudit } from "@/lib/audit"
 
 // token = 6 haneli TOTP VEYA yedek kod (ör. "A1B2C-D3E4F"); geçerli yedek
 // kodlar reddedilmesin diye şekli esnek tutuyoruz — asıl brute-force koruması
@@ -20,13 +21,8 @@ export async function POST(req: NextRequest) {
   if (!session?.user?.id) return NextResponse.json({ error: "Yetkisiz" }, { status: 401 })
   if (!prisma) return NextResponse.json({ error: "Veritabanı yok" }, { status: 503 })
 
-  const rl = rateLimit({ namespace: "2fa-verify", key: session.user.id, max: 5, windowMs: 60_000 })
-  if (!rl.allowed) {
-    return NextResponse.json(
-      { error: `Çok fazla deneme. ${rl.retryAfter ?? 60} saniye sonra tekrar deneyin.` },
-      { status: 429, headers: { "Retry-After": String(rl.retryAfter ?? 60) } }
-    )
-  }
+  const rl = await checkLimit(TWO_FA_VERIFY, session.user.id)
+  if (!rl.allowed) return rateLimitResponse(rl)
 
   const parsed = disableSchema.safeParse(await req.json().catch(() => ({})))
   if (!parsed.success) {
@@ -49,6 +45,14 @@ export async function POST(req: NextRequest) {
   await prisma.user.update({
     where: { id: user.id },
     data: { twoFactorEnabled: false, twoFactorSecret: null, twoFactorPendingSecret: null, twoFactorBackupCodes: [], twoFactorLastUsedStep: null },
+  })
+
+  void logAudit({
+    userId: session.user.id,
+    action: "2fa.disable",
+    resource: "security",
+    resourceId: session.user.id,
+    metadata: {},
   })
 
   return NextResponse.json({ ok: true })

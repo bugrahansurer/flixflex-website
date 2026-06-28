@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 import { encryptSecret, decryptSecret } from "@/lib/crypto"
 import { generateSecret, otpauthUri, verifyTotp, hashBackupCode } from "@/lib/totp"
-import { rateLimit } from "@/lib/rate-limit"
+import { checkLimit, rateLimitResponse, TWO_FA_SETUP } from "@/lib/rate-limit"
 
 // POST — begin 2FA enrollment: generate a provisional secret (stored
 // encrypted but NOT yet enabled), return the otpauth URI + QR data URL.
@@ -14,13 +14,8 @@ export async function POST(req: NextRequest) {
   if (!prisma) return NextResponse.json({ error: "Veritabanı yok" }, { status: 503 })
 
   // Bound provisional-secret regeneration per user.
-  const rl = rateLimit({ namespace: "2fa-setup", key: session.user.id, max: 5, windowMs: 60_000 })
-  if (!rl.allowed) {
-    return NextResponse.json(
-      { error: `Çok fazla deneme. ${rl.retryAfter ?? 60} saniye sonra tekrar deneyin.` },
-      { status: 429, headers: { "Retry-After": String(rl.retryAfter ?? 60) } }
-    )
-  }
+  const rl = await checkLimit(TWO_FA_SETUP, session.user.id)
+  if (!rl.allowed) return rateLimitResponse(rl)
 
   const user = await prisma.user.findUnique({ where: { id: session.user.id } })
   if (!user) return NextResponse.json({ error: "Yetkisiz" }, { status: 401 })

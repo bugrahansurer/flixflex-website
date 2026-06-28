@@ -3,9 +3,10 @@
 //
 //   • requireAdmin()       — gates AI routes (ai:create), returns 401/403
 //   • requirePermission()  — generic gate (resource, action), returns 401/403
-//   • checkRateLimit       — 5 requests/min per user (in-memory)
+//   • checkRateLimit       — delegates to canonical rate-limit module
 //   • auditAI              — console-log a structured event
 //   • jsonError            — consistent error response shape
+//   • rateLimitResponse    — re-exported from @/lib/rate-limit
 //
 // SECURITY:
 //   • requireAdmin no longer falls back to the dev mock session.
@@ -21,6 +22,8 @@ import { NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { hasPermission } from "@/lib/rbac/permissions"
 import { estimateTokens } from "@/lib/ai"
+import { checkLimit, AI as AI_PROFILE } from "@/lib/rate-limit"
+import type { RateLimitResult } from "@/lib/rate-limit"
 
 // ── Auth ───────────────────────────────────────────────────
 export interface AdminContext {
@@ -91,25 +94,18 @@ export async function requirePermission(
   }
 }
 
-// ── Rate limiting (in-memory, per user) ────────────────────
-type RLEntry = { count: number; resetAt: number }
-const rl = new Map<string, RLEntry>()
-const RL_WINDOW = 60_000 // 1 minute
-const RL_MAX    = 5
+// ── Rate limiting — delegated to the canonical module ──────
+// checkRateLimit kept for backwards-compat with existing AI route
+// callers. Returns the full RateLimitResult so callers can pass
+// the result directly to rateLimitResponse(result).
+// New code should call checkLimit(AI, userId) directly.
 
-export function checkRateLimit(userId: string): { allowed: boolean; retryAfter?: number } {
-  const now   = Date.now()
-  const entry = rl.get(userId)
-  if (!entry || now > entry.resetAt) {
-    rl.set(userId, { count: 1, resetAt: now + RL_WINDOW })
-    return { allowed: true }
-  }
-  if (entry.count >= RL_MAX) {
-    return { allowed: false, retryAfter: Math.ceil((entry.resetAt - now) / 1000) }
-  }
-  entry.count++
-  return { allowed: true }
+export async function checkRateLimit(userId: string): Promise<RateLimitResult> {
+  return checkLimit(AI_PROFILE, userId)
 }
+
+// Re-export from canonical module so AI route imports don't break.
+export { rateLimitResponse } from "@/lib/rate-limit"
 
 // ── Audit log ──────────────────────────────────────────────
 export interface AuditAIInput {
@@ -155,17 +151,4 @@ export function auditAI(input: AuditAIInput): void {
 // ── Common error helpers ───────────────────────────────────
 export function jsonError(message: string, status = 400) {
   return NextResponse.json({ ok: false, message }, { status })
-}
-
-export function rateLimitResponse(retryAfter: number) {
-  return NextResponse.json(
-    {
-      ok: false,
-      message: `Çok fazla istek. ${retryAfter} saniye sonra tekrar deneyin.`,
-    },
-    {
-      status: 429,
-      headers: { "Retry-After": String(retryAfter) },
-    }
-  )
 }

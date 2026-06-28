@@ -5,6 +5,23 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+/**
+ * Builds an `aria-describedby` string for form fields.
+ * - When there is an error, returns `${id}-error` only (hint is suppressed).
+ * - When there is no error but a hint exists, returns `${id}-hint`.
+ * - Returns `undefined` when neither is present.
+ */
+export function buildDescribedBy(
+  id: string,
+  hasError: boolean,
+  hasHint: boolean,
+): string | undefined {
+  const parts: string[] = []
+  if (hasError) parts.push(`${id}-error`)
+  if (hasHint && !hasError) parts.push(`${id}-hint`)
+  return parts.length > 0 ? parts.join(" ") : undefined
+}
+
 // ── String Utilities ──────────────────────────────
 export function slugify(str: string): string {
   return str

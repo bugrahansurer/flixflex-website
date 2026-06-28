@@ -8,6 +8,7 @@ import { auth } from "@/lib/auth"
 import prisma from "@/lib/prisma"
 import { hasPermission } from "@/lib/rbac/permissions"
 import { replacePermissionsSchema } from "@/lib/validators/permission-schema"
+import { logAudit } from "@/lib/audit"
 
 export const dynamic = "force-dynamic"
 
@@ -90,6 +91,14 @@ export async function PUT(req: NextRequest, { params }: Params) {
         where: { id },
         include: { permissions: true },
       })
+    })
+
+    void logAudit({
+      userId: session.user.id,
+      action: "role.permissions.replace",
+      resource: "roles",
+      resourceId: id,
+      metadata: { count: permissions.length },
     })
 
     return NextResponse.json({ ok: true, data: updated })

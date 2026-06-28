@@ -8,7 +8,11 @@ const nextConfig: NextConfig = {
   // device), the `_next/webpack-hmr` socket fails. Allow-list the
   // dev machine's LAN IP so hot reload works across devices.
   // Add more IPs here if you access the dev server from other hosts.
-  allowedDevOrigins: ["10.3.5.57"],
+  // NOTE: your machine's LAN IP changes per network (e.g. switching to a
+  // phone hotspot puts you on the 172.20.10.x range). If the mobile preview
+  // shows blank/animation-less sections, check the dev-server warning for the
+  // blocked origin and add that IP here, then restart the dev server.
+  allowedDevOrigins: ["10.3.5.57", "172.20.10.2", "172.20.10.1"],
 
   // ── Image Optimization ────────────────────────────
   images: {

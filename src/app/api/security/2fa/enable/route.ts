@@ -4,7 +4,8 @@ import prisma from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 import { decryptSecret } from "@/lib/crypto"
 import { verifyTotpStep, generateBackupCodes, hashBackupCode } from "@/lib/totp"
-import { rateLimit } from "@/lib/rate-limit"
+import { checkLimit, rateLimitResponse, TWO_FA_VERIFY } from "@/lib/rate-limit"
+import { logAudit } from "@/lib/audit"
 
 const enableSchema = z.object({
   token: z.string().trim().regex(/^\d{6}$/, "6 haneli doğrulama kodu girin."),
@@ -17,15 +18,9 @@ export async function POST(req: NextRequest) {
   if (!session?.user?.id) return NextResponse.json({ error: "Yetkisiz" }, { status: 401 })
   if (!prisma) return NextResponse.json({ error: "Veritabanı yok" }, { status: 503 })
 
-  // Brute-force guard on TOTP verification (per user). NOTE: in-memory /
-  // per-instance — see lib/rate-limit.ts; use Upstash for a strict global limit.
-  const rl = rateLimit({ namespace: "2fa-verify", key: session.user.id, max: 5, windowMs: 60_000 })
-  if (!rl.allowed) {
-    return NextResponse.json(
-      { error: `Çok fazla deneme. ${rl.retryAfter ?? 60} saniye sonra tekrar deneyin.` },
-      { status: 429, headers: { "Retry-After": String(rl.retryAfter ?? 60) } }
-    )
-  }
+  // Brute-force guard on TOTP verification (per user).
+  const rl = await checkLimit(TWO_FA_VERIFY, session.user.id)
+  if (!rl.allowed) return rateLimitResponse(rl)
 
   const parsed = enableSchema.safeParse(await req.json().catch(() => ({})))
   if (!parsed.success) {
@@ -56,6 +51,14 @@ export async function POST(req: NextRequest) {
       // Mark the enrollment code's step as consumed so it can't be replayed at login.
       twoFactorLastUsedStep: matchedStep,
     },
+  })
+
+  void logAudit({
+    userId: session.user.id,
+    action: "2fa.enable",
+    resource: "security",
+    resourceId: session.user.id,
+    metadata: {},
   })
 
   // Return plaintext codes ONCE — they are only stored hashed.

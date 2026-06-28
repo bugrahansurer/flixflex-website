@@ -388,6 +388,70 @@ function getEnumOptions(fieldDef: Record<string, unknown>): string[] {
   return []
 }
 
+// ── JSON Draft Field ──────────────────────────────
+// draft-then-commit pattern (cf. HexInput in palette-editor.tsx):
+// only call handleChange on valid JSON blur, show red border + error on parse failure.
+function JsonDraftField({
+  name,
+  value,
+  onChange,
+}: {
+  name: string
+  value: unknown
+  onChange: (val: unknown) => void
+}) {
+  const [draft, setDraft] = React.useState<string>(() => JSON.stringify(value, null, 2))
+  const [hasParseError, setHasParseError] = React.useState(false)
+  const textareaRef = React.useRef<HTMLTextAreaElement>(null)
+
+  // Sync from outside when value changes externally (e.g. undo/redo),
+  // but skip if the textarea is currently focused to avoid clobbering
+  // in-progress edits.
+  React.useEffect(() => {
+    if (document.activeElement === textareaRef.current) return
+    setDraft(JSON.stringify(value, null, 2))
+    setHasParseError(false)
+  }, [value])
+
+  function commit() {
+    try {
+      const parsed = JSON.parse(draft)
+      setHasParseError(false)
+      onChange(parsed)
+      // Normalise draft to pretty JSON after successful parse
+      setDraft(JSON.stringify(parsed, null, 2))
+    } catch {
+      setHasParseError(true)
+    }
+  }
+
+  return (
+    <div>
+      <FieldLabel name={name} />
+      <textarea
+        ref={textareaRef}
+        value={draft}
+        onChange={(e) => {
+          setDraft(e.target.value)
+          if (hasParseError) setHasParseError(false)
+        }}
+        onBlur={commit}
+        rows={5}
+        className={cn(
+          "ff-shape-container w-full px-3 py-2 text-[11px] font-mono resize-y",
+          "bg-[#f7f7f5] border",
+          hasParseError ? "border-red-500" : "border-[#CCCCCC]",
+          "text-[#333333]",
+          "outline-none focus:border-[#ff4fd8] transition-colors duration-150"
+        )}
+      />
+      {hasParseError && (
+        <p className="text-[11px] text-red-500 mt-1">Geçersiz JSON</p>
+      )}
+    </div>
+  )
+}
+
 // ── Main component ────────────────────────────────
 export function PropertyEditor() {
   // Scoped selectors — avoids re-renders triggered by unrelated store slices
@@ -479,26 +543,12 @@ export function PropertyEditor() {
             // Skip complex/array types for now — render them as JSON textarea
             if (fieldType === "array" || fieldType === "object") {
               return (
-                <div key={fieldName}>
-                  <FieldLabel name={fieldName} />
-                  <textarea
-                    value={JSON.stringify(currentVal, null, 2)}
-                    onChange={(e) => {
-                      try {
-                        handleChange(fieldName, JSON.parse(e.target.value))
-                      } catch {
-                        // invalid JSON — don't update
-                      }
-                    }}
-                    rows={5}
-                    className={cn(
-                      "ff-shape-container w-full px-3 py-2 text-[11px] font-mono resize-y",
-                      "bg-[#f7f7f5] border border-[#CCCCCC]",
-                      "text-[#333333]",
-                      "outline-none focus:border-[#ff4fd8] transition-colors duration-150"
-                    )}
-                  />
-                </div>
+                <JsonDraftField
+                  key={fieldName}
+                  name={fieldName}
+                  value={currentVal}
+                  onChange={(v) => handleChange(fieldName, v)}
+                />
               )
             }
 

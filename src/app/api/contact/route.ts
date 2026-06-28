@@ -6,7 +6,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import { contactSchema } from "@/lib/validators/contact-schema"
-import { rateLimit, getClientIp } from "@/lib/rate-limit"
+import { checkLimit, getClientIp, rateLimitResponse, PUBLIC_FORM } from "@/lib/rate-limit"
 import { notifyAdmins } from "@/lib/notify"
 
 // ── Helper: short random ref ───────────────────────────────
@@ -17,22 +17,10 @@ function generateRef(): string {
 // ── POST handler ───────────────────────────────────────────
 export async function POST(req: NextRequest) {
   try {
-    // Rate limit by IP — 3 submissions / 60s
+    // Rate limit by IP
     const ip = getClientIp(req)
-    const { allowed, retryAfter } = rateLimit({ namespace: "contact", key: ip, max: 3, windowMs: 60_000 })
-
-    if (!allowed) {
-      return NextResponse.json(
-        {
-          ok: false,
-          message: `Çok fazla istek gönderildi. ${retryAfter} saniye bekleyip tekrar deneyin.`,
-        },
-        {
-          status: 429,
-          headers: { "Retry-After": String(retryAfter) },
-        }
-      )
-    }
+    const rlResult = await checkLimit(PUBLIC_FORM, ip)
+    if (!rlResult.allowed) return rateLimitResponse(rlResult)
 
     // Parse body
     let body: unknown

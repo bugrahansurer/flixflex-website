@@ -9,6 +9,7 @@ import { auth } from "@/lib/auth"
 import prisma from "@/lib/prisma"
 import { hasPermission } from "@/lib/rbac/permissions"
 import { createRoleSchema } from "@/lib/validators/role-schema"
+import { logAudit } from "@/lib/audit"
 
 export const dynamic = "force-dynamic"
 
@@ -76,6 +77,15 @@ export async function POST(req: NextRequest) {
     const role = await prisma.role.create({
       data: { name, description: description ?? null, isSystem: false },
     })
+
+    void logAudit({
+      userId: session.user.id,
+      action: "role.create",
+      resource: "roles",
+      resourceId: role.id,
+      metadata: { name },
+    })
+
     return NextResponse.json({ ok: true, data: role }, { status: 201 })
   } catch (err: any) {
     console.error("[roles POST]", err)

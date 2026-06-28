@@ -19,6 +19,11 @@ const ERROR_MESSAGES: Record<string, string> = {
   AccessDenied: "Erişim reddedildi",
   Configuration: "Sunucu yapılandırma hatası — yöneticiyle iletişime geçin",
   Verification: "Doğrulama bağlantısı geçersiz veya süresi dolmuş",
+  // Defensive rate-limit keys — NextAuth credentials flow may not surface
+  // a 429 directly (it returns null or CredentialsSignin), but if the
+  // backend or a future middleware forwards these codes they are handled.
+  TooManyRequests: "Çok fazla başarısız giriş denemesi. Lütfen 15 dakika sonra tekrar deneyin.",
+  RateLimitExceeded: "Çok fazla başarısız giriş denemesi. Lütfen 15 dakika sonra tekrar deneyin.",
   default: "Giriş sırasında bir hata oluştu. Tekrar deneyin.",
 }
 
@@ -38,13 +43,19 @@ export function LoginCard() {
   const rawCallback = searchParams?.get("callbackUrl") ?? "/admin"
   const callbackUrl = React.useMemo(() => {
     try {
-      // If it's a full URL, extract the path if it matches our origin,
-      // otherwise fallback to /admin.
+      // If it's a full URL (http/https), extract the path only when the origin
+      // matches our own; otherwise fall back to /admin.
       if (rawCallback.startsWith("http")) {
         const url = new URL(rawCallback)
         if (typeof window !== "undefined" && url.origin === window.location.origin) {
           return url.pathname + url.search
         }
+        return "/admin"
+      }
+      // Guard against protocol-relative URLs ("//evil.com") and any value that
+      // doesn't look like an absolute path ("/...").  These could otherwise
+      // cause router.push() to navigate to an external origin.
+      if (!rawCallback.startsWith("/") || rawCallback.startsWith("//")) {
         return "/admin"
       }
       return rawCallback
@@ -84,6 +95,7 @@ export function LoginCard() {
         email,
         password,
         totp: totp.trim(),
+        rememberMe: rememberMe ? "true" : "false",
         redirect: false,
         callbackUrl,
       })

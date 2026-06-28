@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 import { hasPermission } from "@/lib/rbac/permissions"
-import { rateLimit, getClientIp } from "@/lib/rate-limit"
+import { checkLimit, getClientIp, rateLimitResponse, APPOINTMENT } from "@/lib/rate-limit"
 import { appointmentSchema } from "@/lib/validators/appointment-schema"
 import { notifyAdmins } from "@/lib/notify"
 
@@ -50,22 +50,10 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Rate limit by IP — 3 bookings / 60s
+    // Rate limit by IP
     const ip = getClientIp(req)
-    const { allowed, retryAfter } = rateLimit({ namespace: "appointments", key: ip, max: 3, windowMs: 60_000 })
-
-    if (!allowed) {
-      return NextResponse.json(
-        {
-          ok: false,
-          message: `Çok fazla istek gönderildi. Lütfen ${retryAfter} saniye bekleyip tekrar deneyin.`,
-        },
-        {
-          status: 429,
-          headers: { "Retry-After": String(retryAfter) },
-        }
-      )
-    }
+    const rlResult = await checkLimit(APPOINTMENT, ip)
+    if (!rlResult.allowed) return rateLimitResponse(rlResult)
 
     // Parse body
     let body: unknown

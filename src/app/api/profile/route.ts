@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import prisma from "@/lib/prisma"
 import { updateProfileSchema } from "@/lib/validators/profile-schema"
+import { logAudit } from "@/lib/audit"
 
 // ── GET own profile ───────────────────────────────────
 export async function GET() {
@@ -99,6 +100,14 @@ export async function PATCH(req: Request) {
         image: true,
         role: { select: { name: true } },
       },
+    })
+
+    void logAudit({
+      userId: session.user.id,
+      action: "profile.update",
+      resource: "profile",
+      resourceId: session.user.id,
+      metadata: { fields: Object.keys(parsed.data) },
     })
 
     return NextResponse.json({ user: updated })

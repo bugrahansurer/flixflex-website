@@ -304,7 +304,7 @@ function SubServiceItem({ sub }: { sub: MegaMenuSubService }) {
       <Link
         href={sub.href}
         className={cn(
-          "group/sub ff-shape-container flex items-start gap-2.5 p-2",
+          "group/sub ff-shape-container flex items-center gap-2.5 p-2",
           "transition-colors duration-200 hover:bg-[var(--background-alt)]",
           "focus-visible:outline-[var(--ff-purple)] focus-visible:outline-2 focus-visible:outline-offset-1",
         )}

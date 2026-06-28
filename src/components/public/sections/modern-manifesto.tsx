@@ -2,6 +2,7 @@
 "use client"
 
 import * as React from "react"
+import * as Dialog from "@radix-ui/react-dialog"
 import { motion, useInView, useMotionValue, useSpring, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { sanitizeHtml } from "@/lib/sanitize"
@@ -9,7 +10,12 @@ import { StarField } from "@/components/ui/star-field"
 import { ArrowUpRight, Maximize2, X, Play, Pause } from "@/lib/icons"
 
 // ═══════════════════════════════════════════════════
-// ModernManifestoSection — Next-Gen Inline Edition
+// ModernManifestoSection — BBDO-style Per-Line Justified Edition
+// The headline is split into EXACTLY 4 balanced lines and each line's font size
+// is scaled so the line spans the full width, left edge to right edge. Font
+// grows/shrinks per line and per screen — never word spacing, never stretched
+// glyphs. Sizing comes from a one-shot hidden-ruler measurement (no feedback
+// loop). CSS clamp fallback yalnızca ilk paint (SSR) için.
 // ═══════════════════════════════════════════════════
 
 export interface ModernManifestoProps {
@@ -62,6 +68,91 @@ function parseSegments(raw: string): Segment[] {
   return segments
 }
 
+/* ── Line-Fit Model ──────────────────────────────── */
+// Each visual line is fitted INDEPENDENTLY so it spans the container from the
+// left margin to the right margin. We split the words into N balanced lines,
+// then scale every line's font size so its natural width exactly equals the
+// available width. This is how the BBDO headline justifies every line to both
+// edges — purely by TYPE SIZE, never by stretching glyphs or padding the word
+// spacing (which the brief explicitly forbids).
+
+interface WordItem {
+  kind: "word"
+  value: string
+}
+interface MediaItemTok {
+  kind: "media"
+  index: 1 | 2 | 3
+}
+type LineItem = WordItem | MediaItemTok
+
+interface FittedLine {
+  items: LineItem[]
+  fontPx: number
+}
+
+// Inline media-capsule widths, in em (relative to each line's own font size).
+const MEDIA_EM: Record<number, number> = { 1: 2, 2: 2.6, 3: 2.2 }
+
+// Flatten the parsed segments into an ordered list of word/media items.
+function segmentsToItems(segments: Segment[]): LineItem[] {
+  const items: LineItem[] = []
+  for (const seg of segments) {
+    if (seg.type === "media") {
+      items.push({ kind: "media", index: seg.index })
+    } else {
+      for (const w of seg.value.split(/\s+/)) {
+        if (w) items.push({ kind: "word", value: w })
+      }
+    }
+  }
+  return items
+}
+
+// Partition items into EXACTLY `lineCount` contiguous lines, minimising the
+// widest line (balanced wrap). Balanced natural widths → similar per-line font
+// sizes once each line is fitted to full width, which reads as a clean, even
+// justified block instead of one giant line next to a tiny one. The item count
+// is small, so the O(n²·L) DP is trivially cheap.
+function partitionBalanced(
+  widths: number[],
+  spaceW: number,
+  lineCount: number,
+): number[][] {
+  const n = widths.length
+  const L = Math.max(1, Math.min(lineCount, n))
+  const lineWidth = (i: number, j: number) => {
+    let s = 0
+    for (let k = i; k <= j; k++) s += widths[k]
+    return s + (j - i) * spaceW
+  }
+  const memo = new Map<string, { cost: number; cut: number }>()
+  const solve = (i: number, k: number): { cost: number; cut: number } => {
+    if (k === 1) return { cost: lineWidth(i, n - 1), cut: n }
+    const key = `${i},${k}`
+    const cached = memo.get(key)
+    if (cached) return cached
+    let best = { cost: Infinity, cut: i + 1 }
+    // First line takes items i..j-1, leaving ≥ k-1 items for the rest.
+    for (let j = i + 1; j <= n - (k - 1); j++) {
+      const cost = Math.max(lineWidth(i, j - 1), solve(j, k - 1).cost)
+      if (cost < best.cost) best = { cost, cut: j }
+    }
+    memo.set(key, best)
+    return best
+  }
+  const groups: number[][] = []
+  let i = 0
+  for (let k = L; k > 0; k--) {
+    const cut = solve(i, k).cut
+    const g: number[] = []
+    for (let x = i; x < cut; x++) g.push(x)
+    groups.push(g)
+    i = cut
+  }
+  return groups
+}
+
 /* ── Media Type Auto-Detection Helper ────────────── */
 
 function getResolvedMediaType(url?: string, type?: "video" | "image"): "video" | "image" {
@@ -111,7 +202,9 @@ interface MediaCapsuleProps {
   mediaType?: "video" | "image"
   accentHex: string
   onExpand: () => void
-  width?: string
+  /** Fixed inline width in em (relative to the line font). Matches the ruler
+   *  measurement so each line still fits the container exactly. */
+  width: string
 }
 
 const capsuleVariants = {
@@ -128,24 +221,35 @@ const capsuleVariants = {
   }
 }
 
-function MediaCapsule({ url, mediaType, accentHex, onExpand, width = "3em" }: MediaCapsuleProps) {
+function MediaCapsule({ url, mediaType, accentHex, onExpand, width }: MediaCapsuleProps) {
   if (!url) return null
 
   const resolvedMediaType = getResolvedMediaType(url, mediaType)
 
   return (
-    <motion.span
+    <motion.button
+      type="button"
+      aria-label="Medyayı genişlet"
       variants={capsuleVariants}
       className={cn(
-        "relative inline-flex items-center justify-center align-middle",
-        "mx-1.5 md:mx-2.5",
-        "overflow-hidden rounded-[0.14em]",
+        "relative inline-flex items-center justify-center",
+        // Use the design-system container shape (.ff-shape-container →
+        // --ff-shape-container-radius, currently 16px) instead of a
+        // font-relative radius. A fixed px keeps the corner rounding identical
+        // on mobile and desktop; an em radius shrank to near-sharp on small
+        // (mobile) type. Also inherits the palette's clip-path shape.
+        "overflow-hidden ff-shape-container",
         "shadow-2xl",
-        "cursor-pointer group/capsule select-none"
+        "cursor-pointer group/capsule select-none",
+        "border-0 p-0 bg-transparent"
       )}
       style={{
-        width: width,
-        height: "1.05em"
+        // Fixed em width (BBDO reference) — the auto-fit accounts for this exact
+        // width so the line still spans edge to edge. NOT a flex-grow capsule.
+        width,
+        height: "0.78em",
+        verticalAlign: "-0.1em",
+        flexShrink: 0,
       }}
       whileHover={{ scale: 1.06, y: -2 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -161,7 +265,7 @@ function MediaCapsule({ url, mediaType, accentHex, onExpand, width = "3em" }: Me
       />
 
       {/* Media content */}
-      <div className="absolute inset-0 w-full h-full overflow-hidden rounded-[0.14em] bg-[var(--surface)]">
+      <div className="absolute inset-0 w-full h-full overflow-hidden ff-shape-container bg-[var(--surface)]">
         {resolvedMediaType === "video" ? (
           <video
             src={url}
@@ -188,92 +292,129 @@ function MediaCapsule({ url, mediaType, accentHex, onExpand, width = "3em" }: Me
           <Maximize2 className="w-3.5 h-3.5 text-white/90 transform scale-75 group-hover/capsule:scale-100 transition-transform duration-300" />
         </div>
       </div>
-    </motion.span>
+    </motion.button>
   )
 }
 
 /* ── Interactive Modal ────────────────────────────── */
 
 interface MediaModalProps {
-  url?: string
-  mediaType?: "video" | "image"
+  activeMedia: { url?: string; type?: "video" | "image" } | null
   onClose: () => void
   accentHex: string
 }
 
-function MediaModal({ url, mediaType, onClose, accentHex }: MediaModalProps) {
+function MediaModal({ activeMedia, onClose, accentHex }: MediaModalProps) {
   const [isPlaying, setIsPlaying] = React.useState(true)
   const videoRef = React.useRef<HTMLVideoElement>(null)
+
+  // Pause video and reset play state when modal closes.
+  // The exit animation keeps the video element mounted for ~300 ms after
+  // activeMedia becomes null — without this the video keeps decoding frames.
+  React.useEffect(() => {
+    if (!activeMedia) {
+      videoRef.current?.pause()
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setIsPlaying(true) // reset for next open
+    }
+  }, [activeMedia])
+
+  const { url, type: mediaType } = activeMedia ?? {}
 
   const togglePlay = () => {
     if (videoRef.current) {
       if (isPlaying) {
         videoRef.current.pause()
       } else {
-        videoRef.current.play()
+        void videoRef.current.play()
       }
       setIsPlaying(!isPlaying)
     }
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-xl bg-black/80"
-      onClick={onClose}
-    >
-      <motion.div
-        initial={{ scale: 0.9, y: 20, opacity: 0 }}
-        animate={{ scale: 1, y: 0, opacity: 1 }}
-        exit={{ scale: 0.9, y: 20, opacity: 0 }}
-        transition={{ type: "spring", damping: 25, stiffness: 220 }}
-        className="relative max-w-4xl w-full aspect-video overflow-hidden shadow-[0_0_80px_rgba(0,0,0,0.8)] border border-white/10 bg-zinc-950"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Media Container */}
-        <div className="w-full h-full relative group">
-          {mediaType === "video" ? (
+    <Dialog.Root open={!!activeMedia} onOpenChange={(open) => { if (!open) onClose() }}>
+      <Dialog.Portal forceMount>
+        <AnimatePresence>
+          {activeMedia && (
             <>
-              <video
-                ref={videoRef}
-                src={url}
-                autoPlay
-                loop
-                playsInline
-                className="w-full h-full object-cover"
-                onClick={togglePlay}
-              />
-              <button
-                onClick={togglePlay}
-                className="absolute bottom-6 left-6 p-4 bg-black/60 border border-white/10 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:scale-105 hover:bg-black/80"
-              >
-                {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
-              </button>
+              {/* Overlay */}
+              <Dialog.Overlay asChild>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 z-50 backdrop-blur-xl bg-black/80"
+                />
+              </Dialog.Overlay>
+
+              {/* Content */}
+              <Dialog.Content asChild>
+                <motion.div
+                  initial={{ scale: 0.9, y: 20, opacity: 0 }}
+                  animate={{ scale: 1, y: 0, opacity: 1 }}
+                  exit={{ scale: 0.9, y: 20, opacity: 0 }}
+                  transition={{ type: "spring", damping: 25, stiffness: 220 }}
+                  className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[51] max-w-4xl w-[calc(100vw-2rem)] aspect-video overflow-hidden shadow-[0_0_80px_rgba(0,0,0,0.8)] border border-white/10 bg-zinc-950 outline-none"
+                >
+                  {/* Visually hidden accessible labels */}
+                  <Dialog.Title className="sr-only">Medya Görüntüleyici</Dialog.Title>
+                  <Dialog.Description className="sr-only">
+                    Seçilen medya içeriği. Kapatmak için Escape tuşuna basın.
+                  </Dialog.Description>
+
+                  {/* Media Container */}
+                  <div className="w-full h-full relative group">
+                    {mediaType === "video" ? (
+                      <>
+                        <video
+                          ref={videoRef}
+                          src={url}
+                          autoPlay
+                          loop
+                          playsInline
+                          className="w-full h-full object-cover"
+                          onClick={togglePlay}
+                        />
+                        <button
+                          type="button"
+                          onClick={togglePlay}
+                          aria-label={isPlaying ? "Videoyu duraklat" : "Videoyu oynat"}
+                          className="absolute bottom-6 left-6 p-4 bg-black/60 border border-white/10 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:scale-105 hover:bg-black/80"
+                        >
+                          {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+                        </button>
+                      </>
+                    ) : (
+                      <img src={url} alt="Genişletilmiş görsel" className="w-full h-full object-cover" />
+                    )}
+
+                    {/* Glowing Aura Frame */}
+                    <div
+                      className="absolute inset-0 pointer-events-none opacity-20"
+                      style={{
+                        boxShadow: `inset 0 0 40px ${accentHex}`,
+                      }}
+                    />
+                  </div>
+
+                  {/* Close Button */}
+                  <Dialog.Close asChild>
+                    <button
+                      type="button"
+                      aria-label="Kapat"
+                      className="absolute top-6 right-6 p-3 bg-black/60 border border-white/10 text-white hover:scale-105 transition-transform duration-200 hover:bg-black/85"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </Dialog.Close>
+                </motion.div>
+              </Dialog.Content>
             </>
-          ) : (
-            <img src={url} alt="Expanded visual" className="w-full h-full object-cover" />
           )}
-
-          {/* Glowing Aura Frame */}
-          <div
-            className="absolute inset-0 pointer-events-none opacity-20"
-            style={{
-              boxShadow: `inset 0 0 40px ${accentHex}`,
-            }}
-          />
-        </div>
-
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-6 right-6 p-3 bg-black/60 border border-white/10 text-white hover:scale-105 transition-transform duration-200 hover:bg-black/85"
-        >
-          <X className="w-5 h-5" />
-        </button>
-      </motion.div>
-    </motion.div>
+        </AnimatePresence>
+      </Dialog.Portal>
+    </Dialog.Root>
   )
 }
 
@@ -292,8 +433,152 @@ export function ModernManifestoSection({
   ctaHref = "/iletisim",
 }: ModernManifestoProps) {
   const containerRef = React.useRef<HTMLDivElement>(null)
-  const contentRef = React.useRef<HTMLDivElement>(null)
-  const isInView = useInView(contentRef, { once: true, margin: "-120px" })
+  const manifestoRef = React.useRef<HTMLDivElement>(null)
+  const isInView = useInView(manifestoRef, { once: true, margin: "-120px" })
+
+  // ── Per-line auto-fit → 4 full-width lines ─────────
+  // (See the Line-Fit Model note above.) The headline is split into exactly 4
+  // balanced lines and each line's font size is scaled so the line spans the
+  // full width, from the left edge to the right edge. Font therefore grows and
+  // shrinks per line and per screen — never word spacing.
+  //
+  // Stability: every size comes from a one-shot measurement against a hidden,
+  // absolutely-positioned ruler — we NEVER read back our own resized output, so
+  // there is no ResizeObserver feedback loop and no oscillation. The fit runs
+  // synchronously on mount (works even in a hidden/background tab, where rAF is
+  // paused) and re-runs only when the available WIDTH changes, plus once web
+  // fonts finish loading (their glyph widths move the fit).
+  const TARGET_LINES = 4
+  const MIN_FONT = 12
+  const MAX_FONT = 400
+  const REF_FONT = 100 // reference px size used only for ruler measurement
+
+  const items = React.useMemo(
+    () => segmentsToItems(parseSegments(leftText || "")),
+    [leftText],
+  )
+
+  const [lines, setLines] = React.useState<FittedLine[] | null>(null)
+
+  React.useEffect(() => {
+    const el = manifestoRef.current
+    if (!el) return
+    const parent = el.parentElement
+    if (!parent) return
+
+    let timer = 0
+    let retries = 0
+    let lastWidth = -1
+
+    // Measure the natural width (at REF_FONT) of a run of items, replicating the
+    // exact inline structure a visible line uses — words as inline-block spans
+    // separated by single spaces, media as fixed em-width boxes — so the fit is
+    // pixel-accurate. `el.className` is copied so the ruler inherits the same
+    // font-family/weight/uppercase/letter-spacing that affect glyph widths.
+    const measureRun = (run: LineItem[]): number => {
+      const ruler = document.createElement("div")
+      ruler.setAttribute("aria-hidden", "true")
+      ruler.className = el.className
+      ruler.style.cssText =
+        "position:absolute;left:-99999px;top:0;visibility:hidden;white-space:nowrap;display:inline-block;width:auto;"
+      ruler.style.fontSize = `${REF_FONT}px`
+      run.forEach((it, idx) => {
+        if (idx > 0) ruler.appendChild(document.createTextNode(" "))
+        const s = document.createElement("span")
+        s.style.display = "inline-block"
+        if (it.kind === "word") {
+          s.textContent = it.value
+        } else {
+          s.style.width = `${(MEDIA_EM[it.index] ?? 2) * REF_FONT}px`
+          s.style.height = "1px"
+        }
+        ruler.appendChild(s)
+      })
+      el.appendChild(ruler)
+      const w = ruler.offsetWidth
+      el.removeChild(ruler)
+      return w
+    }
+
+    const fit = () => {
+      const its = items
+      const containerW = el.clientWidth
+      // Width/layout may not be ready yet — retry briefly (bounded, never spins).
+      if (containerW <= 0 || its.length === 0) {
+        if (retries++ < 40) timer = window.setTimeout(fit, 32)
+        return
+      }
+      retries = 0
+
+      // Per-item widths drive the balanced split; an approximate space width is
+      // fine here because the FINAL per-line font uses an exact line measurement.
+      const widths = its.map((it) => measureRun([it]))
+      const spaceApprox = REF_FONT * 0.28
+
+      const groups = partitionBalanced(
+        widths,
+        spaceApprox,
+        Math.min(TARGET_LINES, its.length),
+      )
+
+      const fitted: FittedLine[] = groups.map((idxs) => {
+        const lineItems = idxs.map((i) => its[i])
+        const natural = measureRun(lineItems) // exact natural width @ REF_FONT
+        const raw = natural > 0 ? REF_FONT * (containerW / natural) : MIN_FONT
+        // Floor (not round) so the line never overshoots the right edge.
+        const fontPx = Math.max(
+          MIN_FONT,
+          Math.min(MAX_FONT, Math.floor(raw * 100) / 100),
+        )
+        return { items: lineItems, fontPx }
+      })
+
+      setLines((prev) => {
+        if (
+          prev &&
+          prev.length === fitted.length &&
+          prev.every(
+            (p, i) =>
+              p.fontPx === fitted[i].fontPx &&
+              p.items.length === fitted[i].items.length,
+          )
+        ) {
+          return prev
+        }
+        return fitted
+      })
+    }
+
+    // Debounced re-fit. setTimeout (NOT requestAnimationFrame): rAF is paused in
+    // hidden/background tabs, so an rAF fit would silently never run there.
+    const schedule = () => {
+      clearTimeout(timer)
+      timer = window.setTimeout(fit, 0)
+    }
+
+    fit() // synchronous initial fit — runs even in a hidden tab
+
+    // Re-fit only when the AVAILABLE width changes. Our own font changes alter
+    // the headline's height, not the parent's width, so observing the parent and
+    // gating on width breaks the feedback loop that caused oscillation.
+    const observer = new ResizeObserver(() => {
+      const w = parent.clientWidth
+      if (w === lastWidth) return
+      lastWidth = w
+      schedule()
+    })
+    observer.observe(parent)
+    lastWidth = parent.clientWidth
+
+    if (typeof document !== "undefined" && document.fonts?.ready) {
+      document.fonts.ready.then(fit).catch(() => {})
+    }
+
+    return () => {
+      observer.disconnect()
+      clearTimeout(timer)
+    }
+  }, [items])
 
   // Spotlight effect coordinates
   const mouseX = useMotionValue(0)
@@ -314,9 +599,6 @@ export function ModernManifestoSection({
     3: { url: mediaUrl3, type: mediaType3 },
   }), [mediaUrl1, mediaType1, mediaUrl2, mediaType2, mediaUrl3, mediaType3])
 
-  // Parse input segments
-  const segments = React.useMemo(() => parseSegments(leftText || ""), [leftText])
-
   /* Colors are locked to the active theme — not user-configurable. */
   const resolvedBg = "var(--background)"
   const resolvedText = "var(--foreground)"
@@ -332,41 +614,45 @@ export function ModernManifestoSection({
     mouseY.set(e.clientY - rect.top)
   }
 
-  // Split text segments into words for precise character animations
-  const renderTextSegment = (text: string, segmentIndex: number) => {
-    // Preserve spaces by splitting while keeping spacing patterns
-    const tokens = text.split(/(\s+)/)
-
-    return tokens.map((token, tokenIdx) => {
-      if (token.trim() === "") {
-        return <span key={`space-${segmentIndex}-${tokenIdx}`}>{token}</span>
-      }
-
+  // Render one fitted item (word or inline media) inside a line. Words keep the
+  // clip-and-slide reveal: an inline-block overflow-hidden wrapper (its width is
+  // exactly the glyph width, so it never disturbs the per-line fit) clips the
+  // inner span as it animates up from below.
+  const renderItem = (it: LineItem, key: React.Key) => {
+    if (it.kind === "media") {
+      const media = mediaMap[it.index]
       return (
+        <MediaCapsule
+          key={key}
+          url={media?.url}
+          mediaType={media?.type}
+          accentHex={accentHex}
+          width={`${MEDIA_EM[it.index] ?? 2}em`}
+          onExpand={() => {
+            const resolvedType = getResolvedMediaType(media?.url, media?.type)
+            setActiveMedia({ url: media?.url, type: resolvedType })
+          }}
+        />
+      )
+    }
+    return (
+      <span key={key} className="inline-block overflow-hidden align-bottom leading-[0.85]">
         <motion.span
-          key={`word-${segmentIndex}-${tokenIdx}`}
-          className="inline-block relative overflow-hidden align-bottom"
+          className="inline-block"
           variants={{
-            hidden: { y: "100%", opacity: 0 },
+            hidden: { y: "115%" },
             visible: {
               y: 0,
-              opacity: 1,
-              transition: {
-                type: "spring",
-                stiffness: 80,
-                damping: 15
-              }
-            }
+              transition: { type: "spring", stiffness: 80, damping: 15 },
+            },
           }}
         >
-          <span
-            className="inline-block transition-all duration-300 hover:text-[var(--manifesto-accent)] hover:-translate-y-0.5 cursor-default"
-          >
-            {token}
+          <span className="inline-block transition-colors duration-300 hover:text-[var(--manifesto-accent)] cursor-default">
+            {it.value}
           </span>
         </motion.span>
-      )
-    })
+      </span>
+    )
   }
 
   return (
@@ -374,7 +660,11 @@ export function ModernManifestoSection({
       ref={containerRef}
       onMouseMove={handleMouseMove}
       className={cn(
-        "relative flex items-center justify-center w-full min-h-screen md:h-screen overflow-hidden py-24 md:py-0",
+        // min-h-screen (NOT a fixed h-screen): each line is fitted to the full
+        // width, so on wide screens the type — and therefore the headline — can
+        // be taller than one viewport. Letting the section grow keeps the
+        // headline AND the dashboard fully visible instead of clipping them.
+        "relative flex flex-col items-center justify-center w-full min-h-screen overflow-hidden py-24 md:py-20",
         // Background/text come from the resolved theme vars in `style` below;
         // keep only the structural classes here so the section adapts to the
         // active light/dark theme instead of being locked to a dark palette.
@@ -409,51 +699,80 @@ export function ModernManifestoSection({
       <div className="pointer-events-none absolute top-1/4 -left-20 w-80 h-80 blur-[120px] opacity-[0.06]" style={{ backgroundColor: accentHex }} />
       <div className="pointer-events-none absolute bottom-1/4 -right-20 w-96 h-96 blur-[140px] opacity-[0.04]" style={{ backgroundColor: accentHex }} />
 
-      <div className="relative z-10 w-full max-w-[1440px] mx-auto px-6 md:px-12 xl:px-20">
+      {/*
+        Outer container: on mobile, horizontal padding is removed so the
+        manifesto text block bleeds to the screen edges. On md+ the original
+        px-12 / xl:px-20 is restored.  The inner `max-w-[1440px]` wrapper
+        keeps desktop content constrained.
+      */}
+      <div className="relative z-10 w-full max-w-[1440px] mx-auto px-6 md:px-12 xl:px-20 py-6 md:py-12 xl:py-20">
 
-        {/* Core Manifesto Box */}
+        {/* Core Manifesto Box — BBDO-style per-line justified headline.
+            Each line is its own block, sized by JS so it fills the full width
+            from edge to edge. Stagger cascades: root staggers the lines, each
+            line staggers its words. */}
         <motion.div
-          ref={contentRef}
+          ref={manifestoRef}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
           variants={{
             hidden: {},
-            visible: {
-              transition: {
-                staggerChildren: 0.03
-              }
-            }
+            visible: { transition: { staggerChildren: 0.08 } },
           }}
           className={cn(
-            "w-full text-justify [text-align-last:justify] font-display font-black",
-            "text-[clamp(1.8225rem,5.67vw,4.86rem)] md:text-[clamp(3rem,6vw,6rem)]",
-            "leading-[1.5] md:leading-[2.1] tracking-[0.015em] uppercase"
+            "w-full font-display font-black uppercase",
+            // Düz blok, sol hizalı. Her satır kendi font boyutuyla tam genişliğe
+            // yaslanır; satır yüksekliği BBDO gibi sıkı.
+            "block text-left",
+            "leading-[0.92]",
+            "tracking-[0.01em]",
           )}
         >
-          {segments.map((seg, idx) => {
-            if (seg.type === "text") {
-              return (
-                <React.Fragment key={`seg-${idx}`}>
-                  {renderTextSegment(seg.value, idx)}
-                </React.Fragment>
-              )
-            } else {
-              const media = mediaMap[seg.index]
-              return (
-                <MediaCapsule
-                  key={`seg-${idx}`}
-                  url={media?.url}
-                  mediaType={media?.type}
-                  accentHex={accentHex}
-                  width={seg.index === 2 ? "3em" : "2.4em"}
-                  onExpand={() => {
-                    const resolvedType = getResolvedMediaType(media?.url, media?.type)
-                    setActiveMedia({ url: media?.url, type: resolvedType })
+          {lines
+            ? lines.map((line, li) => (
+                <motion.div
+                  key={li}
+                  // Sized to fill the container width exactly; nowrap guarantees
+                  // it stays on a single line even at sub-pixel rounding.
+                  className="block whitespace-nowrap"
+                  style={{ fontSize: `${line.fontPx}px` }}
+                  variants={{
+                    hidden: {},
+                    visible: { transition: { staggerChildren: 0.04 } },
                   }}
-                />
-              )
-            }
-          })}
+                >
+                  {line.items.map((it, ii) => (
+                    <React.Fragment key={ii}>
+                      {ii > 0 ? " " : null}
+                      {renderItem(it, `l${li}-i${ii}`)}
+                    </React.Fragment>
+                  ))}
+                </motion.div>
+              ))
+            : (
+                // Pre-fit fallback (SSR / very first paint, before the ruler
+                // measurement runs): natural wrap at a viewport-scaled size so
+                // there is never a flash of tiny or broken text.
+                <div className="block" style={{ fontSize: "clamp(2.5rem, 9vw, 7rem)" }}>
+                  {items.map((it, ii) => (
+                    <React.Fragment key={ii}>
+                      {ii > 0 ? " " : null}
+                      {it.kind === "word" ? (
+                        <span className="inline-block align-bottom">{it.value}</span>
+                      ) : (
+                        <span
+                          className="inline-block"
+                          style={{
+                            width: `${MEDIA_EM[it.index] ?? 2}em`,
+                            height: "0.78em",
+                            verticalAlign: "-0.1em",
+                          }}
+                        />
+                      )}
+                    </React.Fragment>
+                  ))}
+                </div>
+              )}
         </motion.div>
 
         {/* Minimal Details Dashboard */}
@@ -461,7 +780,7 @@ export function ModernManifestoSection({
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.8, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-20"
+          className="mt-20 px-6 md:px-0"
         >
           {/* Subtle separator with accent pulse */}
           <div className="relative mb-12">
@@ -524,17 +843,12 @@ export function ModernManifestoSection({
         </motion.div>
       </div>
 
-      {/* Expanded Media Modal */}
-      <AnimatePresence>
-        {activeMedia && (
-          <MediaModal
-            url={activeMedia.url}
-            mediaType={activeMedia.type}
-            accentHex={accentHex}
-            onClose={() => setActiveMedia(null)}
-          />
-        )}
-      </AnimatePresence>
+      {/* Expanded Media Modal — Radix Dialog with AnimatePresence exit animation */}
+      <MediaModal
+        activeMedia={activeMedia}
+        accentHex={accentHex}
+        onClose={() => setActiveMedia(null)}
+      />
     </section>
   )
 }

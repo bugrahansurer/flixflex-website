@@ -30,11 +30,13 @@ import { authConfig } from "@/lib/auth/config"
 import type { SessionPermission } from "@/lib/auth/types"
 import { decryptSecret } from "@/lib/crypto"
 import { verifyTotpStep, hashBackupCode } from "@/lib/totp"
+import { checkLimit, getClientIp, LOGIN, LOGIN_IP } from "@/lib/rate-limit"
 
 // ── Credentials shape validation ────────────────────────
 const credentialsSchema = z.object({
-  email:    z.string().trim().toLowerCase().email(),
-  password: z.string().min(1),
+  email:      z.string().trim().toLowerCase().email(),
+  password:   z.string().min(1),
+  rememberMe: z.string().optional(), // "true" | "false" | undefined
 })
 
 // PrismaAdapter requires a working PrismaClient instance. During
@@ -65,20 +67,59 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     Credentials({
       name: "Credentials",
       credentials: {
-        email:    { label: "E-posta", type: "email" },
-        password: { label: "Şifre",   type: "password" },
-        totp:     { label: "2FA Kodu", type: "text" },
+        email:      { label: "E-posta",    type: "email" },
+        password:   { label: "Şifre",      type: "password" },
+        totp:       { label: "2FA Kodu",   type: "text" },
+        rememberMe: { label: "Beni hatırla", type: "text" },
       },
-      async authorize(rawCredentials) {
+      async authorize(rawCredentials, req) {
         const emailInput = typeof rawCredentials?.email === "string" ? rawCredentials.email.trim().toLowerCase() : ""
         const passwordInput = typeof rawCredentials?.password === "string" ? rawCredentials.password : ""
         const totpInput = typeof rawCredentials?.totp === "string" ? rawCredentials.totp.replace(/\s/g, "") : ""
+        const rememberMeInput = typeof rawCredentials?.rememberMe === "string" ? rawCredentials.rememberMe : "false"
+
+        // 0. Login rate limit — two-tier brute-force defence.
+        //
+        //    Tier 1 (IP-only): 50 attempts per 15 min from a single IP across
+        //    ALL target emails. Blocks credential-stuffing attacks that rotate
+        //    email addresses to avoid per-credential limits.
+        //
+        //    Tier 2 (IP:email composite): 10 attempts per 15 min per specific
+        //    credential pair. Blocks focused password-guessing against a
+        //    single account.
+        //
+        //    Both checks fall back gracefully when req is undefined (e.g.
+        //    server-side signIn() calls where ip is "unknown").
+        //
+        //    Skipped in development: brute-force protection is a production
+        //    concern, and rate-limiting login on localhost only locks the
+        //    developer out while testing.
+        if (env.NODE_ENV !== "development") {
+          const ip = req ? getClientIp(req as Request) : "unknown"
+
+          const loginIpRl = await checkLimit(LOGIN_IP, ip)
+          if (!loginIpRl.allowed) {
+            console.warn("[auth] login IP rate limit exceeded", { ip })
+            // Return null — NextAuth surfaces a generic "invalid credentials"
+            // message; we deliberately do NOT reveal that this is a rate limit
+            // to avoid enumeration via timing/response differences.
+            return null
+          }
+
+          const rlKey = `${ip}:${emailInput}`
+          const loginRl = await checkLimit(LOGIN, rlKey)
+          if (!loginRl.allowed) {
+            console.warn("[auth] login rate limit exceeded", { ip, email: emailInput })
+            return null
+          }
+        }
 
         // 1. Validate shape
-        const parsed = credentialsSchema.safeParse({ email: emailInput, password: passwordInput })
+        const parsed = credentialsSchema.safeParse({ email: emailInput, password: passwordInput, rememberMe: rememberMeInput })
         if (!parsed.success) return null
 
         const { email, password } = parsed.data
+        const rememberMe = parsed.data.rememberMe === "true"
 
         // 2. Try Prisma lookup. If the call THROWS in dev with the
         //    explicit fallback flag set, we fall through to the dev
@@ -129,13 +170,14 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
               "Unset NEXTAUTH_FALLBACK_ADMIN to disable."
             )
             return {
-              id:       "dev-super-admin",
-              email:    FALLBACK_EMAIL,
-              name:     "Dev Super Admin",
-              image:    null,
-              roleId:   "dev-role",
-              roleName: "Super Admin",
+              id:         "dev-super-admin",
+              email:      FALLBACK_EMAIL,
+              name:       "Dev Super Admin",
+              image:      null,
+              roleId:     "dev-role",
+              roleName:   "Super Admin",
               permissions: [{ resource: "*", action: "*", scope: null }],
+              rememberMe,
             }
           }
           return null
@@ -150,13 +192,25 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         //    enter.
         const DUMMY_HASH =
           "$2b$12$FidO4r0BBh4DMG0kdVDThuIIY3rIc1TT1VO20ImWEpuZF5WEfmkAi"
+        // [LOGIN-DEBUG] geçici — sorun teşhisi için
+        console.warn("[LOGIN-DEBUG] lookup", {
+          emailLooked: email.toLowerCase(),
+          userFound: !!user,
+          isActive: user?.isActive,
+          hasPassword: !!user?.password,
+          twoFA: user?.twoFactorEnabled,
+          nodeEnv: env.NODE_ENV,
+        })
+
         if (!user || !user.isActive || !user.password) {
           await bcrypt.compare(password, DUMMY_HASH)
+          console.warn("[LOGIN-DEBUG] reddedildi: kullanıcı yok/pasif/şifresiz")
           return null
         }
 
         // 5. Verify password using bcryptjs
         const ok = await bcrypt.compare(password, user.password)
+        console.warn("[LOGIN-DEBUG] şifre eşleşmesi:", ok)
         if (!ok) return null
 
         // 5b. Second factor — only enforced for accounts that enabled it.
@@ -227,6 +281,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           roleId:      user.roleId,
           roleName:    user.role?.name ?? "Viewer",
           permissions,
+          rememberMe,
         }
       },
     }),
@@ -256,6 +311,7 @@ declare module "next-auth" {
     roleId?:      string
     roleName?:    string
     permissions?: SessionPermission[]
+    rememberMe?:  boolean
   }
 }
 
@@ -265,5 +321,6 @@ declare module "@auth/core/jwt" {
     roleId?:      string
     roleName?:    string
     permissions?: SessionPermission[]
+    rememberMe?:  boolean
   }
 }

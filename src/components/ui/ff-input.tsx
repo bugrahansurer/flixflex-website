@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { cn } from "@/lib/utils"
+import { cn, buildDescribedBy } from "@/lib/utils"
 
 // ── Input ─────────────────────────────────────────
 export interface FFInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -58,6 +58,7 @@ const FFInput = React.forwardRef<HTMLInputElement, FFInputProps>(
               className
             )}
             aria-invalid={!!error}
+            aria-describedby={buildDescribedBy(inputId, !!error, !!hint)}
             {...props}
           />
 
@@ -69,12 +70,12 @@ const FFInput = React.forwardRef<HTMLInputElement, FFInputProps>(
         </div>
 
         {error && (
-          <p className="text-[11px] text-red-500 flex items-center gap-1">
+          <p id={`${inputId}-error`} className="text-[11px] text-red-500 flex items-center gap-1">
             <span>✕</span> {error}
           </p>
         )}
         {hint && !error && (
-          <p className="text-[11px] text-[var(--foreground-faint)]">{hint}</p>
+          <p id={`${inputId}-hint`} className="text-[11px] text-[var(--foreground-faint)]">{hint}</p>
         )}
       </div>
     )
@@ -117,10 +118,11 @@ const FFTextarea = React.forwardRef<HTMLTextAreaElement, FFTextareaProps>(
             className
           )}
           aria-invalid={!!error}
+          aria-describedby={buildDescribedBy(inputId, !!error, !!hint)}
           {...props}
         />
-        {error && <p className="text-[11px] text-red-500">{error}</p>}
-        {hint && !error && <p className="text-[11px] text-[var(--foreground-faint)]">{hint}</p>}
+        {error && <p id={`${inputId}-error`} className="text-[11px] text-red-500">{error}</p>}
+        {hint && !error && <p id={`${inputId}-hint`} className="text-[11px] text-[var(--foreground-faint)]">{hint}</p>}
       </div>
     )
   }

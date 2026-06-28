@@ -1,7 +1,16 @@
 import { NextRequest, NextResponse } from "next/server"
+import { z } from "zod"
 import { requirePermission, jsonError } from "@/lib/ai/api-utils"
 import prisma from "@/lib/prisma"
 import { generateApiKey } from "@/lib/api-keys"
+import { logAudit } from "@/lib/audit"
+
+const VALID_SCOPES = ["read", "write", "admin"] as const
+
+const createApiKeySchema = z.object({
+  name:   z.string().trim().min(1).max(100).default("API Anahtarı"),
+  scopes: z.array(z.enum(VALID_SCOPES)).max(VALID_SCOPES.length).default([]),
+})
 
 // GET — list keys (never returns the secret, only prefix + metadata)
 export async function GET() {
@@ -23,13 +32,26 @@ export async function POST(req: NextRequest) {
   if (!prisma) return jsonError("Veritabanı yok", 503)
 
   try {
-    const body = await req.json().catch(() => ({}))
-    const name = String(body.name ?? "").trim() || "API Anahtarı"
-    const scopes: string[] = Array.isArray(body.scopes) ? body.scopes.map(String) : []
+    const raw = await req.json().catch(() => ({}))
+    const parsed = createApiKeySchema.safeParse(raw)
+    if (!parsed.success) {
+      return jsonError(parsed.error.issues[0]?.message ?? "Geçersiz istek.", 400)
+    }
+    const { name, scopes } = parsed.data
 
     const { plaintext, prefix, hashedKey } = generateApiKey()
-    await prisma.apiKey.create({
+    const created = await prisma.apiKey.create({
       data: { name, prefix, hashedKey, scopes, createdById: gate.ctx.userId },
+      select: { id: true },
+    })
+
+    void logAudit({
+      userId: gate.ctx.userId,
+      action: "api-key.create",
+      resource: "api-keys",
+      resourceId: created.id,
+      // name only — never log the plaintext key, hash, or prefix
+      metadata: { name },
     })
 
     // plaintext returned ONCE — never retrievable again.

@@ -3,6 +3,7 @@
 import React, { useRef, useEffect } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import * as THREE from 'three';
+import { usePrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion';
 
 export interface WovenLightHeroProps {
   headline?: string;
@@ -20,6 +21,7 @@ export const WovenLightHero = ({
 }: WovenLightHeroProps) => {
   const textControls = useAnimation();
   const buttonControls = useAnimation();
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
     // Add a more elegant font
@@ -28,19 +30,25 @@ export const WovenLightHero = ({
     link.rel = 'stylesheet';
     document.head.appendChild(link);
 
-    textControls.start(i => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: i * 0.1 + 1.5,
-        duration: 1.2,
-        ease: [0.2, 0.65, 0.3, 0.9]
-      }
-    }));
-    buttonControls.start({
-      opacity: 1,
-      transition: { delay: 2.5, duration: 1 }
-    });
+    if (!prefersReducedMotion) {
+      textControls.start(i => ({
+        opacity: 1,
+        y: 0,
+        transition: {
+          delay: i * 0.1 + 1.5,
+          duration: 1.2,
+          ease: [0.2, 0.65, 0.3, 0.9]
+        }
+      }));
+      buttonControls.start({
+        opacity: 1,
+        transition: { delay: 2.5, duration: 1 }
+      });
+    } else {
+      // Skip animation — show immediately
+      textControls.set({ opacity: 1, y: 0 });
+      buttonControls.set({ opacity: 1 });
+    }
 
     return () => {
       try {
@@ -51,11 +59,11 @@ export const WovenLightHero = ({
         console.warn("Could not remove font stylesheet link:", e);
       }
     }
-  }, [textControls, buttonControls]);
+  }, [textControls, buttonControls, prefersReducedMotion]);
 
   return (
     <div className="relative flex h-screen w-full flex-col items-center justify-center overflow-hidden bg-black dark:bg-background">
-      <WovenCanvas />
+      <WovenCanvas prefersReducedMotion={prefersReducedMotion} />
       <HeroNav />
       <div className="relative z-10 text-center px-4">
         <h1 className="text-6xl md:text-8xl text-foreground dark:text-foreground" style={{ fontFamily: "'Playfair Display', serif", textShadow: '0 0 50px rgba(255, 255, 255, 0.3)' }}>
@@ -108,11 +116,14 @@ const HeroNav = () => {
 };
 
 // --- Three.js Canvas Component ---
-const WovenCanvas = () => {
+const WovenCanvas = ({ prefersReducedMotion }: { prefersReducedMotion: boolean }) => {
   const mountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!mountRef.current) return;
+
+    // Reduced motion: skip Three.js entirely, show static gradient fallback
+    if (prefersReducedMotion) return;
 
     const currentMount = mountRef.current;
     const scene = new THREE.Scene();
@@ -182,32 +193,51 @@ const WovenCanvas = () => {
     };
     window.addEventListener('mousemove', handleMouseMove);
 
+    // ── Pre-allocated reusable vectors (no per-frame `new THREE.Vector3`) ──
+    const mouseWorld = new THREE.Vector3();
+    const currentPos = new THREE.Vector3();
+    const originalPos = new THREE.Vector3();
+    const velocity = new THREE.Vector3();
+    const direction = new THREE.Vector3();
+    const returnForce = new THREE.Vector3();
+
     let animationFrameId: number;
 
     const animate = () => {
+      // Do not schedule the next frame while the tab is hidden —
+      // handleVisibilityChange will call animate() once when it becomes
+      // visible again. Without this guard, the previous code scheduled a
+      // new frame BEFORE the document.hidden check, so returning early still
+      // kept the loop alive; a second animate() call from handleVisibilityChange
+      // then produced two concurrent rAF loops.
+      if (document.hidden) return;
+
       animationFrameId = requestAnimationFrame(animate);
+
       const elapsedTime = clock.getElapsedTime();
 
-      const mouseWorld = new THREE.Vector3(mouse.x * 3, mouse.y * 3, 0);
+      // Reuse pre-allocated vector — no heap allocation per frame
+      mouseWorld.set(mouse.x * 3, mouse.y * 3, 0);
 
       for (let i = 0; i < particleCount; i++) {
         const ix = i * 3;
         const iy = i * 3 + 1;
         const iz = i * 3 + 2;
 
-        const currentPos = new THREE.Vector3(positions[ix], positions[iy], positions[iz]);
-        const originalPos = new THREE.Vector3(originalPositions[ix], originalPositions[iy], originalPositions[iz]);
-        const velocity = new THREE.Vector3(velocities[ix], velocities[iy], velocities[iz]);
+        // In-place updates — no new THREE.Vector3() calls
+        currentPos.set(positions[ix], positions[iy], positions[iz]);
+        originalPos.set(originalPositions[ix], originalPositions[iy], originalPositions[iz]);
+        velocity.set(velocities[ix], velocities[iy], velocities[iz]);
 
         const dist = currentPos.distanceTo(mouseWorld);
         if (dist < 1.5) {
           const force = (1.5 - dist) * 0.01;
-          const direction = new THREE.Vector3().subVectors(currentPos, mouseWorld).normalize();
-          velocity.add(direction.multiplyScalar(force));
+          direction.subVectors(currentPos, mouseWorld).normalize();
+          velocity.addScaledVector(direction, force);
         }
 
-        // Return to original position
-        const returnForce = new THREE.Vector3().subVectors(originalPos, currentPos).multiplyScalar(0.001);
+        // Return to original position (in-place)
+        returnForce.subVectors(originalPos, currentPos).multiplyScalar(0.001);
         velocity.add(returnForce);
 
         // Damping
@@ -228,6 +258,16 @@ const WovenCanvas = () => {
     };
     animate();
 
+    // ── Pause/resume on tab visibility ──────────────────────────────────
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(animationFrameId);
+      } else {
+        animate();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
     const handleResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
@@ -239,6 +279,7 @@ const WovenCanvas = () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
 
       // Clean up Three.js resources
       try {
@@ -254,7 +295,20 @@ const WovenCanvas = () => {
       material.dispose();
       renderer.dispose();
     };
-  }, []);
+  }, [prefersReducedMotion]);
+
+  // Reduced-motion fallback: static gradient that matches the dark canvas aesthetic
+  if (prefersReducedMotion) {
+    return (
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          background: 'radial-gradient(ellipse at 50% 40%, rgba(161,52,255,0.15) 0%, rgba(0,0,0,0.9) 60%, #000 100%)',
+        }}
+        aria-hidden
+      />
+    );
+  }
 
   return <div ref={mountRef} className="absolute inset-0 z-0" />;
 };

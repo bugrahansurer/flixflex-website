@@ -26,8 +26,8 @@ export async function POST(req: NextRequest) {
   const gate = await requireAdmin()
   if (!gate.ok) return gate.response
 
-  const rate = checkRateLimit(gate.ctx.userId)
-  if (!rate.allowed) return rateLimitResponse(rate.retryAfter ?? 60)
+  const rate = await checkRateLimit(gate.ctx.userId)
+  if (!rate.allowed) return rateLimitResponse(rate)
 
   let raw: unknown
   try {

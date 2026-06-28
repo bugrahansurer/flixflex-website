@@ -3,7 +3,7 @@
 import * as React from "react"
 import * as RxSelect from "@radix-ui/react-select"
 import { Check, ChevronDown, ChevronUp } from "@/lib/icons"
-import { cn } from "@/lib/utils"
+import { cn, buildDescribedBy } from "@/lib/utils"
 
 // ═══════════════════════════════════════════════════════════
 // FFSelect — Brand-styled Radix Select
@@ -38,8 +38,10 @@ export interface FFSelectProps
   placeholder?: string
   /** Visual size */
   size?: keyof typeof triggerSizes
-  /** Show as error state */
-  error?: boolean
+  /** Show as error state — also accepts an error message string */
+  error?: boolean | string
+  /** Inline hint text shown below the trigger */
+  hint?: string
   /** Full width trigger (default true) */
   fullWidth?: boolean
   /** Trigger className override */
@@ -59,6 +61,7 @@ function FFSelect({
   placeholder = "Seçin...",
   size = "md",
   error = false,
+  hint,
   fullWidth = true,
   triggerClassName,
   id,
@@ -70,7 +73,13 @@ function FFSelect({
   children,
   ...rootProps
 }: FFSelectProps) {
+  const generatedId = React.useId()
+  const triggerId = id ?? generatedId
+  const hasError = !!error
+  const errorMessage = typeof error === "string" ? error : undefined
+
   return (
+    <div className={cn("flex flex-col gap-1.5", fullWidth ? "w-full" : "inline-flex")}>
     <RxSelect.Root
       value={value}
       onValueChange={onValueChange}
@@ -81,8 +90,10 @@ function FFSelect({
       {...rootProps}
     >
       <RxSelect.Trigger
-        id={id}
+        id={triggerId}
         aria-label={ariaLabel}
+        aria-invalid={hasError}
+        aria-describedby={buildDescribedBy(triggerId, hasError, !!hint)}
         className={cn(
           "ff-shape-button h-10 group inline-flex items-center justify-between gap-2",
           "bg-[var(--surface)] text-[var(--foreground)]",
@@ -96,7 +107,7 @@ function FFSelect({
           "rounded-none",
           triggerSizes[size],
           fullWidth && "w-full",
-          error &&
+          hasError &&
           "border-[#dc2626] focus:border-[#dc2626] focus:shadow-[0_0_0_3px_rgba(220,38,38,0.1)]",
           triggerClassName
         )}
@@ -153,6 +164,16 @@ function FFSelect({
         </RxSelect.Content>
       </RxSelect.Portal>
     </RxSelect.Root>
+
+    {errorMessage && (
+      <p id={`${triggerId}-error`} className="text-[11px] text-red-500 flex items-center gap-1">
+        <span>✕</span> {errorMessage}
+      </p>
+    )}
+    {hint && !hasError && (
+      <p id={`${triggerId}-hint`} className="text-[11px] text-[var(--foreground-faint)]">{hint}</p>
+    )}
+    </div>
   )
 }
 

@@ -10,6 +10,7 @@ import { auth } from "@/lib/auth"
 import prisma from "@/lib/prisma"
 import { hasPermission } from "@/lib/rbac/permissions"
 import { updateRoleSchema } from "@/lib/validators/role-schema"
+import { logAudit } from "@/lib/audit"
 
 export const dynamic = "force-dynamic"
 
@@ -100,6 +101,15 @@ export async function PATCH(req: NextRequest, { params }: Params) {
       },
       include: { permissions: true, _count: { select: { users: true } } },
     })
+
+    void logAudit({
+      userId: session.user.id,
+      action: "role.update",
+      resource: "roles",
+      resourceId: id,
+      metadata: { name: updated.name },
+    })
+
     return NextResponse.json({ ok: true, data: updated })
   } catch (err: any) {
     console.error("[roles/[id] PATCH]", err)
@@ -138,6 +148,15 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
     }
 
     await prisma.role.delete({ where: { id } })
+
+    void logAudit({
+      userId: session.user.id,
+      action: "role.delete",
+      resource: "roles",
+      resourceId: id,
+      metadata: { name: role.name },
+    })
+
     return NextResponse.json({ ok: true })
   } catch (err: any) {
     console.error("[roles/[id] DELETE]", err)

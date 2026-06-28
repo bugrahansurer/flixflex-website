@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs"
 import { auth } from "@/lib/auth"
 import prisma from "@/lib/prisma"
 import { changePasswordSchema } from "@/lib/validators/profile-schema"
+import { logAudit } from "@/lib/audit"
 
 export async function POST(req: Request) {
   const session = await auth()
@@ -51,6 +52,14 @@ export async function POST(req: Request) {
     await prisma.user.update({
       where: { id: user.id },
       data:  { password: newHash },
+    })
+
+    void logAudit({
+      userId: user.id,
+      action: "profile.password.change",
+      resource: "profile",
+      resourceId: user.id,
+      metadata: {},
     })
 
     return NextResponse.json({ ok: true })

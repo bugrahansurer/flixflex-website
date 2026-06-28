@@ -4,7 +4,7 @@ import sharp from "sharp"
 import { auth } from "@/lib/auth"
 import { hasPermission } from "@/lib/rbac/permissions"
 import { prisma } from "@/lib/prisma"
-import { rateLimit, getClientIp } from "@/lib/rate-limit"
+import { checkLimit, getClientIp, rateLimitResponse, MEDIA_UPLOAD } from "@/lib/rate-limit"
 import { logAudit } from "@/lib/audit"
 
 export const runtime = "nodejs"
@@ -231,21 +231,8 @@ export async function POST(req: Request) {
     // ── Rate limit (per authenticated user IP) ───────────────
     // Prevents a valid credential from being used to trigger
     // repeated in-memory sharp decode cycles (DoS amplification).
-    const rlResult = rateLimit({
-      namespace: "media-upload",
-      key:       getClientIp(req),
-      max:       10,
-      windowMs:  60_000, // 10 uploads per minute per IP
-    })
-    if (!rlResult.allowed) {
-      return NextResponse.json(
-        { error: "Çok fazla istek gönderildi. Lütfen bir dakika sonra tekrar deneyin." },
-        {
-          status: 429,
-          headers: { "Retry-After": String(rlResult.retryAfter ?? 60) },
-        }
-      )
-    }
+    const rlResult = await checkLimit(MEDIA_UPLOAD, getClientIp(req))
+    if (!rlResult.allowed) return rateLimitResponse(rlResult)
 
     // ── Parse body ───────────────────────────────────────────
     let formData: FormData

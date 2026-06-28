@@ -32,12 +32,13 @@ function deriveInitials(name: string | null | undefined, email: string): string 
 
 export const authConfig: NextAuthConfig = {
   // JWT sessions — required for Credentials + edge middleware.
-  // 8-hour lifetime: permission/role changes propagate on next login
-  // (or within 8h), instead of being cached for 30 days. Admins are
-  // expected to re-authenticate roughly once per working day.
+  // maxAge is set to 30 days here (the "remember me" ceiling).
+  // Sessions WITHOUT rememberMe are capped to 8 hours via token.exp
+  // override in the jwt callback below — NextAuth v5 honours a short
+  // token.exp even when maxAge is longer.
   session: {
     strategy: "jwt",
-    maxAge:   60 * 60 * 8, // 8 hours
+    maxAge:   60 * 60 * 24 * 30, // 30 days (remember-me ceiling)
   },
 
   // Brand-consistent custom pages (Turkish slugs).
@@ -64,12 +65,41 @@ export const authConfig: NextAuthConfig = {
           roleId?: string
           roleName?: string
           permissions?: SessionPermission[]
+          rememberMe?: boolean
         }
         if (u.id)          token.id          = u.id
         if (u.roleId)      token.roleId      = u.roleId
         if (u.roleName)    token.roleName    = u.roleName
         if (u.permissions) token.permissions = u.permissions
+        // Persist the remember-me preference so it survives token refreshes.
+        token.rememberMe = u.rememberMe ?? false
       }
+
+      // Cap short-lived sessions to 8 hours.
+      // Runs on EVERY jwt() invocation — not just sign-in — so that:
+      //   1. Pre-existing sessions (token.rememberMe === undefined, issued
+      //      before this feature was added) are treated as non-rememberMe
+      //      rather than silently inheriting the new 30-day maxAge ceiling.
+      //   2. The 8-hour window is anchored at sign-in (token.exp is set once
+      //      and never extended on refresh), which is the desired behaviour.
+      //
+      // rememberMe === true  → leave token.exp untouched (NextAuth default: maxAge 30 days).
+      // rememberMe === false (or undefined for legacy sessions) → cap to 8 h from sign-in.
+      //
+      // Justification for `as any`: NextAuth v5 beta.31's JWT type does not
+      // expose `exp` as a writable property; casting is the only way to set
+      // it without breaking strict mode elsewhere.
+      if (!token.rememberMe) {
+        const eightHoursFromNow = Math.floor(Date.now() / 1000) + 60 * 60 * 8
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const existingExp = (token as any).exp as number | undefined
+        // Only cap downward — never extend an exp that is already shorter.
+        if (!existingExp || existingExp > eightHoursFromNow) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          ;(token as any).exp = eightHoursFromNow
+        }
+      }
+
       return token
     },
 
