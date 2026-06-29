@@ -74,7 +74,8 @@ export function UserForm({ roles, initial }: UserFormProps) {
       const json = await res.json()
       if (!res.ok || !json.ok) {
         const fieldErrors = json.errors as Record<string, string[]> | undefined
-        if (fieldErrors?.email) setError("email", { message: fieldErrors.email[0] })
+        if (fieldErrors?.username) setError("username" as keyof FormData, { message: fieldErrors.username[0] })
+        else if (fieldErrors?.email) setError("email", { message: fieldErrors.email[0] })
         else if (fieldErrors?.name) setError("name", { message: fieldErrors.name[0] })
         else setError("name", { message: json.message ?? "Kayıt başarısız." })
         return
@@ -89,12 +90,13 @@ export function UserForm({ roles, initial }: UserFormProps) {
       const json = await res.json()
       if (!res.ok || !json.ok) {
         const fieldErrors = json.errors as Record<string, string[]> | undefined
-        if (fieldErrors?.email) setError("email", { message: fieldErrors.email[0] })
+        if (fieldErrors?.username) setError("username" as keyof FormData, { message: fieldErrors.username[0] })
+        else if (fieldErrors?.email) setError("email", { message: fieldErrors.email[0] })
         else if (fieldErrors?.name) setError("name", { message: fieldErrors.name[0] })
         else setError("name", { message: json.message ?? "Kayıt başarısız." })
         return
       }
-      router.push(`/admin/kullanicilar/${json.data.id}`)
+      router.push(`/admin/kullanicilar/${json.data.username}`)
     }
   }
 
