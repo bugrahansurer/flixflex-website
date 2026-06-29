@@ -4,7 +4,8 @@ import * as React from "react"
 import { useRouter } from "next/navigation"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Save, ArrowRight, Mail } from "@/lib/icons"
+import { Save, ArrowRight, Mail, AtSign } from "@/lib/icons"
+import { generateUsername } from "@/lib/username"
 import { FFButton } from "@/components/ui/ff-button"
 import { FFInput } from "@/components/ui/ff-input"
 import { FFSelect, FFSelectItem } from "@/components/ui/ff-select"
@@ -20,6 +21,7 @@ interface UserFormProps {
   initial?: {
     id: string
     name: string | null
+    username: string
     email: string
     roleId: string
     isActive: boolean
@@ -40,15 +42,27 @@ export function UserForm({ roles, initial }: UserFormProps) {
     control,
     formState: { errors, isSubmitting },
     setError,
+    setValue,
     watch,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: isNew
-      ? { name: "", email: "", roleId: roles[0]?.id ?? "", password: "", sendInviteEmail: false }
-      : { name: initial?.name ?? "", email: initial?.email ?? "", roleId: initial?.roleId ?? "", isActive: initial?.isActive ?? true },
+      ? { name: "", username: "", email: "", roleId: roles[0]?.id ?? "", password: "", sendInviteEmail: false }
+      : { name: initial?.name ?? "", username: initial?.username ?? "", email: initial?.email ?? "", roleId: initial?.roleId ?? "", isActive: initial?.isActive ?? true },
   })
 
   const sendInvite = isNew ? watch("sendInviteEmail" as keyof FormData) : false
+
+  const usernameTouched = React.useRef(false)
+  const nameValue = watch("name" as keyof FormData) as string
+  const emailValue = watch("email" as keyof FormData) as string
+  const usernameValue = (watch("username" as keyof FormData) as string) ?? ""
+
+  React.useEffect(() => {
+    if (!isNew || usernameTouched.current) return
+    const suggestion = generateUsername(nameValue || "", emailValue || "")
+    setValue("username" as keyof FormData, suggestion as never, { shouldValidate: false })
+  }, [isNew, nameValue, emailValue, setValue])
 
   const onSubmit = async (data: FormData) => {
     if (isEdit) {
@@ -104,6 +118,25 @@ export function UserForm({ roles, initial }: UserFormProps) {
         disabled={isSubmitting}
         {...register("email")}
       />
+
+      <div className="flex flex-col gap-1">
+        <FFInput
+          label="Kullanıcı Adı"
+          placeholder="omerustagul"
+          leftIcon={<AtSign className="w-4 h-4" />}
+          className="bg-transparent border border-[#CCCCCC] focus:border-[#ff4fd8] text-sm text-[#333333] placeholder:text-[#999999]"
+          error={(errors as { username?: { message?: string } }).username?.message}
+          disabled={isSubmitting}
+          {...register("username" as keyof FormData, {
+            onChange: () => { usernameTouched.current = true },
+          })}
+        />
+        {usernameValue && (
+          <p className="text-[10px] text-[#888888]">
+            URL: <span className="font-mono text-[#FF4FD8]">/admin/kullanicilar/{usernameValue}</span>
+          </p>
+        )}
+      </div>
 
       {/* Role select */}
       <div className="flex flex-col gap-1.5">

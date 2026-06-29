@@ -20,6 +20,7 @@ export {
   IconAlignLeft as AlignLeft,
   IconArrowDownRight as ArrowDownRight,
   IconArrowLeft as ArrowLeft,
+  IconAt as AtSign,
   IconArrowRight as ArrowRight,
   IconArrowUp as ArrowUp,
   IconArrowsUpDown as ArrowUpDown,
