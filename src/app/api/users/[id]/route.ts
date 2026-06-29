@@ -125,11 +125,19 @@ export async function PATCH(req: NextRequest, { params }: Params) {
       }
     }
 
+    if (result.data.username && result.data.username !== user.username) {
+      const existing = await prisma.user.findUnique({ where: { username: result.data.username }, select: { id: true } })
+      if (existing) {
+        return NextResponse.json({ ok: false, errors: { username: ["Bu kullanıcı adı zaten kullanılıyor."] } }, { status: 400 })
+      }
+    }
+
     const updated = await prisma.user.update({
       where: { id },
       data: {
         ...(result.data.name     !== undefined ? { name:     result.data.name }     : {}),
         ...(result.data.email    !== undefined ? { email:    result.data.email }    : {}),
+        ...(result.data.username !== undefined ? { username: result.data.username } : {}),
         ...(result.data.roleId   !== undefined ? { roleId:   result.data.roleId }   : {}),
         ...(result.data.isActive !== undefined ? { isActive: result.data.isActive } : {}),
       },

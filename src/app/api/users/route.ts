@@ -11,6 +11,7 @@ import prisma from "@/lib/prisma"
 import { hasPermission } from "@/lib/rbac/permissions"
 import { logAudit } from "@/lib/audit"
 import { createUserSchema } from "@/lib/validators/user-schema"
+import { generateUsername, ensureUniqueUsername } from "@/lib/username"
 
 export const dynamic = "force-dynamic"
 
@@ -94,11 +95,27 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: false, errors: result.error.flatten().fieldErrors }, { status: 400 })
     }
 
-    const { name, email, roleId, password } = result.data
+    const { name, email, roleId, password, username: rawUsername } = result.data
 
     const existing = await prisma.user.findUnique({ where: { email } })
     if (existing) {
       return NextResponse.json({ ok: false, errors: { email: ["Bu e-posta adresi zaten kayıtlı."] } }, { status: 400 })
+    }
+
+    // Username: verilmişse benzersizliğini doğrula, verilmemişse isimden üret.
+    let username: string
+    if (rawUsername) {
+      const taken = await prisma.user.findUnique({ where: { username: rawUsername }, select: { id: true } })
+      if (taken) {
+        return NextResponse.json({ ok: false, errors: { username: ["Bu kullanıcı adı zaten kullanılıyor."] } }, { status: 400 })
+      }
+      username = rawUsername
+    } else {
+      const db = prisma!
+      username = await ensureUniqueUsername(generateUsername(name, email), async (c) => {
+        const found = await db.user.findUnique({ where: { username: c }, select: { id: true } })
+        return !!found
+      })
     }
 
     const role = await prisma.role.findUnique({ where: { id: roleId } })
@@ -108,7 +125,7 @@ export async function POST(req: NextRequest) {
 
     const hashed = await bcrypt.hash(password, 12)
     const user = await prisma.user.create({
-      data: { name, email, password: hashed, roleId, isActive: true },
+      data: { name, email, username, password: hashed, roleId, isActive: true },
       omit: { password: true },
       include: { role: { select: { id: true, name: true } } },
     })

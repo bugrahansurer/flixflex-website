@@ -7,7 +7,7 @@ const prisma = new PrismaClient()
 
 async function main() {
   const users = await prisma.user.findMany({
-    where: { OR: [{ username: null }, { username: "" }] },
+    where: { OR: [{ username: { equals: null as unknown as string } }, { username: "" }] },
     select: { id: true, name: true, email: true },
   })
   console.log(`${users.length} kullanıcıya username üretilecek`)

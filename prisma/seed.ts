@@ -559,6 +559,7 @@ async function main() {
     create: {
       email:    ADMIN_EMAIL,
       name:     "FlixFlex Admin",
+      username: "flixflex-admin",
       password: passwordHash,
       roleId:   createdRoles["Super Admin"],
       isActive: true,
