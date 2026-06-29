@@ -828,15 +828,21 @@ Backfill çıktısında zaten `omerustagul` üretildi (Task 3). Farklıysa, deta
 
 `.env` — local satırı yorumla, prod satırını aç (Task 2 Step 1'in tersi). Aktif `DATABASE_URL` yeniden `db.prisma.io` olmalı.
 
-- [ ] **Step 5: Production deploy notu (kullanıcı çalıştırır)**
+- [ ] **Step 5: Production deploy notu (GÜNCELLENDİ — güvenlik ağı)**
 
-Production'a uygulamak için sıra (canlıda):
-```
-node scripts/prisma-with-env.mjs migrate deploy   # add_user_username_nullable
-npx tsx scripts/backfill-usernames.ts             # mevcut prod kullanıcılarını doldur
-node scripts/prisma-with-env.mjs migrate deploy   # user_username_notnull
-```
-(Prod DATABASE_URL aktifken. Yalnızca 2 kullanıcı olduğundan hızlı/güvenli.)
+Migration B'ye `SET NOT NULL`'dan önce çalışan bir SQL backfill (güvenlik ağı) eklendi.
+Bu sayede **prod deploy artık her durumda güvenli**: Vercel build'i otomatik
+`migrate deploy` çalıştırsa bile (A + B), mevcut prod kullanıcıları e-posta+id tabanlı
+geçici bir username alır ve NOT NULL kısıtı hatasız uygulanır — build kırılmaz.
+
+Yani normal deploy yeterli (ekstra manuel adım şart değil).
+
+Ömer'e tam `omerustagul` vermek için iki yol:
+- **Basit:** Deploy sonrası admin panelden Ömer'in detay sayfasını aç → Kullanıcı Adı'nı
+  `omerustagul` yap → Kaydet. (Form bunu destekliyor.)
+- **Otomatik:** Prod'da migration A uygulandıktan sonra B'den ÖNCE
+  `npx tsx scripts/backfill-usernames.ts` çalıştırılırsa isimler (omerustagul) otomatik gelir
+  ve güvenlik ağı 0 satır etkiler.
 
 - [ ] **Step 6: Commit**
 
