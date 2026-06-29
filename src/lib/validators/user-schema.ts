@@ -3,6 +3,7 @@
 // ═══════════════════════════════════════════════════════════
 
 import { z } from "zod"
+import { USERNAME_REGEX } from "@/lib/username"
 
 export const createUserSchema = z.object({
   name: z
@@ -14,6 +15,10 @@ export const createUserSchema = z.object({
     .string()
     .email("Geçerli bir e-posta adresi girin")
     .toLowerCase(),
+  username: z
+    .string()
+    .regex(USERNAME_REGEX, "Kullanıcı adı 3-30 karakter; küçük harf, rakam, . _ - olabilir")
+    .optional(),
   roleId: z
     .string()
     .min(1, "Bir rol seçmelisiniz"),
@@ -35,6 +40,10 @@ export const updateUserSchema = z.object({
     .string()
     .email("Geçerli bir e-posta adresi girin")
     .toLowerCase()
+    .optional(),
+  username: z
+    .string()
+    .regex(USERNAME_REGEX, "Kullanıcı adı 3-30 karakter; küçük harf, rakam, . _ - olabilir")
     .optional(),
   roleId: z.string().min(1, "Bir rol seçmelisiniz").optional(),
   isActive: z.boolean().optional(),
