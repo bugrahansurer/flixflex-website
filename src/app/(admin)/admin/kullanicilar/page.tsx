@@ -29,6 +29,7 @@ export default async function UsersPage({ searchParams }: Props) {
   let users: Array<{
     id: string
     name: string | null
+    username: string
     email: string
     isActive: boolean
     lastLogin: Date | null
@@ -198,7 +199,7 @@ export default async function UsersPage({ searchParams }: Props) {
 
                 {/* Edit link */}
                 <div className="flex justify-end">
-                  <Link href={`/admin/kullanicilar/${user.id}`}>
+                  <Link href={`/admin/kullanicilar/${user.username}`}>
                     <FFButton
                       variant="ghost"
                       size="sm"
