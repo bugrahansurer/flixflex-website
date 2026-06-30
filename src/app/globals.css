@@ -930,3 +930,27 @@
 .ff-mo-cursor     { animation: ff-cursor 3s ease-in-out infinite; }
 .ff-mo-orbit      { animation: ff-orbit 12s linear infinite; }
 .ff-mo-orbit-rev  { animation: ff-orbit-rev 8s linear infinite; }
+
+/* ═══ Hero — minimalist kinetik (ambient = CSS, reveal = framer) ═══ */
+@keyframes ff-aurora-a {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(6%, 4%) scale(1.18); }
+}
+@keyframes ff-aurora-b {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-5%, -3%) scale(1.12); }
+}
+@keyframes ff-hero-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.7); }
+}
+.ff-hero-aurora-a { animation: ff-aurora-a 18s ease-in-out infinite; }
+.ff-hero-aurora-b { animation: ff-aurora-b 23s ease-in-out infinite; }
+.ff-hero-dot { animation: ff-hero-dot 2s ease-in-out infinite; }
+.ff-hero-gradient-text {
+  background: linear-gradient(100deg, #FF4FD8 0%, #B85CFF 55%, #6AA8FF 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
