@@ -33,6 +33,7 @@ import {
   heroAnimatedVideoPropsSchema,
   statsPropsSchema,
   servicesPropsSchema,
+  servicesShowcasePropsSchema,
   portfolioPropsSchema,
   testimonialsPropsSchema,
   ctaPropsSchema,
@@ -107,6 +108,14 @@ export const SECTION_REGISTRY: Record<string, SectionMeta> = {
     icon: Briefcase,
     defaultProps: servicesPropsSchema.parse({}),
     description: "Sunulan hizmetlerin listesi",
+  },
+  "services-showcase": {
+    type: "services-showcase",
+    label: "Hizmet Vitrini",
+    category: "İçerik",
+    icon: Briefcase,
+    defaultProps: servicesShowcasePropsSchema.parse({}),
+    description: "Ana hizmetleri modern bento ızgarada sergiler (alt hizmetler dahil)",
   },
   "portfolio": {
     type: "portfolio",

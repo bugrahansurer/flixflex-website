@@ -24,6 +24,7 @@ export type SectionType =
   | "values"
   | "why-us"
   | "services-list"
+  | "services-showcase"
   | "portfolio-hero"
   | "portfolio-grid"
   | "blog-hero"
@@ -128,6 +129,15 @@ export const servicesPropsSchema = z.object({
       }),
     )
     .optional(),
+})
+
+export const servicesShowcasePropsSchema = z.object({
+  headline: z.string().default("Markanı büyüten hizmetler"),
+  subheadline: z
+    .string()
+    .default("Strateji, yaratıcılık ve teknolojiyi tek çatı altında topluyoruz. İhtiyacın olan her şey, bir arada."),
+  ctaLabel: z.string().default(""),
+  ctaHref: z.string().default(""),
 })
 
 export const portfolioPropsSchema = z.object({
@@ -394,6 +404,7 @@ export const SECTION_SCHEMAS: Record<SectionType, z.ZodObject<z.ZodRawShape>> = 
   "values": valuesPropsSchema,
   "why-us": whyUsPropsSchema,
   "services-list": z.object({}),
+  "services-showcase": servicesShowcasePropsSchema,
   "portfolio-hero": z.object({}),
   "portfolio-grid": z.object({}),
   "blog-hero": z.object({}),

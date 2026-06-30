@@ -37,6 +37,7 @@ import { DemoOfferCarousel } from "@/components/ui/offer-carousel"
 import { DemoProjectShowcase } from "@/components/ui/project-showcase"
 import { AnimatedVideoHero, VideoHeroProvider } from "@/components/public/hero/animated-video-hero"
 import { ParallaxScrolling } from "@/components/public/parallax-scrolling"
+import { ServicesShowcase } from "@/components/public/services/services-showcase"
 import { PoemAnimation, ScrollExpandMedia, FlowArt, FlowSection } from "@/components/ui"
 import dynamic from "next/dynamic"
 // Lazy — pulls in three.js (~600KB); only loaded on pages that actually use it.
@@ -45,8 +46,20 @@ const WovenLightHero = dynamic(
   { ssr: false }
 )
 import { SectionWrapper } from "./section-wrapper"
-import { useUIStore } from "@/lib/ui-store"
+import { useUIStore, type HeaderTone } from "@/lib/ui-store"
 import { ArrowRight } from "@/lib/icons"
+
+/** Full-bleed heroes with a fixed dark background (video/image), so the
+ *  transparent header sitting over them needs white text regardless of theme.
+ *  Section types not listed here fall back to 'theme' (follows the active theme). */
+const HEADER_TONE_BY_TYPE: Partial<Record<SectionType, HeaderTone>> = {
+  "hero-video": "dark",
+  "hero-animated-video": "dark",
+  "parallax": "dark",
+  "poem-animation": "dark",
+  "scroll-expansion-hero": "dark",
+  "woven-light-hero": "dark",
+}
 
 /** Props shape consumed by section renderers — covers all properties used across section types. */
 interface SectionRendererProps {
@@ -100,6 +113,18 @@ const SECTION_RENDERERS: Partial<Record<SectionType, (
   "services": (s, ctx) => {
     const p = s.props as SectionRendererProps
     return <ServicesSection headline={p.headline} subheadline={p.subheadline} services={ctx?.servicesItems ?? []} />
+  },
+  "services-showcase": (s, ctx) => {
+    const p = s.props as SectionRendererProps
+    return (
+      <ServicesShowcase
+        headline={p.headline}
+        subheadline={p.subheadline}
+        ctaLabel={typeof p.ctaLabel === "string" ? p.ctaLabel : undefined}
+        ctaHref={typeof p.ctaHref === "string" ? p.ctaHref : undefined}
+        services={ctx?.servicesItems ?? []}
+      />
+    )
   },
   "portfolio": (s, ctx) => <PortfolioSection items={ctx?.portfolioItems as any} />,
   "portfolio-vertical-scroll": (s, ctx) => {
@@ -370,6 +395,7 @@ const SECTION_RENDERERS: Partial<Record<SectionType, (
 
 export function PageRenderer({ sections, portfolioItems, servicesItems, blogPosts }: PageRendererProps) {
   const { setMobileDockVisible } = useUIStore()
+  const setHeaderTone = useUIStore((s) => s.setHeaderTone)
   const sectionRefs = React.useRef<Map<string, HTMLElement>>(new Map())
   const intersectionRatios = React.useRef<Map<string, number>>(new Map())
 
@@ -378,6 +404,15 @@ export function PageRenderer({ sections, portfolioItems, servicesItems, blogPost
       .filter((s) => s.visible)
       .sort((a, b) => a.order - b.order)
   }, [sections])
+
+  // The transparent header only ever floats over the FIRST section (it turns
+  // solid after ~12px of scroll), so the top section's background dictates the
+  // header's text colour. Reset to 'theme' on unmount / when the page changes.
+  const firstSectionType = visibleSections[0]?.type
+  React.useEffect(() => {
+    setHeaderTone((firstSectionType && HEADER_TONE_BY_TYPE[firstSectionType]) || "theme")
+    return () => setHeaderTone("theme")
+  }, [firstSectionType, setHeaderTone])
 
   React.useEffect(() => {
     const observer = new IntersectionObserver(

@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { CTASection } from "@/components/public"
-import { ServicesListAnimated } from "@/components/public/services/services-list-animated"
+import { ServicesShowcase } from "@/components/public/services/services-showcase"
 
 import { getPageBySlug } from "@/lib/page-data"
 import { PageRenderer } from "@/components/public/page-renderer"
@@ -89,12 +89,8 @@ export default async function HizmetlerPage() {
           </div>
         </section>
 
-        {/* ── Services editorial list ── */}
-        <section className="relative bg-[var(--background)] py-0">
-          <div className="mx-auto max-w-[1440px] px-6 md:px-10 xl:px-16">
-            <ServicesListAnimated services={services} />
-          </div>
-        </section>
+        {/* ── Services showcase (bento) ── */}
+        <ServicesShowcase services={services} />
 
         {/* ── Bottom CTA ── */}
         <CTASection
@@ -114,5 +110,5 @@ export default async function HizmetlerPage() {
     )
   }
 
-  return <PageRenderer sections={pageData.sections} portfolioItems={portfolio} />
+  return <PageRenderer sections={pageData.sections} portfolioItems={portfolio} servicesItems={services} />
 }
