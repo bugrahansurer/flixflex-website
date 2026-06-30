@@ -58,6 +58,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html
       lang="tr"
+      data-scroll-behavior="smooth"
       // The server writes the correct class so no flash occurs.
       // suppressHydrationWarning is kept for any residual client-side attribute
       // adjustments (e.g. color-scheme style) that happen synchronously on mount.
