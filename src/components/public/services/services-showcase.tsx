@@ -60,7 +60,7 @@ export function ServicesShowcase({
         style={{ background: "radial-gradient(circle, rgba(255,79,216,0.10) 0%, transparent 60%)" }}
       />
 
-      <div className="relative mx-auto max-w-[1180px] px-6 md:px-10 xl:px-16">
+      <div className="relative mx-auto max-w-[1440px] px-6 md:px-10 xl:px-16">
         {/* Başlık */}
         <div className="max-w-2xl">
           <h2
@@ -138,24 +138,35 @@ export function ServicesShowcase({
 
                 {/* ── Bağlı alt hizmet mini kartları ── */}
                 {subs.length > 0 && (
-                  <div className="mt-3 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 md:gap-3">
+                  <div className="mt-3 grid grid-cols-2 gap-2.5 md:gap-3">
                     {subs.map((sub) => (
                       <Link
                         key={sub.href}
                         href={sub.href}
                         className={cn(
-                          "group/sub flex items-center gap-2.5 ff-shape-container ff-card px-4 py-3",
+                          "group/sub relative flex items-stretch overflow-hidden ff-shape-container ff-card h-20 p-0",
                           "border border-[var(--border)] transition-[border-color,transform] duration-200",
                           "hover:-translate-y-0.5 hover:border-[var(--ff-purple)]/45",
                         )}
                       >
-                        <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center" style={{ background: "rgba(255,79,216,0.10)", borderRadius: 8 }}>
-                          <ServiceIcon iconKey={sub.iconKey} className="h-3.5 w-3.5 text-[var(--ff-purple)]" />
+                        {/* Sol: ikon + etiket */}
+                        <div className="flex min-w-0 flex-1 items-center gap-2.5 px-4 py-3">
+                          <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center" style={{ background: "rgba(255,79,216,0.10)", borderRadius: 8 }}>
+                            <ServiceIcon iconKey={sub.iconKey} className="h-3.5 w-3.5 text-[var(--ff-purple)]" />
+                          </span>
+                          <span className="min-w-0 flex-1">
+                            <span className="block truncate text-[12px] font-medium text-[var(--foreground)]">{sub.label}</span>
+                            <span className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[var(--ff-purple)] opacity-0 transition-opacity duration-200 group-hover/sub:opacity-100">
+                              Keşfet <ArrowUpRight className="h-2.5 w-2.5" />
+                            </span>
+                          </span>
+                        </div>
+
+                        {/* Sağ kenar: minik motion ekran şeridi */}
+                        <span aria-hidden className="relative w-[78px] flex-shrink-0 overflow-hidden border-l border-[var(--border)] sm:w-24">
+                          <MotionStage design={design} />
+                          <span className="absolute inset-0 bg-gradient-to-r from-black/25 to-transparent" />
                         </span>
-                        <span className="min-w-0 flex-1 truncate text-[12px] font-medium text-[var(--foreground)]">
-                          {sub.label}
-                        </span>
-                        <ArrowUpRight className="h-3 w-3 flex-shrink-0 text-[var(--ff-purple)] opacity-0 transition-opacity duration-200 group-hover/sub:opacity-100" />
                       </Link>
                     ))}
                   </div>
