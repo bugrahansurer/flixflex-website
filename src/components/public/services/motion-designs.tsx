@@ -9,9 +9,9 @@
 // ═══════════════════════════════════════════════════════════
 
 import * as React from "react"
-import { motion, useReducedMotion } from "framer-motion"
+import { motion } from "framer-motion"
 import {
-  Send, Heart, MessageCircle, TrendingUp, Play, Sparkles, Globe, MousePointer2,
+  Send, Heart, MessageCircle, TrendingUp, Play, Sparkles, MousePointer2,
 } from "@/lib/icons"
 
 const ACCENT = "#FF4FD8"
@@ -313,7 +313,8 @@ function CountUp({ to, suffix = "", compact = false }: { to: number; suffix?: st
 
 /** Kart üstünde motion'ı oynatan sarmalayıcı (reduced-motion → sade kare). */
 export function MotionStage({ design }: { design: MotionDesign }) {
-  const reduce = useReducedMotion()
+  // Bu motion'lar markanın asıl görsel özelliği — her zaman oynar.
+  // (Sistem reduced-motion ayarına bakılmaz; istenirse buraya geri eklenebilir.)
   const Comp = design.Component
-  return <Comp still={reduce === true} />
+  return <Comp still={false} />
 }
