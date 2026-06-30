@@ -9,6 +9,7 @@ import * as React from "react"
 import { useRouter } from "next/navigation"
 import { Pencil, CopyPlus, Trash2 } from "@/lib/icons"
 import type { ColorPalette } from "@/lib/colors/types"
+import { useCan } from "@/components/admin/rbac/permission-context"
 
 interface PaletteListActionsProps {
   palette: ColorPalette
@@ -16,6 +17,7 @@ interface PaletteListActionsProps {
 
 export function PaletteListActions({ palette }: PaletteListActionsProps) {
   const router = useRouter()
+  const can = useCan()
   const [loading, setLoading] = React.useState<string | null>(null)
 
   async function handleActivate() {
@@ -86,27 +88,31 @@ export function PaletteListActions({ palette }: PaletteListActionsProps) {
   return (
     <div className="flex items-center gap-2 flex-wrap pt-2 border-t border-[#E0E0E0]">
       {/* Düzenle */}
-      <a
-        href={`/admin/theme/${palette.id}`}
-        title="Paleti Düzenle"
-        className="ff-btn ff-btn-ghost bg-[#F7f7f5] border border-[#cccccc] text-[#666666] hover:bg-[#ff4fd8]/10 hover:border-[#ff4fd8]/30 hover:text-[#ff4fd8] w-9 h-9 p-0 normal-case"
-      >
-        <Pencil size={16} />
-      </a>
+      {can("colors", "update") && (
+        <a
+          href={`/admin/theme/${palette.id}`}
+          title="Paleti Düzenle"
+          className="ff-btn ff-btn-ghost bg-[#F7f7f5] border border-[#cccccc] text-[#666666] hover:bg-[#ff4fd8]/10 hover:border-[#ff4fd8]/30 hover:text-[#ff4fd8] w-9 h-9 p-0 normal-case"
+        >
+          <Pencil size={16} />
+        </a>
+      )}
 
       {/* Çoğalt */}
-      <button
-        type="button"
-        onClick={handleDuplicate}
-        disabled={loading === "duplicate"}
-        title="Paleti Çoğalt"
-        className="ff-btn ff-btn-ghost bg-[#F7f7f5] border border-[#cccccc] text-[#666666] hover:bg-[#ff4fd8]/10 hover:border-[#ff4fd8]/30 hover:text-[#ff4fd8] w-9 h-9 p-0 disabled:opacity-40 normal-case"
-      >
-        {loading === "duplicate" ? "..." : <CopyPlus size={16} />}
-      </button>
+      {can("colors", "create") && (
+        <button
+          type="button"
+          onClick={handleDuplicate}
+          disabled={loading === "duplicate"}
+          title="Paleti Çoğalt"
+          className="ff-btn ff-btn-ghost bg-[#F7f7f5] border border-[#cccccc] text-[#666666] hover:bg-[#ff4fd8]/10 hover:border-[#ff4fd8]/30 hover:text-[#ff4fd8] w-9 h-9 p-0 disabled:opacity-40 normal-case"
+        >
+          {loading === "duplicate" ? "..." : <CopyPlus size={16} />}
+        </button>
+      )}
 
       {/* Aktive Et */}
-      {!palette.isActive && (
+      {!palette.isActive && can("colors", "update") && (
         <button
           type="button"
           onClick={handleActivate}
@@ -119,23 +125,25 @@ export function PaletteListActions({ palette }: PaletteListActionsProps) {
       )}
 
       {/* Sil — disabled for system or active palettes */}
-      <button
-        type="button"
-        onClick={handleDelete}
-        disabled={
-          loading === "delete" || palette.isSystem || palette.isActive
-        }
-        title={
-          palette.isSystem
-            ? "Sistem paletleri silinemez"
-            : palette.isActive
-              ? "Aktif tema silinemez"
-              : "Paleti Sil"
-        }
-        className="ff-btn ff-btn-ghost w-9 h-9 p-0 text-red-500 hover:bg-red-500/10 disabled:opacity-30 disabled:cursor-not-allowed ml-auto normal-case"
-      >
-        {loading === "delete" ? "..." : <Trash2 size={16} />}
-      </button>
+      {can("colors", "delete") && (
+        <button
+          type="button"
+          onClick={handleDelete}
+          disabled={
+            loading === "delete" || palette.isSystem || palette.isActive
+          }
+          title={
+            palette.isSystem
+              ? "Sistem paletleri silinemez"
+              : palette.isActive
+                ? "Aktif tema silinemez"
+                : "Paleti Sil"
+          }
+          className="ff-btn ff-btn-ghost w-9 h-9 p-0 text-red-500 hover:bg-red-500/10 disabled:opacity-30 disabled:cursor-not-allowed ml-auto normal-case"
+        >
+          {loading === "delete" ? "..." : <Trash2 size={16} />}
+        </button>
+      )}
     </div>
   )
 }

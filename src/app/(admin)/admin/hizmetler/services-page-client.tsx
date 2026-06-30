@@ -10,6 +10,7 @@ import { Plus, Pencil, ExternalLink, Layers, ChevronRight, Trash2, X, Loader2 } 
 import * as LucideIcons from "@/lib/icons"
 import { cn } from "@/lib/utils"
 import { ViewToggle, type ViewMode } from "@/components/admin/view-toggle"
+import { Can, useCan } from "@/components/admin/rbac/permission-context"
 
 type ServiceCardItem = {
   id: string
@@ -67,13 +68,15 @@ export function ServicesPageClient({ items }: { items: ServiceCardItem[] }) {
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           <ViewToggle mode={viewMode} onChange={setViewMode} />
-          <Link
-            href="/admin/hizmetler/new"
-            className="ff-shape-button inline-flex items-center h-9 px-5 bg-[#ff4fd8] text-white font-bold text-[12px] gap-2 hover:bg-[#ff4fd8]/90 transition-all shadow-sm"
-          >
-            <Plus size={14} />
-            Yeni Hizmet Ekle
-          </Link>
+          <Can resource="services" action="create">
+            <Link
+              href="/admin/hizmetler/new"
+              className="ff-shape-button inline-flex items-center h-9 px-5 bg-[#ff4fd8] text-white font-bold text-[12px] gap-2 hover:bg-[#ff4fd8]/90 transition-all shadow-sm"
+            >
+              <Plus size={14} />
+              Yeni Hizmet Ekle
+            </Link>
+          </Can>
         </div>
       </div>
 
@@ -272,6 +275,7 @@ function MainServiceCard({
   childrenList: ServiceCardItem[]
   onDelete: (item: ServiceCardItem) => void
 }) {
+  const can = useCan()
   const Icon = (LucideIcons as unknown as Record<string, LucideIcon>)[item.icon] ?? LucideIcons.Globe
 
   return (
@@ -345,23 +349,27 @@ function MainServiceCard({
                       />
 
                       {/* Action Links */}
-                      <Link
-                        href={`/admin/hizmetler/${child.slug}`}
-                        className="w-5 h-5 flex items-center justify-center border border-[#CCCCCC] hover:border-[#ff4fd8] text-[#888888] hover:text-[#ff4fd8] transition-colors ff-shape-button"
-                        title="Alt Hizmeti Düzenle"
-                      >
-                        <Pencil size={9} />
-                      </Link>
+                      {can("services", "update") && (
+                        <Link
+                          href={`/admin/hizmetler/${child.slug}`}
+                          className="w-5 h-5 flex items-center justify-center border border-[#CCCCCC] hover:border-[#ff4fd8] text-[#888888] hover:text-[#ff4fd8] transition-colors ff-shape-button"
+                          title="Alt Hizmeti Düzenle"
+                        >
+                          <Pencil size={9} />
+                        </Link>
+                      )}
 
                       {/* Delete button */}
-                      <button
-                        type="button"
-                        onClick={() => onDelete(child)}
-                        className="w-5 h-5 flex items-center justify-center border border-[#CCCCCC] hover:border-red-500/50 hover:bg-red-500/10 text-[#888888] hover:text-red-500 transition-colors ff-shape-button"
-                        title="Alt Hizmeti Sil"
-                      >
-                        <Trash2 size={9} />
-                      </button>
+                      {can("services", "delete") && (
+                        <button
+                          type="button"
+                          onClick={() => onDelete(child)}
+                          className="w-5 h-5 flex items-center justify-center border border-[#CCCCCC] hover:border-red-500/50 hover:bg-red-500/10 text-[#888888] hover:text-red-500 transition-colors ff-shape-button"
+                          title="Alt Hizmeti Sil"
+                        >
+                          <Trash2 size={9} />
+                        </button>
+                      )}
                     </div>
                   </div>
                 )
@@ -389,21 +397,25 @@ function MainServiceCard({
           >
             <ExternalLink size={11} />
           </Link>
-          <Link
-            href={`/admin/hizmetler/${item.slug}`}
-            className="ff-shape-button border border-[#ff4fd8] w-7 h-7 flex items-center justify-center hover:border-[#ff4fd8] text-[#ff4fd8] hover:text-white transition-colors bg-transparent hover:bg-[#ff4fd8]"
-            title="Hizmeti Düzenle"
-          >
-            <Pencil size={11} />
-          </Link>
-          <button
-            type="button"
-            onClick={() => onDelete(item)}
-            className="ff-shape-button border border-red-500 w-7 h-7 flex items-center justify-center hover:border-red-500 text-white hover:text-white transition-colors bg-red-500 hover:bg-red-600"
-            title="Hizmeti Sil"
-          >
-            <Trash2 size={11} />
-          </button>
+          {can("services", "update") && (
+            <Link
+              href={`/admin/hizmetler/${item.slug}`}
+              className="ff-shape-button border border-[#ff4fd8] w-7 h-7 flex items-center justify-center hover:border-[#ff4fd8] text-[#ff4fd8] hover:text-white transition-colors bg-transparent hover:bg-[#ff4fd8]"
+              title="Hizmeti Düzenle"
+            >
+              <Pencil size={11} />
+            </Link>
+          )}
+          {can("services", "delete") && (
+            <button
+              type="button"
+              onClick={() => onDelete(item)}
+              className="ff-shape-button border border-red-500 w-7 h-7 flex items-center justify-center hover:border-red-500 text-white hover:text-white transition-colors bg-red-500 hover:bg-red-600"
+              title="Hizmeti Sil"
+            >
+              <Trash2 size={11} />
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -420,6 +432,7 @@ function ServiceRow({
   isChild: boolean
   onDelete: (item: ServiceCardItem) => void
 }) {
+  const can = useCan()
   const Icon = (LucideIcons as unknown as Record<string, LucideIcon>)[item.icon] ?? LucideIcons.Globe
 
   return (
@@ -485,20 +498,24 @@ function ServiceRow({
           >
             <ExternalLink size={11} />
           </Link>
-          <Link
-            href={`/admin/hizmetler/${item.slug}`}
-            className="ff-shape-button border border-[#E0E0E0] bg-white w-7 h-7 flex items-center justify-center hover:border-[#ff4fd8] text-[#666666] hover:text-[#ff4fd8] transition-colors shadow-sm"
-          >
-            <Pencil size={11} />
-          </Link>
-          <button
-            type="button"
-            onClick={() => onDelete(item)}
-            className="ff-shape-button border border-[#E0E0E0] bg-white w-7 h-7 flex items-center justify-center hover:border-red-500/50 hover:bg-red-500/10 text-[#666666] hover:text-red-500 transition-colors shadow-sm"
-            title="Hizmeti Sil"
-          >
-            <Trash2 size={11} />
-          </button>
+          {can("services", "update") && (
+            <Link
+              href={`/admin/hizmetler/${item.slug}`}
+              className="ff-shape-button border border-[#E0E0E0] bg-white w-7 h-7 flex items-center justify-center hover:border-[#ff4fd8] text-[#666666] hover:text-[#ff4fd8] transition-colors shadow-sm"
+            >
+              <Pencil size={11} />
+            </Link>
+          )}
+          {can("services", "delete") && (
+            <button
+              type="button"
+              onClick={() => onDelete(item)}
+              className="ff-shape-button border border-[#E0E0E0] bg-white w-7 h-7 flex items-center justify-center hover:border-red-500/50 hover:bg-red-500/10 text-[#666666] hover:text-red-500 transition-colors shadow-sm"
+              title="Hizmeti Sil"
+            >
+              <Trash2 size={11} />
+            </button>
+          )}
         </div>
       </td>
     </tr>

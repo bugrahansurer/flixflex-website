@@ -5,6 +5,7 @@ import { Plus, Pencil, ExternalLink, ImageIcon } from "@/lib/icons"
 import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { ViewToggle, type ViewMode } from "@/components/admin/view-toggle"
+import { Can, useCan } from "@/components/admin/rbac/permission-context"
 
 type PortfolioCardItem = {
   id: string
@@ -33,10 +34,12 @@ export function PortfolioPageClient({ items }: { items: PortfolioCardItem[] }) {
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           <ViewToggle mode={viewMode} onChange={setViewMode} />
-          <Link href="/admin/portfolyo/new" className="ff-btn ff-btn-primary inline-flex items-center h-9 font-semibold text-xs gap-2">
-            <Plus size={14} />
-            Yeni Portfolyo
-          </Link>
+          <Can resource="portfolio" action="create">
+            <Link href="/admin/portfolyo/new" className="ff-btn ff-btn-primary inline-flex items-center h-9 font-semibold text-xs gap-2">
+              <Plus size={14} />
+              Yeni Portfolyo
+            </Link>
+          </Can>
         </div>
       </div>
 
@@ -88,9 +91,11 @@ export function PortfolioPageClient({ items }: { items: PortfolioCardItem[] }) {
                         <Link href={`/portfolio/${item.slug}`} target="_blank" className="ff-shape-button text-[#0d0d0d] border border-[#CCCCCC] w-7 h-7 flex items-center justify-center hover:border-[#ff4fd8] transition-colors">
                           <ExternalLink size={12} />
                         </Link>
-                        <Link href={`/admin/portfolyo/${item.slug}`} className="ff-shape-button text-[#0d0d0d] border border-[#CCCCCC] w-7 h-7 flex items-center justify-center hover:border-[#ff4fd8] transition-colors">
-                          <Pencil size={12} />
-                        </Link>
+                        <Can resource="portfolio" action="update">
+                          <Link href={`/admin/portfolyo/${item.slug}`} className="ff-shape-button text-[#0d0d0d] border border-[#CCCCCC] w-7 h-7 flex items-center justify-center hover:border-[#ff4fd8] transition-colors">
+                            <Pencil size={12} />
+                          </Link>
+                        </Can>
                       </div>
                     </td>
                   </tr>
@@ -105,6 +110,7 @@ export function PortfolioPageClient({ items }: { items: PortfolioCardItem[] }) {
 }
 
 function PortfolioCard({ item }: { item: PortfolioCardItem }) {
+  const can = useCan()
   return (
     <div className={cn(
       "ff-shape-container ff-card p-0 group relative",
@@ -166,12 +172,14 @@ function PortfolioCard({ item }: { item: PortfolioCardItem }) {
             >
               <ExternalLink size={12} />
             </Link>
-            <Link
-              href={`/admin/portfolyo/${item.slug}`}
-              className="ff-shape-button text-[#0d0d0d] border border-[#CCCCCC] w-7 h-7 flex items-center justify-center hover:text-[#ff4fd8] hover:border-[#ff4fd8] transition-colors"
-            >
-              <Pencil size={12} />
-            </Link>
+            {can("portfolio", "update") && (
+              <Link
+                href={`/admin/portfolyo/${item.slug}`}
+                className="ff-shape-button text-[#0d0d0d] border border-[#CCCCCC] w-7 h-7 flex items-center justify-center hover:text-[#ff4fd8] hover:border-[#ff4fd8] transition-colors"
+              >
+                <Pencil size={12} />
+              </Link>
+            )}
           </div>
         </div>
       </div>

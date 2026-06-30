@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils"
 import MuxPlayer from "@mux/mux-player-react"
 import { toast } from "sonner"
 import * as Dialog from "@radix-ui/react-dialog"
+import { useCan } from "@/components/admin/rbac/permission-context"
 
 type SortField = "createdAt" | "title" | "type" | "size"
 type SortOrder = "asc" | "desc"
@@ -39,6 +40,7 @@ interface MediaItem {
 }
 
 export default function MediaPage() {
+  const can = useCan()
   const [items, setItems] = React.useState<MediaItem[]>([])
   const [folders, setFolders] = React.useState<MediaFolder[]>([])
   const [loading, setLoading] = React.useState(true)
@@ -380,13 +382,15 @@ export default function MediaPage() {
 
           {/* Action buttons — stay grouped so they wrap as one unit on mobile */}
           <div className="flex items-center gap-2 sm:gap-3">
-            <button
-              onClick={createFolder}
-              className="ff-shape-button inline-flex items-center gap-2 h-9 px-4 border border-[#CCCCCC] text-[#666666] font-bold text-[11px] hover:bg-[#f7f7f5] transition-all"
-            >
-              <FolderPlus size={16} />
-              <span className="hidden sm:inline">Klasör</span>
-            </button>
+            {can("media", "create") && (
+              <button
+                onClick={createFolder}
+                className="ff-shape-button inline-flex items-center gap-2 h-9 px-4 border border-[#CCCCCC] text-[#666666] font-bold text-[11px] hover:bg-[#f7f7f5] transition-all"
+              >
+                <FolderPlus size={16} />
+                <span className="hidden sm:inline">Klasör</span>
+              </button>
+            )}
 
             <button
               onClick={handleSyncMux}
@@ -397,22 +401,26 @@ export default function MediaPage() {
               <RefreshCw size={16} className={cn(loading && "animate-spin")} />
             </button>
 
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              disabled={uploading}
-              className="ff-shape-button inline-flex items-center gap-2 h-9 px-6 bg-[#ff4fd8] text-white font-bold text-[12px] hover:bg-[#ff4fd8]/90 transition-all disabled:opacity-50"
-            >
-              {uploading ? <Loader2 className="animate-spin" size={16} /> : <Upload size={16} />}
-              {uploadCount ? `Yükleniyor ${uploadCount.done}/${uploadCount.total}` : "Yükle"}
-            </button>
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleUpload}
-              multiple
-              className="hidden"
-              accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.tiff"
-            />
+            {can("media", "create") && (
+              <>
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
+                  className="ff-shape-button inline-flex items-center gap-2 h-9 px-6 bg-[#ff4fd8] text-white font-bold text-[12px] hover:bg-[#ff4fd8]/90 transition-all disabled:opacity-50"
+                >
+                  {uploading ? <Loader2 className="animate-spin" size={16} /> : <Upload size={16} />}
+                  {uploadCount ? `Yükleniyor ${uploadCount.done}/${uploadCount.total}` : "Yükle"}
+                </button>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleUpload}
+                  multiple
+                  className="hidden"
+                  accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.tiff"
+                />
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -465,14 +473,16 @@ export default function MediaPage() {
                       )} />
 
                       {/* Folder Actions */}
-                      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button
-                          onClick={(e) => deleteFolder(folder.id, e)}
-                          className="w-7 h-7 ff-shape-button bg-[#ff4fd8]/10 shadow-sm border border-[#ff4fd8]/10 text-[#ff4fd8] flex items-center justify-center hover:bg-[#ff4fd8]/10 hover:text-[#ff4fd8] transition-all"
-                        >
-                          <Trash2 size={12} />
-                        </button>
-                      </div>
+                      {can("media", "delete") && (
+                        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            onClick={(e) => deleteFolder(folder.id, e)}
+                            className="w-7 h-7 ff-shape-button bg-[#ff4fd8]/10 shadow-sm border border-[#ff4fd8]/10 text-[#ff4fd8] flex items-center justify-center hover:bg-[#ff4fd8]/10 hover:text-[#ff4fd8] transition-all"
+                          >
+                            <Trash2 size={12} />
+                          </button>
+                        </div>
+                      )}
                     </div>
 
                     {/* Folder Info Area */}
@@ -580,13 +590,15 @@ export default function MediaPage() {
                           >
                             <ExternalLink size={14} />
                           </button>
-                          <button
-                            onClick={() => deleteItem(item.id)}
-                            className="w-8 h-8 ff-shape-button bg-white text-red-600 flex items-center justify-center hover:bg-red-600 hover:text-white transition-colors"
-                            title="Sil"
-                          >
-                            <Trash2 size={14} />
-                          </button>
+                          {can("media", "delete") && (
+                            <button
+                              onClick={() => deleteItem(item.id)}
+                              className="w-8 h-8 ff-shape-button bg-white text-red-600 flex items-center justify-center hover:bg-red-600 hover:text-white transition-colors"
+                              title="Sil"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          )}
                         </div>
                       </div>
 

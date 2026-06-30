@@ -5,6 +5,7 @@ import { Calendar as CalendarIcon, Clock, Search, ShieldAlert, Eye, EyeOff, Tras
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 import { FFSelect, FFSelectItem } from "@/components/ui/ff-select"
+import { useCan } from "@/components/admin/rbac/permission-context"
 
 // Constants matching public picker
 const WORKING_HOURS = ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"]
@@ -36,6 +37,7 @@ interface BlockedSlot {
 }
 
 export default function AdminAppointmentsPage() {
+  const can = useCan()
   const [activeTab, setActiveTab] = React.useState<"list" | "calendar">("list")
   const [appointments, setAppointments] = React.useState<Appointment[]>([])
   const [blockedSlots, setBlockedSlots] = React.useState<BlockedSlot[]>([])
@@ -305,7 +307,7 @@ export default function AdminAppointmentsPage() {
             onClick={() => setActiveTab("calendar")}
             className={cn(
               "flex-1 sm:flex-none px-4 py-1.5 text-xs font-semibold rounded-none cursor-pointer transition-colors",
-              activeTab === "calendar" ? "ff-shape-container bg-[#FF4FD8] text-[#f7f7f5] shadow-xs" : "text-[#666666] hover:text-[#333333]"
+              activeTab === "calendar" ? "ff-shape-button bg-[#FF4FD8] text-[#f7f7f5] shadow-xs" : "text-[#666666] hover:text-[#333333]"
             )}
           >
             Takvim Yönetimi
@@ -444,7 +446,7 @@ export default function AdminAppointmentsPage() {
                               Detay / Notlar
                             </button>
 
-                            {app.status === "pending" && (
+                            {app.status === "pending" && can("appointments", "update") && (
                               <>
                                 <button
                                   type="button"
@@ -463,7 +465,7 @@ export default function AdminAppointmentsPage() {
                               </>
                             )}
 
-                            {app.status === "approved" && (
+                            {app.status === "approved" && can("appointments", "update") && (
                               <>
                                 <button
                                   type="button"
@@ -593,7 +595,7 @@ export default function AdminAppointmentsPage() {
                       type="button"
                       onClick={() => setSelectedDay(dayNum)}
                       className={cn(
-                        "ff-shape-container aspect-square text-xs font-bold border flex flex-col items-center justify-center transition-all cursor-pointer",
+                        "ff-shape-button aspect-square h-10 w-10 text-xs font-bold border flex flex-col items-center justify-center transition-all cursor-pointer",
                         active && "bg-[var(--ff-purple)] text-white border-[var(--ff-purple)] shadow-xs",
                         !active && !isWeekend && "bg-white border-[#E0E0E0] text-[#333333] hover:border-[var(--ff-purple)]/60 hover:text-[var(--ff-purple)]",
                         !active && isWeekend && "bg-[#F3F3F1] border-[#E8E8E8] text-[#999999] opacity-55"
@@ -620,7 +622,7 @@ export default function AdminAppointmentsPage() {
               </div>
             ) : (
               <div className="space-y-4">
-                <div className="bg-[#F3F3F1] p-3 text-xs border border-[#E0E0E0]">
+                <div className="ff-shape-button border border-[#E0E0E0] bg-[#FBFBF9] p-2 text-xs">
                   Seçilen Tarih: <span className="font-bold text-[#333333]">{selectedDay} {MONTHS[currentMonth]} {currentYear}</span>
                 </div>
 
@@ -645,7 +647,7 @@ export default function AdminAppointmentsPage() {
                         <div
                           key={hourStr}
                           className={cn(
-                            "flex items-center justify-between p-3 border text-xs",
+                            "ff-shape-button flex items-center justify-between p-3 border text-xs",
                             isBooked && "bg-green-500/5 border-green-500/20",
                             isBlocked && "bg-red-500/5 border-red-500/20",
                             !isBooked && !isBlocked && "bg-[#FBFBF9] border-[#E8E8E8]"
@@ -663,30 +665,30 @@ export default function AdminAppointmentsPage() {
 
                           {isBooked ? (
                             <span className="text-[10px] text-[#999999] font-medium italic">Doludur</span>
-                          ) : (
+                          ) : can("appointments", "update") ? (
                             <button
                               type="button"
                               onClick={() => handleToggleBlock(selectedDay!, hourStr)}
                               className={cn(
-                                "px-3 py-1 text-[10px] font-bold border transition-colors cursor-pointer flex items-center gap-1",
+                                "ff-shape-button px-3 py-1 text-[10px] font-bold transition-colors cursor-pointer flex items-center gap-1",
                                 isBlocked
                                   ? "bg-red-600 border-red-600 hover:bg-red-700 text-white"
-                                  : "border-[#C0C0C0] text-[#333333] hover:border-red-600 hover:text-red-600 hover:bg-red-50/20"
+                                  : "bg-red-500/10 border-red-500/30 border border-red-500/30 text-red-600 hover:bg-red-500 hover:border-red-500 hover:text-white"
                               )}
                             >
                               {isBlocked ? (
                                 <>
                                   <Unlock size={10} />
-                                  Bloke Kaldır
+                                  <span className="-mb-0.5">Bloke Kaldır</span>
                                 </>
                               ) : (
                                 <>
                                   <Lock size={10} />
-                                  Kapat / Bloke Et
+                                  <span className="-mb-0.5">Kapat / Bloke Et</span>
                                 </>
                               )}
                             </button>
-                          )}
+                          ) : null}
                         </div>
                       )
                     })}
@@ -714,7 +716,7 @@ export default function AdminAppointmentsPage() {
                   return (
                     <div
                       key={block.id}
-                      className="p-3 border border-[#E0E0E0] bg-[#FBFBF9] flex items-center justify-between text-xs"
+                      className="ff-shape-button p-2 border border-[#E0E0E0] bg-[#FBFBF9] flex items-center justify-between text-xs"
                     >
                       <div className="space-y-0.5">
                         <div className="font-bold text-[#333333]">
@@ -730,14 +732,16 @@ export default function AdminAppointmentsPage() {
                           })}
                         </div>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveBlockDirect(block.date)}
-                        title="Bloke kaldır"
-                        className="p-1 border border-transparent text-[#999999] hover:text-red-600 hover:border-red-200 hover:bg-red-50 cursor-pointer transition-colors"
-                      >
-                        <Trash2 size={13} />
-                      </button>
+                      {can("appointments", "update") && (
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveBlockDirect(block.date)}
+                          title="Bloke kaldır"
+                          className="p-1 border border-transparent text-[#999999] hover:text-red-600 hover:border-red-200 hover:bg-red-50 cursor-pointer transition-colors"
+                        >
+                          <Trash2 size={13} />
+                        </button>
+                      )}
                     </div>
                   )
                 })}

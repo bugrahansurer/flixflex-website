@@ -21,6 +21,7 @@ import { cn, formatDate } from "@/lib/utils"
 import { FFSelect, FFSelectItem } from "@/components/ui/ff-select"
 import { FFButton } from "@/components/ui"
 import type { BlogPostRecord } from "@/lib/ai/blog-store"
+import { Can, useCan } from "@/components/admin/rbac/permission-context"
 
 interface BlogListProps {
   initialPosts: BlogPostRecord[]
@@ -89,6 +90,8 @@ export function BlogList({ initialPosts }: BlogListProps) {
     }
   }
 
+  const can = useCan()
+
   return (
     <div className="px-6 md:px-10 py-8 space-y-6">
       {/* Header */}
@@ -102,20 +105,24 @@ export function BlogList({ initialPosts }: BlogListProps) {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <FFButton
-            className="bg-transparent border-[#ff4fd8] text-[#ff4fd8] hover:text-white hover:bg-[#ff4fd8]/90 hover:border-[#ff4fd8]/90"
-            variant="outline"
-            leftIcon={<Plus size={13} />}
-            onClick={() => router.push("/admin/blog/yeni")}
-          >
-            Yeni Yazı
-          </FFButton>
-          <FFButton
-            leftIcon={<Wand2 size={13} />}
-            onClick={() => router.push("/admin/ai/studio")}
-          >
-            AI ile Üret
-          </FFButton>
+          <Can resource="blog" action="create">
+            <FFButton
+              className="bg-transparent border-[#ff4fd8] text-[#ff4fd8] hover:text-white hover:bg-[#ff4fd8]/90 hover:border-[#ff4fd8]/90"
+              variant="outline"
+              leftIcon={<Plus size={13} />}
+              onClick={() => router.push("/admin/blog/yeni")}
+            >
+              Yeni Yazı
+            </FFButton>
+          </Can>
+          <Can resource="blog" action="create">
+            <FFButton
+              leftIcon={<Wand2 size={13} />}
+              onClick={() => router.push("/admin/ai/studio")}
+            >
+              AI ile Üret
+            </FFButton>
+          </Can>
         </div>
       </div>
 
@@ -248,27 +255,33 @@ export function BlogList({ initialPosts }: BlogListProps) {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-end gap-1">
-                      <IconBtn
-                        label={p.status === "published" ? "Taslağa al" : "Yayınla"}
-                        onClick={() => toggleStatus(p)}
-                        disabled={busy === p.id}
-                      >
-                        {p.status === "published" ? <EyeOff size={13} /> : <Eye size={13} />}
-                      </IconBtn>
-                      <IconBtn
-                        label="Düzenle"
-                        onClick={() => router.push(`/admin/blog/${p.slug}`)}
-                      >
-                        <Pencil size={13} />
-                      </IconBtn>
-                      <IconBtn
-                        label="Sil"
-                        onClick={() => remove(p)}
-                        disabled={busy === p.id}
-                        danger
-                      >
-                        <Trash2 size={13} />
-                      </IconBtn>
+                      {can("blog", "publish") && (
+                        <IconBtn
+                          label={p.status === "published" ? "Taslağa al" : "Yayınla"}
+                          onClick={() => toggleStatus(p)}
+                          disabled={busy === p.id}
+                        >
+                          {p.status === "published" ? <EyeOff size={13} /> : <Eye size={13} />}
+                        </IconBtn>
+                      )}
+                      {can("blog", "update") && (
+                        <IconBtn
+                          label="Düzenle"
+                          onClick={() => router.push(`/admin/blog/${p.slug}`)}
+                        >
+                          <Pencil size={13} />
+                        </IconBtn>
+                      )}
+                      {can("blog", "delete") && (
+                        <IconBtn
+                          label="Sil"
+                          onClick={() => remove(p)}
+                          disabled={busy === p.id}
+                          danger
+                        >
+                          <Trash2 size={13} />
+                        </IconBtn>
+                      )}
                     </div>
                   </td>
                 </tr>

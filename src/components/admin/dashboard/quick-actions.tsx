@@ -5,35 +5,57 @@ import { motion } from "framer-motion"
 import { SquarePen, FileText, Palette, Sparkles, ArrowUpRight } from "@/lib/icons"
 import { staggerContainer, fadeInUp } from "@/lib/animations"
 import { TiltCard } from "@/components/ui/tilt-card"
+import { useCan } from "@/components/admin/rbac/permission-context"
+import type { LucideIcon } from "@/lib/icons"
 
-const ACTIONS = [
+type QuickAction = {
+  label: string
+  description: string
+  href: string
+  icon: LucideIcon
+  resource: string
+  action: string
+}
+
+const ALL_ACTIONS: QuickAction[] = [
   {
     label: "Yeni Post",
     description: "Blog yazısı oluştur",
     href: "/admin/blog/yeni",
     icon: SquarePen,
+    resource: "blog",
+    action: "create",
   },
   {
     label: "Yeni Sayfa",
     description: "Sayfa oluştur",
     href: "/admin/sayfalar/yeni",
     icon: FileText,
+    resource: "pages",
+    action: "create",
   },
   {
     label: "Renk Değiştir",
     description: "Tema yönetimi",
     href: "/admin/theme",
     icon: Palette,
+    resource: "colors",
+    action: "update",
   },
   {
     label: "AI Önerileri",
     description: "İçerik üret",
     href: "/admin/ai",
     icon: Sparkles,
+    resource: "ai",
+    action: "create",
   },
-] as const
+]
 
 export function QuickActions() {
+  const can = useCan()
+  const actions = ALL_ACTIONS.filter((a) => can(a.resource, a.action))
+
   return (
     <div>
       <h2 className="font-display text-[13px] font-bold text-[#666666] mb-4">
@@ -45,7 +67,7 @@ export function QuickActions() {
         animate="visible"
         className="grid grid-cols-1 md:grid-cols-2 gap-3"
       >
-        {ACTIONS.map((action) => {
+        {actions.map((action) => {
           const Icon = action.icon
           return (
             <motion.div key={action.href} variants={fadeInUp}>
