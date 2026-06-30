@@ -91,6 +91,8 @@ export {
   IconMenu2 as Menu,
   IconMessageCircle as MessageCircle,
   IconMessage as MessageSquare,
+  IconHeart as Heart,
+  IconPointer as MousePointer2,
   IconMinus as Minus,
   IconDeviceDesktop as Monitor,
   IconMoon as Moon,
