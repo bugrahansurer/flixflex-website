@@ -3,6 +3,7 @@
 import * as React from "react"
 import { FFButton } from "@/components/ui"
 import { KeyRound, Plus, Trash2, Copy, Check, Loader2, AlertTriangle } from "@/lib/icons"
+import { Can } from "@/components/admin/rbac/permission-context"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
 
@@ -72,35 +73,37 @@ export function ApiKeysForm({ initialKeys }: { initialKeys: ApiKeyRow[] }) {
   return (
     <div className="space-y-4 pb-20">
       {/* Create */}
-      <div className="ff-shape-container ff-card space-y-4">
-        <h3 className="font-display text-sm font-bold text-[#333333]">Yeni Anahtar Oluştur</h3>
-        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Anahtar adı (örn: Mobil Uygulama)"
-            className="ff-shape-button flex-1 px-3 py-2.5 text-sm bg-white border border-[#CCCCCC] text-[#333333] placeholder:text-[#999999] outline-none focus:border-[#ff4fd8]"
-          />
-          <FFButton onClick={createKey} disabled={creating} leftIcon={creating ? <Loader2 className="animate-spin" size={15} /> : <Plus size={15} />}>
-            Oluştur
-          </FFButton>
-        </div>
-
-        {newKey && (
-          <div className="ff-shape-container p-4 bg-[var(--warning)]/5 border border-[var(--warning)]/30 space-y-2">
-            <div className="flex items-center gap-2 text-[var(--warning)]">
-              <AlertTriangle size={14} />
-              <span className="text-[12px] font-semibold">Bu anahtar yalnızca bir kez gösterilir — şimdi kopyalayın.</span>
-            </div>
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-              <code className="flex-1 text-[12px] font-mono text-[#333333] bg-white border border-[#CCCCCC] px-3 py-2 break-all">{newKey}</code>
-              <FFButton variant="ghost" onClick={copyKey} leftIcon={copied ? <Check size={14} /> : <Copy size={14} />}>
-                {copied ? "Kopyalandı" : "Kopyala"}
-              </FFButton>
-            </div>
+      <Can resource="settings" action="update">
+        <div className="ff-shape-container ff-card space-y-4">
+          <h3 className="font-display text-sm font-bold text-[#333333]">Yeni Anahtar Oluştur</h3>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Anahtar adı (örn: Mobil Uygulama)"
+              className="ff-shape-button flex-1 px-3 py-2.5 text-sm bg-white border border-[#CCCCCC] text-[#333333] placeholder:text-[#999999] outline-none focus:border-[#ff4fd8]"
+            />
+            <FFButton onClick={createKey} disabled={creating} leftIcon={creating ? <Loader2 className="animate-spin" size={15} /> : <Plus size={15} />}>
+              Oluştur
+            </FFButton>
           </div>
-        )}
-      </div>
+
+          {newKey && (
+            <div className="ff-shape-container p-4 bg-[var(--warning)]/5 border border-[var(--warning)]/30 space-y-2">
+              <div className="flex items-center gap-2 text-[var(--warning)]">
+                <AlertTriangle size={14} />
+                <span className="text-[12px] font-semibold">Bu anahtar yalnızca bir kez gösterilir — şimdi kopyalayın.</span>
+              </div>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                <code className="flex-1 text-[12px] font-mono text-[#333333] bg-white border border-[#CCCCCC] px-3 py-2 break-all">{newKey}</code>
+                <FFButton variant="ghost" onClick={copyKey} leftIcon={copied ? <Check size={14} /> : <Copy size={14} />}>
+                  {copied ? "Kopyalandı" : "Kopyala"}
+                </FFButton>
+              </div>
+            </div>
+          )}
+        </div>
+      </Can>
 
       {/* List */}
       <div className="space-y-2">
@@ -124,14 +127,16 @@ export function ApiKeysForm({ initialKeys }: { initialKeys: ApiKeyRow[] }) {
                   </p>
                 </div>
               </div>
-              <button
-                type="button"
-                onClick={() => revoke(k.id)}
-                className={cn("ff-shape-button p-2 text-[#999999] hover:text-[var(--error)] hover:bg-[var(--error)]/10 transition-colors shrink-0")}
-                title="İptal et"
-              >
-                <Trash2 size={15} />
-              </button>
+              <Can resource="settings" action="update">
+                <button
+                  type="button"
+                  onClick={() => revoke(k.id)}
+                  className={cn("ff-shape-button p-2 text-[#999999] hover:text-[var(--error)] hover:bg-[var(--error)]/10 transition-colors shrink-0")}
+                  title="İptal et"
+                >
+                  <Trash2 size={15} />
+                </button>
+              </Can>
             </div>
           ))
         )}

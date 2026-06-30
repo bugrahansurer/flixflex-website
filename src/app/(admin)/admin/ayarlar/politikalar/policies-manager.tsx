@@ -4,6 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { FFButton, FFInput } from "@/components/ui"
 import { Save, Loader2, ExternalLink, PenTool, Check, AlertTriangle } from "@/lib/icons"
+import { Can } from "@/components/admin/rbac/permission-context"
 import { toast } from "sonner"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -169,18 +170,20 @@ function PolicyCard({ entry }: { entry: PolicyEntry }) {
       </div>
 
       {/* Save */}
-      <div className="flex justify-end">
-        <FFButton onClick={handleSave} disabled={saving} className="px-8 h-11">
-          {saving ? (
-            <Loader2 className="animate-spin mr-2" size={16} />
-          ) : saved ? (
-            <Check size={16} className="mr-2" />
-          ) : (
-            <Save size={16} className="mr-2" />
-          )}
-          {saved ? "Kaydedildi" : "Kaydet"}
-        </FFButton>
-      </div>
+      <Can resource="settings" action="update">
+        <div className="flex justify-end">
+          <FFButton onClick={handleSave} disabled={saving} className="px-8 h-11">
+            {saving ? (
+              <Loader2 className="animate-spin mr-2" size={16} />
+            ) : saved ? (
+              <Check size={16} className="mr-2" />
+            ) : (
+              <Save size={16} className="mr-2" />
+            )}
+            {saved ? "Kaydedildi" : "Kaydet"}
+          </FFButton>
+        </div>
+      </Can>
     </section>
   )
 }

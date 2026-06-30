@@ -6,6 +6,7 @@ import { FFButton, FFInput, FFSlider, FFTextarea } from "@/components/ui"
 import { ImagePicker } from "@/components/admin/media/image-picker"
 import { SocialIcon } from "@/components/public/footer/social-icon"
 import { SOCIAL_PLATFORMS, platformLabel, type SocialLinkItem } from "@/lib/social-platforms"
+import { Can } from "@/components/admin/rbac/permission-context"
 import { toast } from "sonner"
 
 // Read the current social links from the settings map, migrating legacy
@@ -88,7 +89,7 @@ export function SiteSettingsForm({ initialSettings, saveAction }: SiteSettingsFo
           <h2 className="font-display text-lg text-[#333333] font-bold">Genel Bilgiler</h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div className="space-y-2">
             <label className="text-[11px] font-bold text-[#333333]">Site Adı</label>
             <FFInput
@@ -261,13 +262,15 @@ export function SiteSettingsForm({ initialSettings, saveAction }: SiteSettingsFo
             <Layout size={18} className="text-[#FF4FD8]" />
             <h2 className="font-display text-lg text-[#333333] font-bold">Sosyal Medya</h2>
           </div>
-          <button
-            type="button"
-            onClick={addSocial}
-            className="ff-shape-button inline-flex items-center gap-1.5 h-9 px-3 bg-[#FF4FD8] text-white text-[12px] font-semibold hover:bg-[#e041c0] transition-colors"
-          >
-            <Plus size={14} /> Platform Ekle
-          </button>
+          <Can resource="settings" action="update">
+            <button
+              type="button"
+              onClick={addSocial}
+              className="ff-shape-button inline-flex items-center gap-1.5 h-9 px-3 bg-[#FF4FD8] text-white text-[12px] font-semibold hover:bg-[#e041c0] transition-colors"
+            >
+              <Plus size={14} /> Platform Ekle
+            </button>
+          </Can>
         </div>
 
         <p className="text-[11px] text-[#666666] -mt-2">
@@ -306,14 +309,16 @@ export function SiteSettingsForm({ initialSettings, saveAction }: SiteSettingsFo
                   placeholder="https://..."
                   className="flex-1 h-9 bg-transparent border border-[#CCCCCC] focus:border-[#ff4fd8] text-xs text-[#333333] placeholder:text-[#999999]"
                 />
-                <button
-                  type="button"
-                  onClick={() => removeSocial(i)}
-                  aria-label="Sil"
-                  className="ff-shape-button w-9 h-9 shrink-0 flex items-center justify-center border border-[#CCCCCC] text-[#999999] hover:border-red-400 hover:text-red-500 transition-colors"
-                >
-                  <Trash2 size={14} />
-                </button>
+                <Can resource="settings" action="update">
+                  <button
+                    type="button"
+                    onClick={() => removeSocial(i)}
+                    aria-label="Sil"
+                    className="ff-shape-button w-9 h-9 shrink-0 flex items-center justify-center border border-[#CCCCCC] text-[#999999] hover:border-red-400 hover:text-red-500 transition-colors"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </Can>
               </div>
             ))}
           </div>
@@ -321,12 +326,14 @@ export function SiteSettingsForm({ initialSettings, saveAction }: SiteSettingsFo
       </section>
 
       {/* ── Actions ────────────────────────── */}
-      <div className="flex justify-end pt-4">
-        <FFButton type="submit" size="lg" className="px-4 h-10" disabled={isSaving}>
-          {isSaving ? <Loader2 className="animate-spin" size={16} /> : <Save size={16} className="mr-0" />}
-          Ayarları Kaydet
-        </FFButton>
-      </div>
+      <Can resource="settings" action="update">
+        <div className="flex justify-end pt-4">
+          <FFButton type="submit" size="lg" className="px-4 h-10" disabled={isSaving}>
+            {isSaving ? <Loader2 className="animate-spin" size={16} /> : <Save size={16} className="mr-0" />}
+            Ayarları Kaydet
+          </FFButton>
+        </div>
+      </Can>
     </form>
   )
 }

@@ -14,6 +14,7 @@ import {
   Share2,
   Globe
 } from "@/lib/icons"
+import { Can } from "@/components/admin/rbac/permission-context"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
 
@@ -270,25 +271,27 @@ export function IntegrationForm({ initialData }: { initialData: IntegrationsData
       </section>
 
       {/* ── Footer Actions ───────────────────── */}
-      <div className="ff-shape-container sticky bottom-4 z-20 flex flex-wrap items-center justify-end gap-2 sm:gap-4 p-4 bg-[#F7F7F5]/40 backdrop-blur-sm border border-[#CCCCCC]">
-        <p className="mr-auto text-[11px] text-[#666666] hidden md:block italic">
-          * Değişiklikleri kaydetmeyi unutmayın.
-        </p>
-        <FFButton
-          variant="ghost"
-          disabled={loading}
-          onClick={() => setData(initialData)}
-        >
-          Sıfırla
-        </FFButton>
-        <FFButton
-          onClick={handleSave}
-          disabled={loading}
-          leftIcon={loading ? <Loader2 className="animate-spin" size={16} /> : <Save size={16} />}
-        >
-          {loading ? "Kaydediliyor..." : "Tüm Entegrasyonları Kaydet"}
-        </FFButton>
-      </div>
+      <Can resource="settings" action="update">
+        <div className="ff-shape-container sticky bottom-4 z-20 flex flex-wrap items-center justify-end gap-2 sm:gap-4 p-4 bg-[#F7F7F5]/40 backdrop-blur-sm border border-[#CCCCCC]">
+          <p className="mr-auto text-[11px] text-[#666666] hidden md:block italic">
+            * Değişiklikleri kaydetmeyi unutmayın.
+          </p>
+          <FFButton
+            variant="ghost"
+            disabled={loading}
+            onClick={() => setData(initialData)}
+          >
+            Sıfırla
+          </FFButton>
+          <FFButton
+            onClick={handleSave}
+            disabled={loading}
+            leftIcon={loading ? <Loader2 className="animate-spin" size={16} /> : <Save size={16} />}
+          >
+            {loading ? "Kaydediliyor..." : "Tüm Entegrasyonları Kaydet"}
+          </FFButton>
+        </div>
+      </Can>
     </div>
   )
 }

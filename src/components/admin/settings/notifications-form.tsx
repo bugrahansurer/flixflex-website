@@ -3,6 +3,7 @@
 import * as React from "react"
 import { FFButton } from "@/components/ui"
 import { Bell, Save, Loader2, MessageSquare, CalendarDays } from "@/lib/icons"
+import { Can } from "@/components/admin/rbac/permission-context"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
 
@@ -114,18 +115,20 @@ export function NotificationsForm({ initialData }: { initialData: NotificationsD
         </p>
       </div>
 
-      <div className="ff-shape-container sticky bottom-4 z-20 flex flex-wrap items-center justify-end gap-2 sm:gap-4 p-4 bg-[#F7F7F5]/40 backdrop-blur-sm border border-[#CCCCCC]">
-        <FFButton variant="ghost" disabled={loading} onClick={() => setData(initialData)}>
-          Sıfırla
-        </FFButton>
-        <FFButton
-          onClick={handleSave}
-          disabled={loading}
-          leftIcon={loading ? <Loader2 className="animate-spin" size={16} /> : <Save size={16} />}
-        >
-          {loading ? "Kaydediliyor..." : "Kaydet"}
-        </FFButton>
-      </div>
+      <Can resource="settings" action="update">
+        <div className="ff-shape-container sticky bottom-4 z-20 flex flex-wrap items-center justify-end gap-2 sm:gap-4 p-4 bg-[#F7F7F5]/40 backdrop-blur-sm border border-[#CCCCCC]">
+          <FFButton variant="ghost" disabled={loading} onClick={() => setData(initialData)}>
+            Sıfırla
+          </FFButton>
+          <FFButton
+            onClick={handleSave}
+            disabled={loading}
+            leftIcon={loading ? <Loader2 className="animate-spin" size={16} /> : <Save size={16} />}
+          >
+            {loading ? "Kaydediliyor..." : "Kaydet"}
+          </FFButton>
+        </div>
+      </Can>
     </div>
   )
 }

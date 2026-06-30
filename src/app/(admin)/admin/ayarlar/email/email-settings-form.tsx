@@ -3,6 +3,7 @@
 import React, { useState, FormEvent } from "react"
 import { Mail, ShieldAlert, KeyRound, Server, Save, Loader2, Play } from "@/lib/icons"
 import { FFButton, FFInput, FFSelect, FFSelectItem } from "@/components/ui"
+import { Can } from "@/components/admin/rbac/permission-context"
 import { toast } from "sonner"
 
 interface EmailSettingsFormProps {
@@ -217,12 +218,14 @@ export function EmailSettingsForm({ initialSettings, saveAction }: EmailSettings
         )}
 
         {/* ── Actions ────────────────────────── */}
-        <div className="flex justify-end pt-2">
-          <FFButton type="submit" size="lg" className="px-4 h-10" disabled={isSaving || isTesting}>
-            {isSaving ? <Loader2 className="animate-spin mr-2" size={16} /> : <Save size={16} className="mr-2" />}
-            Ayarları Kaydet
-          </FFButton>
-        </div>
+        <Can resource="settings" action="update">
+          <div className="flex justify-end pt-2">
+            <FFButton type="submit" size="lg" className="px-4 h-10" disabled={isSaving || isTesting}>
+              {isSaving ? <Loader2 className="animate-spin mr-2" size={16} /> : <Save size={16} className="mr-2" />}
+              Ayarları Kaydet
+            </FFButton>
+          </div>
+        </Can>
       </form>
 
       {/* ── Section: Test Mail Gönderim Kutusu ─────────────── */}
@@ -237,31 +240,33 @@ export function EmailSettingsForm({ initialSettings, saveAction }: EmailSettings
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row items-end gap-4">
-          <div className="flex-1 space-y-2 w-full">
-            <label className="text-[11px] font-bold text-[#333333]">Test Alıcı E-postası</label>
-            <FFInput
-              type="email"
-              value={testRecipient}
-              onChange={(e) => setTestRecipient(e.target.value)}
-              placeholder="alıcı@domain.com"
-              className="w-full h-9 bg-transparent border border-[#CCCCCC] focus:border-[#ff4fd8] text-xs text-[#333333] placeholder:text-[#999999]"
-            />
+        <Can resource="settings" action="update">
+          <div className="flex flex-col md:flex-row items-end gap-4">
+            <div className="flex-1 space-y-2 w-full">
+              <label className="text-[11px] font-bold text-[#333333]">Test Alıcı E-postası</label>
+              <FFInput
+                type="email"
+                value={testRecipient}
+                onChange={(e) => setTestRecipient(e.target.value)}
+                placeholder="alıcı@domain.com"
+                className="w-full h-9 bg-transparent border border-[#CCCCCC] focus:border-[#ff4fd8] text-xs text-[#333333] placeholder:text-[#999999]"
+              />
+            </div>
+            <FFButton
+              type="button"
+              onClick={handleSendTestMail}
+              disabled={isSaving || isTesting}
+              className="w-full md:w-auto px-6 h-10 bg-[#0A0A0A] hover:bg-[#222222] text-white flex items-center justify-center font-bold text-xs shrink-0"
+            >
+              {isTesting ? (
+                <Loader2 className="animate-spin mr-2" size={14} />
+              ) : (
+                <Play size={12} className="fill-white mr-2" />
+              )}
+              Test E-postası Gönder
+            </FFButton>
           </div>
-          <FFButton
-            type="button"
-            onClick={handleSendTestMail}
-            disabled={isSaving || isTesting}
-            className="w-full md:w-auto px-6 h-10 bg-[#0A0A0A] hover:bg-[#222222] text-white flex items-center justify-center font-bold text-xs shrink-0"
-          >
-            {isTesting ? (
-              <Loader2 className="animate-spin mr-2" size={14} />
-            ) : (
-              <Play size={12} className="fill-white mr-2" />
-            )}
-            Test E-postası Gönder
-          </FFButton>
-        </div>
+        </Can>
       </section>
     </div>
   )
