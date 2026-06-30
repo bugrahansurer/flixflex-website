@@ -2,9 +2,9 @@
 
 // ═══════════════════════════════════════════════════════════
 // FlixFlex — ServicesShowcase
-// Her ana hizmet için: üstte o hizmete özel canlı motion design'ın
-// oynadığı büyük kart (başlık üzerine bindirilir), hemen altında o
-// hizmete bağlı alt hizmetlerin mini kartları. Modüler, motion odaklı.
+// 3 sütun: her sütun bir ana hizmet kartı (üstte o hizmete özel canlı
+// motion design) + hemen altında o hizmete bağlı alt hizmet kartları
+// (sağ kenarda mini motion şeridiyle). Kompakt, gruplu, motion odaklı.
 // Page-builder section'ı ("services-showcase") — admin'den düzenlenebilir.
 // ═══════════════════════════════════════════════════════════
 
@@ -60,7 +60,7 @@ export function ServicesShowcase({
         style={{ background: "radial-gradient(circle, rgba(255,79,216,0.10) 0%, transparent 60%)" }}
       />
 
-      <div className="relative mx-auto max-w-[1440px] px-6 md:px-10 xl:px-16">
+      <div className="relative mx-auto max-w-[1280px] px-6 md:px-10 xl:px-16">
         {/* Başlık */}
         <div className="max-w-2xl">
           <h2
@@ -74,8 +74,8 @@ export function ServicesShowcase({
           </p>
         </div>
 
-        {/* Ana hizmet blokları */}
-        <div className="mt-12 md:mt-16 space-y-12 md:space-y-16">
+        {/* 3 sütun — her sütun: ana hizmet + altında alt hizmetleri */}
+        <div className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6 items-start">
           {services.map((service, i) => {
             const subs = service.subServices ?? []
             const href = `/hizmetler/${service.slug}`
@@ -88,88 +88,74 @@ export function ServicesShowcase({
             return (
               <motion.div
                 key={service.id ?? service.slug}
-                initial={reduce ? false : { opacity: 0, y: 32 }}
+                className="flex flex-col gap-3"
+                initial={reduce ? false : { opacity: 0, y: 28 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.6, ease: EASE }}
+                viewport={{ once: true, amount: 0.15 }}
+                transition={{ duration: 0.55, delay: Math.min(i * 0.08, 0.3), ease: EASE }}
               >
-                {/* ── Ana kart: motion + başlık bindirme ── */}
+                {/* ── Ana hizmet kartı: motion + başlık ── */}
                 <Link
                   href={href}
                   className={cn(
                     "group relative block overflow-hidden ff-shape-container ff-card p-0",
                     "border border-[var(--border)] transition-[border-color,box-shadow] duration-300",
-                    "hover:border-[var(--ff-purple)]/45 hover:shadow-[0_18px_60px_rgba(255,79,216,0.14)]",
+                    "hover:border-[var(--ff-purple)]/45 hover:shadow-[0_18px_50px_rgba(255,79,216,0.16)]",
                   )}
                 >
-                  <div className="relative h-[210px] sm:h-[240px] md:h-[280px] w-full">
-                    {/* Canlı motion design */}
+                  <div className="relative h-[180px] w-full">
                     <MotionStage design={design} />
-
-                    {/* Alt degrade — başlık okunaklılığı */}
-                    <span aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-
-                    {/* Üst-sağ: motion etiketi (ince) */}
-                    <span className="absolute right-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-[10px] font-medium text-white/70 backdrop-blur-md">
-                      <Sparkles className="h-3 w-3" style={{ color: "#FF4FD8" }} />
+                    <span aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+                    <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5 text-[9px] font-medium text-white/70 backdrop-blur-md">
+                      <Sparkles className="h-2.5 w-2.5" style={{ color: "#FF4FD8" }} />
                       Motion
                     </span>
-
-                    {/* Alt: ikon + başlık + açıklama + Keşfet */}
-                    <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-5 md:p-6">
-                      <div className="flex items-center gap-3 min-w-0">
-                        <span className="ff-shape-button flex h-11 w-11 flex-shrink-0 items-center justify-center border border-white/15 bg-white/10 backdrop-blur-md">
-                          <ServiceIcon iconKey={service.iconKey} className="h-5 w-5 text-white" />
-                        </span>
-                        <div className="min-w-0">
-                          <h3 className="font-display text-lg md:text-xl font-bold tracking-tight text-white">
-                            {service.title}
-                          </h3>
-                          <p className="mt-0.5 truncate text-[12px] text-white/70">{service.description}</p>
-                        </div>
-                      </div>
-                      <span className="hidden sm:inline-flex flex-shrink-0 items-center gap-1.5 text-[12px] font-semibold text-white">
-                        Keşfet
-                        <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    <div className="absolute inset-x-0 bottom-0 flex items-end gap-2.5 p-4">
+                      <span className="ff-shape-button flex h-10 w-10 flex-shrink-0 items-center justify-center border border-white/15 bg-white/10 backdrop-blur-md">
+                        <ServiceIcon iconKey={service.iconKey} className="h-5 w-5 text-white" />
                       </span>
+                      <div className="min-w-0 flex-1">
+                        <h3 className="font-display text-base md:text-lg font-bold tracking-tight text-white leading-tight">
+                          {service.title}
+                        </h3>
+                        <p className="mt-0.5 truncate text-[11px] text-white/65">{service.description}</p>
+                      </div>
+                      <ArrowUpRight className="h-4 w-4 flex-shrink-0 text-white/80 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                     </div>
                   </div>
                 </Link>
 
-                {/* ── Bağlı alt hizmet mini kartları ── */}
+                {/* ── Alt hizmet kartları (sütun içinde, vurgulu) ── */}
                 {subs.length > 0 && (
-                  <div className="mt-3 grid grid-cols-3 gap-2.5 md:gap-3">
+                  <div className="flex flex-col gap-2">
                     {subs.map((sub) => {
                       const subDesign = resolveMotionDesign({ motionDesign: sub.motionDesign, title: sub.label, iconKey: sub.iconKey })
                       return (
-                      <Link
-                        key={sub.href}
-                        href={sub.href}
-                        className={cn(
-                          "group/sub relative flex items-stretch overflow-hidden ff-shape-container ff-card p-0",
-                          "border border-[var(--border)] transition-[border-color,transform] duration-200",
-                          "hover:-translate-y-0.5 hover:border-[var(--ff-purple)]/45",
-                        )}
-                      >
-                        {/* Sol: ikon + etiket */}
-                        <div className="flex min-w-0 flex-1 items-center gap-2.5 px-4 py-3">
-                          <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center" style={{ background: "rgba(255,79,216,0.10)", borderRadius: 8 }}>
-                            <ServiceIcon iconKey={sub.iconKey} className="h-3.5 w-3.5 text-[var(--ff-purple)]" />
-                          </span>
-                          <span className="min-w-0 flex-1">
-                            <span className="block truncate text-[12px] font-medium text-[var(--foreground)]">{sub.label}</span>
-                            <span className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-[var(--ff-purple)] opacity-0 transition-opacity duration-200 group-hover/sub:opacity-100">
-                              Keşfet <ArrowUpRight className="h-2.5 w-2.5" />
+                        <Link
+                          key={sub.href}
+                          href={sub.href}
+                          className={cn(
+                            "group/sub relative flex h-16 items-stretch overflow-hidden ff-shape-container ff-card p-0",
+                            "border border-[var(--border)] transition-[border-color,transform] duration-200",
+                            "hover:-translate-y-0.5 hover:border-[var(--ff-purple)]/45",
+                          )}
+                        >
+                          <div className="flex min-w-0 flex-1 items-center gap-2.5 px-4">
+                            <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center" style={{ background: "rgba(255,79,216,0.10)", borderRadius: 8 }}>
+                              <ServiceIcon iconKey={sub.iconKey} className="h-3.5 w-3.5 text-[var(--ff-purple)]" />
                             </span>
+                            <span className="min-w-0 flex-1">
+                              <span className="block truncate text-[12px] font-semibold text-[var(--foreground)]">{sub.label}</span>
+                              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-[var(--ff-purple)] opacity-0 transition-opacity duration-200 group-hover/sub:opacity-100">
+                                Keşfet <ArrowUpRight className="h-2.5 w-2.5" />
+                              </span>
+                            </span>
+                          </div>
+                          <span aria-hidden className="relative w-[88px] flex-shrink-0 overflow-hidden border-l border-[var(--border)]">
+                            <MotionStage design={subDesign} />
+                            <span className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent" />
                           </span>
-                        </div>
-
-                        {/* Sağ kenar: minik motion ekran şeridi */}
-                        <span aria-hidden className="relative w-[78px] flex-shrink-0 overflow-hidden border-l border-[var(--border)] sm:w-24">
-                          <MotionStage design={subDesign} />
-                          <span className="absolute inset-0 bg-gradient-to-r from-black/25 to-transparent" />
-                        </span>
-                      </Link>
+                        </Link>
                       )
                     })}
                   </div>
@@ -179,7 +165,6 @@ export function ServicesShowcase({
           })}
         </div>
 
-        {/* Opsiyonel tek CTA */}
         {ctaLabel && ctaHref && (
           <div className="mt-14 flex justify-center">
             <Link

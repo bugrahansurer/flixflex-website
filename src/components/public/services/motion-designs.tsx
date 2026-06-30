@@ -78,7 +78,7 @@ function AnalyticsPulse({ still }: { still?: boolean }) {
               style={{ background: i === bars.length - 1 ? ACCENT : "rgba(255,255,255,0.16)" }}
               initial={{ height: `${h * 40}%` }}
               animate={still ? { height: `${h * 100}%` } : { height: [`${h * 40}%`, `${h * 100}%`, `${h * 70}%`, `${h * 100}%`] }}
-              transition={still ? undefined : loop({ duration: 3, delay: i * 0.12, ease: "easeInOut" })}
+              transition={still ? undefined : loop({ duration: 1.8, delay: i * 0.1, ease: "easeInOut" })}
             />
           ))}
         </div>
@@ -144,16 +144,16 @@ function BrandIdentity({ still }: { still?: boolean }) {
         <motion.div
           className="flex h-16 w-16 items-center justify-center text-2xl font-extrabold text-white"
           style={{ borderRadius: 18, background: ACCENT }}
-          animate={still ? {} : { borderRadius: [18, 40, 8, 18], rotate: [0, 90, 180, 360], scale: [1, 1.08, 1, 1] }}
-          transition={still ? undefined : loop({ duration: 5, ease: "easeInOut" })}
+          animate={still ? {} : { borderRadius: [18, 40, 8, 18], rotate: [0, 120, 240, 360], scale: [1, 1.12, 0.96, 1] }}
+          transition={still ? undefined : loop({ duration: 3, ease: "easeInOut" })}
         >
           FF
         </motion.div>
         <div className="flex gap-2">
           {swatches.map((c, i) => (
             <motion.span key={c} className="h-3 w-3 rounded-full" style={{ background: c }}
-              animate={still ? {} : { scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
-              transition={still ? undefined : loop({ duration: 2.5, delay: i * 0.25 })} />
+              animate={still ? {} : { scale: [1, 1.6, 1], opacity: [0.4, 1, 0.4], y: [0, -3, 0] }}
+              transition={still ? undefined : loop({ duration: 1.5, delay: i * 0.18 })} />
           ))}
         </div>
       </div>
@@ -169,7 +169,7 @@ function ContentReel({ still }: { still?: boolean }) {
         <div className="relative w-full overflow-hidden">
           <motion.div className="flex gap-2"
             animate={still ? {} : { x: ["0%", "-50%"] }}
-            transition={still ? undefined : loop({ duration: 6, ease: "linear" })}>
+            transition={still ? undefined : loop({ duration: 4, ease: "linear" })}>
             {[...Array(8)].map((_, i) => (
               <span key={i} className="h-16 w-24 flex-shrink-0 rounded-md"
                 style={{ background: i % 3 === 0 ? `${ACCENT}40` : "rgba(255,255,255,0.08)" }} />
@@ -182,7 +182,7 @@ function ContentReel({ still }: { still?: boolean }) {
         <div className="h-1 w-full max-w-[240px] overflow-hidden rounded-full bg-white/10">
           <motion.div className="h-full rounded-full" style={{ background: ACCENT }}
             animate={still ? { width: "70%" } : { width: ["0%", "100%"] }}
-            transition={still ? undefined : loop({ duration: 6, ease: "linear" })} />
+            transition={still ? undefined : loop({ duration: 4, ease: "linear" })} />
         </div>
       </div>
     </div>
@@ -210,15 +210,15 @@ function WebBuild({ still }: { still?: boolean }) {
               <motion.span key={i} className="block rounded"
                 style={{ width: b.w, height: b.h, background: i === 1 ? `${ACCENT}55` : "rgba(255,255,255,0.10)" }}
                 initial={false}
-                animate={still ? { opacity: 1, y: 0 } : { opacity: [0, 0, 1, 1, 0], y: [10, 10, 0, 0, 10] }}
-                transition={still ? undefined : loop({ duration: 4.5, times: [0, b.d / 4.5, (b.d + 0.4) / 4.5, 0.9, 1] })} />
+                animate={still ? { opacity: 1, y: 0 } : { opacity: [0, 0, 1, 1, 0], y: [12, 12, 0, 0, 12] }}
+                transition={still ? undefined : loop({ duration: 3, times: [0, b.d / 3, (b.d + 0.4) / 3, 0.9, 1] })} />
             ))}
           </div>
         </div>
         {!still && (
           <motion.span className="absolute" style={{ color: "white" }}
             animate={{ x: [40, -10, 30], y: [50, 0, 40], opacity: [0, 1, 1, 0] }}
-            transition={loop({ duration: 4.5, ease: "easeInOut" })}>
+            transition={loop({ duration: 3, ease: "easeInOut" })}>
             <MousePointer2 className="h-4 w-4" style={{ fill: ACCENT }} />
           </motion.span>
         )}
