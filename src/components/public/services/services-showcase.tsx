@@ -129,39 +129,30 @@ export function ServicesShowcase({
                 {/* ── Sağ: alt hizmet kartları (büyük format) ── */}
                 {subs.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 content-start">
-                    {subs.map((sub) => {
-                      const subDesign = resolveMotionDesign({ motionDesign: sub.motionDesign, title: sub.label, iconKey: sub.iconKey })
-                      return (
-                        <Link
-                          key={sub.href}
-                          href={sub.href}
-                          className={cn(
-                            "group/sub relative flex min-h-[112px] items-stretch overflow-hidden ff-shape-container ff-card p-0",
-                            "border border-[var(--border)] transition-[border-color,transform,box-shadow] duration-200",
-                            "hover:-translate-y-0.5 hover:border-[var(--ff-purple)]/45 hover:shadow-[0_10px_30px_rgba(255,79,216,0.10)]",
-                          )}
-                        >
-                          <div className="flex min-w-0 flex-1 flex-col justify-center gap-1.5 px-5 py-4">
-                            <div className="flex items-center gap-2">
-                              <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center" style={{ background: "rgba(255,79,216,0.10)", borderRadius: 8 }}>
-                                <ServiceIcon iconKey={sub.iconKey} className="h-3.5 w-3.5 text-[var(--ff-purple)]" />
-                              </span>
-                              <span className="truncate text-[13px] font-semibold text-[var(--foreground)]">{sub.label}</span>
-                            </div>
-                            {sub.description ? (
-                              <p className="line-clamp-2 text-[11.5px] leading-snug text-[var(--foreground-muted)]">{sub.description}</p>
-                            ) : null}
-                            <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-[var(--ff-purple)] opacity-0 transition-opacity duration-200 group-hover/sub:opacity-100">
-                              Keşfet <ArrowUpRight className="h-2.5 w-2.5" />
-                            </span>
-                          </div>
-                          <span aria-hidden className="relative w-[92px] flex-shrink-0 overflow-hidden border-l border-[var(--border)]">
-                            <MotionStage design={subDesign} />
-                            <span className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent" />
+                    {subs.map((sub) => (
+                      <Link
+                        key={sub.href}
+                        href={sub.href}
+                        className={cn(
+                          "group/sub flex min-h-[112px] flex-col justify-center gap-1.5 ff-shape-container ff-card px-5 py-4",
+                          "border border-[var(--border)] transition-[border-color,transform,box-shadow] duration-200",
+                          "hover:-translate-y-0.5 hover:border-[var(--ff-purple)]/45 hover:shadow-[0_10px_30px_rgba(255,79,216,0.10)]",
+                        )}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center" style={{ background: "rgba(255,79,216,0.10)", borderRadius: 8 }}>
+                            <ServiceIcon iconKey={sub.iconKey} className="h-3.5 w-3.5 text-[var(--ff-purple)]" />
                           </span>
-                        </Link>
-                      )
-                    })}
+                          <span className="truncate text-[13px] font-semibold text-[var(--foreground)]">{sub.label}</span>
+                        </div>
+                        {sub.description ? (
+                          <p className="line-clamp-2 text-[11.5px] leading-snug text-[var(--foreground-muted)]">{sub.description}</p>
+                        ) : null}
+                        <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-[var(--ff-purple)] opacity-0 transition-opacity duration-200 group-hover/sub:opacity-100">
+                          Keşfet <ArrowUpRight className="h-2.5 w-2.5" />
+                        </span>
+                      </Link>
+                    ))}
                   </div>
                 ) : (
                   <div className="hidden lg:block" />
