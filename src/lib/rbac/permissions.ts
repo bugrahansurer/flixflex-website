@@ -2,7 +2,7 @@
 // FlixFlex — RBAC Permission Catalog & Helpers
 // ═══════════════════════════════════════════════════════════
 
-import { RESOURCES, ACTIONS, type Resource, type Action } from "./resources"
+import { RESOURCES, ACTIONS, RESOURCE_LABELS, ACTION_LABELS, type Resource, type Action } from "./resources"
 import type { Session } from "@/lib/auth/types"
 
 // ── Flat string arrays for UI iteration ─────────────────
@@ -10,7 +10,7 @@ export const RESOURCE_LIST: string[] = Object.values(RESOURCES)
 export const ACTION_LIST: string[] = Object.values(ACTIONS)
 
 // Re-export for convenience
-export { RESOURCES, ACTIONS }
+export { RESOURCES, ACTIONS, RESOURCE_LABELS, ACTION_LABELS }
 export type { Resource, Action }
 
 // ── Permission matrix: which actions are available per resource

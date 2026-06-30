@@ -28,6 +28,31 @@ export const ACTIONS = {
 export type Resource = (typeof RESOURCES)[keyof typeof RESOURCES]
 export type Action   = (typeof ACTIONS)[keyof typeof ACTIONS]
 
+// ── İnsan-okur Türkçe etiketler (tek kaynak) ──────
+// Tüm RESOURCES değerleri burada karşılığını bulmalı; eksik bırakılmaz.
+export const RESOURCE_LABELS: Record<string, string> = {
+  [RESOURCES.BLOG]:         "Blog",
+  [RESOURCES.PAGES]:        "Sayfalar",
+  [RESOURCES.PORTFOLIO]:    "Portföy",
+  [RESOURCES.SERVICES]:     "Hizmetler",
+  [RESOURCES.COLORS]:       "Renkler",
+  [RESOURCES.ROLES]:        "Roller",
+  [RESOURCES.USERS]:        "Kullanıcılar",
+  [RESOURCES.SETTINGS]:     "Ayarlar",
+  [RESOURCES.AI]:           "Yapay Zeka",
+  [RESOURCES.MEDIA]:        "Medya",
+  [RESOURCES.APPOINTMENTS]: "Randevular",
+}
+
+export const ACTION_LABELS: Record<string, string> = {
+  [ACTIONS.READ]:    "Görüntüle",
+  [ACTIONS.CREATE]:  "Oluştur",
+  [ACTIONS.UPDATE]:  "Düzenle",
+  [ACTIONS.DELETE]:  "Sil",
+  [ACTIONS.PUBLISH]: "Yayınla",
+  [ACTIONS.MANAGE]:  "Yönet",
+}
+
 // ── Default Role Definitions ──────────────────────
 export interface RoleConfig {
   name:        string

@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Save, RotateCcw, Lock, CheckSquare, Square } from "@/lib/icons"
 import { FFButton } from "@/components/ui/ff-button"
 import { FFBadge } from "@/components/ui/ff-badge"
-import { RESOURCE_LIST, ACTION_LIST, PERMISSION_MATRIX, permissionKey } from "@/lib/rbac/permissions"
+import { RESOURCE_LIST, ACTION_LIST, PERMISSION_MATRIX, permissionKey, RESOURCE_LABELS, ACTION_LABELS } from "@/lib/rbac/permissions"
 import { cn } from "@/lib/utils"
 
 interface Permission {
@@ -18,28 +18,6 @@ interface PermissionMatrixProps {
   roleId: string
   initialPermissions: Permission[]
   isLocked?: boolean // Super Admin
-}
-
-// Human-readable Turkish labels
-const RESOURCE_LABELS: Record<string, string> = {
-  blog: "Blog",
-  pages: "Sayfalar",
-  portfolio: "Portföy",
-  themes: "Tema Ayarları",
-  roles: "Roller",
-  users: "Kullanıcılar",
-  settings: "Ayarlar",
-  ai: "Yapay Zeka",
-  media: "Medya",
-}
-
-const ACTION_LABELS: Record<string, string> = {
-  read: "Görüntüle",
-  create: "Oluştur",
-  update: "Düzenle",
-  delete: "Sil",
-  publish: "Yayınla",
-  manage: "Yönet",
 }
 
 export function PermissionMatrix({
