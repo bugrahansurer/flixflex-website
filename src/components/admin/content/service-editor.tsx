@@ -13,6 +13,7 @@ import {
 } from "@/lib/icons"
 import { slugify, cn } from "@/lib/utils"
 import { MediaPicker } from "@/components/admin/media/media-picker"
+import { MotionDesignPicker } from "@/components/admin/content/motion-design-picker"
 import type { AdminServiceRecord } from "./types"
 
 // Available Icons for Services
@@ -124,6 +125,7 @@ export function ServiceEditor({ mode, initial, allServices }: ServiceEditorProps
     coverImage: initial?.coverImage ?? "",
     accentColor: initial?.accentColor ?? "#ff4fd8",
     gradient: initial?.gradient ?? "bg-gradient-to-r from-[#0f0c29] via-[#302b63] to-[#24243e]",
+    motionDesign: initial?.motionDesign ?? "",
   }))
 
   const availableParents = React.useMemo(() => {
@@ -163,6 +165,7 @@ export function ServiceEditor({ mode, initial, allServices }: ServiceEditorProps
         coverImage: form.coverImage || null,
         accentColor: form.accentColor || null,
         gradient: form.gradient || null,
+        motionDesign: form.motionDesign || null,
       }
       const res = await fetch(mode === "new" ? "/api/services" : `/api/services/${initial!.id}`, {
         method: mode === "new" ? "POST" : "PATCH",
@@ -311,6 +314,11 @@ export function ServiceEditor({ mode, initial, allServices }: ServiceEditorProps
               label="Kapak Görseli"
               value={form.coverImage}
               onChange={(url) => patch({ coverImage: url })}
+            />
+
+            <MotionDesignPicker
+              value={form.motionDesign || null}
+              onChange={(v) => patch({ motionDesign: v ?? "" })}
             />
 
             <div className="grid md:grid-cols-2 gap-6 pt-2">

@@ -48,6 +48,7 @@ export interface AdminServiceRecord {
   coverImage?: string | null
   accentColor?: string | null
   gradient?: string | null
+  motionDesign?: string | null
   children?: AdminServiceRecord[]
   parent?: { id: string; title: string } | null
   portfolios?: AdminPortfolioRecord[]

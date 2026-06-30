@@ -80,7 +80,7 @@ export function ServicesShowcase({
             const subs = service.subServices ?? []
             const href = `/hizmetler/${service.slug}`
             const design = resolveMotionDesign({
-              motionDesign: (service as { motionDesign?: string | null }).motionDesign,
+              motionDesign: service.motionDesign,
               title: service.title,
               iconKey: service.iconKey,
             })

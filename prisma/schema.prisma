@@ -189,6 +189,7 @@ model Service {
   coverImage   String?
   accentColor  String?
   gradient     String?
+  motionDesign String?         // seçili motion design preset anahtarı (canlı React)
   createdAt    DateTime        @default(now())
   updatedAt    DateTime        @updatedAt
   parentId     String?

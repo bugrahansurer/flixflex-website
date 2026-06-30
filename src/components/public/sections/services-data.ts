@@ -59,6 +59,8 @@ export interface Service {
   coverImage?: string | null
   accentColor?: string | null
   gradient?: string | null
+  /** Seçili motion design preset anahtarı (boş → hizmet adından otomatik) */
+  motionDesign?: string | null
 }
 
 export const SERVICES: Service[] = [

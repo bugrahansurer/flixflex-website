@@ -58,4 +58,5 @@ export const servicePayloadSchema = z.object({
   coverImage: z.string().nullable().optional(),
   accentColor: z.string().nullable().optional(),
   gradient: z.string().nullable().optional(),
+  motionDesign: z.string().nullable().optional(),
 })

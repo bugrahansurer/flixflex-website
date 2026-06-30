@@ -37,6 +37,7 @@ type ServiceMapInput = {
   coverImage?: string | null
   accentColor?: string | null
   gradient?: string | null
+  motionDesign?: string | null
 }
 
 const DEFAULT_GRADIENT = "from-[#1A1A1A] via-[#2A1A3A] to-[#3D1A5C]"
@@ -124,6 +125,7 @@ export function mapService(item: ServiceMapInput, depth: number = 0): PublicServ
     coverImage: item.coverImage || null,
     accentColor: item.accentColor || null,
     gradient: item.gradient || null,
+    motionDesign: item.motionDesign ?? null,
     children: depth < MAX_DEPTH && item.children?.length
       ? item.children.map((child) => mapService(child, depth + 1))
       : [],
