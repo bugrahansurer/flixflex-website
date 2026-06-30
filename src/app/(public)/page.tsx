@@ -14,7 +14,7 @@ import {
 } from "@/components/public"
 
 import { getPageBySlug } from "@/lib/page-data"
-import { listPublishedPortfolio, listPublishedServices } from "@/lib/content-store"
+import { listPublishedPortfolio, listPublishedMainServices } from "@/lib/content-store"
 import { PageRenderer } from "@/components/public/page-renderer"
 
 export const metadata: Metadata = {
@@ -34,7 +34,7 @@ export default async function HomePage() {
 
   let servicesItems;
   try {
-    servicesItems = (await listPublishedServices()).filter((s) => !s.parentId);
+    servicesItems = await listPublishedMainServices();
   } catch (err) {
     console.error('[HomePage] Services load error:', err);
     servicesItems = SERVICES.map(({ icon, ...rest }) => rest);
