@@ -4,6 +4,7 @@ import * as React from "react"
 import type { SessionUser } from "@/lib/auth/types"
 import { AdminSidebar } from "./admin-sidebar"
 import { AdminTopbar } from "./admin-topbar"
+import { PermissionProvider } from "@/components/admin/rbac/permission-context"
 
 interface AdminLayoutShellProps {
   user: SessionUser
@@ -35,7 +36,9 @@ export function AdminLayoutShell({ user, siteLogo, logoHeight, children }: Admin
 
         {/* Page content */}
         <main id="admin-content" className="flex-1 bg-[#F7F7F5]">
-          {children}
+          <PermissionProvider role={user.role} permissions={user.permissions}>
+            {children}
+          </PermissionProvider>
         </main>
       </div>
     </div>

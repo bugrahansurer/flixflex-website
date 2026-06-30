@@ -34,11 +34,18 @@ export async function POST(req: Request) {
         console.warn("[MUX_WEBHOOK] signature verification failed:", err)
         return NextResponse.json({ error: "Invalid signature" }, { status: 401 })
       }
-    } else if (process.env.NODE_ENV === "production") {
-      // Fail-closed in production: an unsigned webhook must not be trusted to
-      // mutate media records. Dev keeps the no-secret path for local testing.
-      console.error("[MUX_WEBHOOK] MUX_WEBHOOK_SECRET is not configured — rejecting webhook in production.")
-      return NextResponse.json({ error: "Webhook secret not configured" }, { status: 500 })
+    } else {
+      // Fail-closed everywhere EXCEPT a true local-dev DB. An unsigned webhook
+      // must not be trusted to mutate media records in production OR in any
+      // staging/preview environment (where NODE_ENV may not be "production"
+      // but the database is real). Only allow the no-secret path when the DB
+      // points at localhost.
+      const dbUrl = process.env.DATABASE_URL ?? ""
+      const isLocalDevDb = /localhost|127\.0\.0\.1/.test(dbUrl)
+      if (!isLocalDevDb) {
+        console.error("[MUX_WEBHOOK] MUX_WEBHOOK_SECRET is not configured — rejecting unsigned webhook (non-local environment).")
+        return NextResponse.json({ error: "Webhook secret not configured" }, { status: 500 })
+      }
     }
 
     const body = JSON.parse(rawBody) as MuxWebhookBody

@@ -28,6 +28,7 @@ const ROUTE_RESOURCE: { prefix: string; resource: string }[] = [
   { prefix: "/admin/medya", resource: "media" },
   { prefix: "/admin/ai", resource: "ai" },
   { prefix: "/admin/theme", resource: "colors" },
+  { prefix: "/admin/renkler", resource: "colors" },
   { prefix: "/admin/roller", resource: "roles" },
   { prefix: "/admin/kullanicilar", resource: "users" },
   { prefix: "/admin/ayarlar", resource: "settings" },
