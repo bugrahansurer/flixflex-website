@@ -9,6 +9,7 @@ import { FFButton } from "@/components/ui/ff-button"
 import { FFInput, FFTextarea } from "@/components/ui/ff-input"
 import { FFBadge } from "@/components/ui/ff-badge"
 import { createRoleSchema, updateRoleSchema, type CreateRoleData, type UpdateRoleData } from "@/lib/validators/role-schema"
+import { slugifyTr } from "@/lib/utils"
 
 interface RoleFormBaseProps {
   initial?: {
@@ -77,14 +78,14 @@ export function RoleForm({ initial }: RoleFormBaseProps) {
         return
       }
       // Redirect to detail page for permission matrix editing
-      router.push(`/admin/roller/${json.data.id}`)
+      router.push(`/admin/roller/${slugifyTr(json.data.name)}`)
     }
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       {isReadonly && (
-        <div className="ff-shape-container flex items-center gap-2 px-4 py-3 bg-amber-500/8 border border-amber-500/20 text-amber-400 text-xs">
+        <div className="ff-shape-button flex items-center gap-2 px-4 py-3 bg-amber-500/8 border border-amber-500/20 text-amber-400 text-xs">
           <span className="font-semibold tracking-wide uppercase">Sistem Rolü</span>
           <span>— Ad ve açıklama düzenlenemez.</span>
         </div>

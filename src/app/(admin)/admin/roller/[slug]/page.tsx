@@ -1,12 +1,15 @@
 // ═══════════════════════════════════════════════════════════
-// FlixFlex — /admin/roller/[id] — Role detail/edit
+// FlixFlex — /admin/roller/[slug] — Role detail/edit
+// Slug, rol adından anlık türetilir (DB kolonu yok). Eski cuid ID
+// linkleri slug URL'sine yönlendirilir.
 // ═══════════════════════════════════════════════════════════
 
 import type { Metadata } from "next"
-import { notFound } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 import Link from "next/link"
 import { ChevronLeft, Lock } from "@/lib/icons"
 import prisma from "@/lib/prisma"
+import { slugifyTr } from "@/lib/utils"
 import { FFContainer } from "@/components/ui/ff-container"
 import { FFBadge } from "@/components/ui/ff-badge"
 import { RoleForm } from "@/components/admin/rbac/role-form"
@@ -14,17 +17,31 @@ import { PermissionMatrix } from "@/components/admin/rbac/permission-matrix"
 
 export const dynamic = "force-dynamic"
 
-type Props = { params: Promise<{ id: string }> }
+const LIST_URL = "/admin/roller"
+
+type Props = { params: Promise<{ slug: string }> }
+
+/** Slug ile rolü bulur; bulunamazsa eski cuid ID kabul edip slug URL'sine yönlendirir. */
+async function resolveRole(slugOrId: string): Promise<{ id: string; redirectTo: string | null } | null> {
+  if (!prisma) return null
+  const all = await prisma.role.findMany({ select: { id: true, name: true } })
+  const bySlug = all.find((r) => slugifyTr(r.name) === slugOrId)
+  if (bySlug) return { id: bySlug.id, redirectTo: null }
+  const byId = all.find((r) => r.id === slugOrId)
+  if (byId) return { id: byId.id, redirectTo: `${LIST_URL}/${slugifyTr(byId.name)}` }
+  return null
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { id } = await params
-  if (!prisma) return { title: "Rol Düzenle — FlixFlex Admin" }
-  const role = await prisma.role.findUnique({ where: { id }, select: { name: true } })
+  const { slug } = await params
+  const resolved = await resolveRole(slug)
+  if (!resolved || !prisma) return { title: "Rol Düzenle — FlixFlex Admin" }
+  const role = await prisma.role.findUnique({ where: { id: resolved.id }, select: { name: true } })
   return { title: role ? `${role.name} — FlixFlex Admin` : "Rol Düzenle — FlixFlex Admin" }
 }
 
 export default async function RoleDetailPage({ params }: Props) {
-  const { id } = await params
+  const { slug } = await params
 
   if (!prisma) {
     return (
@@ -36,8 +53,12 @@ export default async function RoleDetailPage({ params }: Props) {
     )
   }
 
+  const resolved = await resolveRole(slug)
+  if (!resolved) notFound()
+  if (resolved.redirectTo) redirect(resolved.redirectTo)
+
   const role = await prisma.role.findUnique({
-    where: { id },
+    where: { id: resolved.id },
     include: { permissions: true },
   })
 
@@ -50,7 +71,7 @@ export default async function RoleDetailPage({ params }: Props) {
     <div className="px-6 md:px-10 py-8 space-y-8">
       {/* Back + breadcrumb */}
       <Link
-        href="/admin/roller"
+        href={LIST_URL}
         className="ff-shape-button inline-flex items-center gap-1.5 text-sm text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors"
       >
         <ChevronLeft className="w-4 h-4" />

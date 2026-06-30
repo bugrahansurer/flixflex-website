@@ -32,6 +32,21 @@ export function slugify(str: string): string {
     .replace(/^-+|-+$/g, '')
 }
 
+const TR_SLUG_MAP: Record<string, string> = {
+  ç: "c", Ç: "c", ğ: "g", Ğ: "g", ı: "i", I: "i", İ: "i",
+  ö: "o", Ö: "o", ş: "s", Ş: "s", ü: "u", Ü: "u",
+}
+
+/** Türkçe karakterleri sadeleştirip URL-güvenli slug üretir (ör. "Süper Admin" → "super-admin"). */
+export function slugifyTr(str: string): string {
+  return str
+    .replace(/[çÇğĞıIİöÖşŞüÜ]/g, (ch) => TR_SLUG_MAP[ch] ?? ch)
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+}
+
 export function truncate(str: string, length: number): string {
   if (str.length <= length) return str
   return str.slice(0, length).trim() + '...'

@@ -9,6 +9,7 @@ import prisma from "@/lib/prisma"
 import { FFBadge } from "@/components/ui/ff-badge"
 import { FFButton } from "@/components/ui/ff-button"
 import { DeleteRoleButton } from "@/components/admin/rbac/delete-role-button"
+import { slugifyTr } from "@/lib/utils"
 
 export const metadata: Metadata = { title: "Roller — FlixFlex Admin" }
 export const dynamic = "force-dynamic"
@@ -127,7 +128,7 @@ export default async function RolesPage() {
 
               {/* Actions */}
               <div className="flex items-center justify-end gap-2">
-                <Link href={`/admin/roller/${role.id}`}>
+                <Link href={`/admin/roller/${slugifyTr(role.name)}`}>
                   <FFButton
                     className="text-[#ff4fd8]"
                     variant="ghost"
