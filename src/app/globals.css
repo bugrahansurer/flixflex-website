@@ -851,3 +851,82 @@
 .poem-animation-hero .container-reflect p {
   transform: scaleY(70%);
 }
+/* ═══════════════════════════════════════════════════════════
+   Hizmet Motion Design'ları — saf CSS keyframe'ler
+   (framer-motion 12 + React 19 Strict Mode sonsuz loop'ları
+   başlatamadığı için CSS'e taşındı; compositor'da güvenilir döner)
+   ═══════════════════════════════════════════════════════════ */
+@keyframes ff-email-chip {
+  0%, 55% { opacity: 0; transform: translate(-50%, -24px); }
+  70%, 90% { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, -24px); }
+}
+@keyframes ff-send-pulse {
+  0%, 50% { transform: scale(1); }
+  60% { transform: scale(0.86); }
+  70%, 100% { transform: scale(1); }
+}
+@keyframes ff-email-bar {
+  0%, 60% { width: 0%; }
+  85%, 95% { width: 100%; }
+  100% { width: 0%; }
+}
+@keyframes ff-bar {
+  0% { transform: scaleY(0.4); }
+  33% { transform: scaleY(1); }
+  66% { transform: scaleY(0.7); }
+  100% { transform: scaleY(1); }
+}
+@keyframes ff-heart {
+  0% { transform: scale(1); }
+  20% { transform: scale(1.18); }
+  40%, 100% { transform: scale(1); }
+}
+@keyframes ff-rise {
+  0% { opacity: 0; transform: translateY(0) scale(0.6); }
+  50% { opacity: 1; transform: translateY(-30px) scale(1); }
+  100% { opacity: 0; transform: translateY(-60px) scale(0.8); }
+}
+@keyframes ff-brand {
+  0% { border-radius: 18px; transform: rotate(0) scale(1); }
+  33% { border-radius: 40px; transform: rotate(120deg) scale(1.12); }
+  66% { border-radius: 8px; transform: rotate(240deg) scale(0.96); }
+  100% { border-radius: 18px; transform: rotate(360deg) scale(1); }
+}
+@keyframes ff-swatch {
+  0%, 100% { opacity: 0.4; transform: translateY(0) scale(1); }
+  50% { opacity: 1; transform: translateY(-3px) scale(1.6); }
+}
+@keyframes ff-reel { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes ff-reel-bar { from { width: 0%; } to { width: 100%; } }
+@keyframes ff-block {
+  0% { opacity: 0; transform: translateY(12px); }
+  15%, 85% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(12px); }
+}
+@keyframes ff-cursor {
+  0% { opacity: 0; transform: translate(40px, 50px); }
+  33% { opacity: 1; transform: translate(-10px, 0); }
+  66% { opacity: 1; transform: translate(30px, 40px); }
+  100% { opacity: 0; transform: translate(30px, 40px); }
+}
+@keyframes ff-orbit { to { transform: rotate(360deg); } }
+@keyframes ff-orbit-rev { to { transform: rotate(-360deg); } }
+
+/* Motion utility class'ları — keyframe'leri CSS içinde referanslar ki
+   Lightning CSS (Tailwind v4) "kullanılmıyor" diye budamasın. Gecikme
+   (animation-delay) JSX'te inline verilir. */
+.ff-mo-email-chip { animation: ff-email-chip 4s ease-in-out infinite; }
+.ff-mo-send-pulse { animation: ff-send-pulse 4s ease-in-out infinite; }
+.ff-mo-email-bar  { animation: ff-email-bar 4s ease-in-out infinite; }
+.ff-mo-bar        { animation: ff-bar 1.8s ease-in-out infinite; }
+.ff-mo-heart      { animation: ff-heart 2.4s ease-in-out infinite; }
+.ff-mo-rise       { animation: ff-rise 2.4s ease-out infinite; }
+.ff-mo-brand      { animation: ff-brand 3s ease-in-out infinite; }
+.ff-mo-swatch     { animation: ff-swatch 1.5s ease-in-out infinite; }
+.ff-mo-reel       { animation: ff-reel 4s linear infinite; }
+.ff-mo-reel-bar   { animation: ff-reel-bar 4s linear infinite; }
+.ff-mo-block      { animation: ff-block 3s ease-in-out infinite; }
+.ff-mo-cursor     { animation: ff-cursor 3s ease-in-out infinite; }
+.ff-mo-orbit      { animation: ff-orbit 12s linear infinite; }
+.ff-mo-orbit-rev  { animation: ff-orbit-rev 8s linear infinite; }

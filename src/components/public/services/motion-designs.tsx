@@ -3,20 +3,27 @@
 // ═══════════════════════════════════════════════════════════
 // FlixFlex — Hizmet Motion Design'ları
 // Her ana hizmet kartının üstünde oynayan, o hizmete özel, canlı
-// (framer-motion) animasyon sahneleri. Hepsi koyu bir "ekran" paneli
-// içinde, marka accent'iyle (--ff-purple) çalışır; reduced-motion'da
-// sade bir kareye düşer. Registry + hizmet→preset çözümleyici.
+// animasyon sahneleri. Koyu bir "ekran" paneli içinde, marka accent'iyle.
+//
+// NOT: Animasyonlar SAF CSS keyframe'leridir (bkz. globals.css "Hizmet
+// Motion Design'ları" + ".ff-mo-*" utility class'ları). framer-motion 12 +
+// React 19 Strict Mode'da repeat:Infinity loop'ları başlamadığı için CSS'e
+// taşındı. Keyframe'lere CSS class'larından referans verilir; aksi halde
+// Lightning CSS (Tailwind v4) "kullanılmıyor" diye onları budar.
+// Gecikmeler (animation-delay) JSX'te inline verilir.
 // ═══════════════════════════════════════════════════════════
 
 import * as React from "react"
-import { motion } from "framer-motion"
+import { cn } from "@/lib/utils"
 import {
   Send, Heart, MessageCircle, TrendingUp, Play, Sparkles, MousePointer2,
 } from "@/lib/icons"
 
 const ACCENT = "#FF4FD8"
 const PANEL = "absolute inset-0 overflow-hidden bg-[#0c0c11]"
-const loop = (extra: object = {}) => ({ repeat: Infinity, repeatType: "loop" as const, ...extra })
+
+/** still ise animasyon class'ı yok (sade kare). */
+const mo = (cls: string, still?: boolean): string | null => (still ? null : cls)
 
 // ── 1. E-posta / Performans kampanyası ───────────────────────
 function EmailCampaign({ still }: { still?: boolean }) {
@@ -25,38 +32,32 @@ function EmailCampaign({ still }: { still?: boolean }) {
     <div className={PANEL}>
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-8">
         {/* Bildirim chip'i — yukarıdan düşer */}
-        <motion.div
-          className="absolute left-1/2 top-4 -translate-x-1/2 flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 backdrop-blur-md border border-white/10"
-          initial={false}
-          animate={still ? { opacity: 1, y: 0 } : { opacity: [0, 0, 1, 1, 0], y: [-24, -24, 0, 0, -24] }}
-          transition={still ? undefined : loop({ duration: 4, times: [0, 0.55, 0.7, 0.9, 1] })}
+        <div
+          className={cn("absolute left-1/2 top-4 flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 backdrop-blur-md border border-white/10", mo("ff-mo-email-chip", still))}
+          style={{ transform: "translateX(-50%)" }}
         >
           <span className="flex h-5 w-5 items-center justify-center rounded-full" style={{ background: ACCENT }}>
             <Send className="h-3 w-3 text-white" />
           </span>
           <span className="text-[11px] font-medium text-white/90">1 yeni gönderim</span>
-        </motion.div>
+        </div>
 
         {/* Compose input */}
         <div className="flex w-full max-w-[260px] items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5">
           <span className="min-w-0 flex-1 truncate text-[12px] text-white/80">
             {still ? text : <Typewriter text={text} />}
           </span>
-          <motion.span
-            className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg"
+          <span
+            className={cn("flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg", mo("ff-mo-send-pulse", still))}
             style={{ background: ACCENT }}
-            animate={still ? {} : { scale: [1, 1, 0.86, 1, 1] }}
-            transition={still ? undefined : loop({ duration: 4, times: [0, 0.5, 0.6, 0.7, 1] })}
           >
             <Send className="h-3.5 w-3.5 text-white" />
-          </motion.span>
+          </span>
         </div>
         <div className="h-1.5 w-[260px] overflow-hidden rounded-full bg-white/5">
-          <motion.div
-            className="h-full rounded-full"
-            style={{ background: ACCENT }}
-            animate={still ? { width: "100%" } : { width: ["0%", "0%", "100%", "100%", "0%"] }}
-            transition={still ? undefined : loop({ duration: 4, times: [0, 0.6, 0.85, 0.95, 1] })}
+          <div
+            className={cn("h-full rounded-full", mo("ff-mo-email-bar", still))}
+            style={{ background: ACCENT, width: still ? "100%" : "0%" }}
           />
         </div>
       </div>
@@ -72,13 +73,15 @@ function AnalyticsPulse({ still }: { still?: boolean }) {
       <div className="absolute inset-0 flex flex-col justify-end gap-3 p-7">
         <div className="flex items-end justify-between gap-2 h-[55%]">
           {bars.map((h, i) => (
-            <motion.span
+            <span
               key={i}
-              className="w-full rounded-t"
-              style={{ background: i === bars.length - 1 ? ACCENT : "rgba(255,255,255,0.16)" }}
-              initial={{ height: `${h * 40}%` }}
-              animate={still ? { height: `${h * 100}%` } : { height: [`${h * 40}%`, `${h * 100}%`, `${h * 70}%`, `${h * 100}%`] }}
-              transition={still ? undefined : loop({ duration: 1.8, delay: i * 0.1, ease: "easeInOut" })}
+              className={cn("w-full rounded-t", mo("ff-mo-bar", still))}
+              style={{
+                background: i === bars.length - 1 ? ACCENT : "rgba(255,255,255,0.16)",
+                height: `${h * 100}%`,
+                transformOrigin: "bottom",
+                animationDelay: still ? undefined : `${i * 0.1}s`,
+              }}
             />
           ))}
         </div>
@@ -109,12 +112,10 @@ function SocialEngage({ still }: { still?: boolean }) {
           </div>
           <span className="block h-16 w-full rounded-lg bg-white/[0.06]" />
           <div className="mt-3 flex items-center gap-4 text-white/70">
-            <motion.span className="flex items-center gap-1.5"
-              animate={still ? {} : { scale: [1, 1.18, 1] }}
-              transition={still ? undefined : loop({ duration: 2.4, times: [0, 0.2, 0.4] })}>
+            <span className={cn("flex items-center gap-1.5", mo("ff-mo-heart", still))}>
               <Heart className="h-4 w-4" style={{ color: ACCENT, fill: ACCENT }} />
-              <span className="text-[11px] tabular-nums">{still ? "1.2K" : <CountUp to={1200} suffix="" compact />}</span>
-            </motion.span>
+              <span className="text-[11px] tabular-nums">{still ? "1.2K" : <CountUp to={1200} compact />}</span>
+            </span>
             <span className="flex items-center gap-1.5">
               <MessageCircle className="h-4 w-4" />
               <span className="text-[11px] tabular-nums">340</span>
@@ -123,12 +124,13 @@ function SocialEngage({ still }: { still?: boolean }) {
         </div>
         {/* Yükselen kalpler */}
         {!still && [0, 1, 2].map((i) => (
-          <motion.span key={i} className="absolute bottom-8"
-            style={{ left: `${42 + i * 8}%`, color: ACCENT }}
-            animate={{ y: [0, -60], opacity: [0, 1, 0], scale: [0.6, 1, 0.8] }}
-            transition={loop({ duration: 2.4, delay: i * 0.5, ease: "easeOut" })}>
+          <span
+            key={i}
+            className="absolute bottom-8 ff-mo-rise"
+            style={{ left: `${42 + i * 8}%`, color: ACCENT, animationDelay: `${i * 0.5}s` }}
+          >
             <Heart className="h-3.5 w-3.5" style={{ fill: ACCENT }} />
-          </motion.span>
+          </span>
         ))}
       </div>
     </div>
@@ -141,19 +143,19 @@ function BrandIdentity({ still }: { still?: boolean }) {
   return (
     <div className={PANEL}>
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-5">
-        <motion.div
-          className="flex h-16 w-16 items-center justify-center text-2xl font-extrabold text-white"
+        <div
+          className={cn("flex h-16 w-16 items-center justify-center text-2xl font-extrabold text-white", mo("ff-mo-brand", still))}
           style={{ borderRadius: 18, background: ACCENT }}
-          animate={still ? {} : { borderRadius: [18, 40, 8, 18], rotate: [0, 120, 240, 360], scale: [1, 1.12, 0.96, 1] }}
-          transition={still ? undefined : loop({ duration: 3, ease: "easeInOut" })}
         >
           FF
-        </motion.div>
+        </div>
         <div className="flex gap-2">
           {swatches.map((c, i) => (
-            <motion.span key={c} className="h-3 w-3 rounded-full" style={{ background: c }}
-              animate={still ? {} : { scale: [1, 1.6, 1], opacity: [0.4, 1, 0.4], y: [0, -3, 0] }}
-              transition={still ? undefined : loop({ duration: 1.5, delay: i * 0.18 })} />
+            <span
+              key={c}
+              className={cn("h-3 w-3 rounded-full", mo("ff-mo-swatch", still))}
+              style={{ background: c, animationDelay: still ? undefined : `${i * 0.18}s` }}
+            />
           ))}
         </div>
       </div>
@@ -167,22 +169,19 @@ function ContentReel({ still }: { still?: boolean }) {
     <div className={PANEL}>
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-7">
         <div className="relative w-full overflow-hidden">
-          <motion.div className="flex gap-2"
-            animate={still ? {} : { x: ["0%", "-50%"] }}
-            transition={still ? undefined : loop({ duration: 4, ease: "linear" })}>
+          <div className={cn("flex gap-2", mo("ff-mo-reel", still))}>
             {[...Array(8)].map((_, i) => (
               <span key={i} className="h-16 w-24 flex-shrink-0 rounded-md"
                 style={{ background: i % 3 === 0 ? `${ACCENT}40` : "rgba(255,255,255,0.08)" }} />
             ))}
-          </motion.div>
+          </div>
           <span className="absolute left-1/2 top-1/2 flex h-10 w-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full backdrop-blur-md" style={{ background: ACCENT }}>
             <Play className="h-4 w-4 text-white" style={{ fill: "white" }} />
           </span>
         </div>
         <div className="h-1 w-full max-w-[240px] overflow-hidden rounded-full bg-white/10">
-          <motion.div className="h-full rounded-full" style={{ background: ACCENT }}
-            animate={still ? { width: "70%" } : { width: ["0%", "100%"] }}
-            transition={still ? undefined : loop({ duration: 4, ease: "linear" })} />
+          <div className={cn("h-full rounded-full", mo("ff-mo-reel-bar", still))}
+            style={{ background: ACCENT, width: still ? "70%" : "0%" }} />
         </div>
       </div>
     </div>
@@ -207,20 +206,19 @@ function WebBuild({ still }: { still?: boolean }) {
           </div>
           <div className="space-y-2 p-3">
             {blocks.map((b, i) => (
-              <motion.span key={i} className="block rounded"
-                style={{ width: b.w, height: b.h, background: i === 1 ? `${ACCENT}55` : "rgba(255,255,255,0.10)" }}
-                initial={false}
-                animate={still ? { opacity: 1, y: 0 } : { opacity: [0, 0, 1, 1, 0], y: [12, 12, 0, 0, 12] }}
-                transition={still ? undefined : loop({ duration: 3, times: [0, b.d / 3, (b.d + 0.4) / 3, 0.9, 1] })} />
+              <span key={i} className={cn("block rounded", mo("ff-mo-block", still))}
+                style={{
+                  width: b.w, height: b.h,
+                  background: i === 1 ? `${ACCENT}55` : "rgba(255,255,255,0.10)",
+                  animationDelay: still ? undefined : `${b.d * 0.4}s`,
+                }} />
             ))}
           </div>
         </div>
         {!still && (
-          <motion.span className="absolute" style={{ color: "white" }}
-            animate={{ x: [40, -10, 30], y: [50, 0, 40], opacity: [0, 1, 1, 0] }}
-            transition={loop({ duration: 3, ease: "easeInOut" })}>
+          <span className="absolute ff-mo-cursor" style={{ color: "white" }}>
             <MousePointer2 className="h-4 w-4" style={{ fill: ACCENT }} />
-          </motion.span>
+          </span>
         )}
       </div>
     </div>
@@ -232,14 +230,12 @@ function DefaultOrbit({ still }: { still?: boolean }) {
   return (
     <div className={PANEL}>
       <div className="absolute inset-0 flex items-center justify-center">
-        <motion.div className="absolute h-32 w-32 rounded-full border border-white/10"
-          animate={still ? {} : { rotate: 360 }} transition={still ? undefined : loop({ duration: 12, ease: "linear" })}>
+        <div className={cn("absolute h-32 w-32 rounded-full border border-white/10", mo("ff-mo-orbit", still))}>
           <span className="absolute -top-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rounded-full" style={{ background: ACCENT }} />
-        </motion.div>
-        <motion.div className="absolute h-20 w-20 rounded-full border border-white/10"
-          animate={still ? {} : { rotate: -360 }} transition={still ? undefined : loop({ duration: 8, ease: "linear" })}>
+        </div>
+        <div className={cn("absolute h-20 w-20 rounded-full border border-white/10", mo("ff-mo-orbit-rev", still))}>
           <span className="absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rounded-full bg-white/40" />
-        </motion.div>
+        </div>
         <Sparkles className="h-6 w-6" style={{ color: ACCENT }} />
       </div>
     </div>
@@ -311,10 +307,9 @@ function CountUp({ to, suffix = "", compact = false }: { to: number; suffix?: st
   return <>{fmt}{suffix}</>
 }
 
-/** Kart üstünde motion'ı oynatan sarmalayıcı (reduced-motion → sade kare). */
+/** Kart üstünde motion'ı oynatan sarmalayıcı. Bu motion'lar markanın asıl
+ *  görsel özelliği — her zaman oynar (CSS animasyonu). */
 export function MotionStage({ design }: { design: MotionDesign }) {
-  // Bu motion'lar markanın asıl görsel özelliği — her zaman oynar.
-  // (Sistem reduced-motion ayarına bakılmaz; istenirse buraya geri eklenebilir.)
   const Comp = design.Component
   return <Comp still={false} />
 }
