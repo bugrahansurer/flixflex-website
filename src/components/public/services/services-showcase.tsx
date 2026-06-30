@@ -2,9 +2,9 @@
 
 // ═══════════════════════════════════════════════════════════
 // FlixFlex — ServicesShowcase
-// Her ana hizmet tam-genişlik bir SATIR: solda büyük motion'lı ana kart,
-// sağda o hizmetin alt hizmet kartları (büyük format, açıklamalı, sağ
-// kenarda mini motion şeridiyle). Editoryal, ferah, profesyonel.
+// Her ana hizmet TEK bir birleşik kart: solda başlık (ana hizmete link)
+// + o hizmetin alt hizmet kartları (2x2), sağda o hizmete özel canlı
+// motion design paneli. Kompakt, gruplu, motion odaklı.
 // Page-builder section'ı ("services-showcase") — admin'den düzenlenebilir.
 // ═══════════════════════════════════════════════════════════
 
@@ -74,8 +74,8 @@ export function ServicesShowcase({
           </p>
         </div>
 
-        {/* Hizmet satırları */}
-        <div className="mt-12 md:mt-16 space-y-6 md:space-y-8">
+        {/* Hizmet kartları — her biri tek birleşik kart */}
+        <div className="mt-12 md:mt-16 space-y-5 md:space-y-6">
           {services.map((service, i) => {
             const subs = service.subServices ?? []
             const href = `/hizmetler/${service.slug}`
@@ -88,75 +88,78 @@ export function ServicesShowcase({
             return (
               <motion.div
                 key={service.id ?? service.slug}
-                className="grid grid-cols-1 lg:grid-cols-[minmax(0,380px)_1fr] gap-4 lg:gap-5 items-stretch"
+                className={cn(
+                  "group/card relative flex flex-col-reverse lg:flex-row items-stretch overflow-hidden ff-shape-container ff-card p-0",
+                  "border border-[var(--border)] transition-[border-color,box-shadow] duration-300",
+                  "hover:border-[var(--ff-purple)]/40 hover:shadow-[0_18px_55px_rgba(255,79,216,0.13)]",
+                )}
                 initial={reduce ? false : { opacity: 0, y: 28 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.15 }}
+                viewport={{ once: true, amount: 0.12 }}
                 transition={{ duration: 0.55, delay: Math.min(i * 0.06, 0.24), ease: EASE }}
               >
-                {/* ── Sol: ana hizmet kartı (büyük motion) ── */}
+                {/* ── Sol: başlık + alt hizmet kartları ── */}
+                <div className="flex min-w-0 flex-1 flex-col gap-4 p-5 md:p-6">
+                  {/* Ana hizmet başlığı (ana hizmet sayfasına link) */}
+                  <Link href={href} className="group/head flex items-start gap-3">
+                    <span className="ff-shape-button flex h-11 w-11 flex-shrink-0 items-center justify-center border border-[var(--ff-purple)]/25" style={{ background: "rgba(255,79,216,0.10)" }}>
+                      <ServiceIcon iconKey={service.iconKey} className="h-5 w-5 text-[var(--ff-purple)]" />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="flex items-center gap-1.5">
+                        <span className="font-display text-lg md:text-xl font-bold tracking-tight text-[var(--foreground)] leading-tight">
+                          {service.title}
+                        </span>
+                        <ArrowUpRight className="h-4 w-4 flex-shrink-0 text-[var(--foreground-muted)] transition-transform duration-200 group-hover/head:translate-x-0.5 group-hover/head:-translate-y-0.5 group-hover/head:text-[var(--ff-purple)]" />
+                      </span>
+                      <span className="mt-0.5 block text-[12.5px] text-[var(--foreground-muted)] leading-snug line-clamp-1">
+                        {service.description}
+                      </span>
+                    </span>
+                  </Link>
+
+                  {/* Alt hizmet kartları (2x2) */}
+                  {subs.length > 0 && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      {subs.map((sub) => (
+                        <Link
+                          key={sub.href}
+                          href={sub.href}
+                          className={cn(
+                            "group/sub flex flex-col gap-1 rounded-xl border border-[var(--border)] bg-[var(--background)]/40 px-3.5 py-3",
+                            "transition-[border-color,transform,background-color] duration-200",
+                            "hover:-translate-y-0.5 hover:border-[var(--ff-purple)]/45 hover:bg-[var(--ff-purple)]/[0.04]",
+                          )}
+                        >
+                          <span className="flex items-center gap-2">
+                            <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center" style={{ background: "rgba(255,79,216,0.10)", borderRadius: 7 }}>
+                              <ServiceIcon iconKey={sub.iconKey} className="h-3.5 w-3.5 text-[var(--ff-purple)]" />
+                            </span>
+                            <span className="min-w-0 flex-1 truncate text-[12.5px] font-semibold text-[var(--foreground)]">{sub.label}</span>
+                            <ArrowUpRight className="h-3 w-3 flex-shrink-0 text-[var(--foreground-muted)] opacity-0 transition-opacity duration-200 group-hover/sub:opacity-100" />
+                          </span>
+                          {sub.description ? (
+                            <span className="block truncate text-[11px] text-[var(--foreground-muted)]">{sub.description}</span>
+                          ) : null}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* ── Sağ: motion paneli ── */}
                 <Link
                   href={href}
-                  className={cn(
-                    "group relative block overflow-hidden ff-shape-container ff-card p-0 min-h-[240px]",
-                    "border border-[var(--border)] transition-[border-color,box-shadow] duration-300",
-                    "hover:border-[var(--ff-purple)]/45 hover:shadow-[0_18px_55px_rgba(255,79,216,0.16)]",
-                  )}
+                  aria-label={`${service.title} — keşfet`}
+                  className="relative h-36 w-full flex-shrink-0 overflow-hidden border-b lg:h-auto lg:w-[240px] xl:w-[280px] lg:border-b-0 lg:border-l border-[var(--border)]"
                 >
                   <MotionStage design={design} />
-                  <span aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
-                  <span className="absolute right-4 top-4 inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5 text-[9px] font-medium text-white/70 backdrop-blur-md">
+                  <span aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent lg:bg-gradient-to-l" />
+                  <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5 text-[9px] font-medium text-white/70 backdrop-blur-md">
                     <Sparkles className="h-2.5 w-2.5" style={{ color: "#FF4FD8" }} />
                     Motion
                   </span>
-                  <div className="absolute inset-x-0 bottom-0 flex items-end gap-3 p-5">
-                    <span className="ff-shape-button flex h-11 w-11 flex-shrink-0 items-center justify-center border border-white/15 bg-white/10 backdrop-blur-md">
-                      <ServiceIcon iconKey={service.iconKey} className="h-5 w-5 text-white" />
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <h3 className="font-display text-lg md:text-xl font-bold tracking-tight text-white leading-tight">
-                        {service.title}
-                      </h3>
-                      <p className="mt-0.5 line-clamp-2 text-[11.5px] leading-snug text-white/65">{service.description}</p>
-                    </div>
-                    <span className="inline-flex flex-shrink-0 items-center gap-1 text-[11px] font-semibold text-white">
-                      Keşfet
-                      <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                    </span>
-                  </div>
                 </Link>
-
-                {/* ── Sağ: alt hizmet kartları (büyük format) ── */}
-                {subs.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 content-start">
-                    {subs.map((sub) => (
-                      <Link
-                        key={sub.href}
-                        href={sub.href}
-                        className={cn(
-                          "group/sub flex min-h-[112px] flex-col justify-center gap-1.5 ff-shape-container ff-card px-5 py-4",
-                          "border border-[var(--border)] transition-[border-color,transform,box-shadow] duration-200",
-                          "hover:-translate-y-0.5 hover:border-[var(--ff-purple)]/45 hover:shadow-[0_10px_30px_rgba(255,79,216,0.10)]",
-                        )}
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center" style={{ background: "rgba(255,79,216,0.10)", borderRadius: 8 }}>
-                            <ServiceIcon iconKey={sub.iconKey} className="h-3.5 w-3.5 text-[var(--ff-purple)]" />
-                          </span>
-                          <span className="truncate text-[13px] font-semibold text-[var(--foreground)]">{sub.label}</span>
-                        </div>
-                        {sub.description ? (
-                          <p className="line-clamp-2 text-[11.5px] leading-snug text-[var(--foreground-muted)]">{sub.description}</p>
-                        ) : null}
-                        <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-[var(--ff-purple)] opacity-0 transition-opacity duration-200 group-hover/sub:opacity-100">
-                          Keşfet <ArrowUpRight className="h-2.5 w-2.5" />
-                        </span>
-                      </Link>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="hidden lg:block" />
-                )}
               </motion.div>
             )
           })}
