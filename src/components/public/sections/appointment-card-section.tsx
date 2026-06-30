@@ -39,7 +39,7 @@ export function AppointmentCardSection({
           variants={fadeInUp}
           className={cn(
             "ff-shape-container border border-[var(--border)] bg-[var(--surface)]/30 backdrop-blur-xs relative overflow-hidden",
-            "p-8 md:p-12 lg:p-16 flex flex-col lg:flex-row lg:items-center justify-between gap-8 md:gap-12"
+            "p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-8 md:gap-12"
           )}
         >
           {/* Subtle line glow */}
@@ -47,7 +47,7 @@ export function AppointmentCardSection({
 
           {/* Icon + Texts */}
           <div className="flex flex-col md:flex-row items-start gap-6 max-w-3xl">
-            <div className="ff-shape-container w-12 h-12 shrink-0 flex items-center justify-center border border-[var(--ff-purple)]/20 bg-[var(--ff-purple)]/10 text-[var(--ff-purple)]">
+            <div className="ff-shape-button w-10 h-10 shrink-0 flex items-center justify-center border border-[var(--ff-purple)]/20 bg-[var(--ff-purple)]/10 text-[var(--ff-purple)]">
               <CalendarDays size={24} className="stroke-[1.5]" />
             </div>
             <div>

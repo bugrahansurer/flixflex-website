@@ -10,6 +10,8 @@ import { ServicesMegaMenuTrigger, type MegaMenuService } from "./services-mega-m
 interface DesktopNavProps {
   links:             NavLink[]
   transparent?:      boolean
+  /** Background tone behind the transparent header: 'dark' → white text, 'light' → black text. */
+  tone?:             "light" | "dark"
   megaMenuServices?: MegaMenuService[]
   /** Real header height (px) so the mega panel sits flush under it. */
   headerHeight?:     number
@@ -17,8 +19,9 @@ interface DesktopNavProps {
   onMegaOpenChange?: (open: boolean) => void
 }
 
-export function DesktopNav({ links, transparent, megaMenuServices, headerHeight, onMegaOpenChange }: DesktopNavProps) {
+export function DesktopNav({ links, transparent, tone = "dark", megaMenuServices, headerHeight, onMegaOpenChange }: DesktopNavProps) {
   const pathname = usePathname()
+  const darkBg = tone === "dark" // dark background → white text
 
   return (
     <ul className="hidden lg:flex items-center gap-1">
@@ -36,6 +39,7 @@ export function DesktopNav({ links, transparent, megaMenuServices, headerHeight,
               link={link}
               services={megaMenuServices}
               transparent={transparent ?? false}
+              tone={tone}
               index={i}
               headerHeight={headerHeight}
               onOpenChange={onMegaOpenChange}
@@ -58,8 +62,8 @@ export function DesktopNav({ links, transparent, megaMenuServices, headerHeight,
                 "transition-colors duration-300",
                 transparent
                   ? isActive
-                    ? "text-white"
-                    : "text-white/70 hover:text-white"
+                    ? (darkBg ? "text-white" : "text-black")
+                    : (darkBg ? "text-white/70 hover:text-white" : "text-black/70 hover:text-black")
                   : isActive
                     ? "text-[var(--ff-purple)]"
                     : "text-[var(--foreground-muted)] hover:text-[var(--ff-purple)]"
@@ -73,7 +77,7 @@ export function DesktopNav({ links, transparent, megaMenuServices, headerHeight,
                   "origin-left transition-transform duration-300 ease-out",
                   "group-hover:scale-x-100",
                   isActive ? "scale-x-100" : "scale-x-0",
-                  transparent ? "bg-white" : "bg-[var(--ff-purple)]"
+                  transparent ? (darkBg ? "bg-white" : "bg-black") : "bg-[var(--ff-purple)]"
                 )}
               />
             </Link>

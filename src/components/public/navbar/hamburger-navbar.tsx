@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils"
 import { FlixFlexLogo } from "./logo"
 import { NAV_LINKS } from "./nav-data"
 import { useUIStore } from "@/lib/ui-store"
+import { useTheme } from "@/components/shared/theme-provider"
 
 
 // ═══════════════════════════════════════════════════════════
@@ -32,6 +33,12 @@ export function HamburgerNavbar({ siteSettings = {} }: HamburgerNavbarProps) {
   const { scrollY } = useScroll()
   const pathname = usePathname()
   const setAppointmentModalOpen = useUIStore((state) => state.setAppointmentModalOpen)
+  const headerTone = useUIStore((state) => state.headerTone)
+  const { resolvedTheme } = useTheme()
+
+  // Transparent (un-scrolled) text colour follows the hero background behind it.
+  const tone: "light" | "dark" = headerTone === "theme" ? resolvedTheme : headerTone
+  const darkBg = tone === "dark" // dark background → white text/buttons
 
 
   useMotionValueEvent(scrollY, "change", (y) => setScrolled(y > 12))
@@ -82,9 +89,10 @@ export function HamburgerNavbar({ siteSettings = {} }: HamburgerNavbarProps) {
           >
             <FlixFlexLogo
               size={scrolled ? "sm" : "md"}
-              logoUrl={scrolled ? siteSettings.site_logo : (siteSettings.site_logo_transparent || siteSettings.site_logo_white)}
+              logoUrl={(scrolled || !darkBg) ? siteSettings.site_logo : (siteSettings.site_logo_transparent || siteSettings.site_logo_white)}
               logoHeight={siteSettings.site_logo_height ? parseInt(siteSettings.site_logo_height) : undefined}
               transparent={!scrolled}
+              tone={tone}
             />
 
             <button
@@ -98,7 +106,9 @@ export function HamburgerNavbar({ siteSettings = {} }: HamburgerNavbarProps) {
                 "h-9 px-5 text-[11px] font-semibold uppercase tracking-[0.16em] transition-all duration-300",
                 scrolled
                   ? "border border-[var(--foreground-muted)] text-[var(--foreground-muted)] hover:bg-[var(--foreground-muted)] hover:text-[var(--background)]"
-                  : "border border-white/20 text-white/80 hover:bg-white/15 hover:text-white hover:border-white/40 bg-white/5"
+                  : darkBg
+                    ? "border border-white/20 text-white/80 hover:bg-white/15 hover:text-white hover:border-white/40 bg-white/5"
+                    : "border border-black/20 text-black/80 hover:bg-black/10 hover:text-black hover:border-black/40 bg-black/5"
               )}
             >
               <span className="hidden sm:inline">Menü</span>

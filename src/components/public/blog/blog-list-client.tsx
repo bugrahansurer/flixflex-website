@@ -93,7 +93,7 @@ export function BlogListClient({ posts = POSTS }: { posts?: BlogPost[] } = {}) {
           >
             {paginated.map((post) => (
               <motion.div key={post.slug} variants={fadeInUp}>
-                <BlogCard post={post} className="h-full" />
+                <BlogCard post={post} className="p-6 h-full" />
               </motion.div>
             ))}
           </motion.div>

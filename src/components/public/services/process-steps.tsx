@@ -25,7 +25,7 @@ export function ProcessSteps({ steps }: ProcessStepsProps) {
           className={cn(
             "group relative flex gap-6 md:gap-10",
             "border-b border-[var(--border)] last:border-b-0",
-            "py-8 md:py-10"
+            "px-4 py-8 md:py-10"
           )}
         >
           {/* Step number + connector line */}

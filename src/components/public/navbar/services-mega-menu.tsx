@@ -92,6 +92,8 @@ interface ServicesMegaMenuTriggerProps {
   link: NavLink
   services: MegaMenuService[]
   transparent: boolean
+  /** Background tone behind the transparent header: 'dark' → white text, 'light' → black text. */
+  tone?: "light" | "dark"
   /** index in the nav list (for stagger animation) */
   index: number
   /** Current header height in px — panel sits right below it. */
@@ -105,6 +107,7 @@ export function ServicesMegaMenuTrigger({
   link,
   services,
   transparent,
+  tone = "dark",
   index,
   headerHeight,
   onOpenChange,
@@ -112,6 +115,7 @@ export function ServicesMegaMenuTrigger({
   const pathname = usePathname()
   const isActive = pathname.startsWith(link.href)
   const [open, setOpen] = React.useState(false)
+  const darkBg = tone === "dark" // dark background → white text
   const [mounted, setMounted] = React.useState(false)
   const timerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -167,8 +171,8 @@ export function ServicesMegaMenuTrigger({
           "transition-colors duration-300",
           transparent
             ? isActive
-              ? "text-white"
-              : "text-white/70 hover:text-white"
+              ? (darkBg ? "text-white" : "text-black")
+              : (darkBg ? "text-white/70 hover:text-white" : "text-black/70 hover:text-black")
             : isActive
               ? "text-[var(--ff-purple)]"
               : "text-[var(--foreground-muted)] hover:text-[var(--ff-purple)]"
@@ -191,7 +195,7 @@ export function ServicesMegaMenuTrigger({
             "origin-left transition-transform duration-300 ease-out",
             "group-hover:scale-x-100",
             isActive ? "scale-x-100" : "scale-x-0",
-            transparent ? "bg-white" : "bg-[var(--ff-purple)]"
+            transparent ? (darkBg ? "bg-white" : "bg-black") : "bg-[var(--ff-purple)]"
           )}
         />
       </Link>
@@ -304,7 +308,7 @@ function SubServiceItem({ sub }: { sub: MegaMenuSubService }) {
       <Link
         href={sub.href}
         className={cn(
-          "group/sub ff-shape-container flex items-center gap-2.5 p-2",
+          "group/sub ff-shape-button flex items-center gap-2.5 p-2",
           "transition-colors duration-200 hover:bg-[var(--background-alt)]",
           "focus-visible:outline-[var(--ff-purple)] focus-visible:outline-2 focus-visible:outline-offset-1",
         )}

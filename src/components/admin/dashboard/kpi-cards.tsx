@@ -89,8 +89,8 @@ const KPI_DATA: KpiItem[] = [
 
 // ── Single KPI card ───────────────────────────────
 function KpiCard({
-  label, value, suffix, icon: Icon, delta, up, deltaLabel, color,
-}: KpiItem) {
+  label, value, suffix, icon: Icon, delta, up, deltaLabel, color, className,
+}: KpiItem & { className?: string }) {
   const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.4 })
   const display = useCountUp(value, inView)
 
@@ -98,10 +98,11 @@ function KpiCard({
     <motion.div
       ref={ref}
       variants={fadeInUp}
+      className="h-full"
     >
       <TiltCard
         variant="glass"
-        className="overflow-hidden"
+        className={cn("overflow-hidden", className)}
       >
         {/* Top purple accent on hover */}
         <div className="absolute inset-x-0 top-0 h-px bg-[#ff4fd8] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -155,7 +156,9 @@ export function KpiCards() {
       className="grid grid-cols-2 xl:grid-cols-4 gap-4"
     >
       {KPI_DATA.map((kpi) => (
-        <KpiCard key={kpi.label} {...kpi} />
+        <motion.div key={kpi.label} variants={fadeInUp} className="h-full">
+          <KpiCard key={kpi.label} {...kpi} className="p-6 h-full" />
+        </motion.div>
       ))}
     </motion.div>
   )

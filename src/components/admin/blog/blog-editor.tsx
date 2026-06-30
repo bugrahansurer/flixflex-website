@@ -154,10 +154,10 @@ export function BlogEditor({ mode, initial }: BlogEditorProps) {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <FFButton variant="outline" leftIcon={<Eye size={13} />} onClick={() => setShowPreview((v) => !v)}>
+          <FFButton variant="secondary" leftIcon={<Eye size={13} />} onClick={() => setShowPreview((v) => !v)}>
             {showPreview ? "Editör" : "Önizleme"}
           </FFButton>
-          <FFButton variant="outline" onClick={() => save("draft")} disabled={!canSave}>
+          <FFButton variant="secondary" onClick={() => save("draft")} disabled={!canSave}>
             Kaydet
           </FFButton>
           <FFButton
@@ -254,7 +254,7 @@ export function BlogEditor({ mode, initial }: BlogEditorProps) {
                 </button>
               )}
             </div>
-            <FFButton variant="outline" className="w-full" leftIcon={<ImageIcon size={13} />} onClick={() => setCoverPicker(true)}>
+            <FFButton variant="secondary" className="w-full" leftIcon={<ImageIcon size={13} />} onClick={() => setCoverPicker(true)}>
               {form.coverImage ? "Kapağı Değiştir" : "Kapak Görseli Seç"}
             </FFButton>
 

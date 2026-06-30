@@ -11,11 +11,12 @@ import { DesktopNav } from "./desktop-nav"
 import { MobileMenu } from "./mobile-menu"
 import { NAV_LINKS } from "./nav-data"
 import { useUIStore } from "@/lib/ui-store"
+import { useTheme } from "@/components/shared/theme-provider"
 import type { MegaMenuService } from "./services-mega-menu"
 
 
 interface FlixFlexNavbarProps {
-  siteSettings?:     Record<string, string>
+  siteSettings?: Record<string, string>
   megaMenuServices?: MegaMenuService[]
 }
 
@@ -25,6 +26,8 @@ export function FlixFlexNavbar({ siteSettings = {}, megaMenuServices = [] }: Fli
   const [megaOpen, setMegaOpen] = React.useState(false)
   const { scrollY } = useScroll()
   const setAppointmentModalOpen = useUIStore((state) => state.setAppointmentModalOpen)
+  const headerTone = useUIStore((state) => state.headerTone)
+  const { resolvedTheme } = useTheme()
 
 
   useMotionValueEvent(scrollY, "change", (y) => {
@@ -35,6 +38,11 @@ export function FlixFlexNavbar({ siteSettings = {}, megaMenuServices = [] }: Fli
   // transparent bar floating above a solid mega panel looks disconnected.
   // Height (and the mega panel offset) still follow `scrolled` only.
   const solid = scrolled || megaOpen
+
+  // While transparent, the text colour follows the background behind the header:
+  // a fixed dark/light hero overrides the theme, otherwise it tracks the theme.
+  const tone: "light" | "dark" = headerTone === "theme" ? resolvedTheme : headerTone
+  const darkBg = tone === "dark" // dark background → white text/buttons
 
   return (
     <>
@@ -59,9 +67,10 @@ export function FlixFlexNavbar({ siteSettings = {}, megaMenuServices = [] }: Fli
             {/* Logo */}
             <FlixFlexLogo
               size={scrolled ? "sm" : "md"}
-              logoUrl={solid ? siteSettings.site_logo : (siteSettings.site_logo_transparent || siteSettings.site_logo_white)}
+              logoUrl={(solid || !darkBg) ? siteSettings.site_logo : (siteSettings.site_logo_transparent || siteSettings.site_logo_white)}
               logoHeight={siteSettings.site_logo_height ? parseInt(siteSettings.site_logo_height) : undefined}
               transparent={!solid}
+              tone={tone}
             />
 
             {/* Desktop nav */}
@@ -69,6 +78,7 @@ export function FlixFlexNavbar({ siteSettings = {}, megaMenuServices = [] }: Fli
               <DesktopNav
                 links={NAV_LINKS}
                 transparent={!solid}
+                tone={tone}
                 headerHeight={scrolled ? 56 : 80}
                 onMegaOpenChange={setMegaOpen}
                 megaMenuServices={megaMenuServices}
@@ -79,7 +89,9 @@ export function FlixFlexNavbar({ siteSettings = {}, megaMenuServices = [] }: Fli
             <div className="flex items-center gap-2 md:gap-3">
               <div className={cn(
                 "hidden md:flex",
-                !solid && "[--foreground-muted:theme(colors.white/0.7)] [--border:theme(colors.white/0.15)]"
+                !solid && (darkBg
+                  ? "[--foreground-muted:theme(colors.white/0.7)] [--border:theme(colors.white/0.15)]"
+                  : "[--foreground-muted:theme(colors.black/0.7)] [--border:theme(colors.black/0.15)]")
               )}>
                 <ThemeToggle />
               </div>
@@ -94,7 +106,9 @@ export function FlixFlexNavbar({ siteSettings = {}, megaMenuServices = [] }: Fli
                     "px-4 py-2 text-[11px] font-medium transition-colors duration-300",
                     solid
                       ? "bg-[var(--ff-purple)] text-white border border-[var(--ff-purple)] hover:bg-[var(--ff-purple-hover)] hover:border-[var(--ff-purple-hover)] hover:shadow-[0_6px_24px_rgba(255,79,216,0.4)]"
-                      : "bg-white/10 backdrop-blur-md text-white border border-white/20 hover:bg-white/20 hover:border-white/40"
+                      : darkBg
+                        ? "bg-white/10 backdrop-blur-md text-white border border-white/20 hover:bg-white/20 hover:border-white/40"
+                        : "bg-foreground/10 backdrop-blur-md text-black border border-foreground/30 hover:bg-black/10 hover:border-black/40"
                   )}
                 >
                   Randevu Al
@@ -115,7 +129,9 @@ export function FlixFlexNavbar({ siteSettings = {}, megaMenuServices = [] }: Fli
                   "ff-shape-button lg:hidden w-9 h-9 flex items-center justify-center transition-all duration-300",
                   solid
                     ? "border border-[var(--foreground-faint)] text-[var(--foreground-faint)] hover:border-[var(--ff-purple)] hover:text-[var(--ff-purple)]"
-                    : "border border-white/20 text-white/80 hover:border-white hover:text-white bg-white/5"
+                    : darkBg
+                      ? "border border-white/20 text-white/80 hover:border-white hover:text-white bg-white/5"
+                      : "border border-black/20 text-black/80 hover:border-black hover:text-black bg-black/5"
                 )}
               >
                 <Menu size={18} />

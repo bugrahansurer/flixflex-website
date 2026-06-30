@@ -11,6 +11,8 @@ interface FlixFlexLogoProps {
   logoUrl?: string
   logoHeight?: number
   transparent?: boolean
+  /** Background tone behind the transparent header: 'dark' → white text, 'light' → black text. */
+  tone?: "light" | "dark"
 }
 
 const sizeMap = {
@@ -19,7 +21,7 @@ const sizeMap = {
   lg: { mark: "w-10 h-10 text-sm", text: "text-xl" },
 }
 
-export function FlixFlexLogo({ className, size = "md", logoUrl, logoHeight, transparent }: FlixFlexLogoProps) {
+export function FlixFlexLogo({ className, size = "md", logoUrl, logoHeight, transparent, tone = "dark" }: FlixFlexLogoProps) {
   const s = sizeMap[size]
 
   return (
@@ -73,7 +75,7 @@ export function FlixFlexLogo({ className, size = "md", logoUrl, logoHeight, tran
           <span
             className={cn(
               "font-display font-extrabold tracking-tight leading-none transition-colors duration-300",
-              transparent ? "text-white" : "text-[var(--foreground)]",
+              transparent ? (tone === "dark" ? "text-white" : "text-black") : "text-[var(--foreground)]",
               s.text
             )}
           >

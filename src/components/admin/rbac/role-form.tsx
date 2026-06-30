@@ -10,6 +10,7 @@ import { FFInput, FFTextarea } from "@/components/ui/ff-input"
 import { FFBadge } from "@/components/ui/ff-badge"
 import { createRoleSchema, updateRoleSchema, type CreateRoleData, type UpdateRoleData } from "@/lib/validators/role-schema"
 import { slugifyTr } from "@/lib/utils"
+import { IconAlertSquareRounded } from "@tabler/icons-react"
 
 interface RoleFormBaseProps {
   initial?: {
@@ -85,8 +86,9 @@ export function RoleForm({ initial }: RoleFormBaseProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       {isReadonly && (
-        <div className="ff-shape-button flex items-center gap-2 px-4 py-3 bg-amber-500/8 border border-amber-500/20 text-amber-400 text-xs">
-          <span className="font-semibold tracking-wide uppercase">Sistem Rolü</span>
+        <div className="flex items-center text-amber-400 text-xs">
+          <IconAlertSquareRounded size={18} className="mr-1" />
+          <span className="font-bold -mb-0.5">Sistem Rolü</span>
           <span>— Ad ve açıklama düzenlenemez.</span>
         </div>
       )}
