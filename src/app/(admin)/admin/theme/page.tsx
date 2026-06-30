@@ -12,6 +12,7 @@ import { SwatchRow } from "@/components/admin/colors/swatch-row"
 import prisma from "@/lib/prisma"
 import type { ColorPalette } from "@/lib/colors/types"
 import { Plus } from "@/lib/icons"
+import { getCan } from "@/lib/rbac/server-can"
 
 export const metadata: Metadata = { title: "Tema Düzeni" }
 
@@ -63,6 +64,7 @@ function swatchColors(p: ColorPalette): string[] {
 
 export default async function ThemePage() {
   const palettes = await fetchPalettes()
+  const can = await getCan()
 
   return (
     <div className="px-6 md:px-10 py-8 space-y-8">
@@ -76,13 +78,15 @@ export default async function ThemePage() {
             Temalarınızı oluşturun ve yönetin.
           </p>
         </div>
-        <Link
-          href="/admin/theme/yeni"
-          className="ff-btn ff-btn-primary text-[13px]"
-        >
-          <Plus size={14} />
-          Tema Oluştur
-        </Link>
+        {can("colors", "create") && (
+          <Link
+            href="/admin/theme/yeni"
+            className="ff-btn ff-btn-primary text-[13px]"
+          >
+            <Plus size={14} />
+            Tema Oluştur
+          </Link>
+        )}
       </div>
 
       {/* Palette grid */}

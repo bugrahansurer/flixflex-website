@@ -16,6 +16,7 @@ import { FFBadge } from "@/components/ui/ff-badge"
 import { UserForm } from "./user-form"
 import { ChangePasswordForm } from "./change-password-form"
 import { DeleteUserButton } from "./delete-user-button"
+import { Can } from "@/components/admin/rbac/permission-context"
 import { formatDate, formatRelativeTime } from "@/lib/utils"
 
 interface Role {
@@ -195,9 +196,11 @@ export function UserDrawer({ mode, roles, user, auditLogs = [], isSelf = false }
                 </section>
 
                 {/* Delete */}
-                <div className="pt-2 border-t border-[#E0E0E0]">
-                  <DeleteUserButton userId={user.id} userName={user.name ?? user.email} isSelf={isSelf} />
-                </div>
+                <Can resource="users" action="delete">
+                  <div className="pt-2 border-t border-[#E0E0E0]">
+                    <DeleteUserButton userId={user.id} userName={user.name ?? user.email} isSelf={isSelf} />
+                  </div>
+                </Can>
               </>
             ) : null}
           </div>

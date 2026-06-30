@@ -10,11 +10,14 @@ import { FFBadge } from "@/components/ui/ff-badge"
 import { FFButton } from "@/components/ui/ff-button"
 import { DeleteRoleButton } from "@/components/admin/rbac/delete-role-button"
 import { slugifyTr } from "@/lib/utils"
+import { getCan } from "@/lib/rbac/server-can"
 
 export const metadata: Metadata = { title: "Roller — FlixFlex Admin" }
 export const dynamic = "force-dynamic"
 
 export default async function RolesPage() {
+  const can = await getCan()
+
   let roles: Array<{
     id: string
     name: string
@@ -49,11 +52,13 @@ export default async function RolesPage() {
             Erişim seviyelerini ve sistem rollerini yönetin
           </p>
         </div>
-        <Link href="/admin/roller/yeni">
-          <FFButton variant="primary" size="sm" leftIcon={<Plus className="w-4 h-4" />}>
-            Yeni Rol
-          </FFButton>
-        </Link>
+        {can("roles", "create") && (
+          <Link href="/admin/roller/yeni">
+            <FFButton variant="primary" size="sm" leftIcon={<Plus className="w-4 h-4" />}>
+              Yeni Rol
+            </FFButton>
+          </Link>
+        )}
       </div>
 
       {/* Table */}
@@ -64,11 +69,13 @@ export default async function RolesPage() {
           <p className="text-xs text-[#666666] mt-1 mb-4">
             İlk rolü oluşturarak başlayın
           </p>
-          <Link href="/admin/roller/yeni">
-            <FFButton variant="outline" size="sm" leftIcon={<Plus className="w-4 h-4" />}>
-              Yeni Rol Oluştur
-            </FFButton>
-          </Link>
+          {can("roles", "create") && (
+            <Link href="/admin/roller/yeni">
+              <FFButton variant="outline" size="sm" leftIcon={<Plus className="w-4 h-4" />}>
+                Yeni Rol Oluştur
+              </FFButton>
+            </Link>
+          )}
         </div>
       ) : (
         <div className="ff-shape-container ff-card p-0 overflow-hidden">
@@ -128,22 +135,26 @@ export default async function RolesPage() {
 
               {/* Actions */}
               <div className="flex items-center justify-end gap-2">
-                <Link href={`/admin/roller/${slugifyTr(role.name)}`}>
-                  <FFButton
-                    className="text-[#ff4fd8]"
-                    variant="ghost"
-                    size="sm"
-                    leftIcon={<Edit2 className="w-3.5 h-3.5" />}
-                  >
-                    Düzenle
-                  </FFButton>
-                </Link>
-                <DeleteRoleButton
-                  roleId={role.id}
-                  roleName={role.name}
-                  isSystem={role.isSystem}
-                  userCount={role._count.users}
-                />
+                {can("roles", "update") && (
+                  <Link href={`/admin/roller/${slugifyTr(role.name)}`}>
+                    <FFButton
+                      className="text-[#ff4fd8]"
+                      variant="ghost"
+                      size="sm"
+                      leftIcon={<Edit2 className="w-3.5 h-3.5" />}
+                    >
+                      Düzenle
+                    </FFButton>
+                  </Link>
+                )}
+                {can("roles", "delete") && (
+                  <DeleteRoleButton
+                    roleId={role.id}
+                    roleName={role.name}
+                    isSystem={role.isSystem}
+                    userCount={role._count.users}
+                  />
+                )}
               </div>
             </div>
           ))}

@@ -9,12 +9,14 @@ import { Sparkles, Wand2, FileText, Activity, KeyRound, ArrowUpRight } from "@/l
 import { hasEnv } from "@/lib/env"
 import { listPosts } from "@/lib/ai/blog-store"
 import { cn } from "@/lib/utils"
+import { getCan } from "@/lib/rbac/server-can"
 
 export const metadata: Metadata = {
   title: "AI Asistan",
 }
 
 export default async function AIDashboardPage() {
+  const can = await getCan()
   const keyConfigured = hasEnv("ANTHROPIC_API_KEY")
   const aiPosts = await listPosts({ aiGenerated: true })
   const aiPostCount = aiPosts.length
@@ -36,20 +38,22 @@ export default async function AIDashboardPage() {
           </p>
         </div>
 
-        <Link
-          href="/admin/ai/studio"
-          className={cn(
-            "ff-shape-button inline-flex items-center gap-2 h-11 px-5 py-3",
-            "bg-[#ff4fd8] text-white border border-[#ff4fd8]",
-            "hover:bg-[#ff4fd8]/80 hover:shadow-[0_4px_14px_0_rgba(255,79,216,0.4)]",
-            "text-[13px] font-semibold",
-            "transition-all duration-200"
-          )}
-        >
-          <Wand2 size={15} />
-          Yeni Blog Üret
-          <ArrowUpRight size={14} />
-        </Link>
+        {can("ai", "create") && (
+          <Link
+            href="/admin/ai/studio"
+            className={cn(
+              "ff-shape-button inline-flex items-center gap-2 h-11 px-5 py-3",
+              "bg-[#ff4fd8] text-white border border-[#ff4fd8]",
+              "hover:bg-[#ff4fd8]/80 hover:shadow-[0_4px_14px_0_rgba(255,79,216,0.4)]",
+              "text-[13px] font-semibold",
+              "transition-all duration-200"
+            )}
+          >
+            <Wand2 size={15} />
+            Yeni Blog Üret
+            <ArrowUpRight size={14} />
+          </Link>
+        )}
       </div>
 
       {/* Hero card — AI Blog Asistanı */}
@@ -135,13 +139,15 @@ export default async function AIDashboardPage() {
           Hızlı Aksiyonlar
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <QuickAction
-            href="/admin/ai/studio"
-            icon={Wand2}
-            title="Yeni Blog Üret"
-            desc="6 adımlı sihirbazla başlıktan yayına"
-            primary
-          />
+          {can("ai", "create") && (
+            <QuickAction
+              href="/admin/ai/studio"
+              icon={Wand2}
+              title="Yeni Blog Üret"
+              desc="6 adımlı sihirbazla başlıktan yayına"
+              primary
+            />
+          )}
           <QuickAction
             href="/admin/blog"
             icon={FileText}

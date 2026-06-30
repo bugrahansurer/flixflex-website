@@ -19,6 +19,7 @@ import { FFButton } from "@/components/ui/ff-button"
 import { FFInput } from "@/components/ui/ff-input"
 import { UserDrawer } from "@/components/admin/rbac/user-drawer"
 import { formatRelativeTime } from "@/lib/utils"
+import { getCan } from "@/lib/rbac/server-can"
 
 export const dynamic = "force-dynamic"
 
@@ -60,6 +61,7 @@ export default async function UsersPage({ params, searchParams }: Props) {
   const limit = 20
 
   const session = await getMockSession()
+  const can = await getCan()
 
   if (!prisma) {
     return (
@@ -148,11 +150,13 @@ export default async function UsersPage({ params, searchParams }: Props) {
           <h1 className="font-display text-2xl font-extrabold text-[#0d0d0d]">Kullanıcılar</h1>
           <p className="text-xs text-[#888888] mt-1">{total} kullanıcı kayıtlı</p>
         </div>
-        <Link href={`${LIST_URL}/yeni`}>
-          <FFButton variant="primary" size="sm" leftIcon={<Plus className="w-4 h-4" />}>
-            Yeni Kullanıcı
-          </FFButton>
-        </Link>
+        {can("users", "create") && (
+          <Link href={`${LIST_URL}/yeni`}>
+            <FFButton variant="primary" size="sm" leftIcon={<Plus className="w-4 h-4" />}>
+              Yeni Kullanıcı
+            </FFButton>
+          </Link>
+        )}
       </div>
 
       {/* Search */}
@@ -179,11 +183,13 @@ export default async function UsersPage({ params, searchParams }: Props) {
               <UserX className="w-10 h-10 text-[#888888] mb-4" />
               <p className="text-sm font-medium text-[#888888]">Henüz kullanıcı yok</p>
               <p className="text-xs text-[#888888] mt-1 mb-4">İlk kullanıcıyı oluşturarak başlayın</p>
-              <Link href={`${LIST_URL}/yeni`}>
-                <FFButton variant="outline" size="sm" leftIcon={<Plus className="w-4 h-4" />}>
-                  Yeni Kullanıcı
-                </FFButton>
-              </Link>
+              {can("users", "create") && (
+                <Link href={`${LIST_URL}/yeni`}>
+                  <FFButton variant="outline" size="sm" leftIcon={<Plus className="w-4 h-4" />}>
+                    Yeni Kullanıcı
+                  </FFButton>
+                </Link>
+              )}
             </>
           )}
         </div>
@@ -245,16 +251,18 @@ export default async function UsersPage({ params, searchParams }: Props) {
                     </span>
 
                     <div className="flex justify-end">
-                      <Link href={`${LIST_URL}/${user.username}`}>
-                        <FFButton
-                          variant="ghost"
-                          size="sm"
-                          leftIcon={<Edit2 className="w-3.5 h-3.5 mr-2" />}
-                          className="flex items-center justify-center bg-transparent hover:bg-transparent border-none text-xs text-[#FF4FD8] hover:text-[#dd2bb7] hover:transition-colors duration-200"
-                        >
-                          Düzenle
-                        </FFButton>
-                      </Link>
+                      {can("users", "update") && (
+                        <Link href={`${LIST_URL}/${user.username}`}>
+                          <FFButton
+                            variant="ghost"
+                            size="sm"
+                            leftIcon={<Edit2 className="w-3.5 h-3.5 mr-2" />}
+                            className="flex items-center justify-center bg-transparent hover:bg-transparent border-none text-xs text-[#FF4FD8] hover:text-[#dd2bb7] hover:transition-colors duration-200"
+                          >
+                            Düzenle
+                          </FFButton>
+                        </Link>
+                      )}
                     </div>
                   </div>
                 )

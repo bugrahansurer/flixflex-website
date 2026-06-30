@@ -8,6 +8,7 @@ import { Plus, FileText, Pencil, Copy } from "@/lib/icons"
 import { formatDate } from "@/lib/utils"
 import type { PageData, SectionBlock } from "@/types/page-builder"
 import { DeletePageButton } from "./delete-page-button"
+import { getCan } from "@/lib/rbac/server-can"
 
 // ── Fetch helper ──────────────────────────────────
 async function getPages(): Promise<PageData[]> {
@@ -63,6 +64,7 @@ function StatusBadge({ status }: { status: "draft" | "published" }) {
 // ── Page ──────────────────────────────────────────
 export default async function SayfalarPage() {
   const pages = await getPages()
+  const can = await getCan()
 
   return (
     <div className="p-6 md:p-10 mx-auto">
@@ -76,13 +78,15 @@ export default async function SayfalarPage() {
             {pages.length} sayfa
           </p>
         </div>
-        <Link
-          href="/admin/sayfalar/yeni"
-          className="ff-shape-button inline-flex items-center justify-center h-9 gap-2 px-5 py-2.5 text-[13px] font-semibold bg-[#ff4fd8] text-white border border-[#ff4fd8] hover:bg-[#ff4fd8] transition-colors duration-150 w-full sm:w-auto"
-        >
-          <Plus size={14} />
-          Yeni Sayfa
-        </Link>
+        {can("pages", "create") && (
+          <Link
+            href="/admin/sayfalar/yeni"
+            className="ff-shape-button inline-flex items-center justify-center h-9 gap-2 px-5 py-2.5 text-[13px] font-semibold bg-[#ff4fd8] text-white border border-[#ff4fd8] hover:bg-[#ff4fd8] transition-colors duration-150 w-full sm:w-auto"
+          >
+            <Plus size={14} />
+            Yeni Sayfa
+          </Link>
+        )}
       </div>
 
       {/* Table */}
@@ -108,12 +112,14 @@ export default async function SayfalarPage() {
                 <p className="text-sm text-[#666666]">
                   Henüz sayfa yok
                 </p>
-                <Link
-                  href="/admin/sayfalar/yeni"
-                  className="mt-4 text-[11px] text-[#ff4fd8] underline underline-offset-2 hover:no-underline"
-                >
-                  İlk sayfayı oluştur
-                </Link>
+                {can("pages", "create") && (
+                  <Link
+                    href="/admin/sayfalar/yeni"
+                    className="mt-4 text-[11px] text-[#ff4fd8] underline underline-offset-2 hover:no-underline"
+                  >
+                    İlk sayfayı oluştur
+                  </Link>
+                )}
               </div>
             ) : (
               pages.map((page, idx) => (
@@ -151,21 +157,25 @@ export default async function SayfalarPage() {
 
                   {/* Actions */}
                   <div className="flex items-end gap-1">
-                    <Link
-                      href={`/admin/sayfalar/${page.slug === "/" ? "home" : page.slug}/edit`}
-                      className="ff-shape-button w-9 h-9 flex items-center justify-center border border-[#CCCCCC] text-[#666666] hover:border-[#ff4fd8] hover:text-[#ff4fd8] transition-colors duration-150"
-                      title="Düzenle"
-                    >
-                      <Pencil size={14} />
-                    </Link>
-                    <Link
-                      href={`/admin/sayfalar/yeni?copy=${page.id}`}
-                      className="ff-shape-button w-9 h-9 flex items-center justify-center border border-[#CCCCCC] text-[#666666] hover:border-[#e28b28] hover:text-[#e28b28] transition-colors duration-150"
-                      title="Kopyala"
-                    >
-                      <Copy size={14} />
-                    </Link>
-                    <DeletePageButton pageId={page.id} pageTitle={page.title} />
+                    {can("pages", "update") && (
+                      <Link
+                        href={`/admin/sayfalar/${page.slug === "/" ? "home" : page.slug}/edit`}
+                        className="ff-shape-button w-9 h-9 flex items-center justify-center border border-[#CCCCCC] text-[#666666] hover:border-[#ff4fd8] hover:text-[#ff4fd8] transition-colors duration-150"
+                        title="Düzenle"
+                      >
+                        <Pencil size={14} />
+                      </Link>
+                    )}
+                    {can("pages", "create") && (
+                      <Link
+                        href={`/admin/sayfalar/yeni?copy=${page.id}`}
+                        className="ff-shape-button w-9 h-9 flex items-center justify-center border border-[#CCCCCC] text-[#666666] hover:border-[#e28b28] hover:text-[#e28b28] transition-colors duration-150"
+                        title="Kopyala"
+                      >
+                        <Copy size={14} />
+                      </Link>
+                    )}
+                    {can("pages", "delete") && <DeletePageButton pageId={page.id} pageTitle={page.title} />}
                   </div>
                 </div>
               ))
