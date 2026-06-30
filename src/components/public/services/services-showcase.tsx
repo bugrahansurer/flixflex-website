@@ -138,13 +138,15 @@ export function ServicesShowcase({
 
                 {/* ── Bağlı alt hizmet mini kartları ── */}
                 {subs.length > 0 && (
-                  <div className="mt-3 grid grid-cols-2 gap-2.5 md:gap-3">
-                    {subs.map((sub) => (
+                  <div className="mt-3 grid grid-cols-3 gap-2.5 md:gap-3">
+                    {subs.map((sub) => {
+                      const subDesign = resolveMotionDesign({ motionDesign: sub.motionDesign, title: sub.label, iconKey: sub.iconKey })
+                      return (
                       <Link
                         key={sub.href}
                         href={sub.href}
                         className={cn(
-                          "group/sub relative flex items-stretch overflow-hidden ff-shape-container ff-card h-20 p-0",
+                          "group/sub relative flex items-stretch overflow-hidden ff-shape-container ff-card p-0",
                           "border border-[var(--border)] transition-[border-color,transform] duration-200",
                           "hover:-translate-y-0.5 hover:border-[var(--ff-purple)]/45",
                         )}
@@ -164,11 +166,12 @@ export function ServicesShowcase({
 
                         {/* Sağ kenar: minik motion ekran şeridi */}
                         <span aria-hidden className="relative w-[78px] flex-shrink-0 overflow-hidden border-l border-[var(--border)] sm:w-24">
-                          <MotionStage design={design} />
+                          <MotionStage design={subDesign} />
                           <span className="absolute inset-0 bg-gradient-to-r from-black/25 to-transparent" />
                         </span>
                       </Link>
-                    ))}
+                      )
+                    })}
                   </div>
                 )}
               </motion.div>

@@ -27,6 +27,8 @@ export interface SubServiceItem {
   iconKey: string
   /** Optional one-line description shown in the mega menu */
   description?: string
+  /** Alt hizmetin kendi motion design preset anahtarı (boş → adından otomatik) */
+  motionDesign?: string | null
 }
 
 export interface Service {

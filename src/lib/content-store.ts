@@ -135,6 +135,7 @@ export function mapService(item: ServiceMapInput, depth: number = 0): PublicServ
           href: `/hizmetler/${child.slug}`,
           iconKey: child.icon ?? "Globe",
           description: child.description ?? "",
+          motionDesign: child.motionDesign ?? null,
         }))
       : [],
     relatedPortfolio: item.portfolios
