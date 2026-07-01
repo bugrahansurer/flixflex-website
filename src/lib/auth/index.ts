@@ -109,7 +109,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           const rlKey = `${ip}:${emailInput}`
           const loginRl = await checkLimit(LOGIN, rlKey)
           if (!loginRl.allowed) {
-            console.warn("[auth] login rate limit exceeded", { ip, email: emailInput })
+            console.warn("[auth] login rate limit exceeded", { ip })
             return null
           }
         }
@@ -192,25 +192,14 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         //    enter.
         const DUMMY_HASH =
           "$2b$12$FidO4r0BBh4DMG0kdVDThuIIY3rIc1TT1VO20ImWEpuZF5WEfmkAi"
-        // [LOGIN-DEBUG] geçici — sorun teşhisi için
-        console.warn("[LOGIN-DEBUG] lookup", {
-          emailLooked: email.toLowerCase(),
-          userFound: !!user,
-          isActive: user?.isActive,
-          hasPassword: !!user?.password,
-          twoFA: user?.twoFactorEnabled,
-          nodeEnv: env.NODE_ENV,
-        })
 
         if (!user || !user.isActive || !user.password) {
           await bcrypt.compare(password, DUMMY_HASH)
-          console.warn("[LOGIN-DEBUG] reddedildi: kullanıcı yok/pasif/şifresiz")
           return null
         }
 
         // 5. Verify password using bcryptjs
         const ok = await bcrypt.compare(password, user.password)
-        console.warn("[LOGIN-DEBUG] şifre eşleşmesi:", ok)
         if (!ok) return null
 
         // 5b. Second factor — only enforced for accounts that enabled it.

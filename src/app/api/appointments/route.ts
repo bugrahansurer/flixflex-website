@@ -140,8 +140,6 @@ export async function POST(req: NextRequest) {
       },
     })
 
-    console.log("📅 [FlixFlex Appointment] New appointment created:", appointment)
-
     // Notify admins (respects notifications settings; never blocks the user).
     try {
       await notifyAdmins("appointment", {
