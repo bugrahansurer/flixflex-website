@@ -122,8 +122,9 @@ function Card({ item, index }: { item: PortfolioItem; index: number }) {
             <Image
               src={item.clientLogo}
               alt={item.client}
-              width={22}
-              height={22}
+              width={160}
+              height={160}
+              sizes="160px"
               className="h-[40px] w-fit max-w-40 flex-shrink-0 object-contain"
             />
           ) : (
