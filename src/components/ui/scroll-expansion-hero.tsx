@@ -9,6 +9,18 @@ import {
 import Image from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ChevronDown } from '@/lib/icons';
+import MuxPlayer from '@mux/mux-player-react';
+
+// Mux HLS (.m3u8) düz <video> ile Chrome/Firefox'ta oynamaz; MuxPlayer hls.js
+// içerir, Mux thumbnail'ını otomatik poster yapar (kart anında görünür) ve
+// adaptif başlar. stream.mux.com URL'sinden playbackId çıkarılır.
+function getMuxPlaybackId(url?: string): string | null {
+  if (!url) return null;
+  if (url.includes('stream.mux.com/') && !url.includes('token=')) {
+    return url.split('stream.mux.com/')[1].split('.m3u8')[0].split('?')[0];
+  }
+  return null;
+}
 
 export interface ScrollExpandMediaProps {
   mediaType?: 'video' | 'image';
@@ -261,19 +273,33 @@ export const ScrollExpandMedia = ({
               </div>
             ) : (
               <div className='relative w-full h-full pointer-events-none rounded-[inherit]'>
-                <video
-                  src={mediaSrc}
-                  poster={posterSrc}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload='auto'
-                  className='w-full h-full object-cover rounded-[inherit]'
-                  controls={false}
-                  disablePictureInPicture
-                  disableRemotePlayback
-                />
+                {getMuxPlaybackId(mediaSrc) ? (
+                  <MuxPlayer
+                    playbackId={getMuxPlaybackId(mediaSrc)!}
+                    streamType='on-demand'
+                    autoPlay='muted'
+                    muted
+                    loop
+                    playsInline
+                    poster={posterSrc || undefined}
+                    nohotkeys
+                    className='w-full h-full rounded-[inherit] [--controls:none] [--media-object-fit:cover]'
+                  />
+                ) : (
+                  <video
+                    src={mediaSrc}
+                    poster={posterSrc}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload='auto'
+                    className='w-full h-full object-cover rounded-[inherit]'
+                    controls={false}
+                    disablePictureInPicture
+                    disableRemotePlayback
+                  />
+                )}
                 <div
                   className='absolute inset-0 z-10'
                   style={{ pointerEvents: 'none' }}
