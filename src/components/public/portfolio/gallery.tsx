@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { ease } from "@/lib/animations"
@@ -61,12 +62,12 @@ export function ProjectGallery({ gradient, accentColor, title, images }: Gallery
         >
           {block.src ? (
             /* Admin-uploaded image */
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src={block.src}
               alt={`${title} — görsel ${block.id}`}
-              loading="lazy"
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             />
           ) : (
             <>

@@ -1,6 +1,7 @@
 "use client"
 
 import { ArrowRight } from "@/lib/icons"
+import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { useState } from "react"
@@ -167,12 +168,12 @@ export function PortfolioGallery({
                       `,
                     }}
                   >
-                    <img
+                    <Image
                       src={image.src || "/placeholder.svg"}
                       alt={image.alt}
-                      className="w-full h-full object-cover object-left-top"
-                      loading="lazy"
-                      decoding="async"
+                      fill
+                      sizes="(max-width: 1024px) 320px, 384px"
+                      className="object-cover object-left-top"
                     />
                   </div>
                 </motion.div>
@@ -219,12 +220,12 @@ export function PortfolioGallery({
                           `,
                         }}
                       >
-                        <img
+                        <Image
                           src={image.src || "/placeholder.svg"}
                           alt={image.alt}
-                          className="w-full h-full object-cover object-left-top"
-                          loading="lazy"
-                          decoding="async"
+                          fill
+                          sizes="256px"
+                          className="object-cover object-left-top"
                         />
                       </div>
                     </div>

@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, ArrowRight } from "@/lib/icons"
 import { cn } from "@/lib/utils"
@@ -25,11 +26,12 @@ function NavSide({
       className="flex-1 block relative group min-h-[300px] md:min-h-[400px] overflow-hidden ff-shape-container border border-[var(--border)]"
     >
       {/* Background Image */}
-      <img
+      <Image
         src={item.coverImage || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800"}
         alt={item.title}
-        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-        loading="lazy"
+        fill
+        sizes="(max-width: 768px) 100vw, 50vw"
+        className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
       />
 
       {/* Dark Ambient Gradient Overlay */}
@@ -58,11 +60,13 @@ function NavSide({
         )}>
           {/* Logo or Initial */}
           {item.clientLogo ? (
-            <img
+            <Image
               src={item.clientLogo}
               alt={item.client ?? ""}
+              width={90}
+              height={20}
+              sizes="90px"
               className="h-5 w-auto max-w-[90px] object-contain filter brightness-0 invert opacity-80 group-hover:opacity-100 transition-opacity duration-300"
-              loading="lazy"
             />
           ) : (
             <div className="w-5 h-5 rounded-full bg-[var(--ff-purple)]/20 border border-[var(--ff-purple)]/40 flex items-center justify-center text-[10px] font-bold text-[var(--ff-purple)]">

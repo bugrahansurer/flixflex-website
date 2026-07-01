@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { ChevronRight } from "@/lib/icons"
@@ -63,12 +64,13 @@ export function ProjectHero({ project }: ProjectHeroProps) {
           {/* Client logo + category badge */}
           <motion.div variants={fadeInUp} className="mb-5 flex items-center gap-3">
             {clientLogo && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
+              <Image
                 src={clientLogo}
                 alt={`${client} logo`}
+                width={140}
+                height={32}
+                sizes="140px"
                 className="h-8 w-auto max-w-[140px] object-contain"
-                loading="lazy"
               />
             )}
           </motion.div>
