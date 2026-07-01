@@ -155,9 +155,12 @@ export async function listPublishedPortfolio(): Promise<PublicPortfolioItem[]> {
       where: { isPublished: true },
       include: { services: true },
       orderBy: [{ order: "asc" }, { createdAt: "desc" }],
+      take: 200,
     })
 
-    return rows.length ? rows.map(mapPortfolio) : PORTFOLIO
+    // DB başarılıysa gerçek sonucu döndür (boşsa boş) — statik demo maskesi yok.
+    // Statik fallback yalnızca DB hatasında (catch) devreye girer.
+    return rows.map(mapPortfolio)
   } catch (err) {
     console.error('[listPublishedPortfolio] DB error:', err)
     return PORTFOLIO
@@ -198,9 +201,10 @@ export async function listPublishedServices(): Promise<PublicService[]> {
         parent: { select: { id: true, title: true } },
       },
       orderBy: [{ order: "asc" }, { createdAt: "asc" }],
+      take: 300,
     })
 
-    return rows.length ? rows.map(mapService) : SERVICES
+    return rows.map(mapService)
   } catch (err) {
     console.error('[listPublishedServices] DB error:', err)
     return SERVICES
@@ -219,9 +223,10 @@ export async function listPublishedChildServices(): Promise<PublicService[]> {
         parent: { select: { id: true, title: true } },
       },
       orderBy: [{ order: "asc" }, { createdAt: "asc" }],
+      take: 300,
     })
 
-    return rows.length ? rows.map(mapService) : SERVICES
+    return rows.map(mapService)
   } catch (err) {
     console.error('[listPublishedChildServices] DB error:', err)
     return SERVICES
@@ -243,9 +248,10 @@ export async function listPublishedMainServices(): Promise<PublicService[]> {
         parent: { select: { id: true, title: true } },
       },
       orderBy: [{ order: "asc" }, { createdAt: "asc" }],
+      take: 100,
     })
 
-    return rows.length ? rows.map((item) => mapService(item)) : SERVICES.filter((s) => !s.parentId)
+    return rows.map((item) => mapService(item))
   } catch (err) {
     console.error('[listPublishedMainServices] DB error:', err)
     return SERVICES.filter((s) => !s.parentId)
@@ -309,8 +315,9 @@ export async function listPublishedBlogPosts(): Promise<PublicBlogPost[]> {
     const rows = await prisma.blogPost.findMany({
       where: { status: "published" },
       orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
+      take: 300,
     })
-    return rows.length ? rows.map(mapBlogPost) : BLOG_POSTS
+    return rows.map(mapBlogPost)
   } catch (err) {
     console.error("[listPublishedBlogPosts] DB error:", err)
     return BLOG_POSTS

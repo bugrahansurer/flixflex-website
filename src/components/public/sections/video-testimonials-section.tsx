@@ -12,7 +12,7 @@ import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { Eyebrow } from "@/components/ui/eyebrow"
 import { Quote } from "@/lib/icons"
-import MuxPlayer from "@mux/mux-player-react"
+import MuxPlayer from "@/components/ui/lazy-mux-player"
 
 export interface VideoTestimonialItem {
   videoUrl?: string

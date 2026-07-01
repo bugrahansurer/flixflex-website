@@ -9,7 +9,7 @@ import {
 import Image from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ChevronDown } from '@/lib/icons';
-import MuxPlayer from '@mux/mux-player-react';
+import MuxPlayer from "@/components/ui/lazy-mux-player";
 
 // Mux HLS (.m3u8) düz <video> ile Chrome/Firefox'ta oynamaz; MuxPlayer hls.js
 // içerir, Mux thumbnail'ını otomatik poster yapar (kart anında görünür) ve

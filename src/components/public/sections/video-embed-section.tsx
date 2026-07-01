@@ -4,7 +4,7 @@ import * as React from "react"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { fadeInUp } from "@/lib/animations"
-import MuxPlayer from "@mux/mux-player-react"
+import MuxPlayer from "@/components/ui/lazy-mux-player"
 
 const isMuxUrl = (url: string) => url.includes("mux.com")
 const getMuxData = (url: string) => {

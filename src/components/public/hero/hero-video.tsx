@@ -8,7 +8,7 @@ import { AnimatedHeading } from "@/components/ui"
 import { fadeInUp, withDelay } from "@/lib/animations"
 import { cn } from "@/lib/utils"
 import { ScrollIndicator } from "./scroll-indicator"
-import MuxPlayer from "@mux/mux-player-react"
+import MuxPlayer from "@/components/ui/lazy-mux-player"
 
 // Helper to extract playbackId or identify if it's a full URL
 const getMuxData = (url: string) => {

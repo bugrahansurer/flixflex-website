@@ -9,7 +9,7 @@ import {
   type MotionValue,
   useReducedMotion,
 } from "framer-motion"
-import MuxPlayer from "@mux/mux-player-react"
+import MuxPlayer from "@/components/ui/lazy-mux-player"
 import { cn } from "@/lib/utils"
 import { useMediaQuery } from "@/hooks/use-media-query"
 
