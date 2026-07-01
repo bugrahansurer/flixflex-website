@@ -2,7 +2,7 @@
 
 import React from "react"
 import Link from "next/link"
-import { motion } from "framer-motion"
+import { motion, useReducedMotion, useInView } from "framer-motion"
 import { ArrowUpRight } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 import { BackgroundPaths } from "@/components/ui/background-paths"
@@ -107,6 +107,87 @@ function CornerAccents() {
   )
 }
 
+// ── Growth grafiği — büyümeyi ima eden zarif ambient katman ─────
+// Yükselen çizgi görünüme girince çizilir (framer pathLength — tek seferlik,
+// loop değil), altında yumuşak alan dolgusu, ucunda nabız atan zirve noktası.
+function GrowthGraph({ dark }: { dark: boolean }) {
+  const reduce = useReducedMotion()
+  const line =
+    "M0,368 C220,352 340,318 470,268 C610,214 740,150 870,112 C980,84 1050,64 1130,46"
+  const area = `${line} L1130,400 L0,400 Z`
+  return (
+    <div aria-hidden className="absolute inset-x-0 bottom-0 h-[62%] pointer-events-none overflow-hidden">
+      <svg viewBox="0 0 1200 400" preserveAspectRatio="none" className="h-full w-full" style={{ opacity: dark ? 0.75 : 0.6 }}>
+        <defs>
+          <linearGradient id="ff-cta-growth-area" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(255,79,216,0.16)" />
+            <stop offset="100%" stopColor="rgba(255,79,216,0)" />
+          </linearGradient>
+        </defs>
+        <motion.path
+          d={area}
+          fill="url(#ff-cta-growth-area)"
+          initial={reduce ? false : { opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 1.2, delay: 0.5 }}
+        />
+        <motion.path
+          d={line}
+          fill="none"
+          stroke="rgba(255,79,216,0.6)"
+          strokeWidth={2.5}
+          strokeLinecap="round"
+          vectorEffect="non-scaling-stroke"
+          initial={reduce ? false : { pathLength: 0 }}
+          whileInView={{ pathLength: 1 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
+        />
+      </svg>
+      {/* Zirve noktası — çizgi ucunda (~94% w, 11% h) */}
+      <span className="ff-cta-peak absolute" style={{ left: "93.2%", top: "9%" }}>
+        <span className="block h-2.5 w-2.5 rounded-full" style={{ background: "#FF4FD8", boxShadow: "0 0 14px 3px rgba(255,79,216,0.6)" }} />
+      </span>
+    </div>
+  )
+}
+
+// ── Zirve sayacı — ince, büyümeyi ima eden +%340 rozet ──────────
+function PeakCounter() {
+  const ref = React.useRef<HTMLDivElement>(null)
+  const inView = useInView(ref, { once: true, margin: "-60px" })
+  const [n, setN] = React.useState(0)
+  React.useEffect(() => {
+    if (!inView) return
+    let cur = 0
+    const id = setInterval(() => {
+      cur += 8
+      if (cur >= 340) { cur = 340; clearInterval(id) }
+      setN(cur)
+    }, 22)
+    return () => clearInterval(id)
+  }, [inView])
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 8 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: 0.7 }}
+      className={cn(
+        "ff-shape-container pointer-events-none absolute right-6 md:right-10 top-[34%]",
+        "flex items-center gap-1.5 px-2.5 py-1",
+        "border border-[var(--ff-purple)]/30 bg-[var(--ff-purple)]/[0.08] backdrop-blur-md",
+      )}
+    >
+      <ArrowUpRight size={12} className="text-[var(--ff-purple)]" />
+      <span className="text-[11px] font-bold tabular-nums text-[var(--ff-purple)]">+{n}%</span>
+      <span className="text-[10px] text-[var(--foreground-muted)]">büyüme</span>
+    </motion.div>
+  )
+}
+
 // ── CTASection ─────────────────────────────────────────────────
 export function CTASection({
   eyebrow = DEFAULT_EYEBROW,
@@ -132,6 +213,10 @@ export function CTASection({
       {isDark ? <StarField className="z-0" /> : <GeometricGrid dark={isDark} />}
       <AuraBlobs dark={isDark} />
       {isDark && <BackgroundPaths intensity="light" />}
+
+      {/* Growth grafiği — büyümeyi ima eden zarif ambient katman */}
+      <GrowthGraph dark={isDark} />
+      <PeakCounter />
 
       {/* Corner marks */}
       <div className="absolute inset-6 pointer-events-none">
