@@ -326,7 +326,7 @@ export function IntegrationForm({ initialData }: { initialData: IntegrationsData
             disabled={loading}
             leftIcon={loading ? <Loader2 className="animate-spin" size={16} /> : <Save size={16} />}
           >
-            {loading ? "Kaydediliyor..." : "Tüm Entegrasyonları Kaydet"}
+            {loading ? "Kaydediliyor..." : "Kaydet"}
           </FFButton>
         </div>
       </Can>
