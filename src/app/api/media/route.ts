@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { z } from "zod"
 import { prisma } from "@/lib/prisma"
 import { del } from "@vercel/blob"
 import { auth } from "@/lib/auth"
@@ -54,8 +55,9 @@ export async function DELETE(req: Request) {
   if (!prisma) return NextResponse.json({ error: "Veritabanı bağlantısı yok" }, { status: 503 })
 
   try {
-    const { id } = await req.json()
-    if (!id) return NextResponse.json({ error: "ID gerekli" }, { status: 400 })
+    const parsed = z.object({ id: z.string().min(1).max(64) }).safeParse(await req.json().catch(() => ({})))
+    if (!parsed.success) return NextResponse.json({ error: "Geçersiz istek" }, { status: 400 })
+    const { id } = parsed.data
 
     const media = await prisma.media.findUnique({ where: { id } })
     if (!media) return NextResponse.json({ error: "Bulunamadı" }, { status: 404 })
@@ -86,8 +88,13 @@ export async function PATCH(req: Request) {
   if (!prisma) return NextResponse.json({ error: "Veritabanı bağlantısı yok" }, { status: 503 })
 
   try {
-    const { id, folderId, title } = await req.json()
-    if (!id) return NextResponse.json({ error: "ID gerekli" }, { status: 400 })
+    const parsed = z.object({
+      id: z.string().min(1).max(64),
+      folderId: z.string().max(64).nullable().optional(),
+      title: z.string().max(200).optional(),
+    }).safeParse(await req.json().catch(() => ({})))
+    if (!parsed.success) return NextResponse.json({ error: "Geçersiz istek" }, { status: 400 })
+    const { id, folderId, title } = parsed.data
 
     const media = await prisma.media.update({
       where: { id },

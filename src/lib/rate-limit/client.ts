@@ -27,7 +27,18 @@ function buildRedis(): Redis | null {
   const url   = process.env.UPSTASH_REDIS_REST_URL
   const token = process.env.UPSTASH_REDIS_REST_TOKEN
 
-  if (!url || !token) return null
+  if (!url || !token) {
+    // Prod'da Redis yoksa rate-limit in-memory'e düşer: her serverless instance
+    // kendi sayacını tutar (brute-force/spam koruması instance sayısıyla zayıflar,
+    // cold-start'ta sıfırlanır). Deploy sırasında Upstash env'lerini set et.
+    if (process.env.NODE_ENV === "production") {
+      console.error(
+        "[rate-limit/client] UYARI: UPSTASH_REDIS_REST_URL/TOKEN prod'da YOK — " +
+        "rate limit dağıtık değil (in-memory, instance başına). Upstash/Vercel KV env'lerini ayarlayın.",
+      )
+    }
+    return null
+  }
 
   try {
     return new Redis({ url, token })

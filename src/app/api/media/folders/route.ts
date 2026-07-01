@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { z } from "zod"
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 import { hasPermission } from "@/lib/rbac/permissions"
@@ -45,12 +46,14 @@ export async function POST(request: Request) {
   if (!prisma) return NextResponse.json({ error: "Veritabanı bağlantısı yok" }, { status: 503 })
 
   try {
-    const body = await request.json()
-    const { name, parentId } = body
-
-    if (!name) {
-      return NextResponse.json({ error: "Klasör adı gerekli" }, { status: 400 })
+    const parsed = z.object({
+      name: z.string().trim().min(1).max(100),
+      parentId: z.string().max(64).nullable().optional(),
+    }).safeParse(await request.json().catch(() => ({})))
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Geçersiz klasör adı" }, { status: 400 })
     }
+    const { name, parentId } = parsed.data
 
     const folder = await prisma.mediaFolder.create({
       data: {

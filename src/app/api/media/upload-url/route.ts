@@ -99,6 +99,6 @@ export async function POST(req: Request) {
     }
   } catch (err: any) {
     console.error("[media/upload-url GLOBAL_FATAL]", err)
-    return NextResponse.json({ error: "Sunucu hatası", details: err.message }, { status: 500 })
+    return NextResponse.json({ error: "Sunucu hatası" }, { status: 500 })
   }
 }
