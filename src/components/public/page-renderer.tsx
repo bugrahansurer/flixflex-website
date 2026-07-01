@@ -397,7 +397,6 @@ export function PageRenderer({ sections, portfolioItems, servicesItems, blogPost
   const { setMobileDockVisible } = useUIStore()
   const setHeaderTone = useUIStore((s) => s.setHeaderTone)
   const sectionRefs = React.useRef<Map<string, HTMLElement>>(new Map())
-  const intersectionRatios = React.useRef<Map<string, number>>(new Map())
 
   const visibleSections = React.useMemo(() => {
     return [...sections]
@@ -415,42 +414,42 @@ export function PageRenderer({ sections, portfolioItems, servicesItems, blogPost
   }, [firstSectionType, setHeaderTone])
 
   React.useEffect(() => {
+    // Yalnızca "Mobil Dock Gizle" seçeneği aktif section'lar dock'u gizleyebilir.
+    const hideSections = visibleSections.filter(
+      (s) => (s.props as { hideMobileDock?: boolean } | undefined)?.hideMobileDock === true,
+    )
+
+    // Hiçbir section dock'u gizlemiyorsa dock DAİMA görünür (stabil, titremesiz).
+    if (hideSections.length === 0) {
+      setMobileDockVisible(true)
+      return
+    }
+
+    const hideIds = new Set(hideSections.map((s) => s.id))
+    // Bir gizle-section, viewport'un alt şeridinde (dock'un oturduğu bölge) mi?
+    const inDockZone = new Map<string, boolean>()
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          const sectionId = (entry.target as HTMLElement).dataset.sectionId
-          if (sectionId) {
-            intersectionRatios.current.set(sectionId, entry.intersectionRatio)
-          }
+          const id = (entry.target as HTMLElement).dataset.sectionId
+          if (id) inDockZone.set(id, entry.isIntersecting)
         })
-
-        // Find the section that is most visible
-        let maxRatio = -1
-        let mostVisibleSectionId = ""
-
-        intersectionRatios.current.forEach((ratio, id) => {
-          if (ratio > maxRatio) {
-            maxRatio = ratio
-            mostVisibleSectionId = id
-          }
+        // Gizle-section'lardan biri dock bölgesindeyse dock gizlenir; değilse görünür.
+        let hide = false
+        inDockZone.forEach((present) => {
+          if (present) hide = true
         })
-
-        if (mostVisibleSectionId) {
-          const mostVisibleSection = visibleSections.find(s => s.id === mostVisibleSectionId)
-          if (mostVisibleSection) {
-            const props = (mostVisibleSection.props as any) || {}
-            const hideDock = props.hideMobileDock === true
-            setMobileDockVisible(!hideDock)
-          }
-        }
+        setMobileDockVisible(!hide)
       },
-      {
-        threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
-        rootMargin: "-20% 0px -20% 0px"
-      }
+      // Sadece viewport'un alt %15'lik şeridini izle (dock burada durur). Tek eşikli
+      // giriş/çıkış → "en görünür section" flip'i yok, titreme biter.
+      { threshold: 0, rootMargin: "-85% 0px 0px 0px" },
     )
 
-    sectionRefs.current.forEach((el) => observer.observe(el))
+    sectionRefs.current.forEach((el, id) => {
+      if (hideIds.has(id)) observer.observe(el)
+    })
 
     return () => observer.disconnect()
   }, [visibleSections, setMobileDockVisible])
