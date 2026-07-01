@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { motion } from "framer-motion"
 import { Sparkles, ArrowUpRight, Clock } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 import { formatRelativeTime } from "@/lib/utils"
@@ -46,11 +45,7 @@ export function AiStatusWidget() {
             {/* Animated pulse dot */}
             <span className="relative flex h-2.5 w-2.5">
               {running && (
-                <motion.span
-                  className="absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"
-                  animate={{ scale: [1, 1.8, 1], opacity: [0.75, 0, 0.75] }}
-                  transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-                />
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
               )}
               <span
                 className={cn(
@@ -111,7 +106,7 @@ export function AiStatusWidget() {
             "transition-all duration-200"
           )}
         >
-          Yeni Yazı Üret
+          Yeni Blog Yazısı Üret
           <ArrowUpRight
             size={13}
             className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200"

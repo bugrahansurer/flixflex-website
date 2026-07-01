@@ -1,6 +1,5 @@
 "use client"
 
-import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 
 interface FFMarqueeProps {
@@ -12,6 +11,8 @@ interface FFMarqueeProps {
 }
 
 // Sonsuz yatay kayan şerit — logolar, taglar vs.
+// Saf CSS: içerik 2x render edilir, track translateX(-50%) ile kusursuz döngü yapar.
+// (React 19 Strict Mode'da framer'ın repeat:Infinity loop'ları güvenilir değil.)
 export function FFMarquee({
   items,
   speed = 40,
@@ -24,18 +25,19 @@ export function FFMarquee({
 
   return (
     <div className={cn("overflow-hidden flex", className)} aria-hidden>
-      <motion.div
-        className="flex shrink-0"
-        style={{ gap }}
-        animate={{ x: direction === "left" ? [0, -((items.length * 120) + gap * items.length)] : [0, ((items.length * 120) + gap * items.length)] }}
-        transition={{ duration, repeat: Infinity, ease: "linear" }}
+      <div
+        className={cn(
+          "flex shrink-0 w-max",
+          direction === "left" ? "ff-marquee-track" : "ff-marquee-track-reverse"
+        )}
+        style={{ gap, ["--ff-marquee-dur" as string]: `${duration}s` }}
       >
         {doubled.map((item, i) => (
           <div key={i} className="shrink-0">
             {item}
           </div>
         ))}
-      </motion.div>
+      </div>
     </div>
   )
 }

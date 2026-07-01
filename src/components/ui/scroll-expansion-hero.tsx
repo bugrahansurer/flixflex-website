@@ -382,13 +382,12 @@ export const ScrollExpandMedia = ({
           <span className='text-[10px] font-semibold uppercase tracking-[0.3em] text-white/70'>
             Kaydır
           </span>
-          <motion.span
-            animate={prefersReducedMotion ? undefined : { y: [0, 8, 0] }}
-            transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
-            className='text-white/80'
+          {/* Saf CSS bounce — React 19 Strict Mode'da framer repeat:Infinity güvenilir değil */}
+          <span
+            className={`text-white/80${prefersReducedMotion ? '' : ' animate-bounce'}`}
           >
             <ChevronDown size={22} strokeWidth={2} />
-          </motion.span>
+          </span>
         </motion.div>
       </div>
 

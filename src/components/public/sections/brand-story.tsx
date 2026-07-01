@@ -111,37 +111,17 @@ function PulseSeparator() {
     >
       {/* Vertical line */}
       <div className="relative w-px flex-1 bg-[var(--border)]">
-        <motion.span
-          className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-transparent via-[var(--ff-purple)] to-transparent"
-          animate={{ y: ["-12%", "120%"] }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
+        {/* Saf CSS loop — React 19 Strict Mode'da framer repeat:Infinity güvenilir değil */}
+        <span className="ff-brand-shimmer absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-transparent via-[var(--ff-purple)] to-transparent" />
       </div>
 
-      {/* Center node */}
-      <motion.div
+      {/* Center node — statik 45° dönük, boxShadow nabzı saf CSS */}
+      <div
         className={cn(
-          "absolute top-1/2 -translate-y-1/2",
-          "w-12 h-12 flex items-center justify-center",
-          "bg-[var(--background)] border border-[var(--ff-purple)]",
-          "shadow-[0_0_40px_rgba(255, 79, 216,0.45)]"
+          "ff-brand-node-pulse absolute top-1/2 -translate-y-1/2",
+          "w-12 h-12 flex items-center justify-center rotate-45",
+          "bg-[var(--background)] border border-[var(--ff-purple)]"
         )}
-        animate={{
-          rotate: 45,
-          boxShadow: [
-            "0 0 20px rgba(255, 79, 216,0.3)",
-            "0 0 50px rgba(255, 79, 216,0.6)",
-            "0 0 20px rgba(255, 79, 216,0.3)",
-          ],
-        }}
-        transition={{
-          rotate: { duration: 0.6, ease: [0.25, 0.1, 0.25, 1] },
-          boxShadow: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
-        }}
       >
         <span
           className="text-[var(--ff-purple)] text-lg font-bold"
@@ -149,7 +129,7 @@ function PulseSeparator() {
         >
           ×
         </span>
-      </motion.div>
+      </div>
     </div>
   )
 }

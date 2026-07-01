@@ -1189,3 +1189,89 @@
 /* CTA "growth" grafiği — zirve noktası ince nabız (framer draw-in ile birlikte) */
 @keyframes ff-cta-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 .ff-cta-peak { animation: ff-cta-pulse 2.2s ease-in-out infinite; }
+
+/* ── Framer repeat:Infinity → saf CSS dönüşümleri ──────────────────
+   React 19 Strict Mode'da framer'ın sonsuz loop'ları sessizce başlamayabiliyor;
+   bu yüzden aşağıdaki sonsuz animasyonlar saf CSS'e taşındı. */
+
+/* FFMarquee — seamless yatay kayan şerit (içerik 2x render edilir) */
+@keyframes ff-marquee-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes ff-marquee-right {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+.ff-marquee-track {
+  animation: ff-marquee-left var(--ff-marquee-dur, 20s) linear infinite;
+}
+.ff-marquee-track-reverse {
+  animation: ff-marquee-right var(--ff-marquee-dur, 20s) linear infinite;
+}
+
+/* BackgroundPaths — SVG path: dash akışı + opaklık nabzı (pathLength yerine dashoffset) */
+@keyframes ff-path-flow {
+  0% {
+    stroke-dashoffset: 200;
+    stroke-opacity: var(--ff-path-op-lo, 0.05);
+  }
+  50% {
+    stroke-opacity: var(--ff-path-op-hi, 0.1);
+  }
+  100% {
+    stroke-dashoffset: 0;
+    stroke-opacity: var(--ff-path-op-lo, 0.05);
+  }
+}
+.ff-path-flow {
+  stroke-dasharray: 200;
+  animation: ff-path-flow var(--ff-path-dur, 18s) linear infinite;
+  animation-delay: var(--ff-path-delay, 0s);
+}
+
+/* ScrollIndicator — aşağı akan nokta (y: -100% → 400%) */
+@keyframes ff-scroll-dot {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(400%); }
+}
+.ff-scroll-dot {
+  animation: ff-scroll-dot 1.8s ease-in-out infinite;
+}
+
+/* BrandStory — dikey shimmer (y: -12% → 120%) */
+@keyframes ff-brand-shimmer {
+  0% { transform: translateY(-12%); }
+  100% { transform: translateY(120%); }
+}
+.ff-brand-shimmer {
+  animation: ff-brand-shimmer 4s ease-in-out infinite;
+}
+
+/* BrandStory — merkez node boxShadow nabzı */
+@keyframes ff-brand-node-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 79, 216, 0.3); }
+  50% { box-shadow: 0 0 50px rgba(255, 79, 216, 0.6); }
+}
+.ff-brand-node-pulse {
+  animation: ff-brand-node-pulse 2.5s ease-in-out infinite;
+}
+
+/* ServiceHeroVisual — dış halka inset glow nabzı */
+@keyframes ff-svc-glow {
+  0%, 100% { box-shadow: inset 0 0 0px rgba(255, 79, 216, 0); }
+  50% { box-shadow: inset 0 0 40px rgba(255, 79, 216, 0.15); }
+}
+.ff-svc-glow {
+  animation: ff-svc-glow 3s ease-in-out infinite;
+}
+
+/* ServiceHeroVisual — iç kare boxShadow nabzı */
+@keyframes ff-svc-inner-glow {
+  0%, 100% { box-shadow: 0 0 0px rgba(255, 79, 216, 0); }
+  50% { box-shadow: 0 0 30px rgba(255, 79, 216, 0.35); }
+}
+.ff-svc-inner-glow {
+  animation: ff-svc-inner-glow 3s ease-in-out infinite;
+  animation-delay: 0.5s;
+}

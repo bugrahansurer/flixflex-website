@@ -1,6 +1,7 @@
 "use client"
 
-import { motion, useReducedMotion } from "framer-motion"
+import { useReducedMotion } from "framer-motion"
+import type { CSSProperties } from "react"
 
 // FlixFlex adaptation — mor geometrik yollar
 function FloatingPaths({ position }: { position: number }) {
@@ -36,24 +37,20 @@ function FloatingPaths({ position }: { position: number }) {
               strokeOpacity={path.opacity}
             />
           ) : (
-            <motion.path
+            // Saf CSS: pathLength framer'a özgü; stroke-dashoffset akışı + opaklık
+            // nabzıyla benzer görünüm. (React 19 Strict Mode'da framer loop güvenilir değil.)
+            <path
               key={path.id}
+              className="ff-path-flow"
               d={path.d}
               stroke={path.purple ? "var(--ff-purple)" : "#888888"}
               strokeWidth={path.width}
-              strokeOpacity={path.opacity}
-              initial={{ pathLength: 0.2, opacity: path.opacity * 0.5 }}
-              animate={{
-                pathLength: 1,
-                opacity: [path.opacity * 0.5, path.opacity, path.opacity * 0.5],
-                pathOffset: [0, 1, 0],
-              }}
-              transition={{
-                duration: 18 + (path.id % 8) * 3,
-                repeat: Infinity,
-                ease: "linear",
-                delay: path.id * 0.3,
-              }}
+              style={{
+                ["--ff-path-dur" as string]: `${18 + (path.id % 8) * 3}s`,
+                ["--ff-path-delay" as string]: `${path.id * 0.3}s`,
+                ["--ff-path-op-lo" as string]: `${path.opacity * 0.5}`,
+                ["--ff-path-op-hi" as string]: `${path.opacity}`,
+              } as CSSProperties}
             />
           )
         )}

@@ -29,41 +29,23 @@ export function ServiceHeroVisual({ slug, index }: ServiceHeroVisualProps) {
           "flex items-center justify-center"
         )}
       >
-        {/* Animated glow */}
-        <motion.div
-          className="absolute inset-0"
-          animate={{
-            boxShadow: [
-              "inset 0 0 0px rgba(255, 79, 216,0)",
-              "inset 0 0 40px rgba(255, 79, 216,0.15)",
-              "inset 0 0 0px rgba(255, 79, 216,0)",
-            ],
-          }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-        />
+        {/* Animated glow — saf CSS loop (React 19 Strict Mode'da framer güvenilir değil) */}
+        <div className="ff-svc-glow absolute inset-0" />
 
         {/* Inner square */}
-        <motion.div
+        <div
           className={cn(
-            "w-24 h-24 md:w-32 md:h-32",
+            "ff-svc-inner-glow w-24 h-24 md:w-32 md:h-32",
             "bg-[var(--surface)] border border-[var(--ff-purple)]/30",
             "flex items-center justify-center"
           )}
-          animate={{
-            boxShadow: [
-              "0 0 0px rgba(255, 79, 216,0)",
-              "0 0 30px rgba(255, 79, 216,0.35)",
-              "0 0 0px rgba(255, 79, 216,0)",
-            ],
-          }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
         >
           <Icon
             size={40}
             className="text-[var(--ff-purple)]"
             strokeWidth={1.5}
           />
-        </motion.div>
+        </div>
 
         {/* Service index badge */}
         <span

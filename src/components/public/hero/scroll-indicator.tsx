@@ -19,11 +19,8 @@ export function ScrollIndicator({ className }: { className?: string }) {
         Kaydır
       </span>
       <span className="relative w-px h-12 bg-[var(--border)] overflow-hidden">
-        <motion.span
-          className="absolute inset-x-0 top-0 h-3 bg-[var(--ff-purple)] rounded-full"
-          animate={{ y: ["-100%", "400%"] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-        />
+        {/* Saf CSS loop — React 19 Strict Mode'da framer repeat:Infinity güvenilir değil */}
+        <span className="ff-scroll-dot absolute inset-x-0 top-0 h-3 bg-[var(--ff-purple)] rounded-full" />
       </span>
     </motion.div>
   )
