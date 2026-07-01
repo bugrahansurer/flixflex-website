@@ -70,8 +70,7 @@ export function ManifestoSection({
         {/* Eyebrow */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-10%" }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="mb-7 flex justify-center"
         >
@@ -89,8 +88,7 @@ export function ManifestoSection({
               <motion.span
                 className={cn("inline-block", isHighlighted(w, highlight) && "ff-hero-gradient-text")}
                 initial={{ y: "115%" }}
-                whileInView={{ y: "0%" }}
-                viewport={{ once: true, margin: "-12%" }}
+                animate={{ y: "0%" }}
                 transition={{ duration: 0.65, delay: 0.1 + i * 0.05, ease: EASE }}
               >
                 {w}
@@ -103,8 +101,7 @@ export function ManifestoSection({
         {description && (
           <motion.p
             initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-10%" }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.35 }}
             className="mx-auto mt-7 max-w-2xl text-base md:text-lg leading-relaxed text-[var(--foreground-muted)]"
           >
@@ -119,8 +116,7 @@ export function ManifestoSection({
               <motion.span
                 key={k}
                 initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-8%" }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.45, delay: 0.55 + i * 0.1, ease: EASE }}
                 className="ff-shape-container inline-flex items-center gap-2 border border-[var(--ff-purple)]/30 bg-[var(--ff-purple)]/[0.06] px-4 py-2 text-sm font-semibold text-[var(--foreground)]"
               >
