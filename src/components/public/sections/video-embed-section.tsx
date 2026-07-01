@@ -5,20 +5,9 @@ import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { fadeInUp } from "@/lib/animations"
 import MuxPlayer from "@/components/ui/lazy-mux-player"
+import { getMuxData } from "@/lib/mux-url"
 
 const isMuxUrl = (url: string) => url.includes("mux.com")
-const getMuxData = (url: string) => {
-  if (!url) return { playbackId: "", src: "" }
-  if (url.startsWith("http")) {
-    const isSigned = url.includes("token=") || url.includes("signature=")
-    if (url.includes("stream.mux.com/") && !isSigned) {
-      const playbackId = url.split("stream.mux.com/")[1].split(".m3u8")[0].split("?")[0]
-      return { playbackId, src: "" }
-    }
-    return { playbackId: "", src: url }
-  }
-  return { playbackId: url, src: "" }
-}
 
 interface VideoEmbedSectionProps {
   headline?: string

@@ -10,6 +10,7 @@ import {
   useReducedMotion,
 } from "framer-motion"
 import MuxPlayer from "@/components/ui/lazy-mux-player"
+import { getMuxData } from "@/lib/mux-url"
 import { cn } from "@/lib/utils"
 import { useMediaQuery } from "@/hooks/use-media-query"
 
@@ -27,25 +28,6 @@ import { useMediaQuery } from "@/hooks/use-media-query"
 //     </HeroContent>
 //   </VideoHeroProvider>
 // ═══════════════════════════════════════════════════════════
-
-// ── Mux helper (reused pattern from hero-video.tsx) ────────
-const getMuxData = (url: string) => {
-  if (!url) return { playbackId: "", src: "" }
-
-  if (url.startsWith("http")) {
-    const isSigned = url.includes("token=") || url.includes("signature=")
-    if (url.includes("stream.mux.com/") && !isSigned) {
-      const playbackId = url
-        .split("stream.mux.com/")[1]
-        .split(".m3u8")[0]
-        .split("?")[0]
-      return { playbackId, src: "" }
-    }
-    return { playbackId: "", src: url }
-  }
-
-  return { playbackId: url, src: "" }
-}
 
 // ── Context ─────────────────────────────────────────────────
 interface VideoHeroContextValue {

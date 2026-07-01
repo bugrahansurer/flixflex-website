@@ -9,26 +9,7 @@ import { fadeInUp, withDelay } from "@/lib/animations"
 import { cn } from "@/lib/utils"
 import { ScrollIndicator } from "./scroll-indicator"
 import MuxPlayer from "@/components/ui/lazy-mux-player"
-
-// Helper to extract playbackId or identify if it's a full URL
-const getMuxData = (url: string) => {
-  if (!url) return { playbackId: "", src: "" }
-
-  // If it's a full URL and not a standard stream.mux.com playback link, treat it as src
-  if (url.startsWith("http")) {
-    const isSigned = url.includes("token=") || url.includes("signature=")
-
-    if (url.includes("stream.mux.com/") && !isSigned) {
-      const playbackId = url.split("stream.mux.com/")[1].split(".m3u8")[0].split("?")[0]
-      return { playbackId, src: "" }
-    }
-    // It's a full URL from manifest, signed URL, or other source
-    return { playbackId: "", src: url }
-  }
-
-  // It's just a playbackId
-  return { playbackId: url, src: "" }
-}
+import { getMuxData } from "@/lib/mux-url"
 
 interface HeroVideoSectionProps {
   title?: string

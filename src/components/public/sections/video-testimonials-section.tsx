@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils"
 import { Eyebrow } from "@/components/ui/eyebrow"
 import { Quote } from "@/lib/icons"
 import MuxPlayer from "@/components/ui/lazy-mux-player"
+import { getMuxPlaybackId } from "@/lib/mux-url"
 
 export interface VideoTestimonialItem {
   videoUrl?: string
@@ -29,14 +30,6 @@ interface VideoTestimonialsSectionProps {
   items?: VideoTestimonialItem[]
 }
 
-// stream.mux.com/{ID}.m3u8 → playbackId (HLS'i MuxPlayer güvenilir oynatır)
-function getMuxPlaybackId(url?: string): string | null {
-  if (!url) return null
-  if (url.includes("stream.mux.com/") && !url.includes("token=")) {
-    return url.split("stream.mux.com/")[1].split(".m3u8")[0].split("?")[0]
-  }
-  return null
-}
 
 function initialsOf(name?: string): string {
   if (!name) return "FF"
@@ -54,7 +47,7 @@ function VideoCard({ item, index }: { item: VideoTestimonialItem; index: number 
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.55, delay: Math.min(index * 0.07, 0.35), ease: [0.16, 1, 0.3, 1] }}
       className={cn(
-        "group ff-shape-container ff-card overflow-hidden bg-surface/10 backdrop-blur-sm border border-[var(--border)]",
+        "group ff-shape-container ff-card p-0 overflow-hidden bg-surface/10 backdrop-blur-sm border border-[var(--border)]",
         "transition-[border-color,box-shadow,transform] duration-300",
         "hover:-translate-y-1 hover:border-[var(--ff-purple)]/45 hover:shadow-[0_20px_60px_rgba(255,79,216,0.14)]",
       )}

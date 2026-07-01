@@ -10,7 +10,6 @@ export type { NavLink }       from "./navbar/nav-data"
 export { FlixFlexFooter }     from "./footer"
 
 export { HeroSection, HeroVideoSection, AnimatedVideoHero, VideoHeroProvider, useVideoHero } from "./hero"
-export { StoryScroll } from "./story-scroll"
 export { ParallaxProvider } from "./parallax-provider"
 export { ParallaxScrolling } from "./parallax-scrolling"
 export { ScrollAnimation } from "./scroll-animation"

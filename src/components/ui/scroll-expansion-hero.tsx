@@ -10,17 +10,7 @@ import Image from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ChevronDown } from '@/lib/icons';
 import MuxPlayer from "@/components/ui/lazy-mux-player";
-
-// Mux HLS (.m3u8) düz <video> ile Chrome/Firefox'ta oynamaz; MuxPlayer hls.js
-// içerir, Mux thumbnail'ını otomatik poster yapar (kart anında görünür) ve
-// adaptif başlar. stream.mux.com URL'sinden playbackId çıkarılır.
-function getMuxPlaybackId(url?: string): string | null {
-  if (!url) return null;
-  if (url.includes('stream.mux.com/') && !url.includes('token=')) {
-    return url.split('stream.mux.com/')[1].split('.m3u8')[0].split('?')[0];
-  }
-  return null;
-}
+import { getMuxPlaybackId } from "@/lib/mux-url";
 
 export interface ScrollExpandMediaProps {
   mediaType?: 'video' | 'image';

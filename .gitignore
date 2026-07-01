@@ -71,3 +71,7 @@ prisma/backups/db_dump.sql
 
 # Playwright test artifacts
 .playwright-mcp/
+
+# Stray / geçici tasarım dosyaları
+.backups/
+/manifesto-*.jpeg
