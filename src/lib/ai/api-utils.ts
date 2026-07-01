@@ -74,6 +74,21 @@ export async function requirePermission(
     }
   }
 
+  // Super Admin bypasses all permission checks — consistent with the
+  // middleware and getCan() UI gate. (Otherwise a newly-added resource
+  // that isn't yet in the Super Admin JWT would 403 until re-seed/re-login.)
+  const roleName = session.user.roleName ?? session.user.role
+  if (roleName === "Super Admin") {
+    return {
+      ok: true,
+      ctx: {
+        userId: session.user.id,
+        email:  session.user.email ?? null,
+        role:   roleName,
+      },
+    }
+  }
+
   if (!hasPermission(session.user.permissions ?? [], resource, action)) {
     return {
       ok: false,
