@@ -47,9 +47,9 @@ function VideoCard({ item, index }: { item: VideoTestimonialItem; index: number 
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.55, delay: Math.min(index * 0.07, 0.35), ease: [0.16, 1, 0.3, 1] }}
       className={cn(
-        "group ff-shape-container ff-card p-0 overflow-hidden bg-surface/10 backdrop-blur-sm border border-[var(--border)]",
-        "transition-[border-color,box-shadow,transform] duration-300",
-        "hover:-translate-y-1 hover:border-[var(--ff-purple)]/45 hover:shadow-[0_20px_60px_rgba(255,79,216,0.14)]",
+        "group ff-shape-container ff-card p-0 overflow-hidden bg-transparent border-none",
+        "transition-[border-color,box-shadow,transform] duration-500",
+        "hover:-translate-y-2 hover:border-[var(--ff-purple)]/45",
       )}
     >
       {/* Video */}
@@ -84,7 +84,7 @@ function VideoCard({ item, index }: { item: VideoTestimonialItem; index: number 
 
       {/* Footer — kişi bilgisi */}
       <div className="flex items-center gap-3 pt-4">
-        <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[var(--ff-purple)]/12 font-display text-[13px] font-bold text-[var(--ff-purple)]">
+        <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-ff-purple/10 backdrop-blur-xs border border-ff-purple/32 font-display text-[13px] font-bold text-ff-purple">
           {initialsOf(item.name)}
         </span>
         <div className="min-w-0">
@@ -136,7 +136,7 @@ export function VideoTestimonialsSection({
         </div>
 
         {/* Video kartları */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6">
           {list.map((item, i) => (
             <VideoCard key={i} item={item} index={i} />
           ))}
