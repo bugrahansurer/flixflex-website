@@ -7,6 +7,7 @@ import { FFCursor } from "@/components/ui"
 import { ActivePaletteStyle } from "@/lib/colors/palette-provider"
 import { cn } from "@/lib/utils";
 import { Toaster } from "sonner"
+import { getSetting } from "@/lib/settings"
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -32,18 +33,25 @@ const metadataBaseUrl = process.env.NEXT_PUBLIC_APP_URL
   ? `https://${process.env.VERCEL_URL}`
   : "https://flixflex.com"
 
-export const metadata: Metadata = {
-  metadataBase: new URL(metadataBaseUrl),
-  title: { default: "FlixFlex — Next-Gen Reklam Ajansı", template: "%s | FlixFlex" },
-  description: "Hız. Güç. Esneklik. FlixFlex ile markanızı büyütün.",
-  openGraph: {
-    type: "website",
-    locale: "tr_TR",
-    siteName: "FlixFlex",
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630 }],
-  },
-  twitter: { card: "summary_large_image", site: "@flixflex" },
-  robots: { index: true, follow: true },
+export async function generateMetadata(): Promise<Metadata> {
+  // Favicon yalnızca admin'den (Ayarlar → Site → Site Favicon) seçildiyse gösterilir.
+  // Seçilmediyse hiç favicon tanımlanmaz — statik favicon.ico kaldırıldığı için
+  // Next/Vercel varsayılan faviconu da çıkmaz (site faviconsuz olur).
+  const favicon = await getSetting<string>("site_favicon")
+  return {
+    metadataBase: new URL(metadataBaseUrl),
+    title: { default: "FlixFlex — Next-Gen Reklam Ajansı", template: "%s | FlixFlex" },
+    description: "Hız. Güç. Esneklik. FlixFlex ile markanızı büyütün.",
+    openGraph: {
+      type: "website",
+      locale: "tr_TR",
+      siteName: "FlixFlex",
+      images: [{ url: "/og-image.jpg", width: 1200, height: 630 }],
+    },
+    twitter: { card: "summary_large_image", site: "@flixflex" },
+    robots: { index: true, follow: true },
+    icons: favicon ? { icon: favicon, shortcut: favicon, apple: favicon } : undefined,
+  }
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
