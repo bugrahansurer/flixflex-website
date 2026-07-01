@@ -16,20 +16,24 @@ export default async function MessagesPage() {
 
   let messages: ContactMessage[] = []
   if (prisma) {
-    const rows = await prisma.contactSubmission.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 300,
-    })
-    messages = rows.map((r) => ({
-      id: r.id,
-      name: r.name,
-      email: r.email,
-      company: r.company,
-      service: r.service,
-      message: r.message,
-      isRead: r.isRead,
-      createdAt: r.createdAt.toISOString(),
-    }))
+    try {
+      const rows = await prisma.contactSubmission.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 300,
+      })
+      messages = rows.map((r) => ({
+        id: r.id,
+        name: r.name,
+        email: r.email,
+        company: r.company,
+        service: r.service,
+        message: r.message,
+        isRead: r.isRead,
+        createdAt: r.createdAt.toISOString(),
+      }))
+    } catch (err) {
+      console.error("[MessagesPage] mesajlar yüklenemedi:", err)
+    }
   }
 
   return (

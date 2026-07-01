@@ -64,6 +64,7 @@ const EMPTY_DASH: DashboardData = {
 export async function getDashboardData(): Promise<DashboardData> {
   if (!prisma) return EMPTY_DASH
 
+  try {
   const now = new Date()
   const todayStart = startOfDay(now)
   const yesterdayStart = addDays(todayStart, -1)
@@ -158,6 +159,10 @@ export async function getDashboardData(): Promise<DashboardData> {
       createdAt: l.createdAt.toISOString(),
     })),
   }
+  } catch (err) {
+    console.error("[getDashboardData] DB erişilemedi, boş veri döndürülüyor:", err)
+    return EMPTY_DASH
+  }
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -167,19 +172,24 @@ export async function getDashboardData(): Promise<DashboardData> {
 export interface LiveStats { activeNow: number; todayViews: number; todayVisitors: number }
 
 export async function getLiveStats(): Promise<LiveStats> {
-  if (!prisma) return { activeNow: 0, todayViews: 0, todayVisitors: 0 }
-  const todayStart = startOfDay()
-  const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000)
-  // Single combined query — one connection.
-  const rows = await prisma.$queryRaw<{ active: number; views: number; visitors: number }[]>`
-    SELECT
-      COUNT(DISTINCT "sessionId") FILTER (WHERE "createdAt" >= ${fiveMinAgo})::int AS active,
-      COUNT(*) FILTER (WHERE "createdAt" >= ${todayStart})::int AS views,
-      COUNT(DISTINCT "visitorId") FILTER (WHERE "createdAt" >= ${todayStart})::int AS visitors
-    FROM page_views
-    WHERE "createdAt" >= ${todayStart} OR "createdAt" >= ${fiveMinAgo}`
-  const r = rows[0] ?? { active: 0, views: 0, visitors: 0 }
-  return { activeNow: r.active, todayViews: r.views, todayVisitors: r.visitors }
+  const empty = { activeNow: 0, todayViews: 0, todayVisitors: 0 }
+  if (!prisma) return empty
+  try {
+    const todayStart = startOfDay()
+    const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000)
+    // Single combined query — one connection.
+    const rows = await prisma.$queryRaw<{ active: number; views: number; visitors: number }[]>`
+      SELECT
+        COUNT(DISTINCT "sessionId") FILTER (WHERE "createdAt" >= ${fiveMinAgo})::int AS active,
+        COUNT(*) FILTER (WHERE "createdAt" >= ${todayStart})::int AS views,
+        COUNT(DISTINCT "visitorId") FILTER (WHERE "createdAt" >= ${todayStart})::int AS visitors
+      FROM page_views
+      WHERE "createdAt" >= ${todayStart} OR "createdAt" >= ${fiveMinAgo}`
+    const r = rows[0] ?? { active: 0, views: 0, visitors: 0 }
+    return { activeNow: r.active, todayViews: r.views, todayVisitors: r.visitors }
+  } catch {
+    return empty
+  }
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -238,15 +248,15 @@ export async function getReportData(fromInput: Date, toInput: Date): Promise<Rep
   const prevTo = new Date(from.getTime() - 1)
   const prevFrom = addDays(from, -days)
 
-  if (!prisma) {
-    return {
-      range: { from: isoDay(from), to: isoDay(to), days },
-      summary: { views: 0, uniqueVisitors: 0, sessions: 0, avgDurationSec: 0, viewsPerSession: 0, bounceRate: 0 },
-      deltas: { views: 0, uniqueVisitors: 0, sessions: 0, avgDuration: 0 },
-      daily: [], topPages: [], referrers: [], devices: [], browsers: [], countries: [],
-    }
+  const empty: ReportData = {
+    range: { from: isoDay(from), to: isoDay(to), days },
+    summary: { views: 0, uniqueVisitors: 0, sessions: 0, avgDurationSec: 0, viewsPerSession: 0, bounceRate: 0 },
+    deltas: { views: 0, uniqueVisitors: 0, sessions: 0, avgDuration: 0 },
+    daily: [], topPages: [], referrers: [], devices: [], browsers: [], countries: [],
   }
+  if (!prisma) return empty
 
+  try {
   // ── Batch 1 (4 concurrent): curr + prev metrics + daily + top pages ──
   const [curr, prev, dailyRows, pageRows] = await Promise.all([
     rangeMetrics(from, to),
@@ -325,5 +335,9 @@ export async function getReportData(fromInput: Date, toInput: Date): Promise<Rep
     devices: devRows.map((r) => ({ device: r.device || "Bilinmiyor", count: Number(r.count) })),
     browsers: browserRows.map((r) => ({ browser: r.browser || "Bilinmiyor", count: Number(r.count) })),
     countries: countryRows.map((r) => ({ country: r.country || "??", count: Number(r.count) })),
+  }
+  } catch (err) {
+    console.error("[getReportData] DB erişilemedi, boş rapor döndürülüyor:", err)
+    return empty
   }
 }
