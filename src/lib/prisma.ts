@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client"
-import { withAccelerate } from "@prisma/extension-accelerate"
 import { normalizeDatabaseUrlEnv } from "@/lib/database-url"
 
 const databaseUrl = normalizeDatabaseUrlEnv()
@@ -14,23 +13,16 @@ if (!hasDbUrl) {
   globalForPrisma.prisma = null
 }
 
-// Prisma Postgres is reached through Accelerate (external connection pooling)
-// via a `prisma+postgres://` / `prisma://` DATABASE_URL. This fixes the
-// connection-limit exhaustion of the low-limit direct connection. Migrations
-// still use the direct connection through DIRECT_URL (see prisma/schema.prisma).
-//
-// The extension is applied at RUNTIME but the value is typed as the base
-// PrismaClient: withAccelerate only ADDS methods (cacheStrategy) and keeps all
-// base query typing — the extended type otherwise degrades `include` relation
-// inference across the codebase. We don't use cacheStrategy, so the base type
-// is both correct and complete.
+// Standart Postgres (Neon). DATABASE_URL = havuzlanmış bağlantı (host'ta -pooler),
+// DIRECT_URL = migration'lar için doğrudan bağlantı (bkz. prisma/schema.prisma).
+// Neon'un PgBouncer havuzu eşzamanlı bağlantıları yönetir → ayrı bir Accelerate
+// katmanına gerek yok.
 const createPrisma = (): PrismaClient =>
   new PrismaClient({
-    // Sadece "warn": DB erişilemediğinde "query"+"error" seviyeleri terminali
-    // sele boğuyordu. Gerçek hatalar zaten uygulama katmanındaki try/catch'lerde
-    // bağlamıyla loglanıyor.
+    // Sadece "warn": DB kesintisinde "query"+"error" seviyeleri terminali sele
+    // boğuyordu; gerçek hatalar uygulama katmanındaki try/catch'lerde loglanıyor.
     log: process.env.NODE_ENV === "development" ? ["warn"] : ["error"],
-  }).$extends(withAccelerate()) as unknown as PrismaClient
+  })
 
 export const prisma: PrismaClient | null =
   globalForPrisma.prisma ?? (hasDbUrl ? createPrisma() : null)
