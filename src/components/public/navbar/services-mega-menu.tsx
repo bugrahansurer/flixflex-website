@@ -222,9 +222,9 @@ export function ServicesMegaMenuTrigger({
               className={cn(
                 // Full-bleed: fixed, spans the entire viewport width
                 "fixed inset-x-0 z-[55]",
-                // Visual — solid background even when the navbar is transparent
-                "bg-[var(--background)]/65 backdrop-blur-md border-b border-[var(--border)]",
-                "border-y border-[var(--border)]",
+                // Opak yüzey: header ile birebir aynı renk, dikişsiz süreklilik.
+                // (Cam efekti dokulu hero üstünde header'la tutmuyordu.)
+                "bg-[var(--background)] border-b border-[var(--border)]",
                 "shadow-[0_24px_80px_rgba(0,0,0,0.22)]",
               )}
             >

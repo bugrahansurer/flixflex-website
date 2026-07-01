@@ -595,7 +595,7 @@ export default function AdminAppointmentsPage() {
                       type="button"
                       onClick={() => setSelectedDay(dayNum)}
                       className={cn(
-                        "ff-shape-button aspect-square h-10 w-10 text-xs font-bold border flex flex-col items-center justify-center transition-all cursor-pointer",
+                        "ff-shape-button aspect-square w-full text-xs font-bold border flex flex-col items-center justify-center transition-all cursor-pointer",
                         active && "bg-[var(--ff-purple)] text-white border-[var(--ff-purple)] shadow-xs",
                         !active && !isWeekend && "bg-white border-[#E0E0E0] text-[#333333] hover:border-[var(--ff-purple)]/60 hover:text-[var(--ff-purple)]",
                         !active && isWeekend && "bg-[#F3F3F1] border-[#E8E8E8] text-[#999999] opacity-55"

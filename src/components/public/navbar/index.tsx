@@ -52,7 +52,11 @@ export function FlixFlexNavbar({ siteSettings = {}, megaMenuServices = [] }: Fli
           "fixed top-0 inset-x-0 z-50",
           "transition-all duration-300",
           solid
-            ? "bg-[var(--background)]/65 backdrop-blur-md border-b border-[var(--border)]"
+            ? megaOpen
+              // Mega menü açık: header ↔ mega panel tek sürekli opak yüzey (cam
+              // efekti dokulu hero üzerinde tutmuyordu; dikiş/alt border yok).
+              ? "bg-[var(--background)]"
+              : "bg-[var(--background)]/65 backdrop-blur-md border-b border-[var(--border)]"
             : "bg-transparent"
         )}
       >
