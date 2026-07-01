@@ -1226,8 +1226,12 @@
 }
 .ff-path-flow {
   stroke-dasharray: 200;
+  /* Base düşük opaklık + backwards fill: animasyon başlamadan (ilk paint +
+     staggered delay boyunca) parlak beyaz çizgi flaş'ı olmasın. */
+  stroke-opacity: var(--ff-path-op-lo, 0.05);
   animation: ff-path-flow var(--ff-path-dur, 18s) linear infinite;
   animation-delay: var(--ff-path-delay, 0s);
+  animation-fill-mode: backwards;
 }
 
 /* ScrollIndicator — aşağı akan nokta (y: -100% → 400%) */
