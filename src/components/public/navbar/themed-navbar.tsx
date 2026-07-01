@@ -22,13 +22,20 @@ import prisma from "@/lib/prisma"
 export async function ThemedNavbar() {
   const theme = await getActiveTheme()
 
-  const settingsData = prisma
-    ? await prisma.siteSetting.findMany({
+  // Resilience: a DB hiccup must not crash the navbar (and thus the whole
+  // public site). Fall back to empty settings → logo defaults to text mark.
+  let settingsData: { key: string; value: string }[] = []
+  if (prisma) {
+    try {
+      settingsData = await prisma.siteSetting.findMany({
         where: {
           key: { in: ["site_logo", "site_logo_white", "site_logo_transparent", "site_logo_height", "site_logo_mobile_height"] }
         }
       })
-    : []
+    } catch (err) {
+      console.error("[ThemedNavbar] site settings load failed, using defaults:", err)
+    }
+  }
 
   const siteSettings = settingsData.reduce((acc, s) => ({ ...acc, [s.key]: s.value }), {} as Record<string, string>)
 

@@ -15,8 +15,13 @@ export default async function PublicLayout({
 }: {
   children: React.ReactNode
 }) {
-  const settingsData = prisma
-    ? await prisma.siteSetting.findMany({
+  // Resilience: never let a DB hiccup (e.g. a paused free-tier database)
+  // crash the entire public site. On error we fall back to empty settings —
+  // the site renders with sane defaults instead of a 500.
+  let settingsData: { key: string; value: string }[] = []
+  if (prisma) {
+    try {
+      settingsData = await prisma.siteSetting.findMany({
         where: {
           key: { in: [
             "site_logo", "site_logo_white", "site_logo_height", "site_logo_mobile_height",
@@ -26,7 +31,10 @@ export default async function PublicLayout({
           ] }
         }
       })
-    : []
+    } catch (err) {
+      console.error("[PublicLayout] site settings load failed, using defaults:", err)
+    }
+  }
 
   const siteSettings = settingsData.reduce((acc, s) => ({ ...acc, [s.key]: s.value }), {} as Record<string, string>)
 
