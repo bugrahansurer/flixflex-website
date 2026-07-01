@@ -153,7 +153,7 @@ const SECTION_RENDERERS: Partial<Record<SectionType, (
   "story": (s) => <StorySection {...(s.props as any)} />,
   "values": (s) => <ValuesSection {...(s.props as any)} />,
   "why-us": (s) => <WhyUsSection {...(s.props as any)} />,
-  "faq": () => <FaqAccordion />,
+  "faq": (s) => <FaqAccordion {...(s.props as { headline?: string; subheadline?: string; items?: { question?: string; answer?: string }[] })} />,
   "services-list": (s, ctx) => (
     <section className="relative bg-[var(--background)] py-0">
       <div className="mx-auto max-w-[1440px] px-6 md:px-10 xl:px-16">

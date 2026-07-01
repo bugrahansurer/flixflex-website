@@ -97,7 +97,23 @@ function FaqItem({
   )
 }
 
-export function FaqAccordion() {
+interface FaqAccordionProps {
+  headline?: string
+  subheadline?: string
+  items?: { question?: string; answer?: string }[]
+}
+
+export function FaqAccordion({ headline, subheadline, items }: FaqAccordionProps = {}) {
+  // Props'tan gelen sorular varsa onları kullan; yoksa varsayılan sete düş.
+  const list = (items && items.length > 0)
+    ? items.map((it) => ({ question: it.question ?? "", answer: it.answer ?? "" }))
+    : FAQ_ITEMS.map((f) => ({ question: f.q, answer: f.a }))
+
+  const heading = (headline && headline.trim()) || "Sıkça Sorulan Sorular"
+  const words = heading.trim().split(" ")
+  const lead = words.slice(0, -1).join(" ")
+  const last = words[words.length - 1]
+
   return (
     <section className="bg-[var(--background)] py-20 md:py-28 border-t border-[var(--border)]">
       <div className="mx-auto max-w-[1440px] px-6 md:px-10 xl:px-16">
@@ -117,21 +133,23 @@ export function FaqAccordion() {
               variants={fadeInUp}
               className="font-display text-2xl md:text-3xl font-extrabold text-[var(--foreground)] leading-tight"
             >
-              Sıkça Sorulan{" "}
-              <span className="text-[var(--ff-purple)]">Sorular</span>
+              {lead}{lead && " "}<span className="text-[var(--ff-purple)]">{last}</span>
             </motion.h2>
             <motion.p
               variants={fadeInUp}
               className="mt-4 text-sm text-[var(--foreground-muted)] leading-relaxed"
             >
-              Cevap bulamadığınız sorularınız için{" "}
-              <a
-                href="mailto:hello@flixflex.com"
-                className="text-[var(--ff-purple)] hover:underline"
-              >
-                hello@flixflex.com
-              </a>{" "}
-              adresine yazabilirsiniz.
+              {subheadline && subheadline.trim() ? (
+                subheadline
+              ) : (
+                <>
+                  Cevap bulamadığınız sorularınız için{" "}
+                  <a href="mailto:hello@flixflex.com" className="text-[var(--ff-purple)] hover:underline">
+                    hello@flixflex.com
+                  </a>{" "}
+                  adresine yazabilirsiniz.
+                </>
+              )}
             </motion.p>
           </motion.div>
 
@@ -143,11 +161,11 @@ export function FaqAccordion() {
             viewport={{ once: true, margin: "-60px" }}
             className="lg:col-span-8"
           >
-            {FAQ_ITEMS.map((item, idx) => (
-              <motion.div key={item.q} variants={fadeInUp}>
+            {list.map((item, idx) => (
+              <motion.div key={`${idx}-${item.question}`} variants={fadeInUp}>
                 <FaqItem
-                  question={item.q}
-                  answer={item.a}
+                  question={item.question}
+                  answer={item.answer}
                   itemId={`item-${idx}`}
                 />
               </motion.div>

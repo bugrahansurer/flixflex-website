@@ -537,6 +537,60 @@ function VideoTestimonialItemsEditor({ value, onChange }: { value: unknown; onCh
   )
 }
 
+// ── SSS (FAQ) öğe editörü ─────────────────────────
+interface FaqItem { question?: string; answer?: string }
+
+function FaqItemsEditor({ value, onChange }: { value: unknown; onChange: (v: unknown) => void }) {
+  const items: FaqItem[] = Array.isArray(value) ? (value as FaqItem[]) : []
+  const patch = (i: number, p: Partial<FaqItem>) =>
+    onChange(items.map((it, idx) => (idx === i ? { ...it, ...p } : it)))
+  const add = () => onChange([...items, { question: "", answer: "" }])
+  const remove = (i: number) => onChange(items.filter((_, idx) => idx !== i))
+
+  const base = "ff-shape-container w-full bg-white border border-[#CCCCCC] text-[#333333] placeholder:text-[#999999] outline-none focus:border-[#ff4fd8] transition-colors duration-150"
+
+  return (
+    <div className="flex flex-col gap-2.5">
+      <span className="text-[10px] font-bold uppercase tracking-wider text-[#666666]">Sorular &amp; Cevaplar</span>
+
+      {items.map((it, i) => (
+        <div key={i} className="ff-shape-container flex flex-col gap-2 border border-[#CCCCCC] bg-[#f7f7f5] p-2.5">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-bold text-[#999999]">#{i + 1}</span>
+            <button type="button" onClick={() => remove(i)} className="text-[#999999] hover:text-[#e03434] transition-colors" title="Kaldır">
+              <X size={12} />
+            </button>
+          </div>
+          <input
+            className={cn(base, "px-2.5 py-1.5 text-[11.5px] font-semibold")}
+            placeholder="Soru"
+            value={it.question ?? ""}
+            onChange={(e) => patch(i, { question: e.target.value })}
+          />
+          <textarea
+            className={cn(base, "px-2.5 py-1.5 text-[11px] resize-y min-h-[64px]")}
+            placeholder="Cevap"
+            rows={3}
+            value={it.answer ?? ""}
+            onChange={(e) => patch(i, { answer: e.target.value })}
+          />
+        </div>
+      ))}
+
+      <button
+        type="button"
+        onClick={add}
+        className={cn(
+          "ff-shape-button h-9 flex items-center justify-center gap-1.5 border border-[#CCCCCC] bg-white",
+          "text-[11px] font-semibold text-[#333333] hover:border-[#ff4fd8] hover:text-[#ff4fd8] transition-all duration-150",
+        )}
+      >
+        + Soru Ekle
+      </button>
+    </div>
+  )
+}
+
 // ── Main component ────────────────────────────────
 export function PropertyEditor() {
   // Scoped selectors — avoids re-renders triggered by unrelated store slices
@@ -618,6 +672,17 @@ export function PropertyEditor() {
                   name={fieldName}
                   value={currentVal}
                   schema={innerDef as { description?: string }}
+                  onChange={(v) => handleChange(fieldName, v)}
+                />
+              )
+            }
+
+            // SSS: soru/cevap çiftlerini yapılandırılmış editörle (JSON yerine)
+            if (fieldName === "items" && section.type === "faq") {
+              return (
+                <FaqItemsEditor
+                  key={fieldName}
+                  value={currentVal}
                   onChange={(v) => handleChange(fieldName, v)}
                 />
               )
