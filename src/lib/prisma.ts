@@ -26,7 +26,10 @@ if (!hasDbUrl) {
 // is both correct and complete.
 const createPrisma = (): PrismaClient =>
   new PrismaClient({
-    log: process.env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
+    // Sadece "warn": DB erişilemediğinde "query"+"error" seviyeleri terminali
+    // sele boğuyordu. Gerçek hatalar zaten uygulama katmanındaki try/catch'lerde
+    // bağlamıyla loglanıyor.
+    log: process.env.NODE_ENV === "development" ? ["warn"] : ["error"],
   }).$extends(withAccelerate()) as unknown as PrismaClient
 
 export const prisma: PrismaClient | null =
