@@ -4,7 +4,7 @@ import * as React from "react"
 import { useMemo, useRef, useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowRight, BriefcaseBusiness } from "@/lib/icons"
+import { ArrowRight, ArrowUpRight, BriefcaseBusiness } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 
 interface PortfolioItem {
@@ -96,12 +96,13 @@ function Card({ item, index }: { item: PortfolioItem; index: number }) {
     <Link
       href={`/portfolio/${item.slug}`}
       className={cn(
-        "group relative flex-shrink-0 w-[260px] md:w-[300px] aspect-[5/8]",
-        "ff-shape-container border border-[var(--border)]/40 cursor-pointer select-none",
-        "snap-center transition-all duration-300 hover:shadow-xl"
+        "group relative flex-shrink-0 w-[260px] md:w-[300px] aspect-[5/8] overflow-hidden",
+        "ff-shape-container border border-[var(--border)]/40 cursor-pointer select-none snap-center",
+        "transition-[transform,box-shadow,border-color] duration-300",
+        "hover:-translate-y-1.5 hover:border-[var(--ff-purple)]/50 hover:shadow-[0_24px_60px_rgba(255,79,216,0.18)]",
       )}
     >
-      {/* Background Cover Image */}
+      {/* Kapak görseli */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <Image
           src={coverImage}
@@ -110,47 +111,53 @@ function Card({ item, index }: { item: PortfolioItem; index: number }) {
           sizes="(max-width: 768px) 100vw, 300px"
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
         />
-        {/* Dark contrast gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/25 to-transparent transition-opacity duration-300" />
+        {/* Yumuşak, güçlü alt scrim */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/5" />
       </div>
 
-      {/* Card Content / Metadata */}
-      <div className="absolute inset-0 z-10 flex flex-col justify-end p-6 text-white">
-        {/* Logo + title — flush to the bottom by default */}
-        <div className="flex flex-col gap-2.5">
-          {/* Logo & Client */}
-          <div className="flex items-center w-fit p-1 gap-2 bg-background/10 backdrop-blur-sm rounded-full border border-border/30">
-            {item.clientLogo ? (
-              <Image
-                src={item.clientLogo}
-                alt={item.client}
-                width={24}
-                height={24}
-                className="rounded-full object-contain"
-              />
-            ) : (
-              <div className="w-5 h-5 rounded-full bg-[var(--ff-purple)]/20 border border-[var(--ff-purple)]/40 flex items-center justify-center text-[10px] font-bold text-[var(--ff-purple)]">
-                {item.client ? item.client.charAt(0) : "P"}
-              </div>
-            )}
-            <span className="text-sm font-bold text-white/80 pr-1">
-              {item.client}
-            </span>
-          </div>
+      {/* Sol üst — kategori çipi */}
+      {item.category ? (
+        <span className="absolute left-4 top-4 z-20 inline-flex items-center rounded-full border border-white/15 bg-white/10 px-2.5 py-1 text-[9.5px] font-semibold uppercase tracking-[0.12em] text-white/85 backdrop-blur-md">
+          {item.category}
+        </span>
+      ) : null}
 
-          {/* Project Title */}
-          <h3 className="font-display text-base md:text-md font-bold leading-snug group-hover:text-[var(--ff-purple)] transition-colors duration-300">
-            {item.title}
-          </h3>
+      {/* Sağ üst — hover'da açılan ↗ butonu */}
+      <span className="absolute right-3.5 top-3.5 z-20 flex h-8 w-8 translate-y-1 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white opacity-0 backdrop-blur-md transition-all duration-300 group-hover:translate-y-0 group-hover:border-[var(--ff-purple)] group-hover:bg-[var(--ff-purple)] group-hover:opacity-100">
+        <ArrowUpRight size={15} />
+      </span>
+
+      {/* Alt meta */}
+      <div className="absolute inset-0 z-10 flex flex-col justify-end p-5 text-white">
+        {/* Firma satırı: avatar + uppercase eyebrow */}
+        <div className="mb-2 flex items-center gap-2">
+          {item.clientLogo ? (
+            <Image
+              src={item.clientLogo}
+              alt={item.client}
+              width={22}
+              height={22}
+              className="h-[22px] w-[22px] flex-shrink-0 rounded-full border border-white/25 object-cover"
+            />
+          ) : (
+            <span className="flex h-[22px] w-[22px] flex-shrink-0 items-center justify-center rounded-full bg-[var(--ff-purple)] text-[10px] font-bold text-white">
+              {item.client ? item.client.charAt(0) : "P"}
+            </span>
+          )}
+          <span className="truncate text-[10px] font-semibold uppercase tracking-[0.14em] text-white/70">
+            {item.client}
+          </span>
         </div>
 
-        {/* "Projeyi İncele" — collapsed (0 height) by default so logo+title
-            sit at the bottom; on hover it expands BELOW them, and because the
-            column is justify-end the logo+title slide up while the button
-            appears at the bottom edge. */}
-        <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-300 ease-out">
-          <div className="overflow-hidden min-h-0">
-            <span className="inline-flex items-center gap-1 pt-2.5 text-[11px] font-bold text-[var(--ff-purple)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
+        {/* Başlık — kahraman */}
+        <h3 className="font-display text-[17px] md:text-lg font-bold leading-[1.15] tracking-tight text-white">
+          {item.title}
+        </h3>
+
+        {/* Hover'da "Projeyi İncele" */}
+        <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out group-hover:grid-rows-[1fr]">
+          <div className="min-h-0 overflow-hidden">
+            <span className="inline-flex items-center gap-1 pt-2.5 text-[11px] font-bold text-[var(--ff-purple)] opacity-0 transition-opacity delay-100 duration-300 group-hover:opacity-100">
               Projeyi İncele <ArrowRight size={12} className="ml-0.5 transition-transform duration-200 group-hover:translate-x-1" />
             </span>
           </div>
