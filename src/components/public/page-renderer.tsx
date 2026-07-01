@@ -420,43 +420,48 @@ export function PageRenderer({ sections, portfolioItems, servicesItems, blogPost
 
   React.useEffect(() => {
     // Yalnızca "Mobil Dock Gizle" seçeneği aktif section'lar dock'u gizleyebilir.
-    const hideSections = visibleSections.filter(
-      (s) => (s.props as { hideMobileDock?: boolean } | undefined)?.hideMobileDock === true,
+    const hideIds = new Set(
+      visibleSections
+        .filter((s) => (s.props as { hideMobileDock?: boolean } | undefined)?.hideMobileDock === true)
+        .map((s) => s.id),
     )
 
     // Hiçbir section dock'u gizlemiyorsa dock DAİMA görünür (stabil, titremesiz).
-    if (hideSections.length === 0) {
+    if (hideIds.size === 0) {
       setMobileDockVisible(true)
       return
     }
 
-    const hideIds = new Set(hideSections.map((s) => s.id))
-    // Bir gizle-section, viewport'un alt şeridinde (dock'un oturduğu bölge) mi?
-    const inDockZone = new Map<string, boolean>()
+    // ÖNEMLİ: Bir section'ın wrapper rect'ini gözlemlemek pinlenen/fixed hero'da
+    // (scroll-expansion-hero) çalışmaz — fixed element viewport'u sürekli kaplar,
+    // dolayısıyla IntersectionObserver onu daima "görünür" sayıp dock'u kilitler.
+    // Bunun yerine viewport'un alt-orta noktasındaki GERÇEK ön-plan section'ını
+    // elementFromPoint ile buluruz: içerik, arkadaki fixed hero'nun üstüne
+    // kaydıkça doğru section döner. Yalnızca ön-plandaki section "gizle" işaretliyse
+    // dock gizlenir.
+    let raf = 0
+    const sample = () => {
+      raf = 0
+      const x = Math.floor(window.innerWidth / 2)
+      const y = Math.floor(window.innerHeight * 0.7) // dock'un üstünde, güvenli nokta
+      const el = document.elementFromPoint(x, y) as HTMLElement | null
+      const section = el?.closest("[data-section-id]") as HTMLElement | null
+      const id = section?.dataset.sectionId
+      setMobileDockVisible(!(id && hideIds.has(id)))
+    }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const id = (entry.target as HTMLElement).dataset.sectionId
-          if (id) inDockZone.set(id, entry.isIntersecting)
-        })
-        // Gizle-section'lardan biri dock bölgesindeyse dock gizlenir; değilse görünür.
-        let hide = false
-        inDockZone.forEach((present) => {
-          if (present) hide = true
-        })
-        setMobileDockVisible(!hide)
-      },
-      // Sadece viewport'un alt %15'lik şeridini izle (dock burada durur). Tek eşikli
-      // giriş/çıkış → "en görünür section" flip'i yok, titreme biter.
-      { threshold: 0, rootMargin: "-85% 0px 0px 0px" },
-    )
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(sample)
+    }
 
-    sectionRefs.current.forEach((el, id) => {
-      if (hideIds.has(id)) observer.observe(el)
-    })
-
-    return () => observer.disconnect()
+    sample() // ilk ölçüm
+    window.addEventListener("scroll", onScroll, { passive: true })
+    window.addEventListener("resize", onScroll)
+    return () => {
+      if (raf) cancelAnimationFrame(raf)
+      window.removeEventListener("scroll", onScroll)
+      window.removeEventListener("resize", onScroll)
+    }
   }, [visibleSections, setMobileDockVisible])
 
   if (visibleSections.length === 0) return null
