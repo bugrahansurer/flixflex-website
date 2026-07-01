@@ -2,10 +2,12 @@
 
 import * as React from "react"
 import { useRouter } from "next/navigation"
-import { Save, Loader2, Send, AlertTriangle, Image as ImageIcon, Trash2, Plus, ArrowLeft, Check, Sparkles } from "@/lib/icons"
+import { Save, Loader2, Send, AlertTriangle, Image as ImageIcon, Trash2, Plus, ArrowLeft, Check, Sparkles, X } from "@/lib/icons"
 import Link from "next/link"
+import * as Dialog from "@radix-ui/react-dialog"
 import { slugify, cn } from "@/lib/utils"
 import { MediaPicker } from "@/components/admin/media/media-picker"
+import { Can } from "@/components/admin/rbac/permission-context"
 import type { AdminPortfolioRecord, AdminServiceOption } from "./types"
 
 interface PortfolioEditorProps {
@@ -435,6 +437,9 @@ export function PortfolioEditor({ mode, initial, services }: PortfolioEditorProp
   const [busy, setBusy] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
   const [slugDirty, setSlugDirty] = React.useState(Boolean(initial?.slug))
+  const [deleteOpen, setDeleteOpen] = React.useState(false)
+  const [deleteLoading, setDeleteLoading] = React.useState(false)
+  const [deleteError, setDeleteError] = React.useState<string | null>(null)
   const [form, setForm] = React.useState(() => ({
     title: initial?.title ?? "",
     slug: initial?.slug ?? "",
@@ -539,6 +544,19 @@ export function PortfolioEditor({ mode, initial, services }: PortfolioEditorProp
             </p>
           </div>
           <div className="flex gap-2">
+            {mode === "edit" && initial?.id && (
+              <Can resource="portfolio" action="delete">
+                <button
+                  type="button"
+                  onClick={() => { setDeleteError(null); setDeleteOpen(true) }}
+                  disabled={busy}
+                  className="ff-shape-button inline-flex items-center gap-1.5 px-4 py-2 border border-red-500/30 text-red-500 hover:bg-red-500/10 hover:border-red-500/50 text-xs font-bold transition-all disabled:opacity-50"
+                >
+                  <Trash2 size={13} />
+                  Sil
+                </button>
+              </Can>
+            )}
             <button
               onClick={() => save(false)}
               disabled={busy}
@@ -557,6 +575,63 @@ export function PortfolioEditor({ mode, initial, services }: PortfolioEditorProp
             </button>
           </div>
         </div>
+
+        {/* Silme onay diyaloğu */}
+        <Dialog.Root open={deleteOpen} onOpenChange={setDeleteOpen}>
+          <Dialog.Portal>
+            <Dialog.Overlay className="fixed inset-0 z-50 bg-black/40 animate-ff-fadeIn" />
+            <Dialog.Content className="fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-md max-h-[90vh] overflow-y-auto bg-white border border-[#E0E0E0] p-6 shadow-2xl ff-shape-container animate-ff-fadeIn">
+              <Dialog.Close asChild>
+                <button className="absolute top-3 right-3 w-7 h-7 flex items-center justify-center text-[#666666] hover:text-[#333333] transition-colors" aria-label="Kapat">
+                  <X size={14} />
+                </button>
+              </Dialog.Close>
+              <div className="ff-shape-button w-10 h-10 flex items-center justify-center border border-red-500/30 bg-red-500/10 mb-4">
+                <Trash2 size={18} className="text-red-500" />
+              </div>
+              <Dialog.Title className="text-base font-extrabold text-[#333333] mb-2">Portfolyoyu Sil</Dialog.Title>
+              <div className="space-y-4">
+                <Dialog.Description className="text-xs text-[#666666] leading-relaxed">
+                  <strong className="text-[#333333]">{initial?.title ?? "Bu proje"}</strong> portfolyo kaydını silmek istediğinize emin misiniz? Bu işlem geri alınamaz.
+                </Dialog.Description>
+                {deleteError && (
+                  <div className="p-2.5 bg-red-50 border border-red-200 text-red-500 text-xs font-semibold ff-shape-container">{deleteError}</div>
+                )}
+                <div className="flex items-center justify-end gap-3 pt-2">
+                  <Dialog.Close asChild>
+                    <button className="ff-shape-button px-5 h-9 border border-[#CCCCCC] bg-[#f7f7f5] text-[#666666] text-[11px] font-bold hover:bg-[#ff4fd8]/5 hover:text-[#ff4fd8] transition-colors" disabled={deleteLoading}>
+                      Vazgeç
+                    </button>
+                  </Dialog.Close>
+                  <button
+                    onClick={async () => {
+                      if (!initial?.id) return
+                      setDeleteLoading(true)
+                      setDeleteError(null)
+                      try {
+                        const res = await fetch(`/api/portfolio/${initial.id}`, { method: "DELETE" })
+                        const json = await res.json().catch(() => ({}))
+                        if (!res.ok || !json.ok) throw new Error(json.message ?? json.error ?? "Silme işlemi başarısız")
+                        setDeleteOpen(false)
+                        router.push("/admin/portfolyo")
+                        router.refresh()
+                      } catch (err) {
+                        setDeleteError(err instanceof Error ? err.message : String(err))
+                      } finally {
+                        setDeleteLoading(false)
+                      }
+                    }}
+                    disabled={deleteLoading}
+                    className="ff-shape-button inline-flex items-center gap-1.5 px-6 h-9 bg-red-500 hover:bg-red-600 text-white text-[11px] font-bold transition-colors shadow-sm disabled:opacity-50"
+                  >
+                    {deleteLoading ? <Loader2 className="animate-spin" size={12} /> : <Trash2 size={12} />}
+                    Portfolyoyu Sil
+                  </button>
+                </div>
+              </div>
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>
 
         {error && (
           <div className="border border-red-500/30 bg-red-500/10 p-4 text-red-500 text-[12px] flex gap-2 ff-shape-container">
