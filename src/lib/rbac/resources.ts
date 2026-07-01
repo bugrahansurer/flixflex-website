@@ -15,6 +15,7 @@ export const RESOURCES = {
   MEDIA:        "media",
   APPOINTMENTS: "appointments",
   ANALYTICS:    "analytics",
+  MESSAGES:     "messages",
 } as const
 
 export const ACTIONS = {
@@ -44,6 +45,7 @@ export const RESOURCE_LABELS: Record<string, string> = {
   [RESOURCES.MEDIA]:        "Medya",
   [RESOURCES.APPOINTMENTS]: "Randevular",
   [RESOURCES.ANALYTICS]:    "Raporlar & Analitik",
+  [RESOURCES.MESSAGES]:     "Mesajlar",
 }
 
 export const ACTION_LABELS: Record<string, string> = {
@@ -82,6 +84,7 @@ export const DEFAULT_ROLES: RoleConfig[] = [
       { resource: RESOURCES.MEDIA,     action: ACTIONS.MANAGE },
       { resource: RESOURCES.APPOINTMENTS, action: ACTIONS.MANAGE },
       { resource: RESOURCES.ANALYTICS, action: ACTIONS.MANAGE },
+      { resource: RESOURCES.MESSAGES,  action: ACTIONS.MANAGE },
     ],
   },
   {
@@ -100,6 +103,7 @@ export const DEFAULT_ROLES: RoleConfig[] = [
       { resource: RESOURCES.USERS,        action: ACTIONS.READ },
       { resource: RESOURCES.SETTINGS,     action: ACTIONS.READ },
       { resource: RESOURCES.ANALYTICS,    action: ACTIONS.READ },
+      { resource: RESOURCES.MESSAGES,     action: ACTIONS.MANAGE },
     ],
   },
   {

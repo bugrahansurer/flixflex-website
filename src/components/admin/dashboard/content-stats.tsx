@@ -19,7 +19,7 @@ const ITEMS = [
   { key: "portfolio", label: "Portfolyo", icon: BriefcaseBusiness, href: "/admin/portfolyo" },
   { key: "services", label: "Hizmet", icon: Wrench, href: "/admin/hizmetler" },
   { key: "appointments", label: "Randevu", icon: CalendarDays, href: "/admin/randevular" },
-  { key: "messages", label: "Mesaj", icon: Mail, href: "/admin/randevular" },
+  { key: "messages", label: "Mesaj", icon: Mail, href: "/admin/mesajlar" },
   { key: "users", label: "Kullanıcı", icon: Users, href: "/admin/kullanicilar" },
 ] as const
 

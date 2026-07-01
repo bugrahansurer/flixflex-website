@@ -20,6 +20,7 @@ import {
   CalendarDays,
   IconPhotoVideo,
   BarChart3,
+  Mail,
 } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 import type { SessionUser } from "@/lib/auth/types"
@@ -34,6 +35,7 @@ const NAV_ITEMS = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard, exact: true, resource: undefined },
   { label: "Raporlar", href: "/admin/raporlar", icon: BarChart3, exact: false, resource: RESOURCES.ANALYTICS },
   { label: "Randevular", href: "/admin/randevular", icon: CalendarDays, exact: false, resource: RESOURCES.APPOINTMENTS },
+  { label: "Mesajlar", href: "/admin/mesajlar", icon: Mail, exact: false, resource: RESOURCES.MESSAGES },
   { label: "Sayfalar", href: "/admin/sayfalar", icon: IconDeviceLaptop, exact: false, resource: RESOURCES.PAGES },
   { label: "Portfolyo", href: "/admin/portfolyo", icon: BriefcaseBusiness, exact: false, resource: RESOURCES.PORTFOLIO },
   { label: "Hizmetler", href: "/admin/hizmetler", icon: IconServerSpark, exact: false, resource: RESOURCES.SERVICES },

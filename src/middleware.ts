@@ -22,6 +22,7 @@ import { hasPermission } from "@/lib/rbac/permissions"
 const ROUTE_RESOURCE: { prefix: string; resource: string }[] = [
   { prefix: "/admin/randevular", resource: "appointments" },
   { prefix: "/admin/raporlar", resource: "analytics" },
+  { prefix: "/admin/mesajlar", resource: "messages" },
   { prefix: "/admin/sayfalar", resource: "pages" },
   { prefix: "/admin/portfolyo", resource: "portfolio" },
   { prefix: "/admin/hizmetler", resource: "services" },
