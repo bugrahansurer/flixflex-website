@@ -263,12 +263,13 @@ export const whyUsPropsSchema = z.object({
   hideMobileDock: z.boolean().default(false),
 })
 
-// ── About: Manifesto (kinetic words) ──
+// ── About: Manifesto (minimalist kinetik ifade) ──
 export const manifestoPropsSchema = z.object({
   eyebrow: z.string().default("Manifestomuz"),
-  line1: z.string().default("FLIX"),
-  line2: z.string().default("FLEX"),
-  line3: z.string().default("DOMINATE"),
+  headline: z.string().default("Markaları domine eden fikirler üretiriz."),
+  highlight: z.string().default("domine"),
+  description: z.string().default("Strateji, yaratıcılık ve teknolojiyi tek vuruşta birleştirir; markanı bir sonraki bölüme taşırız."),
+  keywords: z.array(z.string()).default(["Hız", "Güç", "Esneklik"]),
   hideMobileDock: z.boolean().default(false),
 })
 
