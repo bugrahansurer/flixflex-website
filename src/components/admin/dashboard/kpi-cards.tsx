@@ -2,20 +2,19 @@
 
 import * as React from "react"
 import { motion } from "framer-motion"
-import { SquarePen, FileText, Users, TrendingUp, ArrowUpRight, ArrowDownRight } from "@/lib/icons"
+import { Eye, Users, Clock, TrendingUp, ArrowUpRight, ArrowDownRight } from "@/lib/icons"
 import { useInView } from "@/hooks/use-in-view"
 import { cn } from "@/lib/utils"
 import { staggerContainer, fadeInUp } from "@/lib/animations"
-import { TiltCard } from "@/components/ui/tilt-card"
 
-// ── Counter hook (mirrors ff-stat-counter pattern) ─
+// ── Counter hook ──────────────────────────────────
 function useCountUp(target: number, inView: boolean) {
   const [value, setValue] = React.useState(0)
-
   React.useEffect(() => {
     if (!inView) return
-    const duration = 1600
-    const steps = 60
+    // target === 0 resolves on the first tick (0 >= 0) — no special case needed.
+    const duration = 1100
+    const steps = 45
     const step = target / steps
     let current = 0
     const timer = setInterval(() => {
@@ -24,141 +23,97 @@ function useCountUp(target: number, inView: boolean) {
         setValue(target)
         clearInterval(timer)
       } else {
-        setValue(Math.floor(current))
+        setValue(current)
       }
     }, duration / steps)
     return () => clearInterval(timer)
   }, [inView, target])
-
   return value
 }
 
-interface KpiItem {
-  label: string
-  value: number
-  suffix: string
-  icon: typeof SquarePen
-  delta: string
-  up: boolean | null
-  deltaLabel: string
-  color: string
+export interface VisitsKpi {
+  today: number
+  todayDelta: number
+  month: number
+  monthDelta: number
+  uniqueMonth: number
+  avgDurationSec: number
 }
 
-const KPI_DATA: KpiItem[] = [
-  {
-    label: "Toplam Post",
-    value: 48,
-    suffix: "",
-    icon: SquarePen,
-    delta: "+6",
-    up: true,
-    deltaLabel: "bu ay",
-    color: "var(--ff-purple)",
-  },
-  {
-    label: "Toplam Sayfa",
-    value: 12,
-    suffix: "",
-    icon: FileText,
-    delta: "+2",
-    up: true,
-    deltaLabel: "bu hafta",
-    color: "var(--ff-purple)",
-  },
-  {
-    label: "Aktif Kullanıcı",
-    value: 5,
-    suffix: "",
-    icon: Users,
-    delta: "0",
-    up: null,
-    deltaLabel: "değişim yok",
-    color: "var(--ff-purple)",
-  },
-  {
-    label: "Bu Ay Trafik",
-    value: 24800,
-    suffix: "",
-    icon: TrendingUp,
-    delta: "+12%",
-    up: true,
-    deltaLabel: "geçen aya göre",
-    color: "var(--ff-purple)",
-  },
-]
+function fmtDuration(sec: number): string {
+  if (!sec || sec < 1) return "0sn"
+  const m = Math.floor(sec / 60)
+  const s = Math.round(sec % 60)
+  if (m === 0) return `${s}sn`
+  return `${m}dk ${s}sn`
+}
 
-// ── Single KPI card ───────────────────────────────
-function KpiCard({
-  label, value, suffix, icon: Icon, delta, up, deltaLabel, color, className,
-}: KpiItem & { className?: string }) {
+interface CardDef {
+  label: string
+  value: number
+  display?: (v: number) => string
+  icon: typeof Eye
+  delta?: number
+  deltaLabel?: string
+}
+
+function KpiCard({ label, value, display, icon: Icon, delta, deltaLabel }: CardDef) {
   const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.4 })
-  const display = useCountUp(value, inView)
+  const animated = useCountUp(value, inView)
+  const shown = display ? display(Math.round(animated)) : Math.round(animated).toLocaleString("tr-TR")
+  const up = delta === undefined ? null : delta > 0 ? true : delta < 0 ? false : null
 
   return (
-    <motion.div
-      ref={ref}
-      variants={fadeInUp}
-      className="h-full"
-    >
-      <TiltCard
-        variant="glass"
-        className={cn("overflow-hidden", className)}
-      >
-        {/* Top purple accent on hover */}
+    <motion.div ref={ref} variants={fadeInUp} className="h-full">
+      <div className="group relative h-full ff-shape-container ff-card p-4 overflow-hidden transition-colors duration-300 hover:border-[var(--ff-purple)]/40">
         <div className="absolute inset-x-0 top-0 h-px bg-[#ff4fd8] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-        {/* Icon */}
-        <div
-          className="ff-shape-button bg-[#ff4fd8]/10 w-9 h-9 flex items-center justify-center mb-4"
-          style={{ background: "rgba(255, 79, 216, 0.1)" }}
-        >
-          <Icon size={17} style={{ color }} />
-        </div>
-
-        {/* Value */}
-        <p className="font-display text-3xl font-bold text-[#0d0d0d] leading-none tabular-nums">
-          {display.toLocaleString("tr-TR")}{suffix}
-        </p>
-
-        {/* Label */}
-        <p className="text-[11px] font-semibold text-[#888888] mt-2">
-          {label}
-        </p>
-
-        {/* Delta */}
-        <div className="flex items-center gap-1.5 mt-3">
-          {up === true && <ArrowUpRight size={12} className="text-green-500" />}
-          {up === false && <ArrowDownRight size={12} className="text-red-400" />}
-          <span
-            className={cn(
-              "text-[11px] font-medium",
-              up === true ? "text-green-500" :
-                up === false ? "text-red-400" :
-                  "text-[#888888]"
-            )}
+        <div className="flex items-center justify-between mb-3">
+          <div
+            className="ff-shape-button w-8 h-8 flex items-center justify-center"
+            style={{ background: "rgba(255, 79, 216, 0.1)" }}
           >
-            {delta}
-          </span>
-          <span className="text-[11px] text-[#888888]">{deltaLabel}</span>
+            <Icon size={15} className="text-[var(--ff-purple)]" />
+          </div>
+          {delta !== undefined && (
+            <div className="flex items-center gap-1">
+              {up === true && <ArrowUpRight size={12} className="text-green-500" />}
+              {up === false && <ArrowDownRight size={12} className="text-red-400" />}
+              <span className={cn(
+                "text-[11px] font-semibold tabular-nums",
+                up === true ? "text-green-500" : up === false ? "text-red-400" : "text-[#999999]"
+              )}>
+                {delta > 0 ? "+" : ""}{delta}%
+              </span>
+            </div>
+          )}
         </div>
-      </TiltCard>
+        <p className="font-display text-2xl font-bold text-[#0d0d0d] leading-none tabular-nums">
+          {shown}
+        </p>
+        <p className="text-[11px] font-semibold text-[#888888] mt-1.5">{label}</p>
+        {deltaLabel && <p className="text-[10px] text-[#aaaaaa] mt-0.5">{deltaLabel}</p>}
+      </div>
     </motion.div>
   )
 }
 
-// ── KpiCards grid ─────────────────────────────────
-export function KpiCards() {
+export function KpiCards({ visits }: { visits: VisitsKpi }) {
+  const cards: CardDef[] = [
+    { label: "Bugün Ziyaret", value: visits.today, icon: Eye, delta: visits.todayDelta, deltaLabel: "düne göre" },
+    { label: "Bu Ay Ziyaret", value: visits.month, icon: TrendingUp, delta: visits.monthDelta, deltaLabel: "geçen aya göre" },
+    { label: "Tekil Ziyaretçi", value: visits.uniqueMonth, icon: Users, deltaLabel: "bu ay" },
+    { label: "Ort. Süre", value: visits.avgDurationSec, display: (v) => fmtDuration(v), icon: Clock, deltaLabel: "sayfa başına" },
+  ]
+
   return (
     <motion.div
       variants={staggerContainer}
       initial="hidden"
       animate="visible"
-      className="grid grid-cols-2 xl:grid-cols-4 gap-4"
+      className="grid grid-cols-2 xl:grid-cols-4 gap-3"
     >
-      {KPI_DATA.map((kpi) => (
-        <motion.div key={kpi.label} variants={fadeInUp} className="h-full">
-          <KpiCard key={kpi.label} {...kpi} className="p-6 h-full" />
-        </motion.div>
+      {cards.map((c) => (
+        <KpiCard key={c.label} {...c} />
       ))}
     </motion.div>
   )

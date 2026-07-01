@@ -70,12 +70,13 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value:
               "default-src 'self'; " +
-              `script-src 'self' 'unsafe-inline' ${evalRule}https://*.mux.com https://www.gstatic.com; ` +
+              `script-src 'self' 'unsafe-inline' ${evalRule}https://*.mux.com https://www.gstatic.com https://www.googletagmanager.com https://*.google-analytics.com https://connect.facebook.net; ` +
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
               "font-src 'self' https://fonts.gstatic.com data:; " +
               "img-src 'self' data: blob: https:; " +
               "media-src 'self' blob: https://*.mux.com; " +
-              `connect-src 'self' ${wsRules}https://*.mux.com https://*.litix.io https://api.anthropic.com; ` +
+              `connect-src 'self' ${wsRules}https://*.mux.com https://*.litix.io https://api.anthropic.com https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://connect.facebook.net https://www.facebook.com; ` +
+              "frame-src 'self' https://www.googletagmanager.com https://td.doubleclick.net; " +
               "frame-ancestors 'none';",
           },
         ],

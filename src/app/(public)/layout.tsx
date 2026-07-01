@@ -7,6 +7,8 @@ import { MaintenanceScreen } from "@/components/shared/maintenance-screen"
 import { prisma } from "@/lib/prisma"
 import { getSetting } from "@/lib/settings"
 import { auth } from "@/lib/auth"
+import { AnalyticsTracker } from "@/components/analytics/analytics-tracker"
+import { SitePixels } from "@/components/analytics/site-pixels"
 
 export default async function PublicLayout({
   children,
@@ -20,6 +22,7 @@ export default async function PublicLayout({
             "site_logo", "site_logo_white", "site_logo_height", "site_logo_mobile_height",
             "site_name", "site_tagline", "site_email", "site_phone", "site_address",
             "site_social_links",
+            "analytics.google.ga4", "analytics.google.gtm", "analytics.meta.pixel",
           ] }
         }
       })
@@ -44,6 +47,13 @@ export default async function PublicLayout({
 
   return (
     <ParallaxProvider>
+      {/* First-party analytics + ad-platform pixels (only what's configured) */}
+      <AnalyticsTracker />
+      <SitePixels
+        gaId={siteSettings["analytics.google.ga4"]}
+        gtmId={siteSettings["analytics.google.gtm"]}
+        pixelId={siteSettings["analytics.meta.pixel"]}
+      />
       {/* Route progress bar — fills on navigation (Vercel/Linear style) */}
       <NextTopLoader
         color="#FF4FD8"

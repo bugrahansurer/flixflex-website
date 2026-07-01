@@ -14,9 +14,11 @@ import {
   Share2,
   Globe
 } from "@/lib/icons"
+import Link from "next/link"
 import { Can } from "@/components/admin/rbac/permission-context"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
+import { LiveVisitors } from "@/components/admin/settings/live-visitors"
 
 interface IntegrationsData {
   // AI
@@ -33,6 +35,26 @@ interface IntegrationsData {
   // Marketing & Mail
   resendApiKey: string
   mailchimpKey: string
+}
+
+// ID validation — mirrors the injection guard in site-pixels.tsx so the
+// badge only says "Bağlı" when the value will actually fire on the site.
+const GA_RE = /^(G-[A-Z0-9]{4,20}|UA-\d{4,12}-\d{1,4})$/i
+const GTM_RE = /^GTM-[A-Z0-9]{4,12}$/i
+const PIXEL_RE = /^\d{6,20}$/
+
+function ConnBadge({ on }: { on: boolean }) {
+  return (
+    <span
+      className={cn(
+        "ml-auto inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ff-shape-button",
+        on ? "bg-green-500/10 text-green-600" : "bg-[#eeeeee] text-[#999999]"
+      )}
+    >
+      <span className={cn("w-1.5 h-1.5 rounded-full", on ? "bg-green-500" : "bg-[#bbbbbb]")} />
+      {on ? "Bağlı" : "Bağlı değil"}
+    </span>
+  )
 }
 
 export function IntegrationForm({ initialData }: { initialData: IntegrationsData }) {
@@ -182,11 +204,22 @@ export function IntegrationForm({ initialData }: { initialData: IntegrationsData
           <h2 className="font-display text-xl font-bold text-[#333333]">Analiz & İzleme</h2>
         </header>
 
+        {/* Live first-party visit counter — proves tracking is working */}
+        <LiveVisitors />
+
+        <p className="text-[12px] text-[#666666] -mt-2 leading-relaxed">
+          Aşağıdaki kimlikleri girdiğinizde ilgili script otomatik olarak sitenin tüm sayfalarına eklenir.
+          Detaylı geçmiş ziyaret raporları için{" "}
+          <Link href="/admin/raporlar" className="text-[var(--ff-purple)] font-semibold hover:underline">Raporlar</Link>{" "}
+          sayfasına bakın.
+        </p>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="ff-shape-container ff-card">
             <div className="flex items-center gap-3 mb-4">
               <Globe size={18} className="text-orange-500" />
-              <h3 className="font-display text-sm font-bold text-[#333333]">Google Analytics</h3>
+              <h3 className="font-display text-sm font-bold text-[#333333]">Google Analytics 4</h3>
+              <ConnBadge on={GA_RE.test(data.gaMeasurementId.trim())} />
             </div>
             <FFInput
               label="Measurement ID"
@@ -194,6 +227,7 @@ export function IntegrationForm({ initialData }: { initialData: IntegrationsData
               className="bg-transparent border border-[#CCCCCC] focus:border-[#ff4fd8] text-xs text-[#333333] placeholder:text-[#999999]"
               value={data.gaMeasurementId}
               onChange={(e) => setData({ ...data, gaMeasurementId: e.target.value })}
+              hint="GA4 yönetici → Veri akışları → Ölçüm Kimliği (G- ile başlar)."
             />
           </div>
 
@@ -201,6 +235,7 @@ export function IntegrationForm({ initialData }: { initialData: IntegrationsData
             <div className="flex items-center gap-3 mb-4">
               <Globe size={18} className="text-blue-600" />
               <h3 className="font-display text-sm font-bold text-[#333333]">Google Tag Manager</h3>
+              <ConnBadge on={GTM_RE.test(data.gtmId.trim())} />
             </div>
             <FFInput
               label="GTM Container ID"
@@ -208,6 +243,7 @@ export function IntegrationForm({ initialData }: { initialData: IntegrationsData
               className="bg-transparent border border-[#CCCCCC] focus:border-[#ff4fd8] text-xs text-[#333333] placeholder:text-[#999999]"
               value={data.gtmId}
               onChange={(e) => setData({ ...data, gtmId: e.target.value })}
+              hint="GTM panelinizin üstündeki GTM-XXXXXXX kodu."
             />
           </div>
 
@@ -215,13 +251,15 @@ export function IntegrationForm({ initialData }: { initialData: IntegrationsData
             <div className="flex items-center gap-3 mb-4">
               <Share2 size={18} className="text-blue-500" />
               <h3 className="font-display text-sm font-bold text-[#333333]">Meta Pixel</h3>
+              <ConnBadge on={PIXEL_RE.test(data.pixelId.trim())} />
             </div>
             <FFInput
               label="Pixel ID"
-              placeholder="1234567890..."
+              placeholder="1234567890123456"
               className="bg-transparent border border-[#CCCCCC] focus:border-[#ff4fd8] text-xs text-[#333333] placeholder:text-[#999999]"
               value={data.pixelId}
               onChange={(e) => setData({ ...data, pixelId: e.target.value })}
+              hint="Meta Events Manager → Veri kaynakları → Pixel Kimliği (yalnızca rakam)."
             />
           </div>
         </div>

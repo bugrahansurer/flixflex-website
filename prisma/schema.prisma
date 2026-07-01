@@ -311,4 +311,29 @@ model BlockedSlot {
   @@map("blocked_slots")
 }
 
+// ── First-party analytics ─────────────────────────────
+// Cookieless page-view tracking. Each row is one page view. `visitorId`
+// is a daily-rotating hash (IP+UA+salt) so unique visitors can be counted
+// without persistent identifiers (Plausible-style, GDPR-friendly).
+// `duration` is filled in by a second beacon fired on page-hide/unload.
+model PageView {
+  id        String   @id @default(cuid())
+  eventId   String   @unique // client-generated id, links the duration beacon to its pageview
+  path      String
+  referrer  String?
+  visitorId String
+  sessionId String
+  duration  Int      @default(0) // ms spent on the page
+  device    String? // desktop | mobile | tablet
+  browser   String?
+  country   String?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([path])
+  @@index([sessionId])
+  @@index([visitorId, createdAt])
+  @@map("page_views")
+}
+
 

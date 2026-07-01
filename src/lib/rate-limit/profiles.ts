@@ -94,3 +94,13 @@ export const MEDIA_UPLOAD: RateLimitProfile = {
   windowDuration: "1 m",
   windowMs:       60_000,
 }
+
+// Analytics beacons are high-frequency (one per page view + one per unload),
+// so the ceiling is generous — it only exists to stop a single IP flooding
+// the collector. ~120 events/min comfortably covers real browsing.
+export const ANALYTICS: RateLimitProfile = {
+  namespace:      "analytics",
+  max:            120,
+  windowDuration: "1 m",
+  windowMs:       60_000,
+}

@@ -14,6 +14,7 @@ export const RESOURCES = {
   AI:           "ai",
   MEDIA:        "media",
   APPOINTMENTS: "appointments",
+  ANALYTICS:    "analytics",
 } as const
 
 export const ACTIONS = {
@@ -42,6 +43,7 @@ export const RESOURCE_LABELS: Record<string, string> = {
   [RESOURCES.AI]:           "Yapay Zeka",
   [RESOURCES.MEDIA]:        "Medya",
   [RESOURCES.APPOINTMENTS]: "Randevular",
+  [RESOURCES.ANALYTICS]:    "Raporlar & Analitik",
 }
 
 export const ACTION_LABELS: Record<string, string> = {
@@ -79,6 +81,7 @@ export const DEFAULT_ROLES: RoleConfig[] = [
       { resource: RESOURCES.AI,        action: ACTIONS.MANAGE },
       { resource: RESOURCES.MEDIA,     action: ACTIONS.MANAGE },
       { resource: RESOURCES.APPOINTMENTS, action: ACTIONS.MANAGE },
+      { resource: RESOURCES.ANALYTICS, action: ACTIONS.MANAGE },
     ],
   },
   {
@@ -96,6 +99,7 @@ export const DEFAULT_ROLES: RoleConfig[] = [
       { resource: RESOURCES.APPOINTMENTS, action: ACTIONS.MANAGE },
       { resource: RESOURCES.USERS,        action: ACTIONS.READ },
       { resource: RESOURCES.SETTINGS,     action: ACTIONS.READ },
+      { resource: RESOURCES.ANALYTICS,    action: ACTIONS.READ },
     ],
   },
   {

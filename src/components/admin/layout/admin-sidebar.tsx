@@ -19,6 +19,7 @@ import {
   ExternalLink,
   CalendarDays,
   IconPhotoVideo,
+  BarChart3,
 } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 import type { SessionUser } from "@/lib/auth/types"
@@ -31,6 +32,7 @@ import { IconDeviceLaptop, IconServerSpark } from "@tabler/icons-react"
 // READ permission on it. Items without a resource are always shown.
 const NAV_ITEMS = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard, exact: true, resource: undefined },
+  { label: "Raporlar", href: "/admin/raporlar", icon: BarChart3, exact: false, resource: RESOURCES.ANALYTICS },
   { label: "Randevular", href: "/admin/randevular", icon: CalendarDays, exact: false, resource: RESOURCES.APPOINTMENTS },
   { label: "Sayfalar", href: "/admin/sayfalar", icon: IconDeviceLaptop, exact: false, resource: RESOURCES.PAGES },
   { label: "Portfolyo", href: "/admin/portfolyo", icon: BriefcaseBusiness, exact: false, resource: RESOURCES.PORTFOLIO },

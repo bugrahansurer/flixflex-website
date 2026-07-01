@@ -19,5 +19,6 @@ export {
   TWO_FA_SETUP,
   TWO_FA_VERIFY,
   MEDIA_UPLOAD,
+  ANALYTICS,
 }                                               from "./profiles"
 export type { RateLimitProfile }                from "./profiles"
