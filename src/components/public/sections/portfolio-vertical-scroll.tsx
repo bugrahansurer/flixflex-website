@@ -99,7 +99,7 @@ function Card({ item, index }: { item: PortfolioItem; index: number }) {
         "group relative flex-shrink-0 w-[260px] md:w-[300px] aspect-[5/8] overflow-hidden",
         "ff-shape-container border border-[var(--border)]/40 cursor-pointer select-none snap-center",
         "transition-[transform,box-shadow,border-color] duration-300",
-        "hover:-translate-y-1.5 hover:border-[var(--ff-purple)]/50 hover:shadow-[0_24px_60px_rgba(255,79,216,0.18)]",
+        "hover:-translate-y-1.5 hover:border-[var(--ff-purple)]/50 hover:shadow-[0_10px_32px_rgba(255,79,216,0.18)]",
       )}
     >
       {/* Kapak görseli */}
@@ -117,40 +117,32 @@ function Card({ item, index }: { item: PortfolioItem; index: number }) {
 
       {/* Sol üst — kategori çipi */}
       {item.category ? (
-        <span className="absolute left-4 top-4 z-20 inline-flex items-center rounded-full border border-white/15 bg-white/10 px-2.5 py-1 text-[9.5px] font-semibold uppercase tracking-[0.12em] text-white/85 backdrop-blur-md">
-          {item.category}
-        </span>
-      ) : null}
-
-      {/* Sağ üst — hover'da açılan ↗ butonu */}
-      <span className="absolute right-3.5 top-3.5 z-20 flex h-8 w-8 translate-y-1 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white opacity-0 backdrop-blur-md transition-all duration-300 group-hover:translate-y-0 group-hover:border-[var(--ff-purple)] group-hover:bg-[var(--ff-purple)] group-hover:opacity-100">
-        <ArrowUpRight size={15} />
-      </span>
-
-      {/* Alt meta */}
-      <div className="absolute inset-0 z-10 flex flex-col justify-end p-5 text-white">
-        {/* Firma satırı: avatar + uppercase eyebrow */}
-        <div className="mb-2 flex items-center gap-2">
+        <span className="absolute left-4 top-4 z-20 inline-flex items-center">
           {item.clientLogo ? (
             <Image
               src={item.clientLogo}
               alt={item.client}
               width={22}
               height={22}
-              className="h-[22px] w-[22px] flex-shrink-0 rounded-full border border-white/25 object-cover"
+              className="h-[40px] w-fit max-w-40 flex-shrink-0 object-contain"
             />
           ) : (
-            <span className="flex h-[22px] w-[22px] flex-shrink-0 items-center justify-center rounded-full bg-[var(--ff-purple)] text-[10px] font-bold text-white">
+            <span className="flex h-[30px] w-fit flex-shrink-0 items-center justify-center rounded-full bg-[var(--ff-purple)] text-[10px] font-bold text-white">
               {item.client ? item.client.charAt(0) : "P"}
             </span>
           )}
-          <span className="truncate text-[10px] font-semibold uppercase tracking-[0.14em] text-white/70">
-            {item.client}
-          </span>
-        </div>
+        </span>
+      ) : null}
 
+      {/* Sağ üst — hover'da açılan ↗ butonu */}
+      <span className="absolute right-6 top-6 z-20 flex translate-y-1 items-center justify-center text-ff-purple opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+        <ArrowUpRight size={17} />
+      </span>
+
+      {/* Alt meta */}
+      <div className="absolute inset-0 z-10 flex flex-col justify-end p-5 text-white">
         {/* Başlık — kahraman */}
-        <h3 className="font-display text-[17px] md:text-lg font-bold leading-[1.15] tracking-tight text-white">
+        <h3 className="font-display text-[14px] md:text-md font-semibold text-white">
           {item.title}
         </h3>
 
@@ -325,7 +317,7 @@ export function PortfolioVerticalScrollSection({
         onDragStart={(e) => e.preventDefault()}
         className="hidden md:block relative w-full overflow-x-auto scrollbar-none select-none cursor-grab active:cursor-grabbing"
       >
-        <div ref={containerRef} className="flex gap-6 my-4 px-6 w-max">
+        <div ref={containerRef} className="flex gap-6 my-6 px-6 w-max">
           {displayItems.map((item, index) => (
             <Card key={`desktop-${item.slug}-${index}`} item={item} index={index} />
           ))}
