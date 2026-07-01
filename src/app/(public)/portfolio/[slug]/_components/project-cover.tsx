@@ -19,8 +19,7 @@ export function ProjectCover({ project }: ProjectCoverProps) {
       <div className="relative mx-auto max-w-[1440px] px-6 md:px-10 xl:px-16">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: ease.smooth }}
           className={cn(
             "ff-shape-container relative w-full overflow-hidden",

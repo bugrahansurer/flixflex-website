@@ -46,7 +46,7 @@ export function ParentServicePage({ service, serviceIndex }: ParentServicePagePr
 
         <div className="relative mx-auto max-w-[1440px] px-6 md:px-10 xl:px-16">
           <nav aria-label="Breadcrumb" className="mb-8">
-            <ol className="flex items-center gap-2 text-[12px] uppercase tracking-[0.12em] text-[var(--foreground-faint)]">
+            <ol className="flex items-center gap-2 text-[12px] text-[var(--foreground-faint)]">
               <li>
                 <Link href="/hizmetler" className="hover:text-[var(--ff-purple)] transition-colors duration-150">
                   Hizmetler
@@ -115,8 +115,7 @@ export function ParentServicePage({ service, serviceIndex }: ParentServicePagePr
             <motion.div
               variants={staggerContainer}
               initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-40px" }}
+              animate="visible"
               className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"
             >
               {children.map((child) => (
