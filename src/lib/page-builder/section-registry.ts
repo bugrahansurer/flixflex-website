@@ -36,6 +36,7 @@ import {
   servicesShowcasePropsSchema,
   portfolioPropsSchema,
   testimonialsPropsSchema,
+  videoTestimonialsPropsSchema,
   ctaPropsSchema,
   textContentPropsSchema,
   imageTextPropsSchema,
@@ -140,6 +141,14 @@ export const SECTION_REGISTRY: Record<string, SectionMeta> = {
     icon: MessageSquare,
     defaultProps: testimonialsPropsSchema.parse({}),
     description: "Müşteri görüşleri ve alıntılar",
+  },
+  "video-testimonials": {
+    type: "video-testimonials",
+    label: "Video Referanslar",
+    category: "Sosyal Kanıt",
+    icon: Video,
+    defaultProps: videoTestimonialsPropsSchema.parse({}),
+    description: "Müşteri video görüşleri — referans videolarını izlenebilir kartlarda göster",
   },
   "cta": {
     type: "cta",

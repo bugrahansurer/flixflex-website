@@ -38,6 +38,7 @@ import { DemoProjectShowcase } from "@/components/ui/project-showcase"
 import { AnimatedVideoHero, VideoHeroProvider } from "@/components/public/hero/animated-video-hero"
 import { ParallaxScrolling } from "@/components/public/parallax-scrolling"
 import { ServicesShowcase } from "@/components/public/services/services-showcase"
+import { VideoTestimonialsSection, type VideoTestimonialItem } from "@/components/public/sections/video-testimonials-section"
 import { PoemAnimation, ScrollExpandMedia, FlowArt, FlowSection } from "@/components/ui"
 import dynamic from "next/dynamic"
 // Lazy — pulls in three.js (~600KB); only loaded on pages that actually use it.
@@ -143,6 +144,10 @@ const SECTION_RENDERERS: Partial<Record<SectionType, (
     )
   },
   "testimonials": () => <TestimonialsSection />,
+  "video-testimonials": (s) => {
+    const p = s.props as { eyebrow?: string; headline?: string; subheadline?: string; items?: VideoTestimonialItem[] }
+    return <VideoTestimonialsSection eyebrow={p.eyebrow} headline={p.headline} subheadline={p.subheadline} items={p.items} />
+  },
   "team": (s) => <TeamSection {...(s.props as any)} />,
   "manifesto": (s) => <ManifestoSection {...(s.props as any)} />,
   "story": (s) => <StorySection {...(s.props as any)} />,

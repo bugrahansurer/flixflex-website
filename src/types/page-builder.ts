@@ -12,6 +12,7 @@ export type SectionType =
   | "services"
   | "portfolio"
   | "testimonials"
+  | "video-testimonials"
   | "cta"
   | "text-content"
   | "image-text"
@@ -163,6 +164,25 @@ export const testimonialsPropsSchema = z.object({
   subheadline: z.string().default("Birlikte başardıklarımız"),
   hideMobileDock: z.boolean().default(false),
 })
+
+export const videoTestimonialsPropsSchema = z.object({
+  eyebrow: z.string().default("Video Referanslar"),
+  headline: z.string().default("Müşterilerimiz Anlatıyor"),
+  subheadline: z.string().default("Birlikte büyüdüğümüz markalar, deneyimlerini kendi sözleriyle paylaşıyor."),
+  items: z.array(z.object({
+    videoUrl: z.string().default(""),
+    posterUrl: z.string().default(""),
+    name: z.string().default("İsim Soyisim"),
+    role: z.string().default("Görev"),
+    company: z.string().default("Marka"),
+  })).default([
+    { videoUrl: "", posterUrl: "", name: "Elif Şahin", role: "CMO", company: "Novatek" },
+    { videoUrl: "", posterUrl: "", name: "Mert Yıldırım", role: "Kurucu", company: "Orbitly" },
+    { videoUrl: "", posterUrl: "", name: "Selin Koç", role: "Marka Müdürü", company: "Lümen" },
+  ]),
+  hideMobileDock: z.boolean().default(false),
+})
+export type VideoTestimonialsProps = z.infer<typeof videoTestimonialsPropsSchema>
 
 export const ctaPropsSchema = z.object({
   eyebrow: z.string().default("— Bir Sonraki Adım —"),
@@ -392,6 +412,7 @@ export const SECTION_SCHEMAS: Record<SectionType, z.ZodObject<z.ZodRawShape>> = 
   "services": servicesPropsSchema,
   "portfolio": portfolioPropsSchema,
   "testimonials": testimonialsPropsSchema,
+  "video-testimonials": videoTestimonialsPropsSchema,
   "cta": ctaPropsSchema,
   "text-content": textContentPropsSchema,
   "image-text": imageTextPropsSchema,

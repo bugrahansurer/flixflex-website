@@ -452,6 +452,91 @@ function JsonDraftField({
   )
 }
 
+// ── Video Referanslar öğe editörü ─────────────────
+interface VTItem { videoUrl?: string; name?: string; role?: string; company?: string; posterUrl?: string }
+
+function VideoTestimonialItemsEditor({ value, onChange }: { value: unknown; onChange: (v: unknown) => void }) {
+  const items: VTItem[] = Array.isArray(value) ? (value as VTItem[]) : []
+  const [pickerFor, setPickerFor] = React.useState<number | null>(null)
+
+  const patch = (i: number, p: Partial<VTItem>) =>
+    onChange(items.map((it, idx) => (idx === i ? { ...it, ...p } : it)))
+  const add = () => onChange([...items, { videoUrl: "", name: "", role: "", company: "" }])
+  const remove = (i: number) => onChange(items.filter((_, idx) => idx !== i))
+
+  const inputCls = cn(
+    "ff-shape-container w-full px-2.5 py-1.5 text-[11px] bg-white border border-[#CCCCCC]",
+    "text-[#333333] placeholder:text-[#999999] outline-none focus:border-[#ff4fd8] transition-colors duration-150",
+  )
+
+  return (
+    <div className="flex flex-col gap-2.5">
+      <span className="text-[10px] font-bold uppercase tracking-wider text-[#666666]">Video Referanslar</span>
+
+      {items.map((it, i) => {
+        const fileName = it.videoUrl ? it.videoUrl.split("/").pop() ?? it.videoUrl : ""
+        return (
+          <div key={i} className="ff-shape-container flex flex-col gap-2 border border-[#CCCCCC] bg-[#f7f7f5] p-2.5">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold text-[#999999]">#{i + 1}</span>
+              <button type="button" onClick={() => remove(i)} className="text-[#999999] hover:text-[#e03434] transition-colors" title="Kaldır">
+                <X size={12} />
+              </button>
+            </div>
+
+            {/* Video */}
+            {fileName && (
+              <div className="ff-shape-container flex items-center gap-2 bg-white border border-[#CCCCCC] px-2.5 py-1.5">
+                <span className="text-[#ff4fd8] shrink-0"><Video size={11} /></span>
+                <span className="text-[10px] text-[#333333] truncate flex-1">{fileName}</span>
+                <button type="button" onClick={() => patch(i, { videoUrl: "" })} className="text-[#999999] hover:text-[#e03434] shrink-0" title="Kaldır">
+                  <X size={11} />
+                </button>
+              </div>
+            )}
+            <button
+              type="button"
+              onClick={() => setPickerFor(i)}
+              className={cn(
+                "ff-shape-button h-8 flex items-center justify-center gap-2 border border-dashed border-[#CCCCCC]",
+                "text-[10.5px] font-semibold text-[#666666] hover:border-[#ff4fd8] hover:text-[#ff4fd8] hover:bg-[#ff4fd8]/5 transition-all duration-150",
+              )}
+            >
+              <Video size={12} /> {fileName ? "Videoyu Değiştir" : "Video Seç"}
+            </button>
+
+            {/* Kişi bilgisi */}
+            <input className={inputCls} placeholder="İsim Soyisim" value={it.name ?? ""} onChange={(e) => patch(i, { name: e.target.value })} />
+            <div className="flex gap-2">
+              <input className={inputCls} placeholder="Görev" value={it.role ?? ""} onChange={(e) => patch(i, { role: e.target.value })} />
+              <input className={inputCls} placeholder="Marka" value={it.company ?? ""} onChange={(e) => patch(i, { company: e.target.value })} />
+            </div>
+          </div>
+        )
+      })}
+
+      <button
+        type="button"
+        onClick={add}
+        className={cn(
+          "ff-shape-button h-9 flex items-center justify-center gap-1.5 border border-[#CCCCCC] bg-white",
+          "text-[11px] font-semibold text-[#333333] hover:border-[#ff4fd8] hover:text-[#ff4fd8] transition-all duration-150",
+        )}
+      >
+        + Video Referans Ekle
+      </button>
+
+      {pickerFor !== null && (
+        <MediaPicker
+          allowedTypes={["video"]}
+          onSelect={(url) => { patch(pickerFor, { videoUrl: url }); setPickerFor(null) }}
+          onClose={() => setPickerFor(null)}
+        />
+      )}
+    </div>
+  )
+}
+
 // ── Main component ────────────────────────────────
 export function PropertyEditor() {
   // Scoped selectors — avoids re-renders triggered by unrelated store slices
@@ -533,6 +618,17 @@ export function PropertyEditor() {
                   name={fieldName}
                   value={currentVal}
                   schema={innerDef as { description?: string }}
+                  onChange={(v) => handleChange(fieldName, v)}
+                />
+              )
+            }
+
+            // Video Referanslar: dizi öğelerini video seçicili yapılandırılmış editörle
+            if (fieldName === "items" && section.type === "video-testimonials") {
+              return (
+                <VideoTestimonialItemsEditor
+                  key={fieldName}
+                  value={currentVal}
                   onChange={(v) => handleChange(fieldName, v)}
                 />
               )
