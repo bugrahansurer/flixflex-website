@@ -73,7 +73,7 @@ export function BlogTemplateClassic({ post, related }: ClassicTemplateProps) {
       {/* ── Article ────────────────────────────────── */}
       <article className="mx-auto max-w-[1440px] px-6 md:px-10 xl:px-16 pb-20 md:pb-28">
         {/* Centred content column */}
-        <div className="max-w-2xl mx-auto">
+        <div className="mx-auto">
 
           {/* Category + read time */}
           <div className="flex flex-wrap items-center gap-3 mb-6 -mt-4 relative z-10">
@@ -95,15 +95,15 @@ export function BlogTemplateClassic({ post, related }: ClassicTemplateProps) {
 
           {/* Author strip */}
           <div className="flex items-center gap-3 pb-8 mb-8 border-b border-[var(--border)]">
-            <span className="ff-shape-container w-10 h-10 flex items-center justify-center text-sm font-bold text-white bg-[var(--ff-purple)] flex-shrink-0">
+            <span className="ff-shape-container w-8 h-8 -mt-1 flex items-center justify-center text-xs font-bold text-white bg-[var(--ff-purple)] flex-shrink-0">
               {post.author.initials}
             </span>
             <div>
-              <p className="text-sm font-semibold text-[var(--foreground)] leading-none mb-1">
+              <p className="text-sm font-semibold text-[var(--foreground)] leading-none mb-0.5">
                 {post.author.name}
               </p>
               <p className="text-[12px] text-[var(--foreground-faint)] leading-none">
-                {post.author.role} · {formatDate(post.publishedAt)}
+                {formatDate(post.publishedAt)}
               </p>
             </div>
           </div>
@@ -116,7 +116,7 @@ export function BlogTemplateClassic({ post, related }: ClassicTemplateProps) {
             {post.tags.map((tag) => (
               <span
                 key={tag}
-                className="px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] border border-[var(--border)] text-[var(--foreground-muted)] hover:border-[var(--ff-purple)]/40 hover:text-[var(--ff-purple)] transition-colors duration-200 cursor-default"
+                className="ff-shape-container px-3 py-1.5 text-[11px] font-semibold border border-[var(--border)] text-[var(--foreground-muted)] hover:border-[var(--ff-purple)]/40 hover:text-[var(--ff-purple)] transition-colors duration-200 cursor-default"
               >
                 #{tag}
               </span>

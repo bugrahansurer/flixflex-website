@@ -97,7 +97,7 @@ export default async function ServiceDetailPage({
         <div className="relative mx-auto max-w-[1440px] px-6 md:px-10 xl:px-16">
           {/* ── Breadcrumb ── */}
           <nav aria-label="Breadcrumb" className="mb-8">
-            <ol className="flex items-center gap-2 text-[12px] uppercase tracking-[0.12em] text-[var(--foreground-faint)]">
+            <ol className="flex items-center gap-2 text-[12px] text-[var(--foreground-faint)]">
               <li>
                 <Link
                   href="/hizmetler"

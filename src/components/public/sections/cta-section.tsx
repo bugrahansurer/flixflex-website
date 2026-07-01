@@ -302,7 +302,7 @@ export function CTASection({
                   "ff-shape-button",
                   "group inline-flex items-center justify-center gap-2.5",
                   "px-10 py-5 h-9 text-[15px] font-medium",
-                  "bg-transparent text-[var(--ff-purple)] border border-[var(--ff-purple)]",
+                  "bg-ff-purple/5 backdrop-blur-xs text-[var(--ff-purple)] border border-[var(--ff-purple)]",
                   "hover:bg-[var(--ff-purple)]/10",
                   "transition-colors duration-300 whitespace-nowrap"
                 )}

@@ -60,7 +60,7 @@ export function ServicesShowcase({
         style={{ background: "radial-gradient(circle, rgba(255,79,216,0.10) 0%, transparent 60%)" }}
       />
 
-      <div className="relative mx-auto max-w-[1280px] px-6 md:px-10 xl:px-16">
+      <div className="relative mx-auto max-w-[1440px] px-6 md:px-10 xl:px-16">
         {/* Başlık */}
         <div className="max-w-2xl">
           <h2
@@ -126,7 +126,7 @@ export function ServicesShowcase({
                           key={sub.href}
                           href={sub.href}
                           className={cn(
-                            "group/sub flex flex-col gap-1 rounded-xl border border-[var(--border)] bg-[var(--background)]/40 px-3.5 py-3",
+                            "group/sub flex flex-col ff-shape-container gap-1 rounded-xl border border-[var(--border)] bg-[var(--background)]/40 px-3.5 py-3",
                             "transition-[border-color,transform,background-color] duration-200",
                             "hover:-translate-y-0.5 hover:border-[var(--ff-purple)]/45 hover:bg-[var(--ff-purple)]/[0.04]",
                           )}

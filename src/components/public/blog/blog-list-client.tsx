@@ -89,11 +89,11 @@ export function BlogListClient({ posts = POSTS }: { posts?: BlogPost[] } = {}) {
             variants={staggerContainer}
             initial="hidden"
             animate="visible"
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6"
           >
             {paginated.map((post) => (
               <motion.div key={post.slug} variants={fadeInUp}>
-                <BlogCard post={post} className="p-6 h-full" />
+                <BlogCard post={post} className="p-4 h-full" />
               </motion.div>
             ))}
           </motion.div>

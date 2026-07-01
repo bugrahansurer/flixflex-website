@@ -225,7 +225,6 @@ export function ServicesMegaMenuTrigger({
                 // Opak yüzey: header ile birebir aynı renk, dikişsiz süreklilik.
                 // (Cam efekti dokulu hero üstünde header'la tutmuyordu.)
                 "bg-[var(--background)] border-b border-[var(--border)]",
-                "shadow-[0_24px_80px_rgba(0,0,0,0.22)]",
               )}
             >
               {/* Inner content aligned to the site grid; background stays full-width */}

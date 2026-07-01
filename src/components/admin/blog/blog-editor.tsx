@@ -147,7 +147,7 @@ export function BlogEditor({ mode, initial }: BlogEditorProps) {
       <div className="flex items-end justify-between gap-4 mb-6 flex-wrap">
         <div>
           <h1 className="font-display text-2xl font-bold text-[var(--foreground)]">
-            {mode === "new" ? "Yeni Yazı" : "Yazıyı Düzenle"}
+            {mode === "new" ? "Yeni Blog Yazısı" : "Blog Yazısını Düzenle"}
           </h1>
           <p className="text-xs text-[var(--foreground-muted)] mt-1">
             Modern editör — kapak & metin-içi görseller, markdown, canlı önizleme

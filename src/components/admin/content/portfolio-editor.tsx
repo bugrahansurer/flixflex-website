@@ -461,8 +461,8 @@ export function PortfolioEditor({ mode, initial, services }: PortfolioEditorProp
     sidebarItems: Array.isArray(initial?.sidebarItems)
       ? initial?.sidebarItems as { heading: string; body: string }[]
       : [
-        { heading: "Zorluk", body: "" },
-        { heading: "Yaklaşım", body: "" },
+        { heading: "Problem", body: "" },
+        { heading: "Çözüm", body: "" },
         { heading: "Sonuç", body: "" },
       ],
     resultStats: Array.isArray(initial?.resultStats)
@@ -736,7 +736,7 @@ export function PortfolioEditor({ mode, initial, services }: PortfolioEditorProp
 
             {/* Challenge / Approach / Results Columns */}
             <div className="ff-shape-container ff-card space-y-4">
-              <h2 className="text-xs font-bold text-[#333333] uppercase tracking-wider border-b border-[#F0F0F0] pb-2">Zorluk / Yaklaşım / Sonuç Yapısı</h2>
+              <h2 className="text-xs font-bold text-[#333333] uppercase tracking-wider border-b border-[#F0F0F0] pb-2">Problem / Çözüm / Sonuç Yapısı</h2>
               <div className="space-y-4">
                 {form.sidebarItems.map((item, index) => (
                   <div key={index} className="grid md:grid-cols-[180px_1fr] gap-3 items-start border-b border-[#F7F7F5] pb-3 last:border-0 last:pb-0">
@@ -748,7 +748,7 @@ export function PortfolioEditor({ mode, initial, services }: PortfolioEditorProp
                         onChange={(e) => patch({
                           sidebarItems: form.sidebarItems.map((x, i) => i === index ? { ...x, heading: e.target.value } : x)
                         })}
-                        placeholder="Örn: Zorluk"
+                        placeholder="Örn: Problem"
                       />
                     </div>
                     <div>

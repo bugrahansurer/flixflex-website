@@ -54,13 +54,13 @@ function VideoCard({ item, index }: { item: VideoTestimonialItem; index: number 
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.55, delay: Math.min(index * 0.07, 0.35), ease: [0.16, 1, 0.3, 1] }}
       className={cn(
-        "group ff-shape-container ff-card overflow-hidden border border-[var(--border)]",
+        "group ff-shape-container ff-card overflow-hidden bg-surface/10 backdrop-blur-sm border border-[var(--border)]",
         "transition-[border-color,box-shadow,transform] duration-300",
         "hover:-translate-y-1 hover:border-[var(--ff-purple)]/45 hover:shadow-[0_20px_60px_rgba(255,79,216,0.14)]",
       )}
     >
       {/* Video */}
-      <div className="relative aspect-[4/5] w-full overflow-hidden bg-[var(--surface)]">
+      <div className="ff-shape-container relative aspect-[4/5] w-full overflow-hidden bg-[var(--surface)]">
         {muxId ? (
           <MuxPlayer
             playbackId={muxId}
@@ -90,13 +90,13 @@ function VideoCard({ item, index }: { item: VideoTestimonialItem; index: number 
       </div>
 
       {/* Footer — kişi bilgisi */}
-      <div className="flex items-center gap-3 p-4">
+      <div className="flex items-center gap-3 pt-4">
         <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[var(--ff-purple)]/12 font-display text-[13px] font-bold text-[var(--ff-purple)]">
           {initialsOf(item.name)}
         </span>
         <div className="min-w-0">
           <p className="truncate text-[13.5px] font-semibold text-[var(--foreground)]">{item.name || "İsim Soyisim"}</p>
-          <p className="truncate text-[11.5px] text-[var(--foreground-muted)]">
+          <p className="truncate text-[11.5px] text-[var(--foreground-muted)] -mt-1">
             {[item.role, item.company].filter(Boolean).join(" · ") || "Görev · Marka"}
           </p>
         </div>

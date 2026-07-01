@@ -139,15 +139,15 @@ export function BlogTemplateVisual({ post, related }: VisualTemplateProps) {
       <section className="mx-auto max-w-[1440px] px-6 md:px-10 xl:px-16 pt-10 pb-4">
         <div className="flex flex-col md:flex-row md:items-center gap-6 md:gap-10 pb-10 border-b border-[var(--border)]">
           <div className="flex items-center gap-3 flex-shrink-0">
-            <span className="w-11 h-11 flex items-center justify-center text-sm font-bold text-white bg-[var(--ff-purple)] flex-shrink-0">
+            <span className="ff-shape-container w-8 h-8 -mt-1 flex items-center justify-center text-xs font-bold text-white bg-[var(--ff-purple)] flex-shrink-0">
               {post.author.initials}
             </span>
             <div>
-              <p className="font-semibold text-[var(--foreground)] text-sm leading-none mb-1">
+              <p className="font-semibold text-[var(--foreground)] text-sm leading-none mb-0.5">
                 {post.author.name}
               </p>
               <p className="text-[12px] text-[var(--foreground-faint)] leading-none">
-                {post.author.role}
+                {formatDate(post.publishedAt)}
               </p>
             </div>
           </div>
@@ -170,19 +170,19 @@ export function BlogTemplateVisual({ post, related }: VisualTemplateProps) {
                 index={idx - 1}
               />
             )}
-            <div className="max-w-3xl mx-auto">
+            <div className="mx-auto">
               <MarkdownRenderer content={section} />
             </div>
           </div>
         ))}
 
         {/* Tags */}
-        <div className="max-w-3xl mx-auto">
+        <div className="mx-auto">
           <div className="flex flex-wrap gap-2 mt-10 pt-8 border-t border-[var(--border)]">
             {post.tags.map((tag) => (
               <span
                 key={tag}
-                className="px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] border border-[var(--border)] text-[var(--foreground-muted)] hover:border-[var(--ff-purple)] hover:text-[var(--ff-purple)] transition-colors duration-200 cursor-default"
+                className="ff-shape-container px-3 py-1.5 text-[11px] font-semibold border border-[var(--border)] text-[var(--foreground-muted)] hover:border-[var(--ff-purple)] hover:text-[var(--ff-purple)] transition-colors duration-200 cursor-default"
               >
                 #{tag}
               </span>

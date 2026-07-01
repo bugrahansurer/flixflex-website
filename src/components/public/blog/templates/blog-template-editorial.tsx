@@ -144,7 +144,7 @@ export function BlogTemplateEditorial({ post, related }: EditorialTemplateProps)
               {post.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] border border-[var(--border)] text-[var(--foreground-muted)] hover:border-[var(--ff-purple)] hover:text-[var(--ff-purple)] transition-colors duration-200 cursor-default"
+                  className="ff-shape-container px-3 py-1.5 text-[11px] font-semibold border border-[var(--border)] text-[var(--foreground-muted)] hover:border-[var(--ff-purple)] hover:text-[var(--ff-purple)] transition-colors duration-200 cursor-default"
                 >
                   #{tag}
                 </span>
@@ -168,20 +168,20 @@ export function BlogTemplateEditorial({ post, related }: EditorialTemplateProps)
               )}
 
               {/* Author card */}
-              <div className="border border-[var(--border)] p-6">
+              <div className="ff-shape-container border border-[var(--border)] p-6">
                 <p className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[var(--ff-purple)] mb-4">
                   Yazar
                 </p>
-                <div className="flex items-start gap-3">
-                  <span className="w-11 h-11 flex items-center justify-center text-sm font-bold text-white bg-[var(--ff-purple)] flex-shrink-0">
+                <div className="flex items-center gap-3">
+                  <span className="ff-shape-container w-8 h-8 -mt-1 flex items-center justify-center text-xs font-bold text-white bg-[var(--ff-purple)] flex-shrink-0">
                     {post.author.initials}
                   </span>
                   <div>
-                    <p className="font-semibold text-[var(--foreground)] text-sm leading-snug mb-1">
+                    <p className="font-semibold text-[var(--foreground)] text-sm leading-snug -mb-0.5">
                       {post.author.name}
                     </p>
                     <p className="text-[12px] text-[var(--foreground-faint)] leading-snug">
-                      {post.author.role}
+                      {formatDate(post.publishedAt)}
                     </p>
                   </div>
                 </div>
@@ -189,7 +189,7 @@ export function BlogTemplateEditorial({ post, related }: EditorialTemplateProps)
 
               {/* Related in sidebar — compact list */}
               {related.length > 0 && (
-                <div className="border border-[var(--border)] p-6">
+                <div className="ff-shape-container border border-[var(--border)] p-6">
                   <p className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[var(--ff-purple)] mb-4">
                     İlgili Yazılar
                   </p>

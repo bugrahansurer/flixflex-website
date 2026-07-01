@@ -8,7 +8,7 @@ import { ArrowLeft } from "@/lib/icons"
 import { BlogEditor } from "@/components/admin/blog/blog-editor"
 
 export const metadata: Metadata = {
-  title: "Yeni Yazı",
+  title: "Yeni Blog Yazısı",
 }
 
 export default function NewBlogPage() {

@@ -244,7 +244,7 @@ export function WhyUsSection({ eyebrow, headline, subheadline, items }: WhyUsSec
             className={cn(
               "ff-shape-button",
               "group inline-flex items-center justify-center gap-2.5",
-              "px-8 py-4 text-sm font-medium uppercase tracking-[0.05em]",
+              "px-4 py-2 text-sm font-medium",
               "bg-[var(--ff-purple)] text-white border border-[var(--ff-purple)]",
               "hover:bg-[var(--ff-purple-hover)] hover:border-[var(--ff-purple-hover)]",
               "hover:shadow-[0_4px_24px_rgba(255, 79, 216,0.45)]",

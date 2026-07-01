@@ -97,19 +97,6 @@ export function HeroSection({
       </div>
 
       <div className="relative z-10 mx-auto w-full max-w-4xl px-6 text-center">
-        {/* Eyebrow */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="ff-shape-container mx-auto inline-flex items-center gap-2 mb-8 border border-[var(--ff-purple)]/30 bg-[var(--ff-purple)]/[0.08] px-3.5 py-1.5"
-        >
-          <span className="ff-hero-dot h-1.5 w-1.5 rounded-full bg-[var(--ff-purple)]" />
-          <span className="text-[11px] font-medium tracking-wide text-[var(--ff-purple)]">
-            Next-Gen Reklam Ajansı · 2026
-          </span>
-        </motion.div>
-
         {/* Headline: lead + değişen vurgu kelimesi */}
         <h1 className="font-display font-extrabold leading-[0.98] tracking-[-0.02em] text-[clamp(40px,7.5vw,92px)]">
           <WordReveal text={lead} />
@@ -121,7 +108,7 @@ export function HeroSection({
                 animate={{ y: "0%", opacity: 1 }}
                 exit={{ y: "-110%", opacity: 0 }}
                 transition={{ duration: 0.5, ease: EASE }}
-                className="ff-hero-gradient-text inline-block"
+                className="ff-hero-gradient-text inline-block pb-2 md:pb-4"
               >
                 {ROTATING[wordIdx]}
               </motion.span>

@@ -20,7 +20,7 @@ export function RelatedPosts({ posts, className }: RelatedPostsProps) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {posts.map((post) => (
-          <BlogCard key={post.slug} post={post} />
+          <BlogCard className="p-4" key={post.slug} post={post} />
         ))}
       </div>
     </section>

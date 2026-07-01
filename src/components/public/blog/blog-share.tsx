@@ -42,8 +42,8 @@ export function BlogShare({ title, slug, className }: BlogShareProps) {
   }
 
   const btnBase = cn(
-    "inline-flex items-center gap-2 px-4 py-2.5",
-    "text-[11px] font-semibold tracking-[0.1em] uppercase",
+    "ff-shape-container inline-flex items-center gap-2 px-4 py-1.5",
+    "text-[11px] font-semibold",
     "border border-[var(--border)]",
     "transition-all duration-200",
     "hover:border-[var(--ff-purple)] hover:text-[var(--ff-purple)]",

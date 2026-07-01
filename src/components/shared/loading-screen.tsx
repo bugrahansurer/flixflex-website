@@ -71,7 +71,7 @@ export function LoadingScreen({ logoUrl, logoHeight }: LoadingScreenProps) {
               />
             ) : (
               <span className="inline-flex items-center gap-2.5 select-none">
-                <span className="flex h-10 w-10 items-center justify-center bg-[var(--ff-purple)] text-white font-bold text-sm tracking-tight">
+                <span className="ff-shape-button flex h-10 w-10 items-center justify-center bg-[var(--ff-purple)] text-white font-bold text-sm tracking-tight">
                   FF
                 </span>
                 <span className="font-display text-2xl font-extrabold leading-none tracking-tight text-white">

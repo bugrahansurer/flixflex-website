@@ -329,7 +329,7 @@ function MainServiceCard({
                 return (
                   <div
                     key={child.id}
-                    className="flex items-center justify-between gap-4 p-2 bg-[#f7f7f5] hover:bg-[#ff4fd8]/5 border border-[#CCCCCC]/40 hover:border-[#ff4fd8]/20 transition-all ff-shape-container group/row"
+                    className="flex items-center justify-between gap-4 p-2 bg-[#f7f7f5] hover:bg-[#ff4fd8]/5 border border-[#CCCCCC]/40 hover:border-[#ff4fd8]/20 transition-all ff-shape-button group/row"
                   >
                     <div className="flex items-center gap-2 overflow-hidden">
                       <ChildIcon size={12} className="text-[#888888] shrink-0" />

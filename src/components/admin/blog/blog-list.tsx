@@ -112,7 +112,7 @@ export function BlogList({ initialPosts }: BlogListProps) {
               leftIcon={<Plus size={13} />}
               onClick={() => router.push("/admin/blog/yeni")}
             >
-              Yeni Yazı
+              Yeni Blog Yazısı
             </FFButton>
           </Can>
           <Can resource="blog" action="create">
@@ -289,7 +289,7 @@ export function BlogList({ initialPosts }: BlogListProps) {
               {filtered.length === 0 && (
                 <tr>
                   <td colSpan={5} className="px-4 py-12 text-center text-[12px] text-[var(--foreground-faint)]">
-                    Hiç yazı yok — filtreleri değiştir veya yeni yazı oluştur.
+                    Hiç yazı yok — filtreleri değiştir veya yeni blog yazısı oluştur.
                   </td>
                 </tr>
               )}

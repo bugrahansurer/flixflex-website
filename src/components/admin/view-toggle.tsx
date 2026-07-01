@@ -13,12 +13,12 @@ export function ViewToggle({
   onChange: (mode: ViewMode) => void
 }) {
   return (
-    <div className="ff-shape-button flex items-center justify-center px-1 border border-[#CCCCCC] bg-[#f7f7f5] overflow-hidden h-9">
+    <div className="ff-shape-button flex items-center justify-center px-0.5 border border-[#CCCCCC] bg-[#f7f7f5] overflow-hidden h-9">
       <button
         type="button"
         onClick={() => onChange("grid")}
         className={cn(
-          "ff-shape-button w-7 h-7 flex items-center justify-center transition-colors",
+          "ff-shape-button w-7.5 h-7.5 flex items-center justify-center transition-colors",
           mode === "grid"
             ? "bg-[var(--ff-purple)] text-white"
             : "text-[#666666] hover:text-[#ff4fd8]"
