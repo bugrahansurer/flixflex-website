@@ -53,7 +53,7 @@ export function DeletePageButton({ pageId, pageTitle }: DeletePageButtonProps) {
         {/* Content */}
         <Dialog.Content
           className={cn(
-            "fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2",
+            "ff-shape-container fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2",
             "w-full max-w-md",
             "bg-[var(--surface)] border border-[var(--border)]",
             "p-6 shadow-2xl",
@@ -91,7 +91,7 @@ export function DeletePageButton({ pageId, pageTitle }: DeletePageButtonProps) {
           <div className="flex items-center justify-end gap-3">
             <Dialog.Close asChild>
               <button
-                className="px-4 py-2 text-[11px] font-medium uppercase tracking-wider border border-[var(--border)] text-[var(--foreground-muted)] hover:border-[var(--border-strong)] transition-colors"
+                className="ff-shape-button px-4 py-2 text-[11px] font-medium uppercase tracking-wider border border-[var(--border)] text-[var(--foreground-muted)] hover:border-[var(--border-strong)] transition-colors"
                 disabled={loading}
               >
                 Vazgeç
@@ -101,7 +101,7 @@ export function DeletePageButton({ pageId, pageTitle }: DeletePageButtonProps) {
             <button
               onClick={handleDelete}
               disabled={loading}
-              className="flex items-center gap-2 px-4 py-2 text-[11px] font-medium uppercase tracking-wider bg-red-600 text-white border border-red-600 hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="ff-shape-button flex items-center gap-2 px-4 py-2 text-[11px] font-medium uppercase tracking-wider bg-red-600 text-white border border-red-600 hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading && (
                 <span className="w-3 h-3 border border-white border-t-transparent rounded-full animate-spin" />

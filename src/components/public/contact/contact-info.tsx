@@ -1,7 +1,8 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Mail, Phone, MapPin, Clock, Instagram, Linkedin, Youtube } from "@/lib/icons"
+import { Mail, Phone, MapPin, Clock } from "@/lib/icons"
+import { getSocialIcon, DEFAULT_SOCIAL_LINKS, type SocialLinkItem } from "@/lib/social-platforms"
 import { cn } from "@/lib/utils"
 import { Eyebrow } from "@/components/ui/eyebrow"
 import { staggerContainer, fadeInUp } from "@/lib/animations"
@@ -70,30 +71,31 @@ function ContactDecor() {
   )
 }
 
-// ── Social link config ─────────────────────────────────────
-const SOCIAL = [
-  {
-    label: "Instagram",
-    href: "https://instagram.com/flixflex",
-    icon: Instagram,
-    handle: "@flixflex",
-  },
-  {
-    label: "LinkedIn",
-    href: "https://linkedin.com/company/flixflex",
-    icon: Linkedin,
-    handle: "FlixFlex Ajans",
-  },
-  {
-    label: "YouTube",
-    href: "https://youtube.com/@flixflex",
-    icon: Youtube,
-    handle: "FlixFlex TV",
-  },
-]
+export interface ContactInfoProps {
+  email?: string
+  phone?: string
+  address?: string
+  workingHours?: string
+  /** admin → Ayarlar → Site → site_social_links (parseSocialLinks ile çözülmüş). */
+  social?: SocialLinkItem[]
+}
 
 // ── Main component ─────────────────────────────────────────
-export function ContactInfo() {
+// Değerler admin → Ayarlar → Site'den gelir (prop). Boşsa mevcut varsayılanlara düşer.
+export function ContactInfo({ email, phone, address, workingHours, social }: ContactInfoProps = {}) {
+  const emailVal = email?.trim() || "iletisim@flixflex.com"
+  const phoneVal = phone?.trim() || "+90 532 383 35 54"
+  const addressVal = address?.trim() || "Mutsan Mh. İkitelli Sk. No:14 D:41, İstanbul"
+  const hoursVal = workingHours?.trim() || "Pazartesi – Cuma · 09:00 – 18:00"
+  const socialList = social && social.length > 0 ? social.filter((s) => s?.url) : DEFAULT_SOCIAL_LINKS
+
+  const details = [
+    { icon: Mail, label: "E-posta", value: emailVal, href: `mailto:${emailVal}` },
+    { icon: Phone, label: "Telefon", value: phoneVal, href: `tel:${phoneVal.replace(/[^\d+]/g, "")}` },
+    { icon: MapPin, label: "Adres", value: addressVal, href: null as string | null },
+    { icon: Clock, label: "Çalışma Saatleri", value: hoursVal, href: null as string | null },
+  ]
+
   return (
     <motion.aside
       variants={staggerContainer}
@@ -119,32 +121,7 @@ export function ContactInfo() {
 
       {/* Contact details */}
       <motion.ul variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
-        {[
-          {
-            icon: Mail,
-            label: "E-posta",
-            value: "iletisim@flixflex.com",
-            href: "mailto:contact@flixflex.com",
-          },
-          {
-            icon: Phone,
-            label: "Telefon",
-            value: "+90 532 383 35 54",
-            href: "tel:+905323833554",
-          },
-          {
-            icon: MapPin,
-            label: "Adres",
-            value: "Mutsan Mh. İkitelli Sk. No:14 D:41, İstanbul",
-            href: null,
-          },
-          {
-            icon: Clock,
-            label: "Çalışma Saatleri",
-            value: "Pazartesi – Cuma · 09:00 – 18:00",
-            href: null,
-          },
-        ].map(({ icon: Icon, label, value, href }) => (
+        {details.map(({ icon: Icon, label, value, href }) => (
           <motion.li
             key={label}
             variants={fadeInUp}
@@ -200,32 +177,35 @@ export function ContactInfo() {
           Sosyal Medya
         </p>
         <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {SOCIAL.map(({ label, href, icon: Icon, handle }) => (
-            <li key={label}>
-              <a
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={cn(
-                  "group flex items-center gap-3",
-                  "text-sm text-[var(--foreground-muted)]",
-                  "hover:text-[var(--ff-purple)] transition-colors duration-150"
-                )}
-              >
-                <span
+          {socialList.map((s, i) => {
+            const Icon = getSocialIcon(s.platform)
+            return (
+              <li key={`${s.platform}-${i}`}>
+                <a
+                  href={s.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className={cn(
-                    "ff-shape-button w-8 h-8 flex items-center justify-center shrink-0",
-                    "border border-[var(--border)]",
-                    "group-hover:border-[var(--ff-purple)] group-hover:bg-[var(--ff-purple)]/8",
-                    "transition-colors duration-150"
+                    "group flex items-center gap-3",
+                    "text-sm text-[var(--foreground-muted)]",
+                    "hover:text-[var(--ff-purple)] transition-colors duration-150"
                   )}
                 >
-                  <Icon size={14} />
-                </span>
-                <span>{handle}</span>
-              </a>
-            </li>
-          ))}
+                  <span
+                    className={cn(
+                      "ff-shape-button w-8 h-8 flex items-center justify-center shrink-0",
+                      "border border-[var(--border)]",
+                      "group-hover:border-[var(--ff-purple)] group-hover:bg-[var(--ff-purple)]/8",
+                      "transition-colors duration-150"
+                    )}
+                  >
+                    <Icon size={14} />
+                  </span>
+                  <span>{s.label}</span>
+                </a>
+              </li>
+            )
+          })}
         </ul>
       </motion.div>
 

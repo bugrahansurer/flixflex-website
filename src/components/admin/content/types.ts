@@ -14,6 +14,8 @@ export interface AdminPortfolioRecord {
   category: string
   description: string | null
   content?: string | null
+  linkUrl?: string | null
+  linkLabel?: string | null
   coverImage: string
   images: string[]
   tags: string[]

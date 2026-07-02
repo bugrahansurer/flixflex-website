@@ -23,6 +23,9 @@ export function FlixFlexFooter({ siteSettings = {} }: { siteSettings?: Record<st
   const phone = siteSettings.site_phone || ""
   const address = siteSettings.site_address || "Levent, İstanbul · Türkiye"
   const socialLinks = parseSocialLinks(siteSettings.site_social_links)
+  // Alt bar sağdaki kompakt konum da site_address'ten beslenir: tam adresin
+  // son virgül parçasını (şehir/ülke) gösterir. Örn "…D:41, İstanbul" → "İstanbul".
+  const shortLocation = address.split(",").pop()?.trim() || address
 
   return (
 
@@ -170,7 +173,7 @@ export function FlixFlexFooter({ siteSettings = {} }: { siteSettings?: Record<st
             {/* Locale */}
             <div className="flex items-center gap-2 text-[11px] text-[var(--foreground-faint)]">
               <span className="ff-shape-container w-1.5 h-1.5 bg-[var(--ff-purple)] animate-pulse" />
-              <span>{siteName} · İstanbul, Türkiye</span>
+              <span>{siteName} · {shortLocation}</span>
             </div>
           </div>
         </div>

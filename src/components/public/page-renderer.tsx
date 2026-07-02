@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import type { SectionBlock, SectionType } from "@/types/page-builder"
+import type { SocialLinkItem } from "@/lib/social-platforms"
 import {
   HeroSection,
   HeroVideoSection,
@@ -88,16 +89,34 @@ interface SectionRendererProps {
   [key: string]: unknown
 }
 
+// Site ayarlarından (admin → Ayarlar → Site) beslenen iletişim bilgileri.
+// contact-info section'ı bunları ContactInfo kartına aktarır.
+export interface ContactSettings {
+  email?: string
+  phone?: string
+  address?: string
+  workingHours?: string
+  social?: SocialLinkItem[]
+}
+
 interface PageRendererProps {
   sections: SectionBlock[]
   portfolioItems?: unknown[]
   servicesItems?: Service[]
   blogPosts?: BlogPost[]
+  contactSettings?: ContactSettings
+}
+
+type RenderContext = {
+  portfolioItems?: unknown[]
+  servicesItems?: Service[]
+  blogPosts?: BlogPost[]
+  contactSettings?: ContactSettings
 }
 
 const SECTION_RENDERERS: Partial<Record<SectionType, (
   section: SectionBlock,
-  context?: { portfolioItems?: unknown[]; servicesItems?: Service[]; blogPosts?: BlogPost[] }
+  context?: RenderContext
 ) => React.ReactNode>> = {
   "hero": (s) => {
     const p = s.props as SectionRendererProps
@@ -193,7 +212,7 @@ const SECTION_RENDERERS: Partial<Record<SectionType, (
     </section>
   ),
   "contact-hero": () => <ContactHero />,
-  "contact-info": () => (
+  "contact-info": (s, ctx) => (
     <section className="relative bg-[var(--background)] py-20 md:py-28">
       <div className="relative mx-auto max-w-[1440px] px-6 md:px-10 xl:px-16">
         <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-start">
@@ -201,7 +220,7 @@ const SECTION_RENDERERS: Partial<Record<SectionType, (
             <ContactForm />
           </div>
           <div className="lg:col-span-5">
-            <ContactInfo />
+            <ContactInfo {...(ctx?.contactSettings ?? {})} />
           </div>
         </div>
       </div>
@@ -398,7 +417,7 @@ const SECTION_RENDERERS: Partial<Record<SectionType, (
   },
 }
 
-export function PageRenderer({ sections, portfolioItems, servicesItems, blogPosts }: PageRendererProps) {
+export function PageRenderer({ sections, portfolioItems, servicesItems, blogPosts, contactSettings }: PageRendererProps) {
   const { setMobileDockVisible } = useUIStore()
   const setHeaderTone = useUIStore((s) => s.setHeaderTone)
   const sectionRefs = React.useRef<Map<string, HTMLElement>>(new Map())
@@ -521,7 +540,7 @@ export function PageRenderer({ sections, portfolioItems, servicesItems, blogPost
                     }}
                     fullBleed={isFullBleed(section.type)}
                   >
-                    {renderer(section, { portfolioItems, servicesItems, blogPosts })}
+                    {renderer(section, { portfolioItems, servicesItems, blogPosts, contactSettings })}
                   </FlowSection>
                 )
               })}
@@ -557,7 +576,7 @@ export function PageRenderer({ sections, portfolioItems, servicesItems, blogPost
                   }}
                   className="w-full"
                 >
-                  {renderer(section, { portfolioItems, servicesItems, blogPosts })}
+                  {renderer(section, { portfolioItems, servicesItems, blogPosts, contactSettings })}
                 </SectionWrapper>
               )
             })}

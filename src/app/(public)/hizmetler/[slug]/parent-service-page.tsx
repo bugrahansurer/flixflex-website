@@ -116,7 +116,7 @@ export function ParentServicePage({ service, serviceIndex }: ParentServicePagePr
               variants={staggerContainer}
               initial="hidden"
               animate="visible"
-              className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
             >
               {children.map((child) => (
                 <ChildServiceCard key={child.slug} child={child} />
@@ -201,17 +201,17 @@ function ChildServiceCard({ child }: { child: Service }) {
     <motion.div
       variants={scaleInUp}
       className={cn(
-        "ff-shape-container group relative bg-[var(--surface-elevated)] border border-[var(--border)]",
-        "p-6 transition-all duration-300 hover:border-[var(--ff-purple-border)]",
+        "ff-shape-container ff-card group relative bg-[var(--surface-elevated)] border border-[var(--border)]",
+        "transition-all duration-300 hover:border-[var(--ff-purple-border)]",
         "hover:shadow-[0_0_40px_rgba(255, 79, 216,0.12)]",
         "flex flex-col"
       )}
     >
       <div className="absolute inset-x-0 top-0 h-px bg-[var(--ff-purple)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-      <div className="flex items-start gap-4 mb-4">
-        <div className="w-10 h-10 rounded-full bg-[var(--ff-purple)]/10 border border-[var(--ff-purple)]/20 flex items-center justify-center shrink-0 group-hover:bg-[var(--ff-purple)]/20 transition-colors">
-          <Icon size={18} className="text-[var(--ff-purple)]" />
+      <div className="flex items-center gap-2 mb-4">
+        <div className="w-8 h-8 rounded-full bg-[var(--ff-purple)]/10 border border-[var(--ff-purple)]/20 flex items-center justify-center shrink-0 group-hover:bg-[var(--ff-purple)]/20 transition-colors">
+          <Icon size={15} className="text-[var(--ff-purple)]" />
         </div>
         <div className="flex-1 min-w-0">
           <h3 className="text-[15px] font-extrabold text-[var(--foreground)] leading-tight group-hover:text-[var(--ff-purple)] transition-colors">
@@ -228,22 +228,6 @@ function ChildServiceCard({ child }: { child: Service }) {
       <p className="text-[13px] text-[var(--foreground-muted)] leading-relaxed flex-1 line-clamp-3">
         {child.description}
       </p>
-
-      <div className="mt-4 pt-4 border-t border-[var(--border)] flex items-center justify-between">
-        <div className="flex flex-wrap gap-1.5">
-          {child.features.slice(0, 3).map((f, i) => (
-            <span key={i} className="ff-shape-container px-2 py-0.5 text-[10px] border border-[var(--border)] text-[var(--foreground-faint)] bg-[var(--surface)]">
-              {f}
-            </span>
-          ))}
-        </div>
-        <Link
-          href={`/hizmetler/${child.slug}`}
-          className="w-8 h-8 rounded-full bg-[var(--ff-purple)]/10 border border-[var(--ff-purple)]/20 flex items-center justify-center text-[var(--ff-purple)] group-hover:bg-[var(--ff-purple)] group-hover:text-white transition-all duration-300 shrink-0"
-        >
-          <ArrowRight size={14} />
-        </Link>
-      </div>
     </motion.div>
   )
 }

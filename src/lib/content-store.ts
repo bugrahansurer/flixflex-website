@@ -94,6 +94,8 @@ export function mapPortfolio(item: PortfolioWithServices): PublicPortfolioItem {
     year: item.year ?? new Date().getFullYear(),
     category: item.category,
     description: item.description ?? "",
+    linkUrl: item.linkUrl,
+    linkLabel: item.linkLabel,
     coverImage: item.coverImage,
     images: item.images,
     gradient: item.gradient || DEFAULT_GRADIENT,

@@ -3,7 +3,6 @@ import { notFound } from "next/navigation"
 import { CTASection, PORTFOLIO } from "@/components/public"
 import { listPublishedPortfolio, getPublishedPortfolioBySlug } from "@/lib/content-store"
 import { ProjectHero } from "./_components/project-hero"
-import { ProjectSummary } from "./_components/project-summary"
 import { ProjectCover } from "./_components/project-cover"
 import { ProjectNarrative } from "./_components/project-narrative"
 import { ProjectGallerySection } from "./_components/project-gallery-section"
@@ -77,7 +76,6 @@ export default async function ProjectDetailPage({
   return (
     <>
       <ProjectHero project={project} />
-      <ProjectSummary project={project} />
       <ProjectCover project={project} />
       <ProjectNarrative project={project} />
       <ProjectGallerySection project={project} />

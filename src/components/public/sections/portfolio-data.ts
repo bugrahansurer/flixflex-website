@@ -13,6 +13,10 @@ export interface PortfolioItem {
   year: number
   category: PortfolioCategory
   description: string
+  /** Proje sitesi / sosyal medya / ilgili dış bağlantı (opsiyonel). */
+  linkUrl?: string | null
+  /** Ziyaret butonu metni; boşsa varsayılan "Projeyi Ziyaret Et". */
+  linkLabel?: string | null
   coverImage?: string
   images?: string[]
   /** Tailwind gradient classes for the placeholder visual */

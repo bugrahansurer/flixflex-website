@@ -302,7 +302,7 @@ export function ContactForm() {
 
       {/* Row 5: KVKK consent */}
       <div className="flex flex-col gap-1.5">
-        <label className="flex items-start gap-3 cursor-pointer group">
+        <label className="flex items-center gap-3 cursor-pointer group">
           <span className="relative mt-0.5 shrink-0">
             <input
               type="checkbox"
@@ -338,7 +338,7 @@ export function ContactForm() {
               <polyline points="1 5.5 4.5 9 11 1" />
             </svg>
           </span>
-          <span className="text-[12px] leading-relaxed text-[var(--foreground-muted)]">
+          <span className="text-[12px] leading-relaxed text-[var(--foreground-muted)] mt-1">
             <a
               href="/kvkk"
               target="_blank"

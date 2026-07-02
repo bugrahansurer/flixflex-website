@@ -4,12 +4,13 @@ import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { motion } from "framer-motion"
-import { Home, Briefcase, FileText, Mail, Sparkles } from "@/lib/icons"
+import { Home, Briefcase, FileText, Mail, Sparkles, Star } from "@/lib/icons"
 import type { LucideIcon } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 import type { MobileNavbarVariant } from "@/lib/colors/types"
 
 import { useUIStore } from "@/lib/ui-store"
+import { IconBriefcase2, IconMessage2, IconNews, IconSmartHome, IconTopologyStar2 } from "@tabler/icons-react"
 
 // ═══════════════════════════════════════════════════════════
 // Modern bottom mobile navbar — two variants
@@ -32,11 +33,11 @@ interface NavItem {
 }
 
 const ITEMS: NavItem[] = [
-  { label: "Ana", href: "/", icon: Home },
-  { label: "Portfolyo", href: "/portfolio", icon: Briefcase },
-  { label: "Blog", href: "/blog", icon: FileText },
-  { label: "Hizmet", href: "/hizmetler", icon: Sparkles },
-  { label: "İletişim", href: "/iletisim", icon: Mail },
+  { label: "Ana Sayfa", href: "/", icon: IconSmartHome },
+  { label: "Hizmetler", href: "/hizmetler", icon: IconTopologyStar2 },
+  { label: "İşlerimiz", href: "/portfolio", icon: IconBriefcase2 },
+  { label: "Haberler", href: "/blog", icon: IconNews },
+  { label: "İletişim", href: "/iletisim", icon: IconMessage2 },
 ]
 
 export function MobileNavbar({
@@ -144,7 +145,7 @@ export function MobileNavbar({
                 {variant === "dock" && (
                   <span
                     className={cn(
-                      "text-[9px] font-medium uppercase tracking-[0.08em]",
+                      "text-[9px] font-semibold uppercase",
                       "leading-none"
                     )}
                   >

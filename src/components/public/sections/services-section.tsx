@@ -37,7 +37,7 @@ export function ServicesSection({ services }: ServicesSectionProps) {
 
       <div className="relative z-10 px-6 md:px-10 xl:px-16">
         {/* ── Section header ── */}
-        <div className="w-full flex flex-col items-center justify-center py-6 md:py-10">
+        <div className="w-full mx-auto max-w-[1440px] px-6 md:px-10 xl:px-16 flex flex-col items-center justify-center py-6 md:py-10">
           <div className="w-full flex flex-col items-center justify-center space-y-8 md:space-y-12">
             <RevealGroup className="flex flex-col items-center justify-center gap-3 text-center">
               <RevealItem>

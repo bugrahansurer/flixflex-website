@@ -21,34 +21,75 @@ import {
   IconPhotoVideo,
   BarChart3,
   Mail,
+  Layers,
+  MessageSquare,
+  ChevronDown,
 } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 import type { SessionUser } from "@/lib/auth/types"
+import type { LucideIcon } from "@/lib/icons"
 import { hasPermission } from "@/lib/rbac/permissions"
 import { RESOURCES } from "@/lib/rbac/resources"
-import { IconDeviceLaptop, IconServerSpark } from "@tabler/icons-react"
+import { IconDeviceLaptop, IconListDetails, IconPhotoAlt, IconPointerCollaboration2, IconServerSpark, IconSettings, IconSparkleHighlight } from "@tabler/icons-react"
 
-// ── Nav items ─────────────────────────────────────
-// `resource` gates visibility — an item only shows if the user has
-// READ permission on it. Items without a resource are always shown.
-const NAV_ITEMS = [
-  { label: "Dashboard", href: "/admin", icon: LayoutDashboard, exact: true, resource: undefined },
-  { label: "Raporlar", href: "/admin/raporlar", icon: BarChart3, exact: false, resource: RESOURCES.ANALYTICS },
-  { label: "Randevular", href: "/admin/randevular", icon: CalendarDays, exact: false, resource: RESOURCES.APPOINTMENTS },
-  { label: "Mesajlar", href: "/admin/mesajlar", icon: Mail, exact: false, resource: RESOURCES.MESSAGES },
-  { label: "Sayfalar", href: "/admin/sayfalar", icon: IconDeviceLaptop, exact: false, resource: RESOURCES.PAGES },
-  { label: "Portfolyo", href: "/admin/portfolyo", icon: BriefcaseBusiness, exact: false, resource: RESOURCES.PORTFOLIO },
-  { label: "Hizmetler", href: "/admin/hizmetler", icon: IconServerSpark, exact: false, resource: RESOURCES.SERVICES },
-  { label: "Blog & İçerik", href: "/admin/blog", icon: SquarePen, exact: false, resource: RESOURCES.BLOG },
-  { label: "Dosyalar", href: "/admin/medya", icon: IconPhotoVideo, exact: false, resource: RESOURCES.MEDIA },
-  { label: "AI Asistan", href: "/admin/ai", icon: Sparkles, exact: false, resource: RESOURCES.AI },
-  { label: "Tema Ayarları", href: "/admin/theme", icon: Palette, exact: false, resource: RESOURCES.COLORS },
-  { label: "Roller & Yetkiler", href: "/admin/roller", icon: ShieldCheck, exact: false, resource: RESOURCES.ROLES },
-  { label: "Kullanıcılar", href: "/admin/kullanicilar", icon: Users, exact: false, resource: RESOURCES.USERS },
-  { label: "Ayarlar", href: "/admin/ayarlar", icon: Settings, exact: false, resource: RESOURCES.SETTINGS },
-] as const
+// ── Nav yapısı ────────────────────────────────────
+// `resource` görünürlüğü belirler — bir öğe yalnızca kullanıcı o kaynağı
+// READ edebiliyorsa gösterilir. resource'u olmayan öğe her zaman görünür.
+interface NavItem {
+  label: string
+  href: string
+  icon: LucideIcon
+  exact?: boolean
+  resource?: string
+}
+interface NavGroup {
+  label: string
+  icon: LucideIcon
+  items: NavItem[]
+}
 
-type NavItem = (typeof NAV_ITEMS)[number]
+// Dashboard: gruplanmayan, her zaman üstte duran ana giriş.
+const DASHBOARD: NavItem = { label: "Dashboard", href: "/admin", icon: LayoutDashboard, exact: true }
+
+const NAV_GROUPS: NavGroup[] = [
+  {
+    label: "İçerik",
+    icon: IconListDetails,
+    items: [
+      { label: "Sayfalar", href: "/admin/sayfalar", icon: IconDeviceLaptop, resource: RESOURCES.PAGES },
+      { label: "Portfolyo", href: "/admin/portfolyo", icon: BriefcaseBusiness, resource: RESOURCES.PORTFOLIO },
+      { label: "Hizmetler", href: "/admin/hizmetler", icon: IconServerSpark, resource: RESOURCES.SERVICES },
+      { label: "Blog & İçerik", href: "/admin/blog", icon: SquarePen, resource: RESOURCES.BLOG },
+      { label: "Dosyalar", href: "/admin/medya", icon: IconPhotoVideo, resource: RESOURCES.MEDIA },
+    ],
+  },
+  {
+    label: "Etkileşim",
+    icon: IconPointerCollaboration2,
+    items: [
+      { label: "Randevular", href: "/admin/randevular", icon: CalendarDays, resource: RESOURCES.APPOINTMENTS },
+      { label: "Mesajlar", href: "/admin/mesajlar", icon: Mail, resource: RESOURCES.MESSAGES },
+    ],
+  },
+  {
+    label: "Araçlar",
+    icon: IconSparkleHighlight,
+    items: [
+      { label: "Raporlar", href: "/admin/raporlar", icon: BarChart3, resource: RESOURCES.ANALYTICS },
+      { label: "AI Asistan", href: "/admin/ai", icon: Sparkles, resource: RESOURCES.AI },
+      { label: "Tema Ayarları", href: "/admin/theme", icon: Palette, resource: RESOURCES.COLORS },
+    ],
+  },
+  {
+    label: "Sistem",
+    icon: IconSettings,
+    items: [
+      { label: "Roller & Yetkiler", href: "/admin/roller", icon: ShieldCheck, resource: RESOURCES.ROLES },
+      { label: "Kullanıcılar", href: "/admin/kullanicilar", icon: Users, resource: RESOURCES.USERS },
+      { label: "Ayarlar", href: "/admin/ayarlar", icon: Settings, resource: RESOURCES.SETTINGS },
+    ],
+  },
+]
 
 interface AdminSidebarProps {
   user: SessionUser
@@ -71,18 +112,36 @@ export function AdminSidebar({
   const router = useRouter()
   const [isHovered, setIsHovered] = React.useState(false)
 
-  // Super Admin sees everything; others only items they can READ.
   const isSuper = user.role === "Super Admin"
-  const navItems = React.useMemo(
-    () =>
-      NAV_ITEMS.filter(
-        (it) => !it.resource || isSuper || hasPermission(user.permissions ?? [], it.resource, "read")
-      ),
-    [user.permissions, isSuper]
+  const canSee = React.useCallback(
+    (it: NavItem) => !it.resource || isSuper || hasPermission(user.permissions ?? [], it.resource, "read"),
+    [user.permissions, isSuper],
   )
 
-  // Desktop sidebar expands on hover.
-  const collapsed = !isHovered
+  function isActive(item: NavItem): boolean {
+    if (item.exact) return pathname === item.href
+    return pathname.startsWith(item.href)
+  }
+
+  // İzne göre filtrelenmiş gruplar (boş gruplar düşer).
+  const visibleGroups = React.useMemo(
+    () => NAV_GROUPS.map((g) => ({ ...g, items: g.items.filter(canSee) })).filter((g) => g.items.length > 0),
+    [canSee],
+  )
+
+  // Aktif rotanın bulunduğu grup — accordion başlangıçta bu açık gelir.
+  const activeGroup = React.useMemo(
+    () => visibleGroups.find((g) => g.items.some((it) => isActive(it)))?.label ?? null,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [pathname, visibleGroups],
+  )
+  const [openGroup, setOpenGroup] = React.useState<string | null>(activeGroup)
+  // Rota değişince aktif grubu aç (mevcut bölüm açık kalsın). Kasıtlı senkron:
+  // yalnızca activeGroup (navigasyon) değiştiğinde tetiklenir, manuel toggle'ı ezmez.
+  React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (activeGroup) setOpenGroup(activeGroup)
+  }, [activeGroup])
 
   // Lock body scroll while the mobile drawer is open.
   React.useEffect(() => {
@@ -94,28 +153,41 @@ export function AdminSidebar({
     }
   }, [mobileOpen])
 
-  function isActive(item: NavItem): boolean {
-    if (item.exact) return pathname === item.href
-    return pathname.startsWith(item.href)
-  }
-
   // ── Shared inner content ──────────────────────────
-  // Rendered both inside the desktop hover-sidebar (`expanded` follows hover)
-  // and inside the mobile drawer (`expanded` always true). `onNavigate` lets
-  // the mobile drawer close itself after a navigation.
-  // NOTE: called as a plain function (not <renderBody/>) so the subtree is
-  // inlined and reconciled normally — rendering it as a nested component would
-  // remount everything on every hover toggle.
   const renderBody = (expanded: boolean, onNavigate?: () => void) => {
     const isCollapsed = !expanded
+
+    // Tek nav linki (ikon + etiket). Daraltılmışta yalnızca ikon.
+    const navLink = (item: NavItem, sub = false) => {
+      const active = isActive(item)
+      const Icon = item.icon
+      return (
+        <Link
+          href={item.href}
+          onClick={onNavigate}
+          className={cn(
+            "group/link flex items-center gap-3 w-full rounded-md relative border-l-2",
+            "text-[13px] font-medium transition-all duration-150",
+            isCollapsed ? "h-10 pl-3.5" : sub ? "h-9 pl-3" : "h-10 pl-3.5",
+            active
+              ? "border-l-[var(--ff-purple)] bg-[var(--ff-purple)]/10 text-[var(--ff-purple)]"
+              : "border-l-transparent text-white/85 hover:bg-white/10 hover:text-white",
+          )}
+        >
+          <Icon size={17} className="shrink-0" />
+          {!isCollapsed && <span className="whitespace-nowrap">{item.label}</span>}
+        </Link>
+      )
+    }
+
     return (
       <>
         {/* Logo Section */}
         <div
           className={cn(
             "flex items-center border-b border-[var(--ff-purple)]/10",
-            "h-[8vh] min-h-14 px-6 shrink-0",
-            isCollapsed ? "justify-center" : "justify-start"
+            "h-[8vh] min-h-14 w-full shrink-0",
+            isCollapsed ? "justify-center" : "justify-start",
           )}
         >
           <AnimatePresence initial={false}>
@@ -139,100 +211,138 @@ export function AdminSidebar({
                     style={{ height: logoHeight || 24 }}
                   />
                 ) : (
-                  <span className="font-display font-extrabold text-lg tracking-tight text-white whitespace-nowrap">
+                  <span className="font-display font-extrabold text-lg pl-6 tracking-tight text-white whitespace-nowrap">
                     Flix<span className="text-[var(--ff-purple)]">Flex</span>
                   </span>
                 )}
               </motion.div>
             )}
-            {isCollapsed && siteLogo && (
-              <motion.img
-                src={siteLogo}
-                alt="Logo"
-                className="w-6 h-6 object-contain"
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-              />
-            )}
+            {isCollapsed &&
+              (siteLogo ? (
+                <motion.img
+                  key="logo-mini"
+                  src={siteLogo}
+                  alt="Logo"
+                  className="w-7 h-7 object-contain"
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                />
+              ) : (
+                // Logo yoksa: marka monogramı (public navbar'daki "FF" rozet)
+                <motion.div
+                  key="logo-mark"
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="ff-shape-button flex items-center justify-center w-8 h-8 bg-[var(--ff-purple)] text-white font-display font-extrabold text-[13px] tracking-tight leading-none shadow-[0_2px_10px_rgba(255,79,216,0.4)]"
+                >
+                  FF
+                </motion.div>
+              ))}
           </AnimatePresence>
         </div>
 
-        {/* Navigation items */}
+        {/* Navigation */}
         <div className="flex-1 overflow-y-auto overflow-x-hidden py-3">
-          <ul className="space-y-0.5 px-2">
-            {navItems.map((item) => {
-              const active = isActive(item)
-              const Icon = item.icon
-
-              const linkContent = (
-                <Link
-                  href={item.href}
-                  onClick={onNavigate}
-                  target={"external" in item && item.external ? "_blank" : undefined}
-                  className={cn(
-                    "group flex items-center justify-start gap-3 w-full",
-                    "h-10 pl-3.5 rounded-md",
-                    "text-[13px] font-medium",
-                    "transition-all duration-150 relative",
-                    "border-l-2",
-                    active
-                      ? "border-l-[var(--ff-purple)] bg-[var(--ff-purple)]/10 text-[var(--ff-purple)]"
-                      : "border-l-transparent text-white hover:bg-[var(--surface)] hover:text-[var(--foreground)]"
-                  )}
-                >
-                  <Icon
-                    size={17}
-                    className={cn(
-                      "shrink-0 transition-colors duration-150",
-                      active ? "text-[var(--ff-purple)]" : "text-white group-hover:text-[var(--foreground)]"
-                    )}
-                  />
-                  <AnimatePresence initial={false}>
-                    {!isCollapsed && (
-                      <motion.span
-                        key="label"
-                        initial={{ opacity: 0, x: -6 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -6 }}
-                        transition={{ duration: 0.18 }}
-                        className="whitespace-nowrap"
-                      >
-                        {item.label}
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                </Link>
-              )
-
-              if (isCollapsed) {
+          {isCollapsed ? (
+            // Daraltılmış: sekme/kategori tarzı — Dashboard + grup ikonları (kompakt).
+            // Hover'da sidebar genişler, accordion açılır. Aktif grup vurgulanır.
+            <ul className="space-y-1 px-2">
+              <li>
+                <Tooltip.Root>
+                  <Tooltip.Trigger asChild>{navLink(DASHBOARD)}</Tooltip.Trigger>
+                  <Tooltip.Portal>
+                    <Tooltip.Content
+                      side="right"
+                      sideOffset={8}
+                      className="z-50 px-3 py-1.5 bg-[#222222] border border-[var(--border)] text-[12px] font-medium text-white shadow-xl animate-ff-fadeIn"
+                    >
+                      Dashboard
+                      <Tooltip.Arrow className="fill-[#222222]" />
+                    </Tooltip.Content>
+                  </Tooltip.Portal>
+                </Tooltip.Root>
+              </li>
+              {visibleGroups.map((g) => {
+                const GroupIcon = g.icon
+                const hasActive = g.items.some(isActive)
                 return (
-                  <li key={item.href}>
+                  <li key={g.label}>
                     <Tooltip.Root>
-                      <Tooltip.Trigger asChild>{linkContent}</Tooltip.Trigger>
+                      <Tooltip.Trigger asChild>
+                        <div
+                          className={cn(
+                            "flex items-center justify-center h-10 rounded-md border-l-2 cursor-default transition-colors",
+                            hasActive
+                              ? "border-l-[var(--ff-purple)] bg-[var(--ff-purple)]/10 text-[var(--ff-purple)]"
+                              : "border-l-transparent text-white hover:bg-[var(--surface)] hover:text-ff-purple",
+                          )}
+                        >
+                          <GroupIcon size={18} className="shrink-0" />
+                        </div>
+                      </Tooltip.Trigger>
                       <Tooltip.Portal>
                         <Tooltip.Content
                           side="right"
                           sideOffset={8}
-                          className={cn(
-                            "z-50 px-3 py-1.5",
-                            "bg-[#222222] border border-[var(--border)]",
-                            "text-[12px] font-medium text-white",
-                            "shadow-xl",
-                            "animate-ff-fadeIn"
-                          )}
+                          className="z-50 px-3 py-1.5 bg-[#222222] border border-[var(--border)] text-[12px] font-medium text-white shadow-xl animate-ff-fadeIn"
                         >
-                          {item.label}
+                          {g.label}
                           <Tooltip.Arrow className="fill-[#222222]" />
                         </Tooltip.Content>
                       </Tooltip.Portal>
                     </Tooltip.Root>
                   </li>
                 )
-              }
+              })}
+            </ul>
+          ) : (
+            // Genişlemiş: Dashboard (tekil) + accordion gruplar (tek-açık)
+            <div className="px-2 space-y-1">
+              {navLink(DASHBOARD)}
 
-              return <li key={item.href}>{linkContent}</li>
-            })}
-          </ul>
+              {visibleGroups.map((g) => {
+                const open = openGroup === g.label
+                const GroupIcon = g.icon
+                const hasActive = g.items.some(isActive)
+                return (
+                  <div key={g.label} className="pt-1">
+                    <button
+                      type="button"
+                      onClick={() => setOpenGroup((prev) => (prev === g.label ? null : g.label))}
+                      aria-expanded={open}
+                      className={cn(
+                        "group flex items-center gap-3 w-full h-10 pl-3.5 pr-2.5 rounded-md",
+                        "text-[13px] font-medium transition-colors",
+                        hasActive && !open ? "text-[var(--ff-purple)]" : "bg-transparent hover:bg-white/10 text-white hover:text-ff-purple",
+                      )}
+                    >
+                      <GroupIcon size={17} className="shrink-0" />
+                      <span className="flex-1 text-left">{g.label}</span>
+                      <ChevronDown
+                        size={14}
+                        className={cn("shrink-0 transition-transform duration-200", open && "rotate-180")}
+                      />
+                    </button>
+                    {/* grid-rows animasyonu ile yumuşak aç/kapa */}
+                    <div
+                      className={cn(
+                        "grid transition-[grid-template-rows] duration-200 ease-out",
+                        open ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+                      )}
+                    >
+                      <div className="overflow-hidden">
+                        <ul className="mt-0.5 space-y-0.5 pl-2">
+                          {g.items.map((item) => (
+                            <li key={item.href}>{navLink(item, true)}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
         </div>
 
         {/* View Site Action */}
@@ -247,7 +357,7 @@ export function AdminSidebar({
                   "flex items-center justify-center gap-3 w-full",
                   "h-10 px-2.5",
                   "bg-[var(--ff-purple)]/10 text-[var(--ff-purple)] hover:bg-[var(--ff-purple)] hover:text-white",
-                  "transition-all duration-200 group overflow-hidden"
+                  "transition-all duration-200 group overflow-hidden",
                 )}
               >
                 <ExternalLink
@@ -297,7 +407,7 @@ export function AdminSidebar({
               "w-full flex items-center gap-3",
               "px-2.5 h-12",
               "hover:bg-ff-purple/10",
-              "transition-colors duration-150 group"
+              "transition-colors duration-150 group",
             )}
             aria-label="Profil sayfasına git"
           >
@@ -306,7 +416,7 @@ export function AdminSidebar({
               className={cn(
                 "ff-shape-button shrink-0 w-7 h-7 flex items-center justify-center",
                 "bg-[var(--ff-purple)] text-white",
-                "text-[10px] font-bold font-display"
+                "text-[10px] font-bold font-display",
               )}
             >
               {user.initials}
@@ -355,12 +465,12 @@ export function AdminSidebar({
           "sticky top-0 h-screen z-40 w-fit shrink-0",
           "hidden lg:flex flex-col",
           "bg-[#0d0d0d] border-r border-[#2A2A2A]",
-          "overflow-hidden"
+          "overflow-hidden",
         )}
         animate={{ width: isHovered ? 240 : 64 }}
         transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
       >
-        {renderBody(!collapsed)}
+        {renderBody(isHovered)}
       </motion.nav>
 
       {/* ── Mobile backdrop ── */}
@@ -370,7 +480,7 @@ export function AdminSidebar({
         className={cn(
           "fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden",
           "transition-opacity duration-300",
-          mobileOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+          mobileOpen ? "opacity-100" : "opacity-0 pointer-events-none",
         )}
       />
 
@@ -383,7 +493,7 @@ export function AdminSidebar({
           "bg-[#0d0d0d] border-r border-[#2A2A2A]",
           "overflow-hidden shadow-2xl",
           "transition-transform duration-300 ease-out",
-          mobileOpen ? "translate-x-0" : "-translate-x-full"
+          mobileOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
         {renderBody(true, onMobileClose)}

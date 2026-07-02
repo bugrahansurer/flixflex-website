@@ -448,6 +448,8 @@ export function PortfolioEditor({ mode, initial, services }: PortfolioEditorProp
     category: initial?.category ?? "Performance Marketing",
     description: initial?.description ?? "",
     content: initial?.content ?? "",
+    linkUrl: initial?.linkUrl ?? "",
+    linkLabel: initial?.linkLabel ?? "",
     coverImage: initial?.coverImage ?? "",
     images: initial?.images ?? [],
     tags: initial?.tags ?? [],
@@ -494,6 +496,8 @@ export function PortfolioEditor({ mode, initial, services }: PortfolioEditorProp
         client: form.client.trim(),
         clientLogo: form.clientLogo.trim() || null,
         description: form.description.trim(),
+        linkUrl: form.linkUrl.trim() || null,
+        linkLabel: form.linkLabel.trim() || null,
         coverImage: form.coverImage.trim(),
         images: form.images.map((item) => item.trim()).filter(Boolean),
         tags: form.tags.map((item) => item.trim()).filter(Boolean),
@@ -580,7 +584,7 @@ export function PortfolioEditor({ mode, initial, services }: PortfolioEditorProp
         <Dialog.Root open={deleteOpen} onOpenChange={setDeleteOpen}>
           <Dialog.Portal>
             <Dialog.Overlay className="fixed inset-0 z-50 bg-black/40 animate-ff-fadeIn" />
-            <Dialog.Content className="fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-md max-h-[90vh] overflow-y-auto bg-white border border-[#E0E0E0] p-6 shadow-2xl ff-shape-container animate-ff-fadeIn">
+            <Dialog.Content className="ff-shape-container fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-md max-h-[90vh] overflow-y-auto bg-white border border-[#E0E0E0] p-6 shadow-2xl ff-shape-container animate-ff-fadeIn">
               <Dialog.Close asChild>
                 <button className="absolute top-3 right-3 w-7 h-7 flex items-center justify-center text-[#666666] hover:text-[#333333] transition-colors" aria-label="Kapat">
                   <X size={14} />
@@ -689,6 +693,26 @@ export function PortfolioEditor({ mode, initial, services }: PortfolioEditorProp
               <FormField label="Kısa Açıklama" description="Kartlarda görünecek 1-2 cümlelik özet metin">
                 <textarea rows={2} className="ff-shape-container items-center justify-start w-full h-9 px-4 py-2.5 bg-transparent border border-[#CCCCCC] text-xs text-[#666666] placeholder:text-[#999999]" value={form.description} onChange={(e) => patch({ description: e.target.value })} placeholder="Açıklama girin..." />
               </FormField>
+
+              <div className="grid md:grid-cols-[1fr_220px] gap-4">
+                <FormField label="Proje Bağlantısı (Opsiyonel)" description="Proje sitesi, sosyal medya veya ilgili bir link. Detay sayfasında ziyaret butonu olarak gösterilir.">
+                  <input
+                    type="url"
+                    className="ff-shape-container items-center justify-start w-full h-9 px-4 bg-transparent border border-[#CCCCCC] text-xs text-[#666666] placeholder:text-[#999999]"
+                    value={form.linkUrl}
+                    onChange={(e) => patch({ linkUrl: e.target.value })}
+                    placeholder="https://ornek.com veya https://instagram.com/marka"
+                  />
+                </FormField>
+                <FormField label="Buton Metni" description='Boşsa "Projeyi Ziyaret Et"'>
+                  <input
+                    className="ff-shape-container items-center justify-start w-full h-9 px-4 bg-transparent border border-[#CCCCCC] text-xs text-[#666666] placeholder:text-[#999999]"
+                    value={form.linkLabel}
+                    onChange={(e) => patch({ linkLabel: e.target.value })}
+                    placeholder="Projeyi Ziyaret Et"
+                  />
+                </FormField>
+              </div>
             </div>
 
             {/* Narrative Story Paragraphs */}

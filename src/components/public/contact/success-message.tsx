@@ -1,10 +1,11 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { CheckCircle2 } from "@/lib/icons"
+import { CheckCircle2, Plus } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 import { Eyebrow } from "@/components/ui/eyebrow"
 import { staggerContainer, fadeInUp } from "@/lib/animations"
+import { IconSend } from "@tabler/icons-react"
 
 interface SuccessMessageProps {
   refCode?: string
@@ -25,7 +26,7 @@ export function SuccessMessage({ refCode, onReset }: SuccessMessageProps) {
       {/* Animated checkmark ring */}
       <motion.div
         variants={{
-          hidden:  { scale: 0.5, opacity: 0 },
+          hidden: { scale: 0.5, opacity: 0 },
           visible: {
             scale: 1,
             opacity: 1,
@@ -38,14 +39,14 @@ export function SuccessMessage({ refCode, onReset }: SuccessMessageProps) {
         <motion.span
           className="absolute inset-0 border border-[var(--ff-purple)] rounded-full opacity-75"
           animate={{
-            scale:   [1, 1.5, 1.5],
+            scale: [1, 1.5, 1.5],
             opacity: [0.7, 0, 0],
           }}
           transition={{ duration: 1.2, delay: 0.3, ease: "easeOut" }}
         />
         <span
           className={cn(
-            "w-20 h-20 flex items-center justify-center",
+            "ff-shape-button w-20 h-20 flex items-center justify-center",
             "bg-[rgba(255, 79, 216,0.1)] border border-[rgba(255, 79, 216,0.35)]"
           )}
         >
@@ -72,7 +73,7 @@ export function SuccessMessage({ refCode, onReset }: SuccessMessageProps) {
         <motion.div
           variants={fadeInUp}
           className={cn(
-            "flex items-center gap-3 px-4 py-2.5",
+            "ff-shape-button flex items-center gap-3 px-4 py-2.5",
             "border border-[var(--border)] bg-[var(--surface)]",
             "text-[11px] tracking-wider uppercase"
           )}
@@ -88,14 +89,14 @@ export function SuccessMessage({ refCode, onReset }: SuccessMessageProps) {
         <button
           onClick={onReset}
           className={cn(
-            "mt-2 inline-flex items-center gap-2",
+            "ff-shape-button mt-2 inline-flex items-center gap-2",
             "px-6 py-3 text-[12px] font-medium uppercase tracking-[0.08em]",
-            "border border-[var(--border)] text-[var(--foreground-muted)]",
-            "hover:border-[var(--ff-purple)] hover:text-[var(--ff-purple)]",
+            "bg-ff-purple/10 border border-ff-purple/30 text-ff-purple",
+            "hover:bg-ff-purple hover:text-white",
             "transition-colors duration-200"
           )}
         >
-          Yeni mesaj gönder
+          <IconSend size={16} strokeWidth={2} /> Yeni mesaj gönder
         </button>
       </motion.div>
     </motion.div>

@@ -156,6 +156,8 @@ model PortfolioItem {
   category    String
   description String?
   content     String?
+  linkUrl     String?  // proje sitesi / sosyal medya / ilgili dış bağlantı
+  linkLabel   String?  // ziyaret butonu metni (boşsa varsayılan kullanılır)
   coverImage  String
   images      String[]
   tags        String[]

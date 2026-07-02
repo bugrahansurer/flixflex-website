@@ -26,6 +26,9 @@ export const portfolioPayloadSchema = z.object({
   category: z.string().min(1).max(80),
   description: z.string().min(5).max(800),
   content: z.string().optional(),
+  // Boş string → null. Protokolsüz girilirse render sırasında normalize edilir.
+  linkUrl: z.string().max(500).nullable().optional().transform((v) => (v && v.trim() ? v.trim() : null)),
+  linkLabel: z.string().max(80).nullable().optional().transform((v) => (v && v.trim() ? v.trim() : null)),
   coverImage: z.string().min(1),
   images: z.array(z.string()).default([]),
   tags: z.array(z.string()).default([]),

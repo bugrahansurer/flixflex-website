@@ -13,8 +13,40 @@ import { FaqAccordion } from "./_components/faq-accordion"
 
 import { getPageBySlug } from "@/lib/page-data"
 import { listPublishedPortfolio } from "@/lib/content-store"
-import { PageRenderer } from "@/components/public/page-renderer"
+import { PageRenderer, type ContactSettings } from "@/components/public/page-renderer"
 import { StarField } from "@/components/ui/star-field"
+import { getSetting } from "@/lib/settings"
+import { parseSocialLinks } from "@/lib/social-platforms"
+
+// İletişim kartı verilerini admin → Ayarlar → Site'den okur.
+// Boş değerler ContactInfo içindeki varsayılanlara düşer.
+async function getContactSettings(): Promise<ContactSettings> {
+  const [email, phone, address, workingHours, socialSetting] = await Promise.all([
+    getSetting<string>("site_email"),
+    getSetting<string>("site_phone"),
+    getSetting<string>("site_address"),
+    getSetting<string>("site_working_hours"),
+    // site_social_links "json" tipinde saklandığından getSetting onu diziye çevirir;
+    // parseSocialLinks ham string beklediği için tekrar stringify ediyoruz. Değer
+    // legacy string olarak gelirse de aşağıdaki dal onu doğrudan iletir.
+    getSetting("site_social_links"),
+  ])
+
+  const socialRaw =
+    typeof socialSetting === "string"
+      ? socialSetting
+      : socialSetting != null
+        ? JSON.stringify(socialSetting)
+        : undefined
+
+  return {
+    email,
+    phone,
+    address,
+    workingHours,
+    social: parseSocialLinks(socialRaw),
+  }
+}
 
 export const metadata: Metadata = {
   title: "İletişim · FlixFlex Reklam Ajansı",
@@ -30,6 +62,7 @@ export const metadata: Metadata = {
 export default async function IletisimPage() {
   const portfolioItems = await listPublishedPortfolio();
   const pageData = await getPageBySlug("iletisim")
+  const contactSettings = await getContactSettings()
 
   if (!pageData || pageData.sections.length === 0) {
     return (
@@ -65,7 +98,7 @@ export default async function IletisimPage() {
 
               {/* Info panel */}
               <div className="lg:col-span-5">
-                <ContactInfo />
+                <ContactInfo {...contactSettings} />
               </div>
             </div>
           </div>
@@ -80,5 +113,11 @@ export default async function IletisimPage() {
     )
   }
 
-  return <PageRenderer sections={pageData.sections} portfolioItems={portfolioItems} />
+  return (
+    <PageRenderer
+      sections={pageData.sections}
+      portfolioItems={portfolioItems}
+      contactSettings={contactSettings}
+    />
+  )
 }

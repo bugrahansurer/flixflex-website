@@ -22,9 +22,9 @@ import { cn, buildDescribedBy } from "@/lib/utils"
 
 // ── Sizes ─────────────────────────────────────────────
 const triggerSizes = {
-  sm: "h-9  px-3  py-1.5 text-[12px]",
-  md: "h-9 px-4  py-3   text-sm",
-  lg: "h-9 px-5  py-3   text-[15px]",
+  sm: "h-10  px-3  py-1.5 text-[12px]",
+  md: "h-10 px-4  py-3   text-sm",
+  lg: "h-10 px-5  py-3   text-[15px]",
 } as const
 
 // ── Trigger ───────────────────────────────────────────
@@ -80,99 +80,99 @@ function FFSelect({
 
   return (
     <div className={cn("flex flex-col gap-1.5", fullWidth ? "w-full" : "inline-flex")}>
-    <RxSelect.Root
-      value={value}
-      onValueChange={onValueChange}
-      defaultValue={defaultValue}
-      disabled={disabled}
-      required={required}
-      name={name}
-      {...rootProps}
-    >
-      <RxSelect.Trigger
-        id={triggerId}
-        aria-label={ariaLabel}
-        aria-invalid={hasError}
-        aria-describedby={buildDescribedBy(triggerId, hasError, !!hint)}
-        className={cn(
-          "ff-shape-button h-10 group inline-flex items-center justify-between gap-2",
-          "bg-[var(--surface)] text-[var(--foreground)]",
-          "border border-[var(--border)]",
-          "outline-none transition-[border-color,box-shadow,background-color] duration-150",
-          "data-[placeholder]:text-[var(--foreground-faint)]",
-          "hover:border-[var(--border-strong)]",
-          "focus:border-[var(--ff-purple)] focus:shadow-[0_0_0_3px_var(--ff-purple-muted)]",
-          "data-[state=open]:border-[var(--ff-purple)]",
-          "disabled:opacity-50 disabled:cursor-not-allowed",
-          "rounded-none",
-          triggerSizes[size],
-          fullWidth && "w-full",
-          hasError &&
-          "border-[#dc2626] focus:border-[#dc2626] focus:shadow-[0_0_0_3px_rgba(220,38,38,0.1)]",
-          triggerClassName
-        )}
+      <RxSelect.Root
+        value={value}
+        onValueChange={onValueChange}
+        defaultValue={defaultValue}
+        disabled={disabled}
+        required={required}
+        name={name}
+        {...rootProps}
       >
-        <RxSelect.Value placeholder={placeholder} />
-        <RxSelect.Icon asChild>
-          <ChevronDown
-            size={14}
-            strokeWidth={2}
-            className={cn(
-              "shrink-0 text-[var(--foreground-muted)]",
-              "transition-transform duration-200",
-              "group-data-[state=open]:rotate-180 group-data-[state=open]:text-[var(--ff-purple)]"
-            )}
-          />
-        </RxSelect.Icon>
-      </RxSelect.Trigger>
-
-      <RxSelect.Portal>
-        <RxSelect.Content
-          position="popper"
-          sideOffset={6}
+        <RxSelect.Trigger
+          id={triggerId}
+          aria-label={ariaLabel}
+          aria-invalid={hasError}
+          aria-describedby={buildDescribedBy(triggerId, hasError, !!hint)}
           className={cn(
-            "ff-shape-button z-[100] min-w-[var(--radix-select-trigger-width)] max-h-[60vh]",
-            "overflow-hidden",
-            "bg-[var(--surface-elevated)] text-[var(--foreground)]",
-            "border border-[var(--border)] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.25)]",
+            "ff-shape-button h-10 group inline-flex items-center justify-between gap-2",
+            "bg-[var(--surface)] text-[var(--foreground)]",
+            "border border-[var(--border)]",
+            "outline-none transition-[border-color,box-shadow,background-color] duration-150",
+            "data-[placeholder]:text-[var(--foreground-faint)]",
+            "hover:border-[var(--border-strong)]",
+            "focus:border-[var(--ff-purple)] focus:shadow-[0_0_0_3px_var(--ff-purple-muted)]",
+            "data-[state=open]:border-[var(--ff-purple)]",
+            "disabled:opacity-50 disabled:cursor-not-allowed",
             "rounded-none",
-            // Animation
-            "data-[state=open]:animate-in data-[state=closed]:animate-out",
-            "data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0",
-            "data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95",
-            "data-[side=bottom]:slide-in-from-top-1",
-            "data-[side=top]:slide-in-from-bottom-1"
+            triggerSizes[size],
+            fullWidth && "w-full",
+            hasError &&
+            "border-[#dc2626] focus:border-[#dc2626] focus:shadow-[0_0_0_3px_rgba(220,38,38,0.1)]",
+            triggerClassName
           )}
         >
-          {/* Subtle purple top accent bar */}
-          <span
-            aria-hidden
-            className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--ff-purple)] to-transparent opacity-60"
-          />
+          <RxSelect.Value placeholder={placeholder} />
+          <RxSelect.Icon asChild>
+            <ChevronDown
+              size={14}
+              strokeWidth={2}
+              className={cn(
+                "shrink-0 text-[var(--foreground-muted)]",
+                "transition-transform duration-200",
+                "group-data-[state=open]:rotate-180 group-data-[state=open]:text-[var(--ff-purple)]"
+              )}
+            />
+          </RxSelect.Icon>
+        </RxSelect.Trigger>
 
-          <RxSelect.ScrollUpButton className="flex items-center justify-center h-7 text-[var(--foreground-muted)] bg-[var(--surface-elevated)] cursor-default">
-            <ChevronUp size={14} />
-          </RxSelect.ScrollUpButton>
+        <RxSelect.Portal>
+          <RxSelect.Content
+            position="popper"
+            sideOffset={6}
+            className={cn(
+              "ff-shape-button z-[100] min-w-[var(--radix-select-trigger-width)] max-h-[60vh]",
+              "overflow-hidden",
+              "bg-[var(--surface-elevated)] text-[var(--foreground)]",
+              "border border-[var(--border)] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.25)]",
+              "rounded-none",
+              // Animation
+              "data-[state=open]:animate-in data-[state=closed]:animate-out",
+              "data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0",
+              "data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95",
+              "data-[side=bottom]:slide-in-from-top-1",
+              "data-[side=top]:slide-in-from-bottom-1"
+            )}
+          >
+            {/* Subtle purple top accent bar */}
+            <span
+              aria-hidden
+              className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--ff-purple)] to-transparent opacity-60"
+            />
 
-          <RxSelect.Viewport className="p-1.5">
-            {children}
-          </RxSelect.Viewport>
+            <RxSelect.ScrollUpButton className="flex items-center justify-center h-7 text-[var(--foreground-muted)] bg-[var(--surface-elevated)] cursor-default">
+              <ChevronUp size={14} />
+            </RxSelect.ScrollUpButton>
 
-          <RxSelect.ScrollDownButton className="flex items-center justify-center h-7 text-[var(--foreground-muted)] bg-[var(--surface-elevated)] cursor-default">
-            <ChevronDown size={14} />
-          </RxSelect.ScrollDownButton>
-        </RxSelect.Content>
-      </RxSelect.Portal>
-    </RxSelect.Root>
+            <RxSelect.Viewport className="p-1.5">
+              {children}
+            </RxSelect.Viewport>
 
-    {errorMessage && (
-      <p id={`${triggerId}-error`} className="text-[11px] text-red-500 flex items-center gap-1">
-        <span>✕</span> {errorMessage}
-      </p>
-    )}
-    {hint && !hasError && (
-      <p id={`${triggerId}-hint`} className="text-[11px] text-[var(--foreground-faint)]">{hint}</p>
-    )}
+            <RxSelect.ScrollDownButton className="flex items-center justify-center h-7 text-[var(--foreground-muted)] bg-[var(--surface-elevated)] cursor-default">
+              <ChevronDown size={14} />
+            </RxSelect.ScrollDownButton>
+          </RxSelect.Content>
+        </RxSelect.Portal>
+      </RxSelect.Root>
+
+      {errorMessage && (
+        <p id={`${triggerId}-error`} className="text-[11px] text-red-500 flex items-center gap-1">
+          <span>✕</span> {errorMessage}
+        </p>
+      )}
+      {hint && !hasError && (
+        <p id={`${triggerId}-hint`} className="text-[11px] text-[var(--foreground-faint)]">{hint}</p>
+      )}
     </div>
   )
 }
