@@ -1,3 +1,4 @@
+import { cache } from "react"
 import prisma from "@/lib/prisma"
 
 export type SettingType = "string" | "json" | "boolean" | "number"
@@ -8,27 +9,33 @@ export interface SiteSettingValue {
   type: SettingType
 }
 
-/**
- * Get a single setting by key.
- */
-export async function getSetting<T = string>(key: string, defaultValue?: T): Promise<T | undefined> {
-  if (!prisma) return defaultValue
-
+// Request-level dedupe: birden çok bileşen aynı ayarı istese bile (layout,
+// navbar, sayfa) DB'ye tek sorgu gider. Aynı istek içindeki tekrarları
+// React cache() önler.
+const readSetting = cache(async (key: string): Promise<{ value: string; type: SettingType } | null> => {
+  if (!prisma) return null
   try {
     const setting = await prisma.siteSetting.findUnique({ where: { key } })
-    if (!setting) return defaultValue
-
-    return parseSettingValue(setting.value, setting.type as SettingType) as T
+    return setting ? { value: setting.value, type: setting.type as SettingType } : null
   } catch (err) {
     console.error(`[getSetting] Error fetching key "${key}":`, err)
-    return defaultValue
+    return null
   }
+})
+
+/**
+ * Get a single setting by key. (Request içinde dedupe edilir.)
+ */
+export async function getSetting<T = string>(key: string, defaultValue?: T): Promise<T | undefined> {
+  const row = await readSetting(key)
+  if (!row) return defaultValue
+  return parseSettingValue(row.value, row.type) as T
 }
 
 /**
- * Get multiple settings by prefix.
+ * Get multiple settings by prefix. (Request içinde dedupe edilir.)
  */
-export async function getSettingsByPrefix(prefix: string): Promise<Record<string, any>> {
+export const getSettingsByPrefix = cache(async (prefix: string): Promise<Record<string, any>> => {
   if (!prisma) return {}
 
   try {
@@ -46,7 +53,7 @@ export async function getSettingsByPrefix(prefix: string): Promise<Record<string
     console.error(`[getSettingsByPrefix] Error fetching prefix "${prefix}":`, err)
     return {}
   }
-}
+})
 
 /**
  * Set a setting value.

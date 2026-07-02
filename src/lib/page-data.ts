@@ -1,7 +1,10 @@
+import { cache } from "react"
 import { prisma } from "@/lib/prisma"
 import type { PageData, SectionBlock } from "@/types/page-builder"
 
-export async function getPageBySlug(slug: string): Promise<PageData | null> {
+// Request-level dedupe: aynı sayfa hem generateMetadata'da hem render'da
+// istendiğinde DB'ye tek sorgu gider.
+export const getPageBySlug = cache(async (slug: string): Promise<PageData | null> => {
   if (!prisma) return null
 
   try {
@@ -24,4 +27,4 @@ export async function getPageBySlug(slug: string): Promise<PageData | null> {
     console.error(`[getPageBySlug] Error fetching page ${slug}:`, err)
     return null
   }
-}
+})

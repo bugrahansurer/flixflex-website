@@ -1,3 +1,4 @@
+import { cache } from "react"
 import type { Prisma } from "@prisma/client"
 import prisma from "@/lib/prisma"
 import {
@@ -147,7 +148,7 @@ export function mapService(item: ServiceMapInput, depth: number = 0): PublicServ
   }
 }
 
-export async function listPublishedPortfolio(): Promise<PublicPortfolioItem[]> {
+export const listPublishedPortfolio = cache(async (): Promise<PublicPortfolioItem[]> => {
   if (!prisma) return PORTFOLIO
 
   try {
@@ -165,11 +166,11 @@ export async function listPublishedPortfolio(): Promise<PublicPortfolioItem[]> {
     console.error('[listPublishedPortfolio] DB error:', err)
     return PORTFOLIO
   }
-}
+})
 
-export async function getPublishedPortfolioBySlug(
+export const getPublishedPortfolioBySlug = cache(async (
   slug: string,
-): Promise<PublicPortfolioItem | null> {
+): Promise<PublicPortfolioItem | null> => {
   if (!prisma) return PORTFOLIO.find((item) => item.slug === slug) ?? null
 
   try {
@@ -187,9 +188,9 @@ export async function getPublishedPortfolioBySlug(
     console.error('[getPublishedPortfolioBySlug] DB error:', err)
     return PORTFOLIO.find((item) => item.slug === slug) ?? null
   }
-}
+})
 
-export async function listPublishedServices(): Promise<PublicService[]> {
+export const listPublishedServices = cache(async (): Promise<PublicService[]> => {
   if (!prisma) return SERVICES
 
   try {
@@ -209,9 +210,9 @@ export async function listPublishedServices(): Promise<PublicService[]> {
     console.error('[listPublishedServices] DB error:', err)
     return SERVICES
   }
-}
+})
 
-export async function listPublishedChildServices(): Promise<PublicService[]> {
+export const listPublishedChildServices = cache(async (): Promise<PublicService[]> => {
   if (!prisma) return SERVICES
 
   try {
@@ -231,9 +232,9 @@ export async function listPublishedChildServices(): Promise<PublicService[]> {
     console.error('[listPublishedChildServices] DB error:', err)
     return SERVICES
   }
-}
+})
 
-export async function listPublishedMainServices(): Promise<PublicService[]> {
+export const listPublishedMainServices = cache(async (): Promise<PublicService[]> => {
   if (!prisma) return SERVICES.filter((s) => !s.parentId)
 
   try {
@@ -256,7 +257,7 @@ export async function listPublishedMainServices(): Promise<PublicService[]> {
     console.error('[listPublishedMainServices] DB error:', err)
     return SERVICES.filter((s) => !s.parentId)
   }
-}
+})
 
 // ── Blog ──────────────────────────────────────────
 const DEFAULT_BLOG_GRADIENT =
@@ -308,7 +309,7 @@ function mapBlogPost(row: BlogRow): PublicBlogPost {
   }
 }
 
-export async function listPublishedBlogPosts(): Promise<PublicBlogPost[]> {
+export const listPublishedBlogPosts = cache(async (): Promise<PublicBlogPost[]> => {
   if (!prisma) return BLOG_POSTS
 
   try {
@@ -322,9 +323,9 @@ export async function listPublishedBlogPosts(): Promise<PublicBlogPost[]> {
     console.error("[listPublishedBlogPosts] DB error:", err)
     return BLOG_POSTS
   }
-}
+})
 
-export async function getPublishedBlogBySlug(slug: string): Promise<PublicBlogPost | null> {
+export const getPublishedBlogBySlug = cache(async (slug: string): Promise<PublicBlogPost | null> => {
   if (!prisma) return getStaticPost(slug) ?? null
 
   try {
@@ -335,7 +336,7 @@ export async function getPublishedBlogBySlug(slug: string): Promise<PublicBlogPo
     console.error("[getPublishedBlogBySlug] DB error:", err)
     return getStaticPost(slug) ?? null
   }
-}
+})
 
 export async function getFeaturedBlogPost(): Promise<PublicBlogPost> {
   const all = await listPublishedBlogPosts()
