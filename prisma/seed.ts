@@ -4,11 +4,97 @@
 // veya: npm run db:seed
 // ═══════════════════════════════════════════════════════════
 
+import { readFileSync, existsSync } from "fs"
 import { PrismaClient } from "@prisma/client"
 import bcrypt from "bcryptjs"
 import { DEFAULT_ROLES, RESOURCES, ACTIONS } from "../src/lib/rbac/resources"
 
 const prisma = new PrismaClient()
+
+// ── Varsayılan içerik yükleyici ───────────────────────────
+// Fresh install / boş DB → gerçek içerik (prisma/default-content.json) yüklenir.
+// İçerik zaten varsa DOKUNULMAZ (admin düzenlemeleri korunur).
+// Dönüş: içerik artık mevcut mu (true) yoksa demo fallback gerekli mi (false)?
+async function seedDefaultContent(): Promise<boolean> {
+  if ((await prisma.page.count()) > 0) {
+    console.log("\n📦 İçerik zaten mevcut — varsayılan içerik atlandı (düzenlemeler korunuyor).")
+    return true
+  }
+  const dataUrl = new URL("./default-content.json", import.meta.url)
+  if (!existsSync(dataUrl)) {
+    console.warn("\n⚠️  default-content.json yok — demo içeriğe düşülüyor.")
+    return false
+  }
+  console.log("\n📦 Varsayılan içerik (default-content.json) yükleniyor...")
+  const D = JSON.parse(readFileSync(dataUrl, "utf8"))
+  const arr = (x: unknown): any[] => (Array.isArray(x) ? x : [])
+  const toDate = (s: unknown) => (s ? new Date(/[Z]|[+]\d\d:?\d\d$/.test(s as string) ? (s as string) : (s as string) + "Z") : null)
+
+  await prisma.colorPalette.createMany({ data: arr(D.color_palettes).map((c) => ({
+    id: c.id, name: c.name, description: c.description ?? null, isActive: !!c.isActive, isSystem: !!c.isSystem,
+    createdBy: c.createdBy ?? null, colors: c.colors, settings: c.settings ?? {},
+    fontDisplay: c.fontDisplay ?? "Syne", fontBody: c.fontBody ?? "DM Sans", createdAt: toDate(c.createdAt) ?? new Date(),
+  })) })
+
+  await prisma.siteSetting.createMany({ data: arr(D.site_settings).map((s) => ({
+    id: s.id, key: s.key, value: s.value ?? "", type: s.type ?? "string",
+  })), skipDuplicates: true })
+
+  const folders = arr(D.media_folders)
+  for (const grp of [folders.filter((f) => !f.parentId), folders.filter((f) => f.parentId)]) {
+    await prisma.mediaFolder.createMany({ data: grp.map((f) => ({
+      id: f.id, name: f.name, parentId: f.parentId ?? null, createdAt: toDate(f.createdAt) ?? new Date(),
+    })) })
+  }
+
+  await prisma.media.createMany({ data: arr(D.media).map((m) => ({
+    id: m.id, title: m.title ?? null, type: m.type, mimeType: m.mimeType ?? null, size: m.size ?? null,
+    url: m.url ?? "", thumbnail: m.thumbnail ?? null, muxUploadId: m.muxUploadId ?? null, muxAssetId: m.muxAssetId ?? null,
+    muxPlaybackId: m.muxPlaybackId ?? null, muxStatus: m.muxStatus ?? null, width: m.width ?? null, height: m.height ?? null,
+    duration: m.duration ?? null, folderId: m.folderId ?? null, blurDataUrl: m.blurDataUrl ?? null, createdAt: toDate(m.createdAt) ?? new Date(),
+  })) })
+
+  const services = arr(D.services)
+  await prisma.service.createMany({ data: services.map((s) => ({
+    id: s.id, slug: s.slug, title: s.title, description: s.description ?? "", body: s.body ?? "", icon: s.icon ?? "Globe",
+    features: arr(s.features), processSteps: s.processSteps ?? [], deliverables: arr(s.deliverables),
+    isPublished: !!s.isPublished, order: s.order ?? 0, metaTitle: s.metaTitle ?? null, metaDescription: s.metaDescription ?? null,
+    coverImage: s.coverImage ?? null, accentColor: s.accentColor ?? null, gradient: s.gradient ?? null,
+    motionDesign: s.motionDesign ?? null, parentId: null, createdAt: toDate(s.createdAt) ?? new Date(),
+  })) })
+  for (const s of services.filter((x) => x.parentId)) {
+    await prisma.service.update({ where: { id: s.id }, data: { parentId: s.parentId } })
+  }
+
+  await prisma.portfolioItem.createMany({ data: arr(D.portfolio_items).map((p) => ({
+    id: p.id, title: p.title, slug: p.slug, client: p.client ?? null, clientLogo: p.clientLogo ?? null,
+    category: p.category ?? "", description: p.description ?? null, content: p.content ?? null, coverImage: p.coverImage ?? "",
+    images: arr(p.images), tags: arr(p.tags), results: p.results ?? null, gradient: p.gradient ?? undefined,
+    accentColor: p.accentColor ?? undefined, tall: !!p.tall, narrativeParagraphs: p.narrativeParagraphs ?? null,
+    sidebarItems: p.sidebarItems ?? null, resultStats: p.resultStats ?? null, year: p.year ?? null,
+    isPublished: !!p.isPublished, order: p.order ?? 0, createdAt: toDate(p.createdAt) ?? new Date(),
+  })) })
+  for (const j of arr(D.portfolio_services)) {
+    await prisma.$executeRawUnsafe(`INSERT INTO "_PortfolioServices" ("A","B") VALUES ($1,$2) ON CONFLICT DO NOTHING`, j.A, j.B)
+  }
+
+  await prisma.page.createMany({ data: arr(D.pages).map((p) => ({
+    id: p.id, slug: p.slug, title: p.title, description: p.description ?? null, sections: p.sections ?? [],
+    isPublished: !!p.isPublished, publishedAt: toDate(p.publishedAt), metaTitle: p.metaTitle ?? null,
+    metaDescription: p.metaDescription ?? null, ogImage: p.ogImage ?? null, createdAt: toDate(p.createdAt) ?? new Date(),
+  })) })
+
+  await prisma.blogPost.createMany({ data: arr(D.blog_posts).map((b) => ({
+    id: b.id, title: b.title, slug: b.slug, excerpt: b.excerpt ?? null, content: b.content ?? "",
+    coverImage: b.coverImage ?? null, coverGradient: b.coverGradient ?? null, template: b.template ?? "classic",
+    category: b.category ?? null, tags: arr(b.tags), readTime: b.readTime ?? 5, author: b.author ?? null,
+    aiGenerated: !!b.aiGenerated, aiOutline: b.aiOutline ?? null, status: b.status ?? "draft", publishedAt: toDate(b.publishedAt),
+    metaTitle: b.metaTitle ?? null, metaDescription: b.metaDescription ?? null, ogImage: b.ogImage ?? null, createdAt: toDate(b.createdAt) ?? new Date(),
+  })) })
+
+  console.log(`  ✓ ${arr(D.pages).length} sayfa · ${services.length} hizmet · ${arr(D.portfolio_items).length} portfolyo · ${arr(D.blog_posts).length} blog · ${arr(D.color_palettes).length} palet · ${arr(D.media).length} medya`)
+  return true
+}
 
 // ── Default Super Admin credentials ───────────────
 const ADMIN_EMAIL = "admin@flixflex.com"
@@ -31,65 +117,65 @@ const ADMIN_PASSWORD = (() => {
 
 // ── FlixFlex Default Color Palette ────────────────
 const FLIXFLEX_DEFAULT_PALETTE = {
-  primary:        "#FF4FD8",
-  primaryHover:   "#DC2DB6",
-  primaryMuted:   "rgba(255, 79, 216, 0.12)",
-  secondary:      "#D6FF3B",
+  primary: "#FF4FD8",
+  primaryHover: "#DC2DB6",
+  primaryMuted: "rgba(255, 79, 216, 0.12)",
+  secondary: "#D6FF3B",
   secondaryLight: "#D6FF380D",
-  background:     "#F7F7F5",
-  surface:        "#FFFFFF",
-  foreground:     "#0D0D0D",
-  muted:          "#888888",
-  border:         "#CCCCCC",
+  background: "#F7F7F5",
+  surface: "#FFFFFF",
+  foreground: "#0D0D0D",
+  muted: "#888888",
+  border: "#CCCCCC",
   dark: {
     background: "#0D0D0D",
-    surface:    "#1A1A1A",
+    surface: "#1A1A1A",
     foreground: "#F0F0F0",
-    muted:      "#888888",
-    border:     "#2A2A2A",
+    muted: "#888888",
+    border: "#2A2A2A",
   },
   success: "#16a34a",
   warning: "#d97706",
-  error:   "#dc2626",
-  info:    "#2563eb",
+  error: "#dc2626",
+  info: "#2563eb",
 }
 
 // ── Demo Blog Posts ───────────────────────────────
 const DEMO_POSTS = [
   {
-    title:      "Performance Marketing'de 2025'in 5 Trendi",
-    slug:       "performance-marketing-2025-trendleri",
-    excerpt:    "Dijital reklamcılık hızla değişiyor. Bu yıl öne çıkan 5 trendi ve markanız için ne anlama geldiğini keşfedin.",
-    content:    "# Performance Marketing'de 2025'in 5 Trendi\n\nDijital reklamcılık ekosistemi her geçen yıl köklü değişimler geçiriyor...",
-    template:   "editorial",
-    category:   "Performance Marketing",
-    tags:       ["performance", "dijital", "trend", "2025"],
-    readTime:   6,
-    status:     "published",
+    title: "Performance Marketing'de 2025'in 5 Trendi",
+    slug: "performance-marketing-2025-trendleri",
+    excerpt: "Dijital reklamcılık hızla değişiyor. Bu yıl öne çıkan 5 trendi ve markanız için ne anlama geldiğini keşfedin.",
+    content: "# Performance Marketing'de 2025'in 5 Trendi\n\nDijital reklamcılık ekosistemi her geçen yıl köklü değişimler geçiriyor...",
+    template: "editorial",
+    category: "Performance Marketing",
+    tags: ["performance", "dijital", "trend", "2025"],
+    readTime: 6,
+    status: "published",
     publishedAt: new Date(),
   },
   {
-    title:      "Marka Kimliği: Neden Her Şeyin Temeli?",
-    slug:       "marka-kimligi-temel",
-    excerpt:    "Güçlü bir marka kimliği olmadan hiçbir kampanya tam anlamıyla çalışmaz. İşte sebebi.",
-    content:    "# Marka Kimliği: Neden Her Şeyin Temeli?\n\nMarka kimliği, bir işletmenin görsel ve duygusal parmak izidir...",
-    template:   "classic",
-    category:   "Marka Stratejisi",
-    tags:       ["marka", "kimlik", "strateji"],
-    readTime:   5,
-    status:     "published",
+    title: "Marka Kimliği: Neden Her Şeyin Temeli?",
+    slug: "marka-kimligi-temel",
+    excerpt: "Güçlü bir marka kimliği olmadan hiçbir kampanya tam anlamıyla çalışmaz. İşte sebebi.",
+    content: "# Marka Kimliği: Neden Her Şeyin Temeli?\n\nMarka kimliği, bir işletmenin görsel ve duygusal parmak izidir...",
+    template: "classic",
+    category: "Marka Stratejisi",
+    tags: ["marka", "kimlik", "strateji"],
+    readTime: 5,
+    status: "published",
     publishedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
   },
   {
-    title:      "Creative Brief Yazmanın Sanatı",
-    slug:       "creative-brief-yazma-sanati",
-    excerpt:    "İyi bir creative brief, kampanyanın yarısıdır. Mükemmel brief'i nasıl yazarsınız?",
-    content:    "# Creative Brief Yazmanın Sanatı\n\nBir reklam kampanyasının başarısı, çoğu zaman brief kalitesine bağlıdır...",
-    template:   "visual",
-    category:   "Creative",
-    tags:       ["creative", "brief", "kampanya"],
-    readTime:   4,
-    status:     "draft",
+    title: "Creative Brief Yazmanın Sanatı",
+    slug: "creative-brief-yazma-sanati",
+    excerpt: "İyi bir creative brief, kampanyanın yarısıdır. Mükemmel brief'i nasıl yazarsınız?",
+    content: "# Creative Brief Yazmanın Sanatı\n\nBir reklam kampanyasının başarısı, çoğu zaman brief kalitesine bağlıdır...",
+    template: "visual",
+    category: "Creative",
+    tags: ["creative", "brief", "kampanya"],
+    readTime: 4,
+    status: "draft",
     publishedAt: null,
   },
 ]
@@ -97,14 +183,14 @@ const DEMO_POSTS = [
 // ── Demo Portfolio ────────────────────────────────
 const DEMO_PORTFOLIO = [
   {
-    title:      "Zara Home — Social Media Kampanyası",
-    slug:       "zara-home-social-media",
-    client:     "Zara Home",
-    category:   "Marketing",
+    title: "Zara Home — Social Media Kampanyası",
+    slug: "zara-home-social-media",
+    client: "Zara Home",
+    category: "Marketing",
     description: "Aylık %340 engagement artışı sağlayan multi-platform sosyal medya stratejisi.",
     coverImage: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800",
-    images:     [],
-    tags:       ["social media", "instagram", "tiktok"],
+    images: [],
+    tags: ["social media", "instagram", "tiktok"],
     serviceSlugs: ["sosyal-medya-yonetimi", "icerik-uretimi"],
     gradient: "from-[#0A0A0A] via-[#1A1A1A] to-[#2A2A2A]",
     accentColor: "#FF4FD8",
@@ -115,8 +201,8 @@ const DEMO_PORTFOLIO = [
       "Sonuçta marka, sezon kampanyalarında daha yüksek etkileşim ve daha tutarlı bir görsel dil elde etti.",
     ],
     sidebarItems: [
-      { heading: "Zorluk", body: "Dağınık içerik akışı ve düşük kampanya etkileşimi." },
-      { heading: "Yaklaşım", body: "Aylık takvim, kreatif format sistemi ve performans odaklı yayın ritmi." },
+      { heading: "Problem", body: "Dağınık içerik akışı ve düşük kampanya etkileşimi." },
+      { heading: "Çözüm", body: "Aylık takvim, kreatif format sistemi ve performans odaklı yayın ritmi." },
       { heading: "Sonuç", body: "Engagement artışı, yeni takipçi kazanımı ve ölçülebilir ROAS." },
     ],
     resultStats: [
@@ -124,24 +210,24 @@ const DEMO_PORTFOLIO = [
       { value: 85, suffix: "K", label: "Yeni Takipçi", description: "Kampanya dönemi" },
       { value: 4.2, suffix: "x", label: "ROAS", description: "Çok kanallı kampanya" },
     ],
-    results:    [
+    results: [
       { metric: "Engagement Artışı", value: "+340%" },
-      { metric: "Yeni Takipçi",      value: "85K" },
-      { metric: "ROAS",              value: "4.2x" },
+      { metric: "Yeni Takipçi", value: "85K" },
+      { metric: "ROAS", value: "4.2x" },
     ],
-    year:        2024,
+    year: 2024,
     isPublished: true,
-    order:       1,
+    order: 1,
   },
   {
-    title:      "StartupX — Marka Kimliği & Launch",
-    slug:       "startupx-marka-kimligi",
-    client:     "StartupX",
-    category:   "Branding",
+    title: "StartupX — Marka Kimliği & Launch",
+    slug: "startupx-marka-kimligi",
+    client: "StartupX",
+    category: "Branding",
     description: "Sıfırdan marka inşası: logo, kimlik, launch kampanyası ve dijital varlık.",
     coverImage: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=800",
-    images:     [],
-    tags:       ["branding", "logo", "launch"],
+    images: [],
+    tags: ["branding", "logo", "launch"],
     serviceSlugs: ["marka-kimligi", "yaratici-yonetim"],
     gradient: "from-[#1A0A0A] via-[#3D1A2E] to-[#5C1A3D]",
     accentColor: "#FB7185",
@@ -152,8 +238,8 @@ const DEMO_PORTFOLIO = [
       "Lansman günü marka hem satış hem de görünürlük açısından güçlü bir ilk izlenim yarattı.",
     ],
     sidebarItems: [
-      { heading: "Zorluk", body: "Sıfırdan marka algısı oluşturmak ve lansmana yetişmek." },
-      { heading: "Yaklaşım", body: "Kimlik sistemi, mesaj mimarisi ve launch kreatiflerini paralel ilerletmek." },
+      { heading: "Problem", body: "Sıfırdan marka algısı oluşturmak ve lansmana yetişmek." },
+      { heading: "Çözüm", body: "Kimlik sistemi, mesaj mimarisi ve launch kreatiflerini paralel ilerletmek." },
       { heading: "Sonuç", body: "Güçlü ilk satış, PR görünürlüğü ve tutarlı marka dili." },
     ],
     resultStats: [
@@ -161,13 +247,13 @@ const DEMO_PORTFOLIO = [
       { value: 23, suffix: "", label: "Medya Yayını", description: "PR coverage" },
       { value: 50, suffix: "K+", label: "Yeni Takipçi", description: "İlk ay" },
     ],
-    results:    [
-      { metric: "Launch Günü Satış",  value: "500K₺" },
-      { metric: "Medya Coverage",     value: "23 Yayın" },
+    results: [
+      { metric: "Launch Günü Satış", value: "500K₺" },
+      { metric: "Medya Coverage", value: "23 Yayın" },
     ],
-    year:        2024,
+    year: 2024,
     isPublished: true,
-    order:       2,
+    order: 2,
   },
 ]
 
@@ -319,7 +405,7 @@ const DEMO_PAGES = [
     isPublished: true,
     sections: [
       { id: "hz1", type: "hero", order: 0, visible: true, props: { headline: "Markanı domine etmek için 6 yol", subheadline: "Strateji, yaratıcılık ve teknoloji — üçünü aynı anda doğru kullanan markalar öne çıkar. İşte biz de tam olarak bunu yapıyoruz." } },
-      { id: "hz2", type: "services-list", order: 1, visible: true, props: {} },
+      { id: "hz2", type: "services-showcase", order: 1, visible: true, props: {} },
       { id: "hz3", type: "cta", order: 2, visible: true, props: {} },
     ],
   },
@@ -461,24 +547,24 @@ const DEMO_PAGES = [
 
 // ── Site Settings ─────────────────────────────────
 const SITE_SETTINGS = [
-  { key: "site_name",             value: "FlixFlex",                                type: "string" },
-  { key: "site_tagline",          value: "Next-Gen Reklam Ajansı",                  type: "string" },
-  { key: "site_email",            value: "merhaba@flixflex.com",                    type: "string" },
-  { key: "site_phone",            value: "+90 212 000 00 00",                       type: "string" },
-  { key: "site_logo",             value: "",                                        type: "string" },
-  { key: "site_favicon",          value: "",                                        type: "string" },
-  { key: "site_meta_title",       value: "FlixFlex — Next-Gen Marketing Agency",    type: "string" },
+  { key: "site_name", value: "FlixFlex", type: "string" },
+  { key: "site_tagline", value: "Next-Gen Reklam Ajansı", type: "string" },
+  { key: "site_email", value: "merhaba@flixflex.com", type: "string" },
+  { key: "site_phone", value: "+90 212 000 00 00", type: "string" },
+  { key: "site_logo", value: "", type: "string" },
+  { key: "site_favicon", value: "", type: "string" },
+  { key: "site_meta_title", value: "FlixFlex — Next-Gen Marketing Agency", type: "string" },
   { key: "site_meta_description", value: "Modern ve performans odaklı pazarlama çözümleri.", type: "string" },
-  { key: "site_address",          value: "Levent, İstanbul · Türkiye",              type: "string" },
+  { key: "site_address", value: "Levent, İstanbul · Türkiye", type: "string" },
   // Footer/social are now managed as a dynamic list (add/remove platforms).
   {
     key: "site_social_links",
     type: "json",
     value: JSON.stringify([
       { platform: "instagram", label: "Instagram", url: "https://instagram.com/flixflex" },
-      { platform: "linkedin",  label: "LinkedIn",  url: "https://linkedin.com/company/flixflex" },
-      { platform: "x",         label: "X",         url: "https://x.com/flixflex" },
-      { platform: "youtube",   label: "YouTube",   url: "https://youtube.com/@flixflex" },
+      { platform: "linkedin", label: "LinkedIn", url: "https://linkedin.com/company/flixflex" },
+      { platform: "x", label: "X", url: "https://x.com/flixflex" },
+      { platform: "youtube", label: "YouTube", url: "https://youtube.com/@flixflex" },
     ]),
   },
 ]
@@ -490,7 +576,7 @@ const SITE_SETTINGS = [
 // there automatically grows this set on next seed.
 function buildSuperAdminPermissions() {
   const resources = Object.values(RESOURCES)
-  const actions   = Object.values(ACTIONS)
+  const actions = Object.values(ACTIONS)
   return resources.flatMap((resource) =>
     actions.map((action) => ({ resource, action }))
   )
@@ -513,15 +599,15 @@ async function main() {
 
     // Upsert role
     const role = await prisma.role.upsert({
-      where:  { name: roleDef.name },
+      where: { name: roleDef.name },
       update: {
         description: roleDef.description,
-        isSystem:    roleDef.isSystem,
+        isSystem: roleDef.isSystem,
       },
       create: {
-        name:        roleDef.name,
+        name: roleDef.name,
         description: roleDef.description,
-        isSystem:    roleDef.isSystem,
+        isSystem: roleDef.isSystem,
       },
     })
 
@@ -529,16 +615,16 @@ async function main() {
     // any custom permissions the user configured in the dashboard.
     if (permissions.length > 0) {
       const existingPerms = await prisma.permission.findMany({ where: { roleId: role.id } })
-      const missingPerms = permissions.filter((p) => 
+      const missingPerms = permissions.filter((p) =>
         !existingPerms.some((ep) => ep.resource === p.resource && ep.action === p.action)
       )
 
       if (missingPerms.length > 0) {
         await prisma.permission.createMany({
           data: missingPerms.map((p) => ({
-            roleId:   role.id,
+            roleId: role.id,
             resource: p.resource,
-            action:   p.action,
+            action: p.action,
           })),
           skipDuplicates: true,
         })
@@ -554,32 +640,36 @@ async function main() {
   const passwordHash = await bcrypt.hash(ADMIN_PASSWORD, 12)
 
   const adminUser = await prisma.user.upsert({
-    where:  { email: ADMIN_EMAIL },
+    where: { email: ADMIN_EMAIL },
     update: {}, // Preserve custom admin credentials and state
     create: {
-      email:    ADMIN_EMAIL,
-      name:     "FlixFlex Admin",
+      email: ADMIN_EMAIL,
+      name: "FlixFlex Admin",
       username: "flixflex-admin",
       password: passwordHash,
-      roleId:   createdRoles["Super Admin"],
+      roleId: createdRoles["Super Admin"],
       isActive: true,
     },
   })
   console.log(`  ✓ ${adminUser.email}`)
 
+  // ── Varsayılan içerik: fresh install → gerçek içerik (default-content.json) ──
+  const contentSeeded = await seedDefaultContent()
+  if (!contentSeeded) {
+  // Fallback (yalnızca default-content.json yoksa): temel demo içerik
   // ── 3. Default renk paleti ────────────────────
   console.log("\n🎨 FlixFlex default renk paleti oluşturuluyor...")
   await prisma.colorPalette.upsert({
-    where:  { id: "default-flixflex" },
+    where: { id: "default-flixflex" },
     update: {},
     create: {
-      id:          "default-flixflex",
-      name:        "FlixFlex Default",
-      isActive:    true,
-      isSystem:    true,
-      colors:      FLIXFLEX_DEFAULT_PALETTE,
+      id: "default-flixflex",
+      name: "FlixFlex Default",
+      isActive: true,
+      isSystem: true,
+      colors: FLIXFLEX_DEFAULT_PALETTE,
       fontDisplay: "Syne",
-      fontBody:    "DM Sans",
+      fontBody: "DM Sans",
     },
   })
   console.log("  ✓ FlixFlex Default palette")
@@ -587,15 +677,15 @@ async function main() {
   // ── 3.1 FlixFlex Modern UI (System) ───────────
   console.log("🎨 FlixFlex Modern UI tema oluşturuluyor...")
   await prisma.colorPalette.upsert({
-    where:  { id: "flixflex-modern-ui" },
+    where: { id: "flixflex-modern-ui" },
     update: { isSystem: true },
     create: {
-      id:          "flixflex-modern-ui",
-      name:        "FlixFlex Modern UI",
+      id: "flixflex-modern-ui",
+      name: "FlixFlex Modern UI",
       description: "Yepyeni nesil premium tasarım — yuvarlatılmış köşeler, cam efektleri.",
-      isActive:    false,
-      isSystem:    true,
-      colors:      {
+      isActive: false,
+      isSystem: true,
+      colors: {
         ...FLIXFLEX_DEFAULT_PALETTE,
         primary: "#6C3CE1",
         background: "#000000",
@@ -608,7 +698,7 @@ async function main() {
         headerVariant: "classic",
       },
       fontDisplay: "Syne",
-      fontBody:    "DM Sans",
+      fontBody: "DM Sans",
     },
   })
   console.log("  ✓ FlixFlex Modern UI palette")
@@ -617,7 +707,7 @@ async function main() {
   console.log("\n📝 Demo blog postları oluşturuluyor...")
   for (const post of DEMO_POSTS) {
     await prisma.blogPost.upsert({
-      where:  { slug: post.slug },
+      where: { slug: post.slug },
       update: {},
       create: post,
     })
@@ -640,7 +730,7 @@ async function main() {
   for (const item of DEMO_PORTFOLIO) {
     const { serviceSlugs, ...portfolioData } = item
     await prisma.portfolioItem.upsert({
-      where:  { slug: item.slug },
+      where: { slug: item.slug },
       update: {}, // Preserve custom portfolio items modifications
       create: {
         ...portfolioData,
@@ -654,7 +744,7 @@ async function main() {
   console.log("\n📄 Demo sayfalar oluşturuluyor...")
   for (const page of DEMO_PAGES) {
     await prisma.page.upsert({
-      where:  { slug: page.slug },
+      where: { slug: page.slug },
       update: {}, // Preserve custom page content if page already exists
       create: page,
     })
@@ -665,12 +755,13 @@ async function main() {
   console.log("\n⚙️  Site ayarları oluşturuluyor...")
   for (const setting of SITE_SETTINGS) {
     await prisma.siteSetting.upsert({
-      where:  { key: setting.key },
+      where: { key: setting.key },
       update: {},
       create: setting,
     })
   }
   console.log("  ✓ Temel site ayarları")
+  } // ← fallback demo bloğu sonu (default-content.json yoksa çalışır)
 
   // ── Özet ─────────────────────────────────────
   const passwordIsDefault = ADMIN_PASSWORD === "FlixFlex2026!"

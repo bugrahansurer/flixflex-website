@@ -1,0 +1,2747 @@
+{
+  "color_palettes": [
+    {
+      "id": "default-flixflex",
+      "name": "FlixFlex Default",
+      "description": "Varsayılan FlixFlex marka paleti — mor, antrasit, koyu arka plan.",
+      "isActive": false,
+      "isSystem": true,
+      "createdBy": null,
+      "colors": {
+        "dark": {
+          "border": "#2A2A2A",
+          "surface": "#1A1A1A",
+          "background": "#0d0d0d",
+          "foreground": "#f7f7f5",
+          "borderStrong": "#CCCCCC",
+          "backgroundAlt": "#111111",
+          "foregroundFaint": "#999999",
+          "foregroundMuted": "#888888",
+          "surfaceElevated": "#222222"
+        },
+        "error": "#dc2626",
+        "border": "#E0E0E0",
+        "primary": "#ff4fd8",
+        "success": "#16a34a",
+        "surface": "#F2F2F2",
+        "warning": "#ca8a04",
+        "secondary": "#D6FF3B",
+        "background": "#FFFFFF",
+        "foreground": "#111111",
+        "primaryGlow": "rgba(255, 79, 216, 0.35)",
+        "borderStrong": "#CCCCCC",
+        "primaryHover": "#e045c2",
+        "primaryMuted": "rgba(255, 79, 216, 0.12)",
+        "backgroundAlt": "#F7F7F7",
+        "secondaryLight": "rgba(214, 255, 56, 0.05)",
+        "foregroundFaint": "#999999",
+        "foregroundMuted": "#666666",
+        "surfaceElevated": "#FFFFFF"
+      },
+      "settings": {
+        "buttonShape": "bevel",
+        "fontBodySize": 16,
+        "mobileNavbar": true,
+        "headerVariant": "classic",
+        "containerShape": "rounded",
+        "fontHeadingSize": 32,
+        "mobileNavbarVariant": "dock"
+      },
+      "fontDisplay": "Outfit",
+      "fontBody": "Inter",
+      "createdAt": "2026-05-11T09:00:47.574",
+      "updatedAt": "2026-06-12T08:48:53.191"
+    },
+    {
+      "id": "flixflex-modern-ui",
+      "name": "FlixFlex Modern UI",
+      "description": "Yepyeni nesil premium tasarım — yuvarlatılmış köşeler, cam efektleri.",
+      "isActive": true,
+      "isSystem": true,
+      "createdBy": null,
+      "colors": {
+        "dark": {
+          "border": "#2A2A2A",
+          "surface": "#1A1A1A",
+          "secondary": "#D6FF3B",
+          "background": "#0d0d0d",
+          "foreground": "#f7f7f5",
+          "borderStrong": "#3A3A3A",
+          "backgroundAlt": "#111111",
+          "foregroundFaint": "#999999",
+          "foregroundMuted": "#888888",
+          "surfaceElevated": "#222222"
+        },
+        "error": "#dc2626",
+        "border": "#E0E0E0",
+        "primary": "#ff4fd8",
+        "success": "#16a34a",
+        "surface": "#F2F2F2",
+        "warning": "#ca8a04",
+        "secondary": "#D6FF3B",
+        "background": "#FFFFFF",
+        "foreground": "#111111",
+        "primaryGlow": "rgba(255, 79, 216, 0.35)",
+        "borderStrong": "#CCCCCC",
+        "primaryHover": "#e045c2",
+        "primaryMuted": "rgba(255, 79, 216, 0.12)",
+        "backgroundAlt": "#F7F7F7",
+        "secondaryLight": "rgba(214, 255, 56, 0.05)",
+        "foregroundFaint": "#999999",
+        "foregroundMuted": "#666666",
+        "surfaceElevated": "#FFFFFF"
+      },
+      "settings": {
+        "buttonShape": "rounded",
+        "buttonRadius": 10,
+        "fontBodySize": 16,
+        "mobileNavbar": true,
+        "headerVariant": "classic",
+        "containerShape": "rounded",
+        "containerRadius": 16,
+        "fontHeadingSize": 32,
+        "mobileNavbarVariant": "dock"
+      },
+      "fontDisplay": "Outfit",
+      "fontBody": "Inter",
+      "createdAt": "2026-06-10T10:34:14.489",
+      "updatedAt": "2026-06-28T19:09:51.013"
+    }
+  ],
+  "site_settings": [
+    {
+      "id": "cmp0z1ze0002mo6noj8isuojx",
+      "key": "site_name",
+      "value": "FlixFlex",
+      "type": "string",
+      "updatedAt": "2026-07-01T07:19:26.498"
+    },
+    {
+      "id": "cmp0z1ze3002no6noyyegi1g3",
+      "key": "site_tagline",
+      "value": "Next-Gen Reklam Ajansı",
+      "type": "string",
+      "updatedAt": "2026-07-01T07:19:26.697"
+    },
+    {
+      "id": "cmp0z1ze5002oo6nolwb33r8z",
+      "key": "site_email",
+      "value": "merhaba@flixflex.com",
+      "type": "string",
+      "updatedAt": "2026-07-01T07:19:26.748"
+    },
+    {
+      "id": "cmp0z1ze6002po6nosas5f697",
+      "key": "site_phone",
+      "value": "+90 212 000 00 00",
+      "type": "string",
+      "updatedAt": "2026-07-01T07:19:26.796"
+    },
+    {
+      "id": "cmp0z1ze8002qo6no5scwwl1g",
+      "key": "social_instagram",
+      "value": "https://instagram.com/flixflex",
+      "type": "string",
+      "updatedAt": "2026-07-01T07:19:26.845"
+    },
+    {
+      "id": "cmp0z1ze9002ro6novee04v10",
+      "key": "social_linkedin",
+      "value": "https://linkedin.com/company/flixflex",
+      "type": "string",
+      "updatedAt": "2026-07-01T07:19:26.893"
+    },
+    {
+      "id": "cmq7xlpqj000xo6lcwv7brvfw",
+      "key": "site_logo",
+      "value": "",
+      "type": "string",
+      "updatedAt": "2026-07-01T07:19:26.941"
+    },
+    {
+      "id": "cmq7xlpqk000yo6lchwtgezo7",
+      "key": "site_favicon",
+      "value": "",
+      "type": "string",
+      "updatedAt": "2026-07-01T07:19:26.991"
+    },
+    {
+      "id": "cmq7xlpql000zo6lch5c5slds",
+      "key": "site_meta_title",
+      "value": "FlixFlex — Next-Gen Marketing Agency",
+      "type": "string",
+      "updatedAt": "2026-07-01T07:19:27.085"
+    },
+    {
+      "id": "cmq7xlpqm0010o6lcudmyfdzj",
+      "key": "site_meta_description",
+      "value": "Modern ve performans odaklı pazarlama çözümleri.",
+      "type": "string",
+      "updatedAt": "2026-07-01T07:19:27.133"
+    },
+    {
+      "id": "cmqkxzw3t0011jf7qge2eu7ml",
+      "key": "site_address",
+      "value": "Levent, İstanbul · Türkiye",
+      "type": "string",
+      "updatedAt": "2026-07-01T07:19:27.181"
+    },
+    {
+      "id": "cmqkxzwr00012jf7q95yckmqw",
+      "key": "site_social_links",
+      "value": "[{\"platform\":\"instagram\",\"label\":\"Instagram\",\"url\":\"https://instagram.com/flixflex\"},{\"platform\":\"linkedin\",\"label\":\"LinkedIn\",\"url\":\"https://linkedin.com/company/flixflex\"},{\"platform\":\"x\",\"label\":\"X\",\"url\":\"https://x.com/flixflex\"},{\"platform\":\"youtube\",\"label\":\"YouTube\",\"url\":\"https://youtube.com/@flixflex\"}]",
+      "type": "json",
+      "updatedAt": "2026-07-01T07:19:27.228"
+    }
+  ],
+  "media_folders": [
+    {
+      "id": "cmq84tn4f000bo6es9lg1l84n",
+      "name": "portfolios",
+      "parentId": null,
+      "createdAt": "2026-06-10T13:56:21.71",
+      "updatedAt": "2026-06-10T13:56:21.71"
+    },
+    {
+      "id": "cmq84tunc000do6es6hbeviqr",
+      "name": "akbank",
+      "parentId": "cmq84tn4f000bo6es9lg1l84n",
+      "createdAt": "2026-06-10T13:56:31.464",
+      "updatedAt": "2026-06-10T13:56:31.464"
+    },
+    {
+      "id": "cmq855ao3000qo6es8zqsuavt",
+      "name": "zarahome",
+      "parentId": "cmq84tn4f000bo6es9lg1l84n",
+      "createdAt": "2026-06-10T14:05:25.444",
+      "updatedAt": "2026-06-10T14:05:25.444"
+    },
+    {
+      "id": "cmq85t8r90012o6esl14mcfbk",
+      "name": "startupx",
+      "parentId": "cmq84tn4f000bo6es9lg1l84n",
+      "createdAt": "2026-06-10T14:24:02.709",
+      "updatedAt": "2026-06-10T14:24:02.709"
+    },
+    {
+      "id": "cmq85x5ow001co6esv4dyb2ji",
+      "name": "pet-gourmet",
+      "parentId": "cmq84tn4f000bo6es9lg1l84n",
+      "createdAt": "2026-06-10T14:27:05.36",
+      "updatedAt": "2026-06-10T14:27:05.36"
+    },
+    {
+      "id": "cmq93y0az0002o66k2zfde83o",
+      "name": "bursaspor",
+      "parentId": "cmq84tn4f000bo6es9lg1l84n",
+      "createdAt": "2026-06-11T06:19:31.978",
+      "updatedAt": "2026-06-11T06:19:31.978"
+    },
+    {
+      "id": "cmqaiz6p90001o6m8i05vhy2h",
+      "name": "casual-coffee",
+      "parentId": "cmq84tn4f000bo6es9lg1l84n",
+      "createdAt": "2026-06-12T06:08:07.338",
+      "updatedAt": "2026-06-12T06:08:07.338"
+    }
+  ],
+  "media": [
+    {
+      "id": "cmq855pjv000yo6esiplpmiz7",
+      "title": "dd70.avif",
+      "type": "image",
+      "mimeType": "image/avif",
+      "size": 24729,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/0d449a27-649f-4947-9d1d-00abb42638e9-dd70.avif",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/0d449a27-649f-4947-9d1d-00abb42638e9-dd70.avif",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-10T14:05:44.732",
+      "updatedAt": "2026-06-10T14:05:44.732",
+      "folderId": "cmq855ao3000qo6es8zqsuavt",
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmq83zwy50001o6eso0iu3l6q",
+      "title": "Marketing Agency GIF by GOODKIDS.gif",
+      "type": "image",
+      "mimeType": "image/gif",
+      "size": 142629,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/aa9db239-bd88-4a80-a9d5-ed0713d1dfb5-marketing-agency-gif-by-goodkids.gif",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/aa9db239-bd88-4a80-a9d5-ed0713d1dfb5-marketing-agency-gif-by-goodkids.gif",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-10T13:33:14.735",
+      "updatedAt": "2026-06-10T13:33:14.735",
+      "folderId": null,
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmq84020s0003o6eskayorj05",
+      "title": "New York Marketing GIF by GOODKIDS.gif",
+      "type": "image",
+      "mimeType": "image/gif",
+      "size": 6936578,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/2299de44-492e-4c5a-ad84-17c46e26934c-new-york-marketing-gif-by-goodkids.gif",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/2299de44-492e-4c5a-ad84-17c46e26934c-new-york-marketing-gif-by-goodkids.gif",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-10T13:33:21.341",
+      "updatedAt": "2026-06-10T13:33:21.341",
+      "folderId": null,
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmq8405an0005o6esg2u8x61i",
+      "title": "Design Halloween GIF by Vitalstrats Creative Solutions.gif",
+      "type": "image",
+      "mimeType": "image/gif",
+      "size": 1620793,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/ead2bc12-bdaa-4de9-9de2-6fe52a21a3fa-design-halloween-gif-by-vitalstrats-creative-solutions.gif",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/ead2bc12-bdaa-4de9-9de2-6fe52a21a3fa-design-halloween-gif-by-vitalstrats-creative-solutions.gif",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-10T13:33:25.583",
+      "updatedAt": "2026-06-10T13:33:25.583",
+      "folderId": null,
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmq84l1eg0007o6esplcha69j",
+      "title": "pexels-undrxposure-33261214.jpg",
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "size": 901306,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/90471f87-4d3a-4238-ace1-4d502bf6a1af-pexels-undrxposure-33261214.jpg",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/90471f87-4d3a-4238-ace1-4d502bf6a1af-pexels-undrxposure-33261214.jpg",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-10T13:49:40.281",
+      "updatedAt": "2026-06-10T13:49:40.281",
+      "folderId": null,
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmq84wecw000fo6esn2fq2sjq",
+      "title": "logo.png",
+      "type": "image",
+      "mimeType": "image/png",
+      "size": 50972,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/f7afa974-83a2-4248-8e49-10c6689a83ca-logo.png",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/f7afa974-83a2-4248-8e49-10c6689a83ca-logo.png",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-10T13:58:30.32",
+      "updatedAt": "2026-06-10T13:58:30.32",
+      "folderId": "cmq84tunc000do6es6hbeviqr",
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmq84wgti000ho6esgff243pr",
+      "title": "akbank-mobile-giris.jpg",
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "size": 96202,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/0cb2cdd6-3544-49dd-a9b7-230394f1f2f1-akbank-mobile-giris.jpg",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/0cb2cdd6-3544-49dd-a9b7-230394f1f2f1-akbank-mobile-giris.jpg",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-10T13:58:33.511",
+      "updatedAt": "2026-06-10T13:58:33.511",
+      "folderId": "cmq84tunc000do6es6hbeviqr",
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmq84wiwt000jo6es0mku324n",
+      "title": "akbank-mobil-gizlilik-ilkeleri.jpg",
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "size": 66144,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/fa3330cf-7173-4e7e-ae25-1e0bdc0d50bc-akbank-mobil-gizlilik-ilkeleri.jpg",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/fa3330cf-7173-4e7e-ae25-1e0bdc0d50bc-akbank-mobil-gizlilik-ilkeleri.jpg",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-10T13:58:36.222",
+      "updatedAt": "2026-06-10T13:58:36.222",
+      "folderId": "cmq84tunc000do6es6hbeviqr",
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmq84wn9s000lo6es7me920dy",
+      "title": "0lnfqkmnmzhdzwc64kcpthk45ja8.png",
+      "type": "image",
+      "mimeType": "image/png",
+      "size": 1252176,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/596acf3a-bdd2-4016-b705-4c7687b706a1-0lnfqkmnmzhdzwc64kcpthk45ja8.png",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/596acf3a-bdd2-4016-b705-4c7687b706a1-0lnfqkmnmzhdzwc64kcpthk45ja8.png",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-10T13:58:41.872",
+      "updatedAt": "2026-06-10T13:58:41.872",
+      "folderId": "cmq84tunc000do6es6hbeviqr",
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmq84wpf3000no6esv3v2qt6d",
+      "title": "20250820111914255.jpg",
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "size": 57106,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/15f47d9d-2ce8-4192-934e-1dc98c553e4f-20250820111914255.jpg",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/15f47d9d-2ce8-4192-934e-1dc98c553e4f-20250820111914255.jpg",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-10T13:58:44.655",
+      "updatedAt": "2026-06-10T13:58:44.655",
+      "folderId": "cmq84tunc000do6es6hbeviqr",
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmq855jkj000so6esh1iqhhtt",
+      "title": "Zara_Home_logo_2023.svg.png",
+      "type": "image",
+      "mimeType": "image/png",
+      "size": 19911,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/bb6dfc6a-cd48-44aa-bbef-5560f8b51433-zara_home_logo_2023-svg.png",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/bb6dfc6a-cd48-44aa-bbef-5560f8b51433-zara_home_logo_2023-svg.png",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-10T14:05:36.979",
+      "updatedAt": "2026-06-10T14:05:36.979",
+      "folderId": "cmq855ao3000qo6es8zqsuavt",
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmq855lk2000uo6esppi2r10s",
+      "title": "76c536141241379.6396da10a8613.jpg",
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "size": 63173,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/9863d349-aa9a-4a2b-aa7c-7440db2dc752-76c536141241379-6396da10a8613.jpg",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/9863d349-aa9a-4a2b-aa7c-7440db2dc752-76c536141241379-6396da10a8613.jpg",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-10T14:05:39.554",
+      "updatedAt": "2026-06-10T14:05:39.554",
+      "folderId": "cmq855ao3000qo6es8zqsuavt",
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmq855nkm000wo6esqg9qf1bo",
+      "title": "mvccopertinazara.jpeg",
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "size": 150654,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/86d4cf2f-1224-4cbf-bf2a-c9a02fb51c4e-mvccopertinazara.jpeg",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/86d4cf2f-1224-4cbf-bf2a-c9a02fb51c4e-mvccopertinazara.jpeg",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-10T14:05:42.166",
+      "updatedAt": "2026-06-10T14:05:42.166",
+      "folderId": "cmq855ao3000qo6es8zqsuavt",
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmq855rik0010o6es5bd7lqvu",
+      "title": "zara-home-magazine-a-w-2015.jpg",
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "size": 79411,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/38d1fe4b-b2a0-4424-b810-cec1e53a794f-zara-home-magazine-a-w-2015.jpg",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/38d1fe4b-b2a0-4424-b810-cec1e53a794f-zara-home-magazine-a-w-2015.jpg",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-10T14:05:47.276",
+      "updatedAt": "2026-06-10T14:05:47.276",
+      "folderId": "cmq855ao3000qo6es8zqsuavt",
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmq85tevb0014o6esg8u06ouo",
+      "title": "startupx-logo.png",
+      "type": "image",
+      "mimeType": "image/png",
+      "size": 15652,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/b917c6f6-9d67-4f2b-805d-915e2bd11492-startupx-logo.png",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/b917c6f6-9d67-4f2b-805d-915e2bd11492-startupx-logo.png",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-10T14:24:10.631",
+      "updatedAt": "2026-06-10T14:24:10.631",
+      "folderId": "cmq85t8r90012o6esl14mcfbk",
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmq85tgql0016o6esh3xy7f3y",
+      "title": "353076_342363a89b134303a369b191c319a340~mv2.avif",
+      "type": "image",
+      "mimeType": "image/avif",
+      "size": 40804,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/5ce70cb0-3d3c-4560-b339-72102fac48dc-353076_342363a89b134303a369b191c319a340-mv2.avif",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/5ce70cb0-3d3c-4560-b339-72102fac48dc-353076_342363a89b134303a369b191c319a340-mv2.avif",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-10T14:24:13.053",
+      "updatedAt": "2026-06-10T14:24:13.053",
+      "folderId": "cmq85t8r90012o6esl14mcfbk",
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmq81umd10000o6ckboiilvwx",
+      "title": "Mux Video 9nls",
+      "type": "video",
+      "mimeType": "video/hls",
+      "size": 0,
+      "url": "https://stream.mux.com/GFIWfyEVKiG8HMFgAh00icEcB7U00mrwA5OSMbz7zr02Mw.m3u8",
+      "thumbnail": "https://image.mux.com/GFIWfyEVKiG8HMFgAh00icEcB7U00mrwA5OSMbz7zr02Mw/thumbnail.jpg",
+      "muxUploadId": null,
+      "muxAssetId": "KoSZogAVda33Wp7008aZsUE5LnduEdRkqE9o8KXd9nls",
+      "muxPlaybackId": "GFIWfyEVKiG8HMFgAh00icEcB7U00mrwA5OSMbz7zr02Mw",
+      "muxStatus": "ready",
+      "width": 1920,
+      "height": 1080,
+      "duration": 7.733333,
+      "createdAt": "2026-06-10T12:33:08.533",
+      "updatedAt": "2026-06-11T06:06:53.302",
+      "folderId": null,
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmq85tjc80018o6esx9anh8by",
+      "title": "dc9fef54-3056-43d1-987d-67c0a0f956a1.png",
+      "type": "image",
+      "mimeType": "image/png",
+      "size": 526347,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/65af2de6-df3c-453e-9e14-5d46dd0b7cc8-dc9fef54-3056-43d1-987d-67c0a0f956a1.png",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/65af2de6-df3c-453e-9e14-5d46dd0b7cc8-dc9fef54-3056-43d1-987d-67c0a0f956a1.png",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-10T14:24:16.424",
+      "updatedAt": "2026-06-10T14:24:16.424",
+      "folderId": "cmq85t8r90012o6esl14mcfbk",
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmq85tl9z001ao6esv690lxcq",
+      "title": "d9f9c85c6ca70478c0fd27d00711bfd17e1ce99cb5faf8cda56fc2da2f636a65.webp",
+      "type": "image",
+      "mimeType": "image/webp",
+      "size": 135288,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/0a2bd9ee-a4ac-4d97-a309-26480db5d977-d9f9c85c6ca70478c0fd27d00711bfd17e1ce99cb5faf8cda56fc2da2f636a65.webp",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/0a2bd9ee-a4ac-4d97-a309-26480db5d977-d9f9c85c6ca70478c0fd27d00711bfd17e1ce99cb5faf8cda56fc2da2f636a65.webp",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-10T14:24:18.935",
+      "updatedAt": "2026-06-10T14:24:18.935",
+      "folderId": "cmq85t8r90012o6esl14mcfbk",
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmq85xcas001eo6esvu0h2js5",
+      "title": "image_1080.webp",
+      "type": "image",
+      "mimeType": "image/webp",
+      "size": 47012,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/af562f2f-007f-4b73-8468-b227c75dd3ab-image_1080.webp",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/af562f2f-007f-4b73-8468-b227c75dd3ab-image_1080.webp",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-10T14:27:13.924",
+      "updatedAt": "2026-06-10T14:27:13.924",
+      "folderId": "cmq85x5ow001co6esv4dyb2ji",
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmq85xeeb001go6esmny9kwnr",
+      "title": "images.jpg",
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "size": 8675,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/dfd57c09-fec7-4f9e-bbc3-5ba0b39ad5c8-images.jpg",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/dfd57c09-fec7-4f9e-bbc3-5ba0b39ad5c8-images.jpg",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-10T14:27:16.643",
+      "updatedAt": "2026-06-10T14:27:16.643",
+      "folderId": "cmq85x5ow001co6esv4dyb2ji",
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmq85xg5a001io6esozae36y9",
+      "title": "images (1).jpg",
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "size": 12158,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/c389aeac-f39d-47bc-aad9-ca8bb56c558f-images-1.jpg",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/c389aeac-f39d-47bc-aad9-ca8bb56c558f-images-1.jpg",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-10T14:27:18.91",
+      "updatedAt": "2026-06-10T14:27:18.91",
+      "folderId": "cmq85x5ow001co6esv4dyb2ji",
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmq85xmk5001ko6es5pneb7yk",
+      "title": "674506967_17884971540505746_4078187206191599858_n.jpg",
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "size": 234655,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/d81ba97a-2cdd-4a0e-910a-613bce2241c7-674506967_17884971540505746_4078187206191599858_n.jpg",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/d81ba97a-2cdd-4a0e-910a-613bce2241c7-674506967_17884971540505746_4078187206191599858_n.jpg",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-10T14:27:27.221",
+      "updatedAt": "2026-06-10T14:27:27.221",
+      "folderId": "cmq85x5ow001co6esv4dyb2ji",
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmq93hqvx0000o66kuvq3cv77",
+      "title": "Mux Video VV00",
+      "type": "video",
+      "mimeType": "video/hls",
+      "size": 0,
+      "url": "https://stream.mux.com/t1vAS8J81c4vCgpPwDnXPgunDNM1HX02C2LAlee27B2Q.m3u8",
+      "thumbnail": "https://image.mux.com/t1vAS8J81c4vCgpPwDnXPgunDNM1HX02C2LAlee27B2Q/thumbnail.jpg",
+      "muxUploadId": null,
+      "muxAssetId": "7ZR5qZD01u00lEAqpouN3D47HeZcXholKNJU01OEfZ4VV00",
+      "muxPlaybackId": "t1vAS8J81c4vCgpPwDnXPgunDNM1HX02C2LAlee27B2Q",
+      "muxStatus": "ready",
+      "width": 1920,
+      "height": 1080,
+      "duration": 43.233333,
+      "createdAt": "2026-06-11T06:06:53.276",
+      "updatedAt": "2026-06-11T06:06:53.276",
+      "folderId": null,
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmq84o5830009o6eszr1t7d5f",
+      "title": "Mux Video oW44",
+      "type": "video",
+      "mimeType": "video/hls",
+      "size": 0,
+      "url": "https://stream.mux.com/uJdK3BRHjb67vbHKyyEyM02ti9U45ldWcXxF7mN00nmzM.m3u8",
+      "thumbnail": "https://image.mux.com/uJdK3BRHjb67vbHKyyEyM02ti9U45ldWcXxF7mN00nmzM/thumbnail.jpg",
+      "muxUploadId": null,
+      "muxAssetId": "01002S5eXERZjfq6pnqAfPQ1STnFVShUgsNh42jMFoW44",
+      "muxPlaybackId": "uJdK3BRHjb67vbHKyyEyM02ti9U45ldWcXxF7mN00nmzM",
+      "muxStatus": "ready",
+      "width": 1920,
+      "height": 1080,
+      "duration": 40.44,
+      "createdAt": "2026-06-10T13:52:05.236",
+      "updatedAt": "2026-06-11T06:06:53.296",
+      "folderId": null,
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmq93y6qv0004o66kko68cuyv",
+      "title": "Bursaspor-amblem.png",
+      "type": "image",
+      "mimeType": "image/png",
+      "size": 76745,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-11/fdd41651-1df5-4825-a682-6abe7fc1ab27-bursaspor-amblem.png",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-11/fdd41651-1df5-4825-a682-6abe7fc1ab27-bursaspor-amblem.png",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-11T06:19:40.327",
+      "updatedAt": "2026-06-11T06:19:40.327",
+      "folderId": "cmq93y0az0002o66k2zfde83o",
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmq93yapn0006o66k6077hgrt",
+      "title": "xforvet-transfer-golcu.png.pagespeed.ic.Ya92VBhLkg.webp",
+      "type": "image",
+      "mimeType": "image/webp",
+      "size": 177196,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-11/52f32812-7fc5-4470-bfe0-f55de7070260-xforvet-transfer-golcu-png-pagespeed-ic-ya92vbhlkg.webp",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-11/52f32812-7fc5-4470-bfe0-f55de7070260-xforvet-transfer-golcu-png-pagespeed-ic-ya92vbhlkg.webp",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-11T06:19:45.467",
+      "updatedAt": "2026-06-11T06:19:45.467",
+      "folderId": "cmq93y0az0002o66k2zfde83o",
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmq93ydq00008o66kaur5j2yf",
+      "title": "xtransfer-el-390x220.png.pagespeed.ic.s872_la8Qk.webp",
+      "type": "image",
+      "mimeType": "image/webp",
+      "size": 11990,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-11/5429b515-b614-4ab4-b93e-efa008c5f07b-xtransfer-el-390x220-png-pagespeed-ic-s872_la8qk.webp",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-11/5429b515-b614-4ab4-b93e-efa008c5f07b-xtransfer-el-390x220-png-pagespeed-ic-s872_la8qk.webp",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-11T06:19:49.368",
+      "updatedAt": "2026-06-11T06:19:49.368",
+      "folderId": "cmq93y0az0002o66k2zfde83o",
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmqaizcwr0003o6m86qslcys9",
+      "title": "İyi kahve, taze lezzetler, ders çalışma alanları ve Urla havası Casual Coffee & Bakery Urla’da.# (2).jpg",
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "size": 85701,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-12/5bbaae7c-003a-4048-b832-90f63f4cfb29-i-yi-kahve-taze-lezzetler-ders-al-ma-alanlar-ve-urla-havas-casual-coffee-bakery-.jpg",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-12/5bbaae7c-003a-4048-b832-90f63f4cfb29-i-yi-kahve-taze-lezzetler-ders-al-ma-alanlar-ve-urla-havas-casual-coffee-bakery-.jpg",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-12T06:08:15.387",
+      "updatedAt": "2026-06-12T06:08:15.387",
+      "folderId": "cmqaiz6p90001o6m8i05vhy2h",
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmqaizdka0005o6m89xckniw4",
+      "title": "İyi kahve, taze lezzetler, ders çalışma alanları ve Urla havası Casual Coffee & Bakery Urla’da.# (1).jpg",
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "size": 98002,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-12/605b98f4-4233-4ab5-939e-541fb1df7e2d-i-yi-kahve-taze-lezzetler-ders-al-ma-alanlar-ve-urla-havas-casual-coffee-bakery-.jpg",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-12/605b98f4-4233-4ab5-939e-541fb1df7e2d-i-yi-kahve-taze-lezzetler-ders-al-ma-alanlar-ve-urla-havas-casual-coffee-bakery-.jpg",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-12T06:08:16.234",
+      "updatedAt": "2026-06-12T06:08:16.234",
+      "folderId": "cmqaiz6p90001o6m8i05vhy2h",
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmqaizebd0007o6m8s6n1skrx",
+      "title": "İyi kahve, taze lezzetler, ders çalışma alanları ve Urla havası Casual Coffee & Bakery Urla’da.#.jpg",
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "size": 66354,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-12/66b58516-7880-482a-91ae-5d16879392bd-i-yi-kahve-taze-lezzetler-ders-al-ma-alanlar-ve-urla-havas-casual-coffee-bakery-.jpg",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-12/66b58516-7880-482a-91ae-5d16879392bd-i-yi-kahve-taze-lezzetler-ders-al-ma-alanlar-ve-urla-havas-casual-coffee-bakery-.jpg",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-12T06:08:17.209",
+      "updatedAt": "2026-06-12T06:08:17.209",
+      "folderId": "cmqaiz6p90001o6m8i05vhy2h",
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmqaizfvi0009o6m896huef3o",
+      "title": "logo.png",
+      "type": "image",
+      "mimeType": "image/png",
+      "size": 520971,
+      "url": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-12/967a0e7b-8a13-44fa-b160-f72bcbe9e1fa-logo.png",
+      "thumbnail": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-12/967a0e7b-8a13-44fa-b160-f72bcbe9e1fa-logo.png",
+      "muxUploadId": null,
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "ready",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-12T06:08:19.23",
+      "updatedAt": "2026-06-12T06:08:19.23",
+      "folderId": "cmqaiz6p90001o6m8i05vhy2h",
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmqq81yvj0000k004fxbhwut3",
+      "title": "Preview.mp4",
+      "type": "video",
+      "mimeType": null,
+      "size": null,
+      "url": "",
+      "thumbnail": null,
+      "muxUploadId": "01pZwgruDJdNyh1mLLZ3hLGZYvdMfJThX00Ww5QWlvhS8",
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "uploading",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-23T05:46:40.056",
+      "updatedAt": "2026-06-23T05:46:40.056",
+      "folderId": null,
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmqq83l0s0000l104gmeaw10g",
+      "title": "hero.mp4",
+      "type": "video",
+      "mimeType": null,
+      "size": null,
+      "url": "",
+      "thumbnail": null,
+      "muxUploadId": "dQ0263fh4zRg37YGrs8amjycG9W1S1LufkNqspPpVzE4",
+      "muxAssetId": null,
+      "muxPlaybackId": null,
+      "muxStatus": "uploading",
+      "width": null,
+      "height": null,
+      "duration": null,
+      "createdAt": "2026-06-23T05:47:55.565",
+      "updatedAt": "2026-06-23T05:47:55.565",
+      "folderId": null,
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmqq83vhd0000k1046lftfkb7",
+      "title": "Mux Video zC00",
+      "type": "video",
+      "mimeType": "video/hls",
+      "size": 0,
+      "url": "https://stream.mux.com/6A48inO5AgNAvffLfAfnWAWJFFTBeEiuusidMWPkV4Q.m3u8",
+      "thumbnail": "https://image.mux.com/6A48inO5AgNAvffLfAfnWAWJFFTBeEiuusidMWPkV4Q/thumbnail.jpg",
+      "muxUploadId": null,
+      "muxAssetId": "202VFIxlKCus5hYpmYzohHkO8PS3wVTi824v8Mxq1zC00",
+      "muxPlaybackId": "6A48inO5AgNAvffLfAfnWAWJFFTBeEiuusidMWPkV4Q",
+      "muxStatus": "ready",
+      "width": 1920,
+      "height": 1080,
+      "duration": 34.066667,
+      "createdAt": "2026-06-23T05:48:09.122",
+      "updatedAt": "2026-06-23T05:48:09.122",
+      "folderId": null,
+      "blurDataUrl": null
+    },
+    {
+      "id": "cmqq83vpm0001k104x5yh4763",
+      "title": "Mux Video nKpY",
+      "type": "video",
+      "mimeType": "video/hls",
+      "size": 0,
+      "url": "https://stream.mux.com/M58tI1Mg8yGCAnxP36a0015zc4w4vR9SFbjRLJvkOSB8.m3u8",
+      "thumbnail": "https://image.mux.com/M58tI1Mg8yGCAnxP36a0015zc4w4vR9SFbjRLJvkOSB8/thumbnail.jpg",
+      "muxUploadId": null,
+      "muxAssetId": "FLfUCON6eX2yDxHuHQPeRsZqbVwLcB02F3LZHodinKpY",
+      "muxPlaybackId": "M58tI1Mg8yGCAnxP36a0015zc4w4vR9SFbjRLJvkOSB8",
+      "muxStatus": "ready",
+      "width": 1920,
+      "height": 1080,
+      "duration": 34,
+      "createdAt": "2026-06-23T05:48:09.418",
+      "updatedAt": "2026-06-23T05:48:09.418",
+      "folderId": null,
+      "blurDataUrl": null
+    }
+  ],
+  "services": [
+    {
+      "id": "cmq7xlppj000ao6lc8jl6dyt0",
+      "slug": "performans-pazarlamasi",
+      "title": "Performance Marketing",
+      "description": "Veri odaklı kampanyalar, hedeflenmiş erişim ve ölçülebilir büyüme.",
+      "body": "Her reklam bütçesi geri dönmeli. Google, Meta ve TikTok kanallarında A/B testleri, funnel optimizasyonu ve gerçek zamanlı bütçe yönetimiyle ROAS'ını maksimize ediyoruz.",
+      "icon": "BarChart3",
+      "features": [
+        "Google & Meta reklam yönetimi",
+        "Funnel ve dönüşüm optimizasyonu",
+        "Gerçek zamanlı raporlama"
+      ],
+      "processSteps": [
+        {
+          "title": "Keşif & Hedef",
+          "description": "KPI'lar, mevcut hesap yapısı ve büyüme hedefleri netleştirilir."
+        },
+        {
+          "title": "Kurulum",
+          "description": "Kampanya mimarisi, kitleler ve kreatif test matrisi hazırlanır."
+        },
+        {
+          "title": "Optimizasyon",
+          "description": "Haftalık test ve bütçe optimizasyon döngüsü yürütülür."
+        }
+      ],
+      "deliverables": [
+        "Kampanya mimarisi",
+        "Performans dashboard",
+        "Aylık ROAS raporu"
+      ],
+      "isPublished": true,
+      "order": 0,
+      "metaTitle": null,
+      "metaDescription": null,
+      "createdAt": "2026-06-10T10:34:14.503",
+      "updatedAt": "2026-06-30T12:00:27.832",
+      "accentColor": "#ff4fd8",
+      "coverImage": null,
+      "gradient": "bg-gradient-to-r from-[#0f0c29] via-[#302b63] to-[#24243e]",
+      "parentId": null,
+      "motionDesign": "analytics-pulse"
+    },
+    {
+      "id": "cmq7xlppo000co6lcgyfpmgtv",
+      "slug": "sosyal-medya-yonetimi",
+      "title": "Sosyal Medya Yönetimi",
+      "description": "İçerik takvimi, topluluk yönetimi ve etkileşim.",
+      "body": "Markanın sesini sosyal medyada büyütür; planlı içerik ve aktif topluluk yönetimiyle etkileşimi artırırız.",
+      "icon": "MessageCircle",
+      "features": [
+        "Aylık içerik takvimi",
+        "Görsel ve metin üretimi",
+        "Topluluk yönetimi"
+      ],
+      "processSteps": [
+        {
+          "title": "Analiz",
+          "description": "Platform, hedef kitle ve rakip içerikleri incelenir."
+        },
+        {
+          "title": "Plan",
+          "description": "30 günlük içerik planı hazırlanır."
+        },
+        {
+          "title": "Yayın",
+          "description": "İçerikler yayınlanır ve etkileşim yönetilir."
+        }
+      ],
+      "deliverables": [
+        "Aylık içerik takvimi",
+        "Görsel/kopya seti",
+        "Aylık büyüme raporu"
+      ],
+      "isPublished": true,
+      "order": 1,
+      "metaTitle": null,
+      "metaDescription": null,
+      "createdAt": "2026-06-10T10:34:14.508",
+      "updatedAt": "2026-06-30T12:00:28.959",
+      "accentColor": "#ff4fd8",
+      "coverImage": null,
+      "gradient": "bg-gradient-to-r from-[#0f0c29] via-[#302b63] to-[#24243e]",
+      "parentId": "cmq7xlppn000bo6lcr7cti0fe",
+      "motionDesign": "social-engage"
+    },
+    {
+      "id": "cmq7xlppq000eo6lc3un438hs",
+      "slug": "icerik-uretimi",
+      "title": "İçerik Üretimi",
+      "description": "Fotoğraf, grafik ve metinlerle; markanıza özel içerik.",
+      "body": "Markanın hikâyesini anlatan özgün görsel ve metin içeriklerini uçtan uca üretiriz.",
+      "icon": "FileText",
+      "features": [
+        "Fotoğraf & video",
+        "Motion design",
+        "Sosyal medya formatları"
+      ],
+      "processSteps": [
+        {
+          "title": "Konsept",
+          "description": "Yaratıcı brief ve storyboard hazırlanır."
+        },
+        {
+          "title": "Prodüksiyon",
+          "description": "Çekim veya motion üretim gerçekleştirilir."
+        },
+        {
+          "title": "Teslim",
+          "description": "İçerikler platform formatlarına optimize edilir."
+        }
+      ],
+      "deliverables": [
+        "Düzenlenmiş materyaller",
+        "Platform format setleri",
+        "Kullanım hakları"
+      ],
+      "isPublished": true,
+      "order": 2,
+      "metaTitle": null,
+      "metaDescription": null,
+      "createdAt": "2026-06-10T10:34:14.511",
+      "updatedAt": "2026-06-30T13:42:43.207",
+      "accentColor": "#ff4fd8",
+      "coverImage": null,
+      "gradient": "bg-gradient-to-r from-[#0f0c29] via-[#302b63] to-[#24243e]",
+      "parentId": "cmq7xlppn000bo6lcr7cti0fe",
+      "motionDesign": "content-reel"
+    },
+    {
+      "id": "cmr0lhnfx0007o6hc4md99wdq",
+      "slug": "google-ads-yonetimi",
+      "title": "Google Ads Yönetimi",
+      "description": "Arama ve alışveriş kampanyalarıyla nitelikli trafik.",
+      "body": "Doğru anahtar kelime ve kitle hedeflemesiyle Google ekosisteminde dönüşüm getiren kampanyalar kurar ve optimize ederiz.",
+      "icon": "Search",
+      "features": [],
+      "processSteps": [],
+      "deliverables": [],
+      "isPublished": true,
+      "order": 0,
+      "metaTitle": null,
+      "metaDescription": null,
+      "createdAt": "2026-06-30T12:00:28.654",
+      "updatedAt": "2026-06-30T13:38:39.887",
+      "accentColor": "#ff4fd8",
+      "coverImage": null,
+      "gradient": "bg-gradient-to-r from-[#0f0c29] via-[#302b63] to-[#24243e]",
+      "parentId": "cmq7xlppj000ao6lc8jl6dyt0",
+      "motionDesign": "email-campaign"
+    },
+    {
+      "id": "cmq7xlppn000bo6lcr7cti0fe",
+      "slug": "yaratici-yonetim",
+      "title": "Creative Direction",
+      "description": "Görsel kimlik ve yaratıcı strateji — markanı fark ettiren tasarım dili.",
+      "body": "Markanı rakiplerinden ayıran bir kimlik ve tutarlı bir görsel dil kuruyoruz. Logodan sosyal içeriğe, her temas noktasında aynı güçlü hikâyeyi anlatıyoruz.",
+      "icon": "Palette",
+      "features": [
+        "Marka kimliği ve rehberi",
+        "Sosyal medya içerik üretimi",
+        "Video ve görsel prodüksiyon"
+      ],
+      "processSteps": [
+        {
+          "title": "Araştırma",
+          "description": "Marka algısı ve rakip görsel dilleri analiz edilir."
+        },
+        {
+          "title": "Konsept",
+          "description": "Moodboard ve yaratıcı yönler hazırlanır."
+        },
+        {
+          "title": "Sistem",
+          "description": "Seçilen yön tüm kanallara uygulanır."
+        }
+      ],
+      "deliverables": [
+        "Yaratıcı strateji brief",
+        "Moodboard",
+        "Kampanya kreatif seti"
+      ],
+      "isPublished": true,
+      "order": 1,
+      "metaTitle": null,
+      "metaDescription": null,
+      "createdAt": "2026-06-10T10:34:14.507",
+      "updatedAt": "2026-06-30T12:00:28.084",
+      "accentColor": "#ff4fd8",
+      "coverImage": null,
+      "gradient": "bg-gradient-to-r from-[#4776e6] via-[#8e54e9] to-[#4776e6]",
+      "parentId": null,
+      "motionDesign": "brand-identity"
+    },
+    {
+      "id": "cmr0lhnk7000bo6hcyet6u5oo",
+      "slug": "seo-icerik-stratejisi",
+      "title": "SEO & İçerik Stratejisi",
+      "description": "Organik görünürlük için teknik SEO ve içerik planı.",
+      "body": "Teknik SEO, anahtar kelime araştırması ve içerik takvimiyle arama motorlarında kalıcı görünürlük sağlarız.",
+      "icon": "TrendingUp",
+      "features": [],
+      "processSteps": [],
+      "deliverables": [],
+      "isPublished": true,
+      "order": 2,
+      "metaTitle": null,
+      "metaDescription": null,
+      "createdAt": "2026-06-30T12:00:28.808",
+      "updatedAt": "2026-06-30T12:00:28.808",
+      "accentColor": null,
+      "coverImage": null,
+      "gradient": null,
+      "parentId": "cmq7xlppj000ao6lc8jl6dyt0",
+      "motionDesign": "analytics-pulse"
+    },
+    {
+      "id": "cmq7xlpps000fo6lcypucwx8c",
+      "slug": "web-ve-dijital",
+      "title": "Web & Digital",
+      "description": "Dönüşüm odaklı, modern web siteleri, özel yazılımlar ve dijital ürünler.",
+      "body": "Hızlı, responsive ve SEO uyumlu web siteleri ile satışa hazır e-ticaret deneyimleri kuruyoruz. Tasarımdan geliştirmeye, dönüşümü merkeze alıyoruz.",
+      "icon": "Monitor",
+      "features": [
+        "Kurumsal & kampanya siteleri",
+        "E-ticaret çözümleri",
+        "UX/UI ve yazılım geliştirme"
+      ],
+      "processSteps": [
+        {
+          "title": "UX",
+          "description": "Kullanıcı yolculuğu ve bilgi mimarisi oluşturulur."
+        },
+        {
+          "title": "Tasarım",
+          "description": "Figma'da yüksek kaliteli UI tasarlanır."
+        },
+        {
+          "title": "Geliştirme",
+          "description": "Next.js ile hızlı ve SEO uyumlu site geliştirilir."
+        }
+      ],
+      "deliverables": [
+        "UX raporu",
+        "UI tasarımı",
+        "Next.js kaynak kodu"
+      ],
+      "isPublished": true,
+      "order": 2,
+      "metaTitle": null,
+      "metaDescription": null,
+      "createdAt": "2026-06-10T10:34:14.512",
+      "updatedAt": "2026-06-30T13:43:43.236",
+      "accentColor": "#ff4fd8",
+      "coverImage": null,
+      "gradient": "bg-gradient-to-r from-[#11998e] via-[#38ef7d] to-[#11998e]",
+      "parentId": null,
+      "motionDesign": "web-build"
+    },
+    {
+      "id": "cmr0lhnis0009o6hc0dwk6ak6",
+      "slug": "meta-tiktok-reklamlari",
+      "title": "Meta & TikTok Reklamları",
+      "description": "Instagram ve TikTok'ta performans odaklı reklamlar.",
+      "body": "Yaratıcı reklam setleri ve hassas hedeflemeyle sosyal platformlarda markanı doğru kitleyle buluştururuz.",
+      "icon": "Target",
+      "features": [],
+      "processSteps": [],
+      "deliverables": [],
+      "isPublished": true,
+      "order": 1,
+      "metaTitle": null,
+      "metaDescription": null,
+      "createdAt": "2026-06-30T12:00:28.757",
+      "updatedAt": "2026-06-30T13:38:45.292",
+      "accentColor": "#ff4fd8",
+      "coverImage": null,
+      "gradient": "bg-gradient-to-r from-[#0f0c29] via-[#302b63] to-[#24243e]",
+      "parentId": "cmq7xlppj000ao6lc8jl6dyt0",
+      "motionDesign": "social-engage"
+    },
+    {
+      "id": "cmq7xlppp000do6lcs4fz4gyv",
+      "slug": "marka-kimligi",
+      "title": "Marka Kimliği",
+      "description": "Logo tasarımı, renk paleti, font tipografisi, marka rehberi ve daha fazlası.",
+      "body": "Markanın kişiliğini yansıtan, her mecrada tutarlı bir görsel kimlik ve kullanım rehberi tasarlarız.",
+      "icon": "Fingerprint",
+      "features": [
+        "Logo & marka işareti",
+        "Renk paleti",
+        "Ses tonu rehberi"
+      ],
+      "processSteps": [
+        {
+          "title": "Strateji",
+          "description": "Konumlandırma ve marka değerleri netleştirilir."
+        },
+        {
+          "title": "Tasarım",
+          "description": "Logo, renk ve tipografi sistemi geliştirilir."
+        },
+        {
+          "title": "Teslim",
+          "description": "Marka kılavuzu ve uygulamalar teslim edilir."
+        }
+      ],
+      "deliverables": [
+        "Logo seti",
+        "Renk & tipografi sistemi",
+        "Marka kılavuzu"
+      ],
+      "isPublished": true,
+      "order": 0,
+      "metaTitle": null,
+      "metaDescription": null,
+      "createdAt": "2026-06-10T10:34:14.51",
+      "updatedAt": "2026-06-30T13:43:15.985",
+      "accentColor": "#ff4fd8",
+      "coverImage": null,
+      "gradient": "bg-gradient-to-r from-[#0f0c29] via-[#302b63] to-[#24243e]",
+      "parentId": "cmq7xlppn000bo6lcr7cti0fe",
+      "motionDesign": "brand-identity"
+    },
+    {
+      "id": "cmr0lhnsf000no6hcbt850wc6",
+      "slug": "web-sitesi-tasarimi",
+      "title": "Web Sitesi Tasarımı",
+      "description": "Kurumsal ve kampanya siteleri; hızlı, responsive, SEO uyumlu.",
+      "body": "Markanı en iyi temsil eden, performanslı ve dönüşüm odaklı modern web siteleri tasarlar ve geliştiririz.",
+      "icon": "Layout",
+      "features": [],
+      "processSteps": [],
+      "deliverables": [],
+      "isPublished": true,
+      "order": 0,
+      "metaTitle": null,
+      "metaDescription": null,
+      "createdAt": "2026-06-30T12:00:29.103",
+      "updatedAt": "2026-06-30T12:00:29.103",
+      "accentColor": null,
+      "coverImage": null,
+      "gradient": null,
+      "parentId": "cmq7xlpps000fo6lcypucwx8c",
+      "motionDesign": "web-build"
+    },
+    {
+      "id": "cmr0lhnu3000po6hcwwf48g2j",
+      "slug": "e-ticaret-cozumleri",
+      "title": "E-ticaret Çözümleri",
+      "description": "Satışa hazır, ölçeklenebilir e-ticaret deneyimleri.",
+      "body": "Ürün vitrininden ödeme akışına kadar satışı kolaylaştıran, ölçeklenebilir e-ticaret deneyimleri kurarız.",
+      "icon": "LayoutGrid",
+      "features": [],
+      "processSteps": [],
+      "deliverables": [],
+      "isPublished": true,
+      "order": 1,
+      "metaTitle": null,
+      "metaDescription": null,
+      "createdAt": "2026-06-30T12:00:29.163",
+      "updatedAt": "2026-06-30T12:00:29.163",
+      "accentColor": null,
+      "coverImage": null,
+      "gradient": null,
+      "parentId": "cmq7xlpps000fo6lcypucwx8c",
+      "motionDesign": "web-build"
+    },
+    {
+      "id": "cmr0lhnvf000ro6hcz75gevd0",
+      "slug": "ux-ui-tasarim",
+      "title": "UX/UI Tasarım",
+      "description": "Kullanıcı araştırması, akış ve arayüz tasarımı.",
+      "body": "Kullanıcıyı merkeze alan araştırma, akış ve arayüz tasarımıyla sezgisel dijital deneyimler oluştururuz.",
+      "icon": "PenTool",
+      "features": [],
+      "processSteps": [],
+      "deliverables": [],
+      "isPublished": true,
+      "order": 2,
+      "metaTitle": null,
+      "metaDescription": null,
+      "createdAt": "2026-06-30T12:00:29.211",
+      "updatedAt": "2026-06-30T12:00:29.211",
+      "accentColor": null,
+      "coverImage": null,
+      "gradient": null,
+      "parentId": "cmq7xlpps000fo6lcypucwx8c",
+      "motionDesign": "web-build"
+    },
+    {
+      "id": "cmr0lhnlj000do6hclsrwyirk",
+      "slug": "donusum-optimizasyonu",
+      "title": "Dönüşüm Optimizasyonu",
+      "description": "A/B testleri ve funnel analiziyle yüksek dönüşüm oranı.",
+      "body": "Ziyaretçiyi müşteriye çeviren her adımı test eder, ölçer ve iyileştiririz.",
+      "icon": "Zap",
+      "features": [],
+      "processSteps": [],
+      "deliverables": [],
+      "isPublished": true,
+      "order": 3,
+      "metaTitle": null,
+      "metaDescription": null,
+      "createdAt": "2026-06-30T12:00:28.855",
+      "updatedAt": "2026-06-30T13:39:09.713",
+      "accentColor": "#ff4fd8",
+      "coverImage": null,
+      "gradient": "bg-gradient-to-r from-[#0f0c29] via-[#302b63] to-[#24243e]",
+      "parentId": "cmq7xlppj000ao6lc8jl6dyt0",
+      "motionDesign": "analytics-pulse"
+    },
+    {
+      "id": "cmr0lhnws000to6hcrpxvhwwy",
+      "slug": "yazilim-gelistirme",
+      "title": "Yazılım & Geliştirme",
+      "description": "Özel web uygulamaları, yazılımlar ve entegrasyonlar.",
+      "body": "İhtiyaca özel web uygulamaları, API entegrasyonları ve otomasyonları modern teknolojilerle geliştiririz.",
+      "icon": "Code2",
+      "features": [],
+      "processSteps": [],
+      "deliverables": [],
+      "isPublished": true,
+      "order": 3,
+      "metaTitle": null,
+      "metaDescription": null,
+      "createdAt": "2026-06-30T12:00:29.26",
+      "updatedAt": "2026-06-30T13:39:34.238",
+      "accentColor": "#ff4fd8",
+      "coverImage": null,
+      "gradient": "bg-gradient-to-r from-[#0f0c29] via-[#302b63] to-[#24243e]",
+      "parentId": "cmq7xlpps000fo6lcypucwx8c",
+      "motionDesign": "web-build"
+    },
+    {
+      "id": "cmr0lhnr3000lo6hcqgy9e1ww",
+      "slug": "video-produksiyon",
+      "title": "Video Prodüksiyon",
+      "description": "Reklam filmi, sosyal video içeriği ve kurgu.",
+      "body": "Konsepttan kurguya; markanı öne çıkaran reklam filmleri ve sosyal videolar prodükte ederiz.",
+      "icon": "Film",
+      "features": [],
+      "processSteps": [],
+      "deliverables": [],
+      "isPublished": true,
+      "order": 3,
+      "metaTitle": null,
+      "metaDescription": null,
+      "createdAt": "2026-06-30T12:00:29.055",
+      "updatedAt": "2026-06-30T13:40:06.24",
+      "accentColor": "#ff4fd8",
+      "coverImage": null,
+      "gradient": "bg-gradient-to-r from-[#0f0c29] via-[#302b63] to-[#24243e]",
+      "parentId": "cmq7xlppn000bo6lcr7cti0fe",
+      "motionDesign": "content-reel"
+    }
+  ],
+  "portfolio_items": [
+    {
+      "id": "cmp0z1zdt002jo6nogntvzmaf",
+      "title": "StartupX — Marka Kimliği & Launch",
+      "slug": "startupx",
+      "client": "StartupX",
+      "category": "Branding",
+      "description": "Sıfırdan marka inşası: logo, kimlik, launch kampanyası ve dijital varlık.",
+      "content": "",
+      "coverImage": "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=800",
+      "images": [
+        "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/0a2bd9ee-a4ac-4d97-a309-26480db5d977-d9f9c85c6ca70478c0fd27d00711bfd17e1ce99cb5faf8cda56fc2da2f636a65.webp",
+        "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/5ce70cb0-3d3c-4560-b339-72102fac48dc-353076_342363a89b134303a369b191c319a340-mv2.avif",
+        "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/65af2de6-df3c-453e-9e14-5d46dd0b7cc8-dc9fef54-3056-43d1-987d-67c0a0f956a1.png"
+      ],
+      "tags": [
+        "branding",
+        "logo",
+        "launch"
+      ],
+      "results": [
+        {
+          "label": "ROAS Artışı",
+          "value": 920,
+          "suffix": "%",
+          "description": "Kampanya sonunda"
+        },
+        {
+          "label": "CPA Düşüşü",
+          "value": 62,
+          "suffix": "%",
+          "description": "Optimizasyon sonrası"
+        }
+      ],
+      "year": 2024,
+      "isPublished": true,
+      "order": 2,
+      "createdAt": "2026-05-11T09:00:47.585",
+      "updatedAt": "2026-07-01T07:08:30.878",
+      "accentColor": "#FF4FD8",
+      "gradient": "from-[#1A1A1A] via-[#2A1A3A] to-[#3D1A5C]",
+      "narrativeParagraphs": [],
+      "resultStats": [
+        {
+          "label": "ROAS Artışı",
+          "value": 920,
+          "suffix": "%",
+          "description": "Kampanya sonunda"
+        },
+        {
+          "label": "CPA Düşüşü",
+          "value": 62,
+          "suffix": "%",
+          "description": "Optimizasyon sonrası"
+        }
+      ],
+      "sidebarItems": [],
+      "tall": false,
+      "clientLogo": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/b917c6f6-9d67-4f2b-805d-915e2bd11492-startupx-logo.png"
+    },
+    {
+      "id": "cmqaj053v000ao6m8yfpxp00v",
+      "title": "Casual Coffee - Video Production",
+      "slug": "casual-coffee",
+      "client": "Casual Coffee",
+      "category": "Video Production",
+      "description": "Buraya kısaca bir açıklama metni gelecek.",
+      "content": "",
+      "coverImage": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-12/66b58516-7880-482a-91ae-5d16879392bd-i-yi-kahve-taze-lezzetler-ders-al-ma-alanlar-ve-urla-havas-casual-coffee-bakery-.jpg",
+      "images": [
+        "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-12/66b58516-7880-482a-91ae-5d16879392bd-i-yi-kahve-taze-lezzetler-ders-al-ma-alanlar-ve-urla-havas-casual-coffee-bakery-.jpg",
+        "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-12/605b98f4-4233-4ab5-939e-541fb1df7e2d-i-yi-kahve-taze-lezzetler-ders-al-ma-alanlar-ve-urla-havas-casual-coffee-bakery-.jpg",
+        "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-12/5bbaae7c-003a-4048-b832-90f63f4cfb29-i-yi-kahve-taze-lezzetler-ders-al-ma-alanlar-ve-urla-havas-casual-coffee-bakery-.jpg"
+      ],
+      "tags": [],
+      "results": [
+        {
+          "label": "ROAS Artışı",
+          "value": 920,
+          "suffix": "%",
+          "description": "Kampanya sonunda"
+        },
+        {
+          "label": "CPA Düşüşü",
+          "value": 62,
+          "suffix": "%",
+          "description": "Optimizasyon sonrası"
+        }
+      ],
+      "year": 2025,
+      "isPublished": true,
+      "order": 0,
+      "createdAt": "2026-06-12T06:08:51.931",
+      "updatedAt": "2026-07-01T07:08:13.34",
+      "accentColor": "var(--ff-purple)",
+      "gradient": "bg-gradient-to-r from-[#c3cfe2] via-[#a18cd1] to-[#fbc2eb]",
+      "narrativeParagraphs": [
+        "Buraya kısaca bir açıklama metni gelecek.",
+        "Buraya kısaca bir açıklama metni gelecek.",
+        "Buraya kısaca bir açıklama metni gelecek."
+      ],
+      "resultStats": [
+        {
+          "label": "ROAS Artışı",
+          "value": 920,
+          "suffix": "%",
+          "description": "Kampanya sonunda"
+        },
+        {
+          "label": "CPA Düşüşü",
+          "value": 62,
+          "suffix": "%",
+          "description": "Optimizasyon sonrası"
+        }
+      ],
+      "sidebarItems": [
+        {
+          "body": "Buraya kısaca bir açıklama metni gelecek.",
+          "heading": "Zorluk"
+        },
+        {
+          "body": "Buraya kısaca bir açıklama metni gelecek.",
+          "heading": "Yaklaşım"
+        },
+        {
+          "body": "Buraya kısaca bir açıklama metni gelecek.",
+          "heading": "Sonuç"
+        }
+      ],
+      "tall": false,
+      "clientLogo": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-12/967a0e7b-8a13-44fa-b160-f72bcbe9e1fa-logo.png"
+    },
+    {
+      "id": "cmq85z195001lo6ese1q230bq",
+      "title": "Pet Gourmet - Performance Marketing",
+      "slug": "pet-gourmet",
+      "client": "Pet Gourmet",
+      "category": "Performance Marketing",
+      "description": "Buraya kısaca açıklayıcı bir metin gelecek.",
+      "content": "",
+      "coverImage": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/c389aeac-f39d-47bc-aad9-ca8bb56c558f-images-1.jpg",
+      "images": [
+        "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/d81ba97a-2cdd-4a0e-910a-613bce2241c7-674506967_17884971540505746_4078187206191599858_n.jpg",
+        "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/c389aeac-f39d-47bc-aad9-ca8bb56c558f-images-1.jpg",
+        "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/dfd57c09-fec7-4f9e-bbc3-5ba0b39ad5c8-images.jpg"
+      ],
+      "tags": [],
+      "results": [
+        {
+          "label": "ROAS Artışı",
+          "value": 920,
+          "suffix": "%",
+          "description": "Kampanya sonunda"
+        },
+        {
+          "label": "CPA Düşüşü",
+          "value": 62,
+          "suffix": "%",
+          "description": "Optimizasyon sonrası"
+        }
+      ],
+      "year": 2025,
+      "isPublished": true,
+      "order": 0,
+      "createdAt": "2026-06-10T14:28:32.921",
+      "updatedAt": "2026-07-01T07:08:00.289",
+      "accentColor": "var(--ff-purple)",
+      "gradient": "bg-gradient-to-r from-[#0f0c29] via-[#302b63] to-[#24243e]",
+      "narrativeParagraphs": [
+        "Buraya kısaca açıklayıcı bir metin gelecek.",
+        "Buraya kısaca açıklayıcı bir metin gelecek.",
+        "Buraya kısaca açıklayıcı bir metin gelecek."
+      ],
+      "resultStats": [
+        {
+          "label": "ROAS Artışı",
+          "value": 920,
+          "suffix": "%",
+          "description": "Kampanya sonunda"
+        },
+        {
+          "label": "CPA Düşüşü",
+          "value": 62,
+          "suffix": "%",
+          "description": "Optimizasyon sonrası"
+        }
+      ],
+      "sidebarItems": [
+        {
+          "body": "Buraya kısaca açıklayıcı bir metin gelecek.",
+          "heading": "Zorluk"
+        },
+        {
+          "body": "Buraya kısaca açıklayıcı bir metin gelecek.",
+          "heading": "Yaklaşım"
+        },
+        {
+          "body": "Buraya kısaca açıklayıcı bir metin gelecek.",
+          "heading": "Sonuç"
+        }
+      ],
+      "tall": false,
+      "clientLogo": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/af562f2f-007f-4b73-8468-b227c75dd3ab-image_1080.webp"
+    },
+    {
+      "id": "cmq853960000oo6esvtuzfh3n",
+      "title": "Akbank - Social Media Management",
+      "slug": "akbank",
+      "client": "AKBANK",
+      "category": "Social Media Management",
+      "description": "Buraya kısaca açıklayıcı bir metin gelecek.",
+      "content": "",
+      "coverImage": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/0cb2cdd6-3544-49dd-a9b7-230394f1f2f1-akbank-mobile-giris.jpg",
+      "images": [
+        "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/15f47d9d-2ce8-4192-934e-1dc98c553e4f-20250820111914255.jpg",
+        "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/596acf3a-bdd2-4016-b705-4c7687b706a1-0lnfqkmnmzhdzwc64kcpthk45ja8.png",
+        "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/fa3330cf-7173-4e7e-ae25-1e0bdc0d50bc-akbank-mobil-gizlilik-ilkeleri.jpg"
+      ],
+      "tags": [],
+      "results": [
+        {
+          "label": "ROAS Artışı",
+          "value": 920,
+          "suffix": "%",
+          "description": "Kampanya sonunda"
+        },
+        {
+          "label": "CPA Düşüşü",
+          "value": 62,
+          "suffix": "%",
+          "description": "Optimizasyon sonrası"
+        }
+      ],
+      "year": 2025,
+      "isPublished": true,
+      "order": 0,
+      "createdAt": "2026-06-10T14:03:50.183",
+      "updatedAt": "2026-07-01T07:08:19.283",
+      "accentColor": "var(--ff-purple)",
+      "gradient": "bg-gradient-to-r from-[#cb2d3e] via-[#ef473a] to-[#cb2d3e]",
+      "narrativeParagraphs": [
+        "Buraya kısaca açıklayıcı bir metin gelecek.",
+        "Buraya kısaca açıklayıcı bir metin gelecek.",
+        "Buraya kısaca açıklayıcı bir metin gelecek."
+      ],
+      "resultStats": [
+        {
+          "label": "ROAS Artışı",
+          "value": 920,
+          "suffix": "%",
+          "description": "Kampanya sonunda"
+        },
+        {
+          "label": "CPA Düşüşü",
+          "value": 62,
+          "suffix": "%",
+          "description": "Optimizasyon sonrası"
+        }
+      ],
+      "sidebarItems": [
+        {
+          "body": "Buraya kısaca açıklayıcı bir metin gelecek.",
+          "heading": "Zorluk"
+        },
+        {
+          "body": "Buraya kısaca açıklayıcı bir metin gelecek.",
+          "heading": "Yaklaşım"
+        },
+        {
+          "body": "Buraya kısaca açıklayıcı bir metin gelecek.",
+          "heading": "Sonuç"
+        }
+      ],
+      "tall": false,
+      "clientLogo": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/f7afa974-83a2-4248-8e49-10c6689a83ca-logo.png"
+    },
+    {
+      "id": "cmp0z1zdq002io6nouvj3rqwr",
+      "title": "Zara Home — Social Media",
+      "slug": "zara-home",
+      "client": "Zara Home",
+      "category": "Marketing",
+      "description": "Aylık %340 engagement artışı sağlayan multi-platform sosyal medya stratejisi.",
+      "content": "",
+      "coverImage": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/38d1fe4b-b2a0-4424-b810-cec1e53a794f-zara-home-magazine-a-w-2015.jpg",
+      "images": [
+        "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/86d4cf2f-1224-4cbf-bf2a-c9a02fb51c4e-mvccopertinazara.jpeg",
+        "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/0d449a27-649f-4947-9d1d-00abb42638e9-dd70.avif",
+        "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/9863d349-aa9a-4a2b-aa7c-7440db2dc752-76c536141241379-6396da10a8613.jpg"
+      ],
+      "tags": [
+        "social media",
+        "instagram",
+        "tiktok"
+      ],
+      "results": [
+        {
+          "label": "ROAS Artışı",
+          "value": 920,
+          "suffix": "%",
+          "description": "Kampanya sonunda"
+        },
+        {
+          "label": "CPA Düşüşü",
+          "value": 62,
+          "suffix": "%",
+          "description": "Optimizasyon sonrası"
+        }
+      ],
+      "year": 2024,
+      "isPublished": true,
+      "order": 1,
+      "createdAt": "2026-05-11T09:00:47.583",
+      "updatedAt": "2026-07-01T07:10:51.889",
+      "accentColor": "#FF4FD8",
+      "gradient": "from-[#1A1A1A] via-[#2A1A3A] to-[#3D1A5C]",
+      "narrativeParagraphs": [],
+      "resultStats": [
+        {
+          "label": "ROAS Artışı",
+          "value": 920,
+          "suffix": "%",
+          "description": "Kampanya sonunda"
+        },
+        {
+          "label": "CPA Düşüşü",
+          "value": 62,
+          "suffix": "%",
+          "description": "Optimizasyon sonrası"
+        }
+      ],
+      "sidebarItems": [],
+      "tall": false,
+      "clientLogo": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/bb6dfc6a-cd48-44aa-bbef-5560f8b51433-zara_home_logo_2023-svg.png"
+    },
+    {
+      "id": "cmq93yufo0009o66k43xyu0dp",
+      "title": "Bursaspor - Content Production",
+      "slug": "bursaspor",
+      "client": "Bursaspor Kulübü",
+      "category": "Video Production",
+      "description": "Buraya kısaca bir açıklama metni gelecek.",
+      "content": "",
+      "coverImage": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-11/5429b515-b614-4ab4-b93e-efa008c5f07b-xtransfer-el-390x220-png-pagespeed-ic-s872_la8qk.webp",
+      "images": [
+        "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-11/52f32812-7fc5-4470-bfe0-f55de7070260-xforvet-transfer-golcu-png-pagespeed-ic-ya92vbhlkg.webp"
+      ],
+      "tags": [],
+      "results": [
+        {
+          "label": "ROAS Artışı",
+          "value": 920,
+          "suffix": "%",
+          "description": "Kampanya sonunda"
+        },
+        {
+          "label": "CPA Düşüşü",
+          "value": 62,
+          "suffix": "%",
+          "description": "Optimizasyon sonrası"
+        }
+      ],
+      "year": 2026,
+      "isPublished": true,
+      "order": 0,
+      "createdAt": "2026-06-11T06:20:11.028",
+      "updatedAt": "2026-07-01T07:10:43.804",
+      "accentColor": "var(--ff-purple)",
+      "gradient": "bg-gradient-to-r from-[#11998e] via-[#38ef7d] to-[#11998e]",
+      "narrativeParagraphs": [
+        "Buraya kısaca bir açıklama metni gelecek.",
+        "Buraya kısaca bir açıklama metni gelecek.",
+        "Buraya kısaca bir açıklama metni gelecek."
+      ],
+      "resultStats": [
+        {
+          "label": "ROAS Artışı",
+          "value": 920,
+          "suffix": "%",
+          "description": "Kampanya sonunda"
+        },
+        {
+          "label": "CPA Düşüşü",
+          "value": 62,
+          "suffix": "%",
+          "description": "Optimizasyon sonrası"
+        }
+      ],
+      "sidebarItems": [
+        {
+          "body": "Buraya kısaca bir açıklama metni gelecek.",
+          "heading": "Zorluk"
+        },
+        {
+          "body": "Buraya kısaca bir açıklama metni gelecek.",
+          "heading": "Yaklaşım"
+        },
+        {
+          "body": "Buraya kısaca bir açıklama metni gelecek.",
+          "heading": "Sonuç"
+        }
+      ],
+      "tall": false,
+      "clientLogo": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-11/fdd41651-1df5-4825-a682-6abe7fc1ab27-bursaspor-amblem.png"
+    }
+  ],
+  "portfolio_services": [
+    {
+      "A": "cmq85z195001lo6ese1q230bq",
+      "B": "cmq7xlppn000bo6lcr7cti0fe"
+    },
+    {
+      "A": "cmq85z195001lo6ese1q230bq",
+      "B": "cmq7xlppp000do6lcs4fz4gyv"
+    },
+    {
+      "A": "cmqaj053v000ao6m8yfpxp00v",
+      "B": "cmq7xlppq000eo6lc3un438hs"
+    },
+    {
+      "A": "cmqaj053v000ao6m8yfpxp00v",
+      "B": "cmq7xlppn000bo6lcr7cti0fe"
+    },
+    {
+      "A": "cmq853960000oo6esvtuzfh3n",
+      "B": "cmq7xlppo000co6lcgyfpmgtv"
+    },
+    {
+      "A": "cmq93yufo0009o66k43xyu0dp",
+      "B": "cmq7xlppq000eo6lc3un438hs"
+    },
+    {
+      "A": "cmq93yufo0009o66k43xyu0dp",
+      "B": "cmq7xlppn000bo6lcr7cti0fe"
+    },
+    {
+      "A": "cmp0z1zdq002io6nouvj3rqwr",
+      "B": "cmq7xlppj000ao6lc8jl6dyt0"
+    },
+    {
+      "A": "cmp0z1zdq002io6nouvj3rqwr",
+      "B": "cmq7xlpps000fo6lcypucwx8c"
+    }
+  ],
+  "pages": [
+    {
+      "id": "cmp6ilzg0002no6zsd83am9ih",
+      "slug": "portfolio",
+      "title": "Portfolyo",
+      "description": "Seçili işlerimiz",
+      "sections": [
+        {
+          "id": "pf1",
+          "type": "portfolio-hero",
+          "order": 0,
+          "props": {},
+          "visible": true
+        },
+        {
+          "id": "pf2",
+          "type": "portfolio-grid",
+          "order": 1,
+          "props": {},
+          "visible": true
+        },
+        {
+          "id": "pf3",
+          "type": "cta",
+          "order": 2,
+          "props": {},
+          "visible": true
+        }
+      ],
+      "isPublished": true,
+      "publishedAt": null,
+      "metaTitle": null,
+      "metaDescription": null,
+      "ogImage": null,
+      "createdAt": "2026-05-15T06:07:04.368",
+      "updatedAt": "2026-05-15T06:07:04.368"
+    },
+    {
+      "id": "cmp6ilzg1002oo6zs9zpp8pjy",
+      "slug": "blog",
+      "title": "Blog",
+      "description": "Düşünceler & İçgörüler",
+      "sections": [
+        {
+          "id": "bl1",
+          "type": "blog-hero",
+          "order": 0,
+          "props": {},
+          "visible": true
+        },
+        {
+          "id": "bl2",
+          "type": "blog-grid",
+          "order": 1,
+          "props": {},
+          "visible": true
+        },
+        {
+          "id": "bl3",
+          "type": "cta",
+          "order": 2,
+          "props": {},
+          "visible": true
+        }
+      ],
+      "isPublished": true,
+      "publishedAt": null,
+      "metaTitle": null,
+      "metaDescription": null,
+      "ogImage": null,
+      "createdAt": "2026-05-15T06:07:04.369",
+      "updatedAt": "2026-05-15T06:07:04.369"
+    },
+    {
+      "id": "cmq7xlpq7000oo6lctltdwr9t",
+      "slug": "kariyer",
+      "title": "Kariyer",
+      "description": "FlixFlex'te kariyer ve açık pozisyonlar",
+      "sections": [
+        {
+          "id": "kar1",
+          "type": "text-content",
+          "order": 0,
+          "props": {
+            "body": "<p class='mb-6 text-lg text-[var(--foreground-muted)]'>FlixFlex olarak hız, güç ve esnekliğe inanan kreatif yeteneklerle çalışmak istiyoruz. Eğer siz de dijital dünyayı domine etmek istiyorsanız bizimle iletişime geçin.</p><h3 class='text-2xl font-bold mt-12 mb-6 text-[var(--foreground)]'>Açık Pozisyonlar</h3><ul class='list-disc pl-6 space-y-3 text-[var(--foreground-muted)]'><li>Senior React Developer (Remote)</li><li>Performance Marketing Specialist</li><li>Art Director</li></ul><p class='mt-10'>Başvurularınız için özgeçmişinizi <a href='mailto:hello@flixflex.com' class='text-[var(--ff-purple)] hover:underline'>hello@flixflex.com</a> adresine gönderebilirsiniz.</p>",
+            "headline": "Bizimle Çalışın",
+            "alignment": "left",
+            "maxWidthProse": true
+          },
+          "visible": true
+        }
+      ],
+      "isPublished": true,
+      "publishedAt": null,
+      "metaTitle": null,
+      "metaDescription": null,
+      "ogImage": null,
+      "createdAt": "2026-06-10T10:34:14.528",
+      "updatedAt": "2026-06-10T10:34:14.528"
+    },
+    {
+      "id": "cmp0zr02u0004o6mg3k3wevhp",
+      "slug": "omer",
+      "title": "Ömer",
+      "description": "",
+      "sections": [
+        {
+          "id": "srzvq8wzmp0ztkag",
+          "type": "video-embed",
+          "order": 0,
+          "props": {
+            "autoplay": true,
+            "headline": "Video",
+            "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+            "aspectRatio": "16/9"
+          },
+          "visible": true
+        },
+        {
+          "id": "rdohlbhkmp0ztf0q",
+          "type": "hero",
+          "order": 1,
+          "props": {
+            "ctaHref": "/iletisim",
+            "ctaLabel": "Hemen Başla",
+            "headline": "Güçlü Başlık",
+            "subheadline": "Açıklayıcı alt başlık metni",
+            "secondaryCtaHref": "/portfolio",
+            "backgroundVariant": "dark",
+            "secondaryCtaLabel": "Portfolyoyu Gör"
+          },
+          "visible": true
+        },
+        {
+          "id": "0kvbn15nmp0zti7e",
+          "type": "services",
+          "order": 2,
+          "props": {
+            "showAll": true,
+            "headline": "Hizmetlerimiz",
+            "subheadline": "İşletmeniz için kapsamlı dijital çözümler"
+          },
+          "visible": true
+        },
+        {
+          "id": "zowmivqqmp0ztjyj",
+          "type": "portfolio",
+          "order": 3,
+          "props": {
+            "headline": "Portfolyo",
+            "maxItems": 6,
+            "subheadline": "Seçkin projelerimiz",
+            "filterEnabled": true
+          },
+          "visible": true
+        },
+        {
+          "id": "9k6x3yjnmp0ztlho",
+          "type": "testimonials",
+          "order": 4,
+          "props": {
+            "headline": "Müşterilerimiz Ne Diyor?",
+            "subheadline": "Birlikte başardıklarımız"
+          },
+          "visible": true
+        },
+        {
+          "id": "jj4jo559mp0ztm14",
+          "type": "cta",
+          "order": 5,
+          "props": {
+            "eyebrow": "— Bir Sonraki Adım —",
+            "variant": "dark",
+            "headline": "Birlikte büyüyelim mi?",
+            "description": "Brief'ini paylaş, hemen toplanalım.",
+            "primaryCtaHref": "/iletisim",
+            "primaryCtaLabel": "İletişime Geç",
+            "secondaryCtaHref": "/portfolio",
+            "secondaryCtaLabel": "Portfolyoyu Gör"
+          },
+          "visible": true
+        },
+        {
+          "id": "llt3a4sjmp0ztmf8",
+          "type": "contact-form",
+          "order": 6,
+          "props": {
+            "showMap": true,
+            "headline": "İletişime Geç",
+            "subheadline": "Hemen konuşalım",
+            "primaryColor": "#A134FF"
+          },
+          "visible": true
+        },
+        {
+          "id": "9tbbu97lmp0ztix2",
+          "type": "faq",
+          "order": 7,
+          "props": {
+            "items": [
+              {
+                "answer": "Bize ulaşarak brief paylaşabilirsiniz.",
+                "question": "FlixFlex ile nasıl çalışabilirim?"
+              },
+              {
+                "answer": "Projeye göre değişir, ortalama 4-8 hafta.",
+                "question": "Proje süresi ne kadar?"
+              }
+            ],
+            "headline": "Sık Sorulan Sorular",
+            "subheadline": ""
+          },
+          "visible": true
+        }
+      ],
+      "isPublished": true,
+      "publishedAt": "2026-05-11T10:00:08.715",
+      "metaTitle": null,
+      "metaDescription": null,
+      "ogImage": null,
+      "createdAt": "2026-05-11T09:20:14.886",
+      "updatedAt": "2026-05-11T10:00:08.717"
+    },
+    {
+      "id": "cmq7xlpq9000po6lc3cfh7qmy",
+      "slug": "gizlilik-politikasi",
+      "title": "Gizlilik Politikası",
+      "description": "Gizlilik politikamız ve veri güvenliği",
+      "sections": [
+        {
+          "id": "gp1",
+          "type": "text-content",
+          "order": 0,
+          "props": {
+            "body": "<p class='mb-6 text-lg text-[var(--foreground-muted)]'>FlixFlex olarak kişisel verilerinizin güvenliği hususuna azami hassasiyet göstermekteyiz. Bu bilinçle, ajans olarak hizmetlerimizden faydalanan kişilere ait her türlü kişisel verilerin 6698 sayılı Kişisel Verilerin Korunması Kanunu'na uygun olarak işlenmesine ve muhafaza edilmesine önem veriyoruz.</p><p class='mb-4 text-[var(--foreground-muted)]'>Kişisel verileriniz, ajansımız tarafından sunulan ürün ve hizmetlerin geliştirilmesi, müşteri ilişkilerinin yönetilmesi ve yasal yükümlülüklerin yerine getirilmesi amacıyla işlenmektedir.</p>",
+            "headline": "Gizlilik Politikası",
+            "alignment": "left",
+            "maxWidthProse": true
+          },
+          "visible": true
+        }
+      ],
+      "isPublished": true,
+      "publishedAt": null,
+      "metaTitle": null,
+      "metaDescription": null,
+      "ogImage": null,
+      "createdAt": "2026-06-10T10:34:14.529",
+      "updatedAt": "2026-06-10T10:34:14.529"
+    },
+    {
+      "id": "cmq7xlpqa000qo6lcmiff0ab7",
+      "slug": "kullanim-sartlari",
+      "title": "Kullanım Şartları",
+      "description": "Kullanım şartları ve kurallar",
+      "sections": [
+        {
+          "id": "ks1",
+          "type": "text-content",
+          "order": 0,
+          "props": {
+            "body": "<p class='mb-6 text-lg text-[var(--foreground-muted)]'>FlixFlex web sitesine erişiminiz veya siteyi kullanımınız, bu kullanım şartlarını kabul ettiğiniz anlamına gelir. Bu şartları kabul etmiyorsanız lütfen siteyi kullanmayınız.</p><p class='mb-4 text-[var(--foreground-muted)]'>Bu web sitesinde yer alan tüm görsel, yazılı ve dijital içeriklerin telif hakları FlixFlex'e aittir. İzinsiz kopyalanması veya kullanılması yasaktır.</p>",
+            "headline": "Kullanım Şartları",
+            "alignment": "left",
+            "maxWidthProse": true
+          },
+          "visible": true
+        }
+      ],
+      "isPublished": true,
+      "publishedAt": null,
+      "metaTitle": null,
+      "metaDescription": null,
+      "ogImage": null,
+      "createdAt": "2026-06-10T10:34:14.531",
+      "updatedAt": "2026-06-10T10:34:14.531"
+    },
+    {
+      "id": "cmq7xlpqb000ro6lcgeahpy1s",
+      "slug": "cerez-politikasi",
+      "title": "Çerez Politikası",
+      "description": "Çerez politikası ve tercihleriniz",
+      "sections": [
+        {
+          "id": "cp1",
+          "type": "text-content",
+          "order": 0,
+          "props": {
+            "body": "<p class='mb-6 text-lg text-[var(--foreground-muted)]'>Web sitemizde, kullanıcı deneyiminizi geliştirmek ve site trafiğini analiz etmek amacıyla çerezler kullanılmaktadır. Sitemizi ziyaret ederek çerez kullanımını kabul etmiş olursunuz.</p><p class='mb-4 text-[var(--foreground-muted)]'>Çerezler, tarayıcınız tarafından bilgisayarınıza veya mobil cihazınıza kaydedilen küçük veri dosyalarıdır. Çerez tercihlerinizi tarayıcı ayarlarınızdan değiştirebilirsiniz.</p>",
+            "headline": "Çerez Politikası",
+            "alignment": "left",
+            "maxWidthProse": true
+          },
+          "visible": true
+        }
+      ],
+      "isPublished": true,
+      "publishedAt": null,
+      "metaTitle": null,
+      "metaDescription": null,
+      "ogImage": null,
+      "createdAt": "2026-06-10T10:34:14.532",
+      "updatedAt": "2026-06-10T10:34:14.532"
+    },
+    {
+      "id": "cmp0z1zdy002lo6noxf0ybu26",
+      "slug": "hakkimizda",
+      "title": "Hakkımızda",
+      "description": "FlixFlex hakkında",
+      "sections": [
+        {
+          "id": "about-manifesto",
+          "type": "manifesto",
+          "order": 0,
+          "props": {
+            "line1": "FLIX",
+            "line2": "FLEX",
+            "line3": "DOMINATE",
+            "eyebrow": "Manifestomuz"
+          },
+          "visible": true
+        },
+        {
+          "id": "about-story",
+          "type": "story",
+          "order": 1,
+          "props": {
+            "eyebrow": "Hikâyemiz",
+            "paragraphs": [
+              "FlixFlex, 2020 yılında İstanbul'da bir garaj ofisinde, iki kişilik bir ekibin \"neden Türk markalar dijitalde hak ettiği yerde değil?\" sorusundan doğdu. Cevap ne şablonlarda ne de ajans klişelerindeydi; cesaret, strateji ve veriydi.",
+              "İlk yılımızda 5 startup ile çalıştık — bütçeler küçük, hedefler büyüktü. Her bütçeyi sanki kendi paramızmış gibi harcadık, her sonucu şeffaf raporladık. Kulaktan kulağa yayılan itibar, bugün 50+ aktif müşteri portföyüne dönüştü.",
+              "Bugün FlixFlex; strateji, yaratıcılık ve performans pazarlamasını tek çatı altında birleştiren 8 kişilik bir ekip. Biz sadece reklam yapmıyoruz — markaları bir sonraki seviyeye taşıyoruz."
+            ]
+          },
+          "visible": true
+        },
+        {
+          "id": "about-values",
+          "type": "values",
+          "order": 2,
+          "props": {
+            "items": [
+              {
+                "iconKey": "Target",
+                "tagline": "Her piksel, her kelime, her karar hesaplıdır.",
+                "titleTr": "Hassasiyet",
+                "description": "Rastgele değil, strateji. FlixFlex'te her kampanya, her içerik parçası ve her tasarım kararı veriye, içgüdüye ve mükemmele olan tutkuya dayanır."
+              },
+              {
+                "iconKey": "TrendingUp",
+                "tagline": "Tek seferlik değil — sürdürülebilir ivme.",
+                "titleTr": "Büyüme",
+                "description": "Viral anlara değil, kalıcı büyümeye odaklanıyoruz. Ölçülebilir KPI'lar, veri döngüleri ve sürekli optimizasyon ile markanızın değeri her ay birikimli artar."
+              },
+              {
+                "iconKey": "Sparkles",
+                "tagline": "İyi iş, iyi enerjiyle yapılır.",
+                "titleTr": "Eğlence",
+                "description": "Ciddi sonuçlar, ciddi yüzler gerektirmez. Ekibimizin yaratıcı enerjisi müşterilerimizin markasına yansır."
+              },
+              {
+                "iconKey": "Star",
+                "tagline": "En iyi ya da hiç.",
+                "titleTr": "Premium Standart",
+                "description": "Orta seviyeye razı olmuyoruz. Her iş ortağımız için sanki kendi markamızmış gibi çalışıyoruz."
+              }
+            ],
+            "eyebrow": "Temel Değerlerimiz",
+            "subheadline": "Her kararımızı, her çalışmamızı ve her müşteri ilişkimizi şekillendiren dört temel değer."
+          },
+          "visible": true
+        },
+        {
+          "id": "about-team",
+          "type": "team",
+          "order": 3,
+          "props": {
+            "eyebrow": "Ekibimiz",
+            "members": [
+              {
+                "bio": "Marka stratejisi ve büyüme pazarlaması odaklı, 7 yıllık sektör deneyimi.",
+                "name": "Kaan Aydın",
+                "role": "Kurucu & CEO",
+                "links": [
+                  {
+                    "href": "https://linkedin.com",
+                    "label": "LinkedIn"
+                  }
+                ],
+                "accent": true,
+                "initials": "KA"
+              },
+              {
+                "bio": "Reklam tasarımı ve marka kimliği alanında ödüllü, vizyoner bir yaratıcı.",
+                "name": "Defne Çelik",
+                "role": "CCO — Yaratıcı Direktör",
+                "links": [
+                  {
+                    "href": "https://behance.net",
+                    "label": "Behance"
+                  }
+                ],
+                "initials": "DC"
+              },
+              {
+                "bio": "Meta, Google ve TikTok ekosisteminde 50M+ TL bütçe yönetimi deneyimi.",
+                "name": "Mert Öztürk",
+                "role": "Performans Direktörü",
+                "accent": true,
+                "initials": "MÖ"
+              },
+              {
+                "bio": "Viral içerik mühendisliği ve community building konusunda uzman.",
+                "name": "Selin Arslan",
+                "role": "İçerik Stratejisti",
+                "links": [
+                  {
+                    "href": "https://instagram.com",
+                    "label": "Instagram"
+                  }
+                ],
+                "initials": "SA"
+              },
+              {
+                "bio": "CRM entegrasyonları ve pazarlama otomasyonu mimarisi konularında uzman.",
+                "name": "Burak Yılmaz",
+                "role": "Teknik & MarTech Lideri",
+                "accent": true,
+                "initials": "BY"
+              },
+              {
+                "bio": "Müşteri ilişkilerini uzun vadeli ortaklıklara dönüştüren iletişim uzmanı.",
+                "name": "Ayşe Koç",
+                "role": "Müşteri Deneyimi Lideri",
+                "links": [
+                  {
+                    "href": "https://linkedin.com",
+                    "label": "LinkedIn"
+                  }
+                ],
+                "initials": "AK"
+              },
+              {
+                "bio": "Kısa format video ve animasyon ile sosyal medyada algı yaratma ustası.",
+                "name": "Emre Şahin",
+                "role": "Video & Motion Tasarımcı",
+                "links": [
+                  {
+                    "href": "https://vimeo.com",
+                    "label": "Vimeo"
+                  }
+                ],
+                "initials": "EŞ"
+              },
+              {
+                "bio": "Organik büyüme ve veri analitiği ile karar mekanizmalarını şekillendiriyor.",
+                "name": "Naz Demir",
+                "role": "SEO & Veri Analisti",
+                "accent": true,
+                "initials": "ND"
+              }
+            ],
+            "subheadline": "Strateji, yaratıcılık, veri ve üretim — hepsi tek bir kompakt, güçlü ekipte birleşiyor."
+          },
+          "visible": true
+        },
+        {
+          "id": "about-whyus",
+          "type": "why-us",
+          "order": 4,
+          "props": {
+            "items": [
+              {
+                "ours": "Markanıza özel veri tabanlı strateji.",
+                "topic": "Strateji",
+                "theirs": "Şablonlar ve genel trendler."
+              },
+              {
+                "ours": "Gerçek zamanlı dashboard, anlam taşıyan KPI'lar.",
+                "topic": "Raporlama",
+                "theirs": "Aylık PDF, boş metrikler."
+              },
+              {
+                "ours": "Dedicated hesap yöneticisi, 24 saat yanıt.",
+                "topic": "İletişim",
+                "theirs": "Haftalar süren e-posta zincirleri."
+              },
+              {
+                "ours": "Yazılı taahhütler, ölçülür büyüme hedefleri.",
+                "topic": "Sonuçlar",
+                "theirs": "Vaatler, belirsizlik, bahaneler."
+              },
+              {
+                "ours": "Şeffaf fiyatlandırma, ihtiyaca özel paketler.",
+                "topic": "Fiyat",
+                "theirs": "Gizli ücretler, paket dayatması."
+              }
+            ],
+            "eyebrow": "Neden FlixFlex",
+            "subheadline": "Piyasadaki ajanslardan nasıl ayrışıyoruz? Şeffaf, direkt ve ölçülebilir bir karşılaştırma."
+          },
+          "visible": true
+        }
+      ],
+      "isPublished": true,
+      "publishedAt": null,
+      "metaTitle": null,
+      "metaDescription": null,
+      "ogImage": null,
+      "createdAt": "2026-05-11T09:00:47.591",
+      "updatedAt": "2026-06-12T12:23:31.262"
+    },
+    {
+      "id": "cmq7xlpqc000so6lcn71el3sh",
+      "slug": "kvkk-aydinlatma-metni",
+      "title": "KVKK Aydınlatma Metni",
+      "description": "Kişisel verilerin korunması aydınlatma metni",
+      "sections": [
+        {
+          "id": "kvkk1",
+          "type": "text-content",
+          "order": 0,
+          "props": {
+            "body": "<p class='mb-6 text-lg text-[var(--foreground-muted)]'>Bu metin, 6698 sayılı Kişisel Verilerin Korunması Kanunu uyarınca, FlixFlex tarafından kişisel verilerinizin işlenme amaçları, hukuki sebepleri ve haklarınız konusunda sizi bilgilendirmek amacıyla hazırlanmıştır.</p><p class='mb-4 text-[var(--foreground-muted)]'>Veri sahibi olarak Kanun'un 11. maddesinde belirtilen haklarınızı kullanmak için ajansımızla her zaman iletişime geçebilirsiniz.</p>",
+            "headline": "KVKK Aydınlatma Metni",
+            "alignment": "left",
+            "maxWidthProse": true
+          },
+          "visible": true
+        }
+      ],
+      "isPublished": true,
+      "publishedAt": null,
+      "metaTitle": null,
+      "metaDescription": null,
+      "ogImage": null,
+      "createdAt": "2026-06-10T10:34:14.532",
+      "updatedAt": "2026-06-10T10:34:14.532"
+    },
+    {
+      "id": "cmp6ilzfx002mo6zsz2sw1sns",
+      "slug": "hizmetler",
+      "title": "Hizmetler",
+      "description": "FlixFlex hizmetleri",
+      "sections": [
+        {
+          "id": "hz1",
+          "type": "hero",
+          "order": 0,
+          "props": {
+            "headline": "Markanı büyüten",
+            "subheadline": "Strateji, yaratıcılık ve teknoloji — üçünü aynı anda doğru kullanan markalar öne çıkar. İşte biz de tam olarak bunu yapıyoruz."
+          },
+          "visible": true
+        },
+        {
+          "id": "hz2",
+          "type": "services-showcase",
+          "order": 1,
+          "props": {
+            "ctaHref": "",
+            "ctaLabel": "",
+            "headline": "Markanı büyüten hizmetler",
+            "subheadline": "Strateji, yaratıcılık ve teknolojiyi tek çatı altında topluyoruz. İhtiyacın olan her şey, bir arada."
+          },
+          "visible": true
+        },
+        {
+          "id": "hz3",
+          "type": "cta",
+          "order": 2,
+          "props": {},
+          "visible": true
+        }
+      ],
+      "isPublished": true,
+      "publishedAt": "2026-06-12T11:13:44.005",
+      "metaTitle": null,
+      "metaDescription": null,
+      "ogImage": null,
+      "createdAt": "2026-05-15T06:07:04.365",
+      "updatedAt": "2026-06-30T13:06:06.472"
+    },
+    {
+      "id": "cmp0z1zdu002ko6nooq3x7oyx",
+      "slug": "anasayfa",
+      "title": "Ana Sayfa",
+      "description": "FlixFlex ana sayfası",
+      "sections": [
+        {
+          "id": "6a8beb27-5c51-46e7-a19a-b9b622c57e85",
+          "type": "scroll-expansion-hero",
+          "order": 0,
+          "props": {
+            "date": "Cosmic Journey",
+            "title": "Deneme Metni",
+            "mediaSrc": "https://stream.mux.com/6A48inO5AgNAvffLfAfnWAWJFFTBeEiuusidMWPkV4Q.m3u8",
+            "mediaType": "video",
+            "posterSrc": "",
+            "textBlend": true,
+            "bgImageSrc": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/90471f87-4d3a-4238-ace1-4d502bf6a1af-pexels-undrxposure-33261214.jpg",
+            "description": "This is a demonstration of the ScrollExpandMedia component. As you scroll, the media expands to fill more of the screen, creating an immersive experience.",
+            "hideMobileDock": true,
+            "scrollToExpand": "Scroll to Expand Demo"
+          },
+          "visible": true,
+          "transition": "parallax"
+        },
+        {
+          "id": "9f8c3751-7138-4762-8777-3065e826fc1e",
+          "type": "modern-manifesto",
+          "order": 1,
+          "props": {
+            "ctaHref": "/iletisim",
+            "ctaLabel": "Birlikte Çalışalım",
+            "leftText": "FLIX FOR [media1] THE MOMENT [media2] FLEX FOR THE [media3] FUTURE",
+            "mediaUrl1": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/ead2bc12-bdaa-4de9-9de2-6fe52a21a3fa-design-halloween-gif-by-vitalstrats-creative-solutions.gif",
+            "mediaUrl2": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/2299de44-492e-4c5a-ad84-17c46e26934c-new-york-marketing-gif-by-goodkids.gif",
+            "mediaUrl3": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/aa9db239-bd88-4a80-a9d5-ed0713d1dfb5-marketing-agency-gif-by-goodkids.gif",
+            "textColor": "#ebebeb",
+            "mediaType1": "video",
+            "mediaType2": "video",
+            "mediaType3": "video",
+            "accentColor": "#ff4fd8",
+            "rightContent": "<p>We solve big problems with strategy and creative that make a big impact.</p><p>We work with brands and marketers that have the biggest ambitions.</p><p>We hire big talent and bring them big opportunities that build boundless careers.</p>",
+            "hideMobileDock": false,
+            "backgroundColor": "var(--theme-background)"
+          },
+          "visible": true
+        },
+        {
+          "id": "03b9b5d4-685e-4b4d-b73d-e719c56b37f2",
+          "type": "portfolio-vertical-scroll",
+          "order": 2,
+          "props": {
+            "speed": "normal",
+            "headline": "Seçili İşlerimiz",
+            "maxItems": 12,
+            "direction": "right",
+            "subheadline": "Akıcı ve dikey formatta projelerimiz",
+            "pauseOnHover": true,
+            "hideMobileDock": false
+          },
+          "visible": true
+        },
+        {
+          "id": "4bca4526-5529-4e81-a687-5f5e40e874db",
+          "type": "services",
+          "order": 3,
+          "props": {
+            "showAll": false,
+            "headline": "Hizmetlerimiz",
+            "subheadline": "İşletmeniz için kapsamlı dijital çözümler",
+            "hideMobileDock": false
+          },
+          "visible": true
+        },
+        {
+          "id": "ac57d59d-be00-461b-aee7-d6084c5891bf",
+          "type": "appointment-card",
+          "order": 4,
+          "props": {
+            "eyebrow": "Hızlı Randevu",
+            "ctaLabel": "Randevu Al",
+            "headline": "Ön Görüşme Randevusu Alın",
+            "description": "Projelerinizi, hedeflerinizi ve nasıl yardımcı olabileceğimizi konuşmak üzere hemen ücretsiz bir ön görüşme randevusu oluşturun.",
+            "hideMobileDock": false
+          },
+          "visible": true
+        },
+        {
+          "id": "4b0f2c78-6c9a-474a-be0a-bad5454924b0",
+          "type": "video-testimonials",
+          "order": 5,
+          "props": {
+            "items": [
+              {
+                "name": "Mert Kuzgun",
+                "role": "CEO",
+                "company": "AKBANK",
+                "videoUrl": "https://stream.mux.com/uJdK3BRHjb67vbHKyyEyM02ti9U45ldWcXxF7mN00nmzM.m3u8"
+              },
+              {
+                "name": "İsmail Demiroğulları",
+                "role": "Founder",
+                "company": "Pet Gourmet",
+                "videoUrl": "https://stream.mux.com/GFIWfyEVKiG8HMFgAh00icEcB7U00mrwA5OSMbz7zr02Mw.m3u8"
+              }
+            ],
+            "eyebrow": "Video Referanslar",
+            "headline": "Müşterilerimiz Anlatıyor",
+            "subheadline": "Birlikte büyüdüğümüz markalar, deneyimlerini kendi sözleriyle paylaşıyor.",
+            "hideMobileDock": false
+          },
+          "visible": true
+        },
+        {
+          "id": "ac21b516-5052-4c8c-ac77-b6b440ef58f3",
+          "type": "cta",
+          "order": 6,
+          "props": {
+            "eyebrow": "— Bir Sonraki Adım —",
+            "variant": "dark",
+            "headline": "Birlikte büyüyelim mi?",
+            "description": "Brief'ini paylaş, hemen toplanalım.",
+            "hideMobileDock": false,
+            "primaryCtaHref": "/iletisim",
+            "primaryCtaLabel": "İletişime Geç",
+            "secondaryCtaHref": "/portfolio",
+            "secondaryCtaLabel": "Portfolyoyu Gör"
+          },
+          "visible": true
+        }
+      ],
+      "isPublished": true,
+      "publishedAt": "2026-07-01T06:19:22.639",
+      "metaTitle": null,
+      "metaDescription": null,
+      "ogImage": null,
+      "createdAt": "2026-05-11T09:00:47.587",
+      "updatedAt": "2026-07-01T06:19:22.641"
+    },
+    {
+      "id": "cmp6ilzg2002po6zsvi5dbswp",
+      "slug": "iletisim",
+      "title": "İletişim",
+      "description": "Bize ulaşın",
+      "sections": [
+        {
+          "id": "ct1",
+          "type": "contact-hero",
+          "order": 0,
+          "props": {},
+          "visible": true
+        },
+        {
+          "id": "ct2",
+          "type": "contact-info",
+          "order": 1,
+          "props": {},
+          "visible": true
+        },
+        {
+          "id": "ct3",
+          "type": "why-us",
+          "order": 2,
+          "props": {},
+          "visible": true
+        },
+        {
+          "id": "ct4",
+          "type": "faq",
+          "order": 3,
+          "props": {
+            "items": [
+              {
+                "answer": "Proje kapsamına göre değişir. Bir marka kimliği projesi genellikle 3-6 hafta, sosyal medya yönetimi aylık yenilenen bir süreç, performans kampanyaları ise birkaç günde yayına alınabilir. İlk görüşmede net bir zaman planı paylaşırız.",
+                "question": "Bir proje ne kadar sürer?"
+              },
+              {
+                "answer": "Hizmet türüne göre farklılık gösterir. Sosyal medya yönetimi için aylık 12.000 ₺'den, performans kampanyaları için 18.000 ₺'den başlayan paketlerimiz mevcut. Özel ihtiyaçlarınız için bize yazın, birlikte en uygun çözümü bulalım.",
+                "question": "Minimum bütçe var mı?"
+              },
+              {
+                "answer": "Evet. Mevcut müşterilerimizin bir kısmı Avrupa ve Orta Doğu pazarlarında faaliyet gösteriyor. Tüm görüşmeleri ve raporlamaları Türkçe veya İngilizce olarak yürütebiliyoruz.",
+                "question": "Türkiye dışındaki markalarla çalışıyor musunuz?"
+              },
+              {
+                "answer": "Evet, tüm projeler için yazılı bir hizmet sözleşmesi imzalıyoruz. Bu hem sizin hem bizim güvencemiz. Sözleşme kapsamı, teslimat takvimleri ve ödeme planını net şekilde belirtir.",
+                "question": "Sözleşme zorunlu mu?"
+              },
+              {
+                "answer": "Formu doldurup gönderdiğinizde 24 saat içinde size ulaşıyoruz. Ardından 30-45 dakikalık ücretsiz bir keşif görüşmesi planlıyoruz. Bu görüşmede ihtiyaçlarınızı, bütçenizi ve hedeflerinizi anlayarak size özel bir teklif hazırlıyoruz.",
+                "question": "Süreç nasıl işliyor? İlk adım nedir?"
+              }
+            ],
+            "headline": "Sıkça Sorulan Sorular",
+            "subheadline": "Cevap bulamadığınız sorularınız için hello@flixflex.com adresine yazabilirsiniz."
+          },
+          "visible": true
+        }
+      ],
+      "isPublished": true,
+      "publishedAt": "2026-07-01T06:39:19.46",
+      "metaTitle": null,
+      "metaDescription": null,
+      "ogImage": null,
+      "createdAt": "2026-05-15T06:07:04.371",
+      "updatedAt": "2026-07-01T06:39:19.463"
+    }
+  ],
+  "blog_posts": [
+    {
+      "id": "cmp0z1zdl002fo6nolix2zie9",
+      "title": "Performance Marketing'de 2025'in 5 Trendi",
+      "slug": "performance-marketing-2025-trendleri",
+      "excerpt": "Dijital reklamcılık hızla değişiyor. Bu yıl öne çıkan 5 trendi ve markanız için ne anlama geldiğini keşfedin.",
+      "content": "# Performance Marketing'de 2025'in 5 Trendi\n\nDijital reklamcılık ekosistemi her geçen yıl köklü değişimler geçiriyor...",
+      "coverImage": null,
+      "template": "editorial",
+      "category": "Performance Marketing",
+      "tags": [
+        "performance",
+        "dijital",
+        "trend",
+        "2025"
+      ],
+      "readTime": 6,
+      "author": null,
+      "aiGenerated": false,
+      "aiOutline": null,
+      "status": "published",
+      "publishedAt": "2026-05-11T09:00:47.293",
+      "metaTitle": null,
+      "metaDescription": null,
+      "ogImage": null,
+      "createdAt": "2026-05-11T09:00:47.578",
+      "updatedAt": "2026-05-11T09:00:47.578",
+      "coverGradient": null
+    },
+    {
+      "id": "cmp0z1zdo002go6nojgb5oc8b",
+      "title": "Marka Kimliği: Neden Her Şeyin Temeli?",
+      "slug": "marka-kimligi-temel",
+      "excerpt": "Güçlü bir marka kimliği olmadan hiçbir kampanya tam anlamıyla çalışmaz. İşte sebebi.",
+      "content": "# Marka Kimliği: Neden Her Şeyin Temeli?\n\nMarka kimliği, bir işletmenin görsel ve duygusal parmak izidir...",
+      "coverImage": null,
+      "template": "classic",
+      "category": "Marka",
+      "tags": [
+        "marka",
+        "kimlik",
+        "strateji"
+      ],
+      "readTime": 1,
+      "author": null,
+      "aiGenerated": false,
+      "aiOutline": null,
+      "status": "published",
+      "publishedAt": "2026-05-04T09:00:47.293",
+      "metaTitle": null,
+      "metaDescription": null,
+      "ogImage": null,
+      "createdAt": "2026-05-11T09:00:47.58",
+      "updatedAt": "2026-06-30T14:01:25.483",
+      "coverGradient": "from-[#0EA5E9]/25 via-[#0369A1]/20 to-[#0D0D0D]"
+    },
+    {
+      "id": "cmp0z1zdp002ho6noiodcyzne",
+      "title": "Creative Brief Yazmanın Sanatı",
+      "slug": "creative-brief-yazma-sanati",
+      "excerpt": "İyi bir creative brief, kampanyanın yarısıdır. Mükemmel brief'i nasıl yazarsınız?",
+      "content": "# Creative Brief Yazmanın Sanatı\n\nBir reklam kampanyasının başarısı, çoğu zaman brief kalitesine bağlıdır...",
+      "coverImage": "https://evzdfrqv04r553zt.public.blob.vercel-storage.com/media/2026-06-10/fa3330cf-7173-4e7e-ae25-1e0bdc0d50bc-akbank-mobil-gizlilik-ilkeleri.jpg",
+      "template": "visual",
+      "category": "Creative",
+      "tags": [
+        "creative",
+        "brief",
+        "kampanya"
+      ],
+      "readTime": 1,
+      "author": null,
+      "aiGenerated": false,
+      "aiOutline": null,
+      "status": "published",
+      "publishedAt": "2026-05-11T12:25:43.212",
+      "metaTitle": null,
+      "metaDescription": null,
+      "ogImage": null,
+      "createdAt": "2026-05-11T09:00:47.581",
+      "updatedAt": "2026-07-01T05:45:26.814",
+      "coverGradient": "from-[#16A34A]/25 via-[#0D6931]/20 to-[#0D0D0D]"
+    }
+  ]
+}
