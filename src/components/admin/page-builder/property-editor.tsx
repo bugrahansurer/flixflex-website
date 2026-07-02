@@ -16,6 +16,7 @@ import { SECTION_REGISTRY } from "@/lib/page-builder/section-registry"
 import { FFSelect, FFSelectItem } from "@/components/ui/ff-select"
 import { MediaPicker } from "@/components/admin/media/media-picker"
 import { Image as ImageIcon, Video } from "@/lib/icons"
+import { DIFFERENTIATORS } from "@/components/public/about/about-data"
 
 // ── Field renderers ───────────────────────────────
 interface FieldProps {
@@ -591,6 +592,415 @@ function FaqItemsEditor({ value, onChange }: { value: unknown; onChange: (v: unk
   )
 }
 
+// ── Neden Biz (karşılaştırma) öğe editörü ─────────
+interface WhyUsItem { topic?: string; theirs?: string; ours?: string }
+
+function WhyUsItemsEditor({ value, onChange }: { value: unknown; onChange: (v: unknown) => void }) {
+  const items: WhyUsItem[] = Array.isArray(value) ? (value as WhyUsItem[]) : []
+  const patch = (i: number, p: Partial<WhyUsItem>) =>
+    onChange(items.map((it, idx) => (idx === i ? { ...it, ...p } : it)))
+  const add = () => onChange([...items, { topic: "", theirs: "", ours: "" }])
+  const remove = (i: number) => onChange(items.filter((_, idx) => idx !== i))
+  const loadDefaults = () =>
+    onChange(DIFFERENTIATORS.map((d) => ({ topic: d.topic, theirs: d.theirs, ours: d.ours })))
+
+  const base =
+    "ff-shape-container w-full bg-white border border-[#CCCCCC] text-[#333333] placeholder:text-[#999999] outline-none focus:border-[#ff4fd8] transition-colors duration-150"
+
+  return (
+    <div className="flex flex-col gap-2.5">
+      <div className="flex items-center justify-between">
+        <span className="text-[10px] font-bold uppercase tracking-wider text-[#666666]">Karşılaştırma Satırları</span>
+        {items.length === 0 && (
+          <button
+            type="button"
+            onClick={loadDefaults}
+            className="ff-shape-button px-2 py-1 text-[10px] font-semibold border border-[#CCCCCC] bg-white text-[#666666] hover:border-[#ff4fd8] hover:text-[#ff4fd8] transition-all duration-150"
+          >
+            Varsayılanları Yükle
+          </button>
+        )}
+      </div>
+
+      {items.length === 0 && (
+        <p className="text-[10px] text-[#999999] leading-normal">
+          Henüz satır yok. Yayında şu an varsayılan karşılaştırma gösteriliyor —
+          düzenlemek için &quot;Varsayılanları Yükle&quot; ile başlayın veya yeni satır ekleyin.
+        </p>
+      )}
+
+      {items.map((it, i) => (
+        <div key={i} className="ff-shape-container flex flex-col gap-2 border border-[#CCCCCC] bg-[#f7f7f5] p-2.5">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-bold text-[#999999]">#{i + 1}</span>
+            <button type="button" onClick={() => remove(i)} className="text-[#999999] hover:text-[#e03434] transition-colors" title="Kaldır">
+              <X size={12} />
+            </button>
+          </div>
+          <div>
+            <label className="text-[9px] font-bold uppercase tracking-wider text-[#999999] block mb-1">Konu (orta etiket)</label>
+            <input
+              className={cn(base, "px-2.5 py-1.5 text-[11.5px] font-semibold")}
+              placeholder="Örn: Strateji"
+              value={it.topic ?? ""}
+              onChange={(e) => patch(i, { topic: e.target.value })}
+            />
+          </div>
+          <div>
+            <label className="text-[9px] font-bold uppercase tracking-wider text-[#999999] block mb-1">Diğer Ajanslar</label>
+            <textarea
+              className={cn(base, "px-2.5 py-1.5 text-[11px] resize-y min-h-[52px]")}
+              placeholder="Diğer ajansların yaklaşımı"
+              rows={2}
+              value={it.theirs ?? ""}
+              onChange={(e) => patch(i, { theirs: e.target.value })}
+            />
+          </div>
+          <div>
+            <label className="text-[9px] font-bold uppercase tracking-wider text-[#ff4fd8] block mb-1">Biz (FlixFlex)</label>
+            <textarea
+              className={cn(base, "px-2.5 py-1.5 text-[11px] resize-y min-h-[52px]")}
+              placeholder="Bizim yaklaşımımız"
+              rows={2}
+              value={it.ours ?? ""}
+              onChange={(e) => patch(i, { ours: e.target.value })}
+            />
+          </div>
+        </div>
+      ))}
+
+      <button
+        type="button"
+        onClick={add}
+        className={cn(
+          "ff-shape-button h-9 flex items-center justify-center gap-1.5 border border-[#CCCCCC] bg-white",
+          "text-[11px] font-semibold text-[#333333] hover:border-[#ff4fd8] hover:text-[#ff4fd8] transition-all duration-150",
+        )}
+      >
+        + Karşılaştırma Satırı Ekle
+      </button>
+    </div>
+  )
+}
+
+// ── Ortak repeater yardımcıları ───────────────────
+const repeaterInput =
+  "ff-shape-container w-full bg-white border border-[#CCCCCC] text-[#333333] placeholder:text-[#999999] outline-none focus:border-[#ff4fd8] transition-colors duration-150"
+
+const initialsFrom = (name?: string) =>
+  (name || "").trim().split(/\s+/).slice(0, 2).map((w) => w[0]?.toUpperCase() ?? "").join("") || "?"
+
+function RepeaterShell({
+  title, count, onAdd, addLabel, children,
+}: {
+  title: string; count: number; onAdd: () => void; addLabel: string; children: React.ReactNode
+}) {
+  return (
+    <div className="flex flex-col gap-2.5">
+      <div className="flex items-center justify-between">
+        <span className="text-[10px] font-bold uppercase tracking-wider text-[#666666]">
+          {title} <span className="text-[#bbbbbb]">({count})</span>
+        </span>
+      </div>
+      {children}
+      <button
+        type="button"
+        onClick={onAdd}
+        className={cn(
+          "ff-shape-button h-9 flex items-center justify-center gap-1.5 border border-dashed border-[#CCCCCC] bg-white",
+          "text-[11px] font-semibold text-[#666666] hover:border-[#ff4fd8] hover:text-[#ff4fd8] hover:bg-[#ff4fd8]/5 transition-all duration-150",
+        )}
+      >
+        {addLabel}
+      </button>
+    </div>
+  )
+}
+
+function ItemCard({ index, onRemove, children }: { index: number; onRemove: () => void; children: React.ReactNode }) {
+  return (
+    <div className="ff-shape-container flex flex-col gap-2 border border-[#CCCCCC] bg-[#f7f7f5] p-2.5">
+      <div className="flex items-center justify-between">
+        <span className="text-[10px] font-bold text-[#999999]">#{index + 1}</span>
+        <button type="button" onClick={onRemove} className="text-[#999999] hover:text-[#e03434] transition-colors" title="Kaldır">
+          <X size={12} />
+        </button>
+      </div>
+      {children}
+    </div>
+  )
+}
+
+function FieldMini({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <label className="text-[9px] font-bold uppercase tracking-wider text-[#999999] block mb-1">{label}</label>
+      {children}
+    </div>
+  )
+}
+
+// ── Ekip üyeleri editörü ──────────────────────────
+interface TeamMember { name?: string; role?: string; initials?: string; accent?: boolean; bio?: string }
+
+function TeamMembersEditor({ value, onChange }: { value: unknown; onChange: (v: unknown) => void }) {
+  const items: TeamMember[] = Array.isArray(value) ? (value as TeamMember[]) : []
+  const patch = (i: number, p: Partial<TeamMember>) =>
+    onChange(items.map((it, idx) => (idx === i ? { ...it, ...p } : it)))
+  const add = () => onChange([...items, { name: "", role: "", initials: "", bio: "" }])
+  const remove = (i: number) => onChange(items.filter((_, idx) => idx !== i))
+
+  return (
+    <RepeaterShell title="Ekip Üyeleri" count={items.length} onAdd={add} addLabel="+ Üye Ekle">
+      <div className="grid sm:grid-cols-2 gap-2.5">
+        {items.map((it, i) => (
+          <ItemCard key={i} index={i} onRemove={() => remove(i)}>
+            <div className="flex items-center gap-2">
+              <span className="ff-shape-button w-8 h-8 shrink-0 flex items-center justify-center text-[11px] font-bold text-white bg-[var(--ff-purple)]">
+                {initialsFrom(it.name) }
+              </span>
+              <input
+                className={cn(repeaterInput, "px-2.5 py-1.5 text-[12px] font-semibold")}
+                placeholder="İsim Soyisim"
+                value={it.name ?? ""}
+                onChange={(e) => patch(i, { name: e.target.value, initials: initialsFrom(e.target.value) })}
+              />
+            </div>
+            <input
+              className={cn(repeaterInput, "px-2.5 py-1.5 text-[11px]")}
+              placeholder="Görev (ör. Kurucu & CEO)"
+              value={it.role ?? ""}
+              onChange={(e) => patch(i, { role: e.target.value })}
+            />
+            <textarea
+              className={cn(repeaterInput, "px-2.5 py-1.5 text-[11px] resize-y min-h-[52px]")}
+              placeholder="Kısa biyografi"
+              rows={2}
+              value={it.bio ?? ""}
+              onChange={(e) => patch(i, { bio: e.target.value })}
+            />
+            <label className="flex items-center gap-2 text-[10px] font-semibold text-[#666666] cursor-pointer select-none">
+              <input
+                type="checkbox"
+                className="accent-[#ff4fd8]"
+                checked={!!it.accent}
+                onChange={(e) => patch(i, { accent: e.target.checked })}
+              />
+              Vurgulu kart (öne çıkar)
+            </label>
+          </ItemCard>
+        ))}
+      </div>
+    </RepeaterShell>
+  )
+}
+
+// ── İstatistik editörü ────────────────────────────
+interface StatItem { value?: string; label?: string }
+
+function StatsEditor({ value, onChange }: { value: unknown; onChange: (v: unknown) => void }) {
+  const items: StatItem[] = Array.isArray(value) ? (value as StatItem[]) : []
+  const patch = (i: number, p: Partial<StatItem>) =>
+    onChange(items.map((it, idx) => (idx === i ? { ...it, ...p } : it)))
+  const add = () => onChange([...items, { value: "", label: "" }])
+  const remove = (i: number) => onChange(items.filter((_, idx) => idx !== i))
+
+  return (
+    <RepeaterShell title="İstatistikler" count={items.length} onAdd={add} addLabel="+ İstatistik Ekle">
+      <div className="grid sm:grid-cols-2 gap-2.5">
+        {items.map((it, i) => (
+          <ItemCard key={i} index={i} onRemove={() => remove(i)}>
+            <FieldMini label="Değer">
+              <input
+                className={cn(repeaterInput, "px-2.5 py-1.5 text-[12px] font-semibold")}
+                placeholder="150+"
+                value={it.value ?? ""}
+                onChange={(e) => patch(i, { value: e.target.value })}
+              />
+            </FieldMini>
+            <FieldMini label="Etiket">
+              <input
+                className={cn(repeaterInput, "px-2.5 py-1.5 text-[11px]")}
+                placeholder="Müşteri"
+                value={it.label ?? ""}
+                onChange={(e) => patch(i, { label: e.target.value })}
+              />
+            </FieldMini>
+          </ItemCard>
+        ))}
+      </div>
+    </RepeaterShell>
+  )
+}
+
+// ── Değerler editörü ──────────────────────────────
+interface ValueItem { iconKey?: string; titleTr?: string; tagline?: string; description?: string }
+
+function ValuesEditor({ value, onChange }: { value: unknown; onChange: (v: unknown) => void }) {
+  const items: ValueItem[] = Array.isArray(value) ? (value as ValueItem[]) : []
+  const patch = (i: number, p: Partial<ValueItem>) =>
+    onChange(items.map((it, idx) => (idx === i ? { ...it, ...p } : it)))
+  const add = () => onChange([...items, { iconKey: "Star", titleTr: "", tagline: "", description: "" }])
+  const remove = (i: number) => onChange(items.filter((_, idx) => idx !== i))
+
+  return (
+    <RepeaterShell title="Değerler" count={items.length} onAdd={add} addLabel="+ Değer Ekle">
+      <div className="grid sm:grid-cols-2 gap-2.5">
+        {items.map((it, i) => (
+          <ItemCard key={i} index={i} onRemove={() => remove(i)}>
+            <div className="grid grid-cols-[1fr_2fr] gap-2">
+              <FieldMini label="İkon">
+                <input
+                  className={cn(repeaterInput, "px-2.5 py-1.5 text-[11px]")}
+                  placeholder="Star"
+                  value={it.iconKey ?? ""}
+                  onChange={(e) => patch(i, { iconKey: e.target.value })}
+                />
+              </FieldMini>
+              <FieldMini label="Başlık">
+                <input
+                  className={cn(repeaterInput, "px-2.5 py-1.5 text-[12px] font-semibold")}
+                  placeholder="Değer adı"
+                  value={it.titleTr ?? ""}
+                  onChange={(e) => patch(i, { titleTr: e.target.value })}
+                />
+              </FieldMini>
+            </div>
+            <FieldMini label="Slogan">
+              <input
+                className={cn(repeaterInput, "px-2.5 py-1.5 text-[11px]")}
+                placeholder="Kısa slogan"
+                value={it.tagline ?? ""}
+                onChange={(e) => patch(i, { tagline: e.target.value })}
+              />
+            </FieldMini>
+            <FieldMini label="Açıklama">
+              <textarea
+                className={cn(repeaterInput, "px-2.5 py-1.5 text-[11px] resize-y min-h-[52px]")}
+                placeholder="Açıklama metni"
+                rows={2}
+                value={it.description ?? ""}
+                onChange={(e) => patch(i, { description: e.target.value })}
+              />
+            </FieldMini>
+          </ItemCard>
+        ))}
+      </div>
+    </RepeaterShell>
+  )
+}
+
+// ── Basit metin listesi editörü (keywords / paragraphs) ──
+function StringListEditor({
+  value, onChange, title, placeholder, addLabel, multiline,
+}: {
+  value: unknown; onChange: (v: unknown) => void
+  title: string; placeholder: string; addLabel: string; multiline?: boolean
+}) {
+  const items: string[] = Array.isArray(value) ? (value as string[]) : []
+  const patch = (i: number, v: string) => onChange(items.map((it, idx) => (idx === i ? v : it)))
+  const add = () => onChange([...items, ""])
+  const remove = (i: number) => onChange(items.filter((_, idx) => idx !== i))
+
+  return (
+    <RepeaterShell title={title} count={items.length} onAdd={add} addLabel={addLabel}>
+      <div className="flex flex-col gap-2">
+        {items.map((it, i) => (
+          <div key={i} className="flex items-start gap-1.5">
+            {multiline ? (
+              <textarea
+                className={cn(repeaterInput, "px-2.5 py-1.5 text-[11px] resize-y min-h-[52px]")}
+                placeholder={placeholder}
+                rows={2}
+                value={it}
+                onChange={(e) => patch(i, e.target.value)}
+              />
+            ) : (
+              <input
+                className={cn(repeaterInput, "px-2.5 py-1.5 text-[11.5px]")}
+                placeholder={placeholder}
+                value={it}
+                onChange={(e) => patch(i, e.target.value)}
+              />
+            )}
+            <button
+              type="button"
+              onClick={() => remove(i)}
+              className="ff-shape-button w-8 h-8 shrink-0 flex items-center justify-center border border-[#CCCCCC] bg-white text-[#999999] hover:text-[#e03434] hover:border-[#e03434] transition-colors"
+              title="Kaldır"
+            >
+              <X size={12} />
+            </button>
+          </div>
+        ))}
+      </div>
+    </RepeaterShell>
+  )
+}
+
+// ── Parallax katman editörü ───────────────────────
+interface ParallaxLayer { imageUrl?: string; speed?: number }
+
+function ParallaxLayersEditor({ value, onChange }: { value: unknown; onChange: (v: unknown) => void }) {
+  const items: ParallaxLayer[] = Array.isArray(value) ? (value as ParallaxLayer[]) : []
+  const [pickerFor, setPickerFor] = React.useState<number | null>(null)
+  const patch = (i: number, p: Partial<ParallaxLayer>) =>
+    onChange(items.map((it, idx) => (idx === i ? { ...it, ...p } : it)))
+  const add = () => onChange([...items, { imageUrl: "", speed: 1 }])
+  const remove = (i: number) => onChange(items.filter((_, idx) => idx !== i))
+
+  return (
+    <RepeaterShell title="Katmanlar" count={items.length} onAdd={add} addLabel="+ Katman Ekle">
+      <div className="flex flex-col gap-2.5">
+        {items.map((it, i) => {
+          const fileName = it.imageUrl ? it.imageUrl.split("/").pop() ?? it.imageUrl : ""
+          return (
+            <ItemCard key={i} index={i} onRemove={() => remove(i)}>
+              {fileName && (
+                <div className="ff-shape-container flex items-center gap-2 bg-white border border-[#CCCCCC] px-2.5 py-1.5">
+                  <span className="text-[#ff4fd8] shrink-0"><ImageIcon size={11} /></span>
+                  <span className="text-[10px] text-[#333333] truncate flex-1">{fileName}</span>
+                  <button type="button" onClick={() => patch(i, { imageUrl: "" })} className="text-[#999999] hover:text-[#e03434] shrink-0" title="Kaldır">
+                    <X size={11} />
+                  </button>
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={() => setPickerFor(i)}
+                className={cn(
+                  "ff-shape-button h-8 flex items-center justify-center gap-2 border border-dashed border-[#CCCCCC]",
+                  "text-[10.5px] font-semibold text-[#666666] hover:border-[#ff4fd8] hover:text-[#ff4fd8] hover:bg-[#ff4fd8]/5 transition-all duration-150",
+                )}
+              >
+                <ImageIcon size={12} /> {fileName ? "Görseli Değiştir" : "Görsel Seç"}
+              </button>
+              <FieldMini label={`Hız (${(it.speed ?? 1).toFixed(1)})`}>
+                <input
+                  type="range"
+                  min={0}
+                  max={3}
+                  step={0.1}
+                  value={typeof it.speed === "number" ? it.speed : 1}
+                  onChange={(e) => patch(i, { speed: Number(e.target.value) })}
+                  className="w-full accent-[#ff4fd8]"
+                />
+              </FieldMini>
+            </ItemCard>
+          )
+        })}
+      </div>
+      {pickerFor !== null && (
+        <MediaPicker
+          allowedTypes={["image"]}
+          onSelect={(url) => { patch(pickerFor, { imageUrl: url }); setPickerFor(null) }}
+          onClose={() => setPickerFor(null)}
+        />
+      )}
+    </RepeaterShell>
+  )
+}
+
 // ── Main component ────────────────────────────────
 export function PropertyEditor() {
   // Scoped selectors — avoids re-renders triggered by unrelated store slices
@@ -656,7 +1066,7 @@ export function PropertyEditor() {
       </div>
 
       {/* Fields */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-4">
+      <div className="flex-1 overflow-y-auto px-5 py-5 flex flex-col gap-4 w-full max-w-3xl mx-auto">
         {Object.entries(shape)
           .filter(([fieldName]) => fieldName !== "hideMobileDock")
           .map(([fieldName, fieldDef]) => {
@@ -686,6 +1096,53 @@ export function PropertyEditor() {
                   onChange={(v) => handleChange(fieldName, v)}
                 />
               )
+            }
+
+            // Neden Biz: karşılaştırma satırlarını (topic/theirs/ours) yapılandırılmış editörle
+            if (fieldName === "items" && section.type === "why-us") {
+              return (
+                <WhyUsItemsEditor
+                  key={fieldName}
+                  value={currentVal}
+                  onChange={(v) => handleChange(fieldName, v)}
+                />
+              )
+            }
+
+            // Ekip üyeleri (name/role/bio + otomatik baş harf)
+            if (fieldName === "members" && section.type === "team") {
+              return <TeamMembersEditor key={fieldName} value={currentVal} onChange={(v) => handleChange(fieldName, v)} />
+            }
+
+            // İstatistikler (value/label)
+            if (fieldName === "stats" && section.type === "stats") {
+              return <StatsEditor key={fieldName} value={currentVal} onChange={(v) => handleChange(fieldName, v)} />
+            }
+
+            // Değerler (iconKey/titleTr/tagline/description)
+            if (fieldName === "items" && section.type === "values") {
+              return <ValuesEditor key={fieldName} value={currentVal} onChange={(v) => handleChange(fieldName, v)} />
+            }
+
+            // Manifesto anahtar kelimeleri (metin listesi)
+            if (fieldName === "keywords" && section.type === "manifesto") {
+              return <StringListEditor key={fieldName} value={currentVal} onChange={(v) => handleChange(fieldName, v)} title="Anahtar Kelimeler" placeholder="Örn: Hız" addLabel="+ Kelime Ekle" />
+            }
+
+            // Hikaye paragrafları (metin listesi)
+            if (fieldName === "paragraphs" && section.type === "story") {
+              return <StringListEditor key={fieldName} value={currentVal} onChange={(v) => handleChange(fieldName, v)} title="Paragraflar" placeholder="Paragraf metni…" addLabel="+ Paragraf Ekle" multiline />
+            }
+
+            // Parallax katmanları (görsel + hız)
+            if (fieldName === "layers" && section.type === "parallax") {
+              return <ParallaxLayersEditor key={fieldName} value={currentVal} onChange={(v) => handleChange(fieldName, v)} />
+            }
+
+            // Hizmetler bölümündeki "services" alanı DB'deki hizmetlerden beslenir;
+            // burada elle düzenlenmez → editörde gösterme (yanıltıcı JSON'u gizle).
+            if (fieldName === "services" && section.type === "services") {
+              return null
             }
 
             // Video Referanslar: dizi öğelerini video seçicili yapılandırılmış editörle

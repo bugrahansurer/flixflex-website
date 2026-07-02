@@ -9,6 +9,7 @@ import { revalidatePath } from "next/cache"
 import { z } from "zod"
 import { requirePermission, jsonError } from "@/lib/ai/api-utils"
 import { listPosts, createPost } from "@/lib/ai/blog-store"
+import { logAudit } from "@/lib/audit"
 
 const TEMPLATE = z.enum(["classic", "editorial", "visual"])
 const STATUS   = z.enum(["draft", "published"])
@@ -75,6 +76,7 @@ export async function POST(req: NextRequest) {
   }
 
   const post = await createPost(parsed.data)
+  void logAudit({ userId: gate.ctx.userId, action: "create", resource: "blog", resourceId: post?.id ?? null, metadata: { title: parsed.data.title } })
   revalidatePath("/", "layout")
   return NextResponse.json({ ok: true, post }, { status: 201 })
 }

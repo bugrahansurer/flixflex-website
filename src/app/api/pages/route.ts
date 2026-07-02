@@ -12,6 +12,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { hasPermission } from "@/lib/rbac/permissions"
 import { createPageSchema } from "@/lib/validators/page-schema"
+import { logAudit } from "@/lib/audit"
 import type { PageData, SectionBlock } from "@/types/page-builder"
 
 // ── In-memory fallback store ──────────────────────
@@ -124,6 +125,7 @@ export async function POST(req: NextRequest) {
         isPublished: false,
       },
     })
+    void logAudit({ userId: session.user.id, action: "create", resource: "pages", resourceId: page.id, metadata: { title: page.title } })
     return NextResponse.json({ success: true, data: prismaPageToPageData(page) }, { status: 201 })
   } catch {
     // DB not available — in-memory

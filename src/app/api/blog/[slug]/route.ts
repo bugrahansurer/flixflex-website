@@ -15,6 +15,7 @@ import {
   updatePost,
   deletePost,
 } from "@/lib/ai/blog-store"
+import { logAudit } from "@/lib/audit"
 
 const TEMPLATE = z.enum(["classic", "editorial", "visual"])
 const STATUS   = z.enum(["draft", "published"])
@@ -76,6 +77,7 @@ export async function PATCH(
   }
 
   const updated = await updatePost(post.id, parsed.data)
+  void logAudit({ userId: gate.ctx.userId, action: parsed.data.status === "published" ? "publish" : "update", resource: "blog", resourceId: post.id, metadata: { title: updated?.title ?? post.title } })
   revalidatePath("/", "layout")
   return NextResponse.json({ ok: true, post: updated })
 }
@@ -92,6 +94,7 @@ export async function DELETE(
   if (!post) return jsonError("Yazı bulunamadı.", 404)
 
   const removed = await deletePost(post.id)
+  void logAudit({ userId: gate.ctx.userId, action: "delete", resource: "blog", resourceId: post.id, metadata: { title: post.title } })
   revalidatePath("/", "layout")
   return NextResponse.json({ ok: removed })
 }

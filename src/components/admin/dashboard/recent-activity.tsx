@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { formatRelativeTime } from "@/lib/utils"
 import { staggerContainer, fadeInUp } from "@/lib/animations"
-import { RESOURCE_LABELS } from "@/lib/rbac/resources"
+import { humanizeAudit } from "@/lib/admin/activity-format"
 
 export interface ActivityItem {
   id: string
@@ -13,31 +13,6 @@ export interface ActivityItem {
   userName: string
   initials: string
   createdAt: string
-}
-
-// AuditLog rows are a mix of already-human Turkish phrases (older writers)
-// and machine keys like "role.update" / "ai.pipeline.write". Normalise both
-// into a readable sentence.
-const VERB: Record<string, string> = {
-  create: "oluşturuldu",
-  update: "güncellendi",
-  delete: "silindi",
-  read: "görüntülendi",
-  publish: "yayınlandı",
-  login: "giriş yapıldı",
-}
-
-function humanize(action: string, resource: string): string {
-  // Already a human sentence (contains a space) → show verbatim.
-  if (/\s/.test(action)) return action
-
-  const parts = action.split(".")
-  const last = parts[parts.length - 1]
-  const resLabel = RESOURCE_LABELS[resource] || resource
-
-  if (parts[0] === "ai") return "AI içerik üretildi"
-  if (VERB[last]) return `${resLabel} ${VERB[last]}`
-  return `${resLabel}: ${action}`
 }
 
 export function RecentActivity({ items = [] }: { items?: ActivityItem[] }) {
@@ -94,7 +69,7 @@ export function RecentActivity({ items = [] }: { items?: ActivityItem[] }) {
                 {/* Action */}
                 <div className="pl-9 md:pl-0">
                   <span className="text-[12px] text-[#333333] font-medium">
-                    {humanize(activity.action, activity.resource)}
+                    {humanizeAudit(activity.action, activity.resource)}
                   </span>
                 </div>
 

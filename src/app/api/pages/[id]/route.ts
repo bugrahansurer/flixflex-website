@@ -12,6 +12,7 @@ import { revalidatePath } from "next/cache"
 import { auth } from "@/lib/auth"
 import { hasPermission } from "@/lib/rbac/permissions"
 import { updatePageSchema } from "@/lib/validators/page-schema"
+import { logAudit } from "@/lib/audit"
 import type { PageData, SectionBlock } from "@/types/page-builder"
 
 // ── In-memory fallback (shared via globalThis) ────
@@ -140,6 +141,7 @@ export async function PATCH(
         }),
       },
     })
+    void logAudit({ userId: session.user.id, action: body.status !== undefined ? (body.status === "published" ? "publish" : "update") : "update", resource: "pages", resourceId: id, metadata: { title: updated.title } })
     revalidatePath("/", "layout")
     return NextResponse.json({ success: true, data: prismaPageToPageData(updated) })
   } catch {
@@ -180,6 +182,7 @@ export async function DELETE(
   try {
     const db = await getPrisma()
     await db.page.delete({ where: { id } })
+    void logAudit({ userId: session.user.id, action: "delete", resource: "pages", resourceId: id })
     return NextResponse.json({ success: true })
   } catch {
     const existed = memStore.has(id)

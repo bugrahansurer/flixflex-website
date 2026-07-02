@@ -3,6 +3,7 @@ import { revalidatePath } from "next/cache"
 import { requirePermission, jsonError } from "@/lib/ai/api-utils"
 import prisma from "@/lib/prisma"
 import { servicePayloadSchema } from "@/lib/validators/content-schema"
+import { logAudit } from "@/lib/audit"
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const gate = await requirePermission("services", "update")
@@ -22,6 +23,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
       parentId: parsed.data.parentId || null,
     },
   })
+  void logAudit({ userId: gate.ctx.userId, action: "update", resource: "services", resourceId: id, metadata: { title: item.title } })
   revalidatePath("/", "layout")
   return NextResponse.json({ ok: true, item })
 }
@@ -34,6 +36,7 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
   const { id } = await params
   try {
     await prisma.service.delete({ where: { id } })
+    void logAudit({ userId: gate.ctx.userId, action: "delete", resource: "services", resourceId: id })
     revalidatePath("/", "layout")
     return NextResponse.json({ ok: true })
   } catch (err) {

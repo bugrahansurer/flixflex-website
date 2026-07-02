@@ -7,6 +7,7 @@ import { NextResponse } from "next/server"
 import { z } from "zod"
 import { requirePermission, jsonError } from "@/lib/ai/api-utils"
 import prisma from "@/lib/prisma"
+import { logAudit } from "@/lib/audit"
 
 const patchSchema = z.object({ isRead: z.boolean() })
 
@@ -21,6 +22,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
 
   try {
     await prisma.contactSubmission.update({ where: { id }, data: { isRead: parsed.data.isRead } })
+    void logAudit({ userId: gate.ctx.userId, action: "update", resource: "messages", resourceId: id, metadata: { isRead: parsed.data.isRead } })
     return NextResponse.json({ ok: true })
   } catch {
     return jsonError("Mesaj bulunamadı.", 404)
@@ -35,6 +37,7 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
   const { id } = await params
   try {
     await prisma.contactSubmission.delete({ where: { id } })
+    void logAudit({ userId: gate.ctx.userId, action: "delete", resource: "messages", resourceId: id })
     return NextResponse.json({ ok: true })
   } catch {
     return jsonError("Mesaj bulunamadı.", 404)

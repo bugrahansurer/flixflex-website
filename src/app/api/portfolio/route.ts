@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { requirePermission, jsonError } from "@/lib/ai/api-utils"
 import prisma from "@/lib/prisma"
 import { portfolioPayloadSchema } from "@/lib/validators/content-schema"
+import { logAudit } from "@/lib/audit"
 
 export async function GET() {
   const gate = await requirePermission("portfolio", "read")
@@ -36,5 +37,6 @@ export async function POST(req: Request) {
     include: { services: true },
   })
 
+  void logAudit({ userId: gate.ctx.userId, action: "create", resource: "portfolio", resourceId: item.id, metadata: { title: item.title } })
   return NextResponse.json({ ok: true, item }, { status: 201 })
 }

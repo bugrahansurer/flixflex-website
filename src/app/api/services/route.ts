@@ -3,6 +3,7 @@ import { revalidatePath } from "next/cache"
 import { requirePermission, jsonError } from "@/lib/ai/api-utils"
 import prisma from "@/lib/prisma"
 import { servicePayloadSchema } from "@/lib/validators/content-schema"
+import { logAudit } from "@/lib/audit"
 
 export async function GET() {
   const gate = await requirePermission("services", "read")
@@ -34,6 +35,7 @@ export async function POST(req: Request) {
       parentId: parentId || null,
     },
   })
+  void logAudit({ userId: gate.ctx.userId, action: "create", resource: "services", resourceId: item.id, metadata: { title: item.title } })
   revalidatePath("/", "layout")
   return NextResponse.json({ ok: true, item }, { status: 201 })
 }

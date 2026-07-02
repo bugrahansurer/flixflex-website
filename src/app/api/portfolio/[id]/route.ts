@@ -3,6 +3,7 @@ import { revalidatePath } from "next/cache"
 import { requirePermission, jsonError } from "@/lib/ai/api-utils"
 import prisma from "@/lib/prisma"
 import { portfolioPayloadSchema } from "@/lib/validators/content-schema"
+import { logAudit } from "@/lib/audit"
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const gate = await requirePermission("portfolio", "update")
@@ -26,6 +27,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     include: { services: true },
   })
 
+  void logAudit({ userId: gate.ctx.userId, action: "update", resource: "portfolio", resourceId: id, metadata: { title: item.title } })
   revalidatePath("/", "layout")
   return NextResponse.json({ ok: true, item })
 }
@@ -37,6 +39,7 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
 
   const { id } = await params
   await prisma.portfolioItem.delete({ where: { id } })
+  void logAudit({ userId: gate.ctx.userId, action: "delete", resource: "portfolio", resourceId: id })
   revalidatePath("/", "layout")
   return NextResponse.json({ ok: true })
 }

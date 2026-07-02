@@ -5,9 +5,11 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { signOut } from "next-auth/react"
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
-import { Search, Bell, ChevronRight, User, Settings, LogOut, Menu } from "@/lib/icons"
+import { ChevronRight, User, Settings, LogOut, Menu } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 import type { SessionUser } from "@/lib/auth/types"
+import { AdminSearch } from "./admin-search"
+import { AdminNotifications } from "./admin-notifications"
 
 // ── Breadcrumb helper ─────────────────────────────
 const SEGMENT_LABELS: Record<string, string> = {
@@ -111,123 +113,11 @@ export function AdminTopbar({ user, onMenuClick }: AdminTopbarProps) {
 
       {/* Right controls */}
       <div className="flex items-center gap-1.5 shrink-0">
-        {/* Search */}
-        <button
-          type="button"
-          aria-label="Ara"
-          className={cn(
-            "ff-shape-button hidden sm:flex w-9 h-9 items-center justify-center",
-            "border border-[#E0E0E0] text-[#666666]",
-            "hover:border-[#ff4fd8] hover:text-[#ff4fd8]",
-            "transition-colors duration-150"
-          )}
-        >
-          <Search size={15} />
-        </button>
+        {/* Global admin search — animasyonlu genişleyen arama */}
+        <AdminSearch />
 
-        {/* Notification bell */}
-        <DropdownMenu.Root>
-          <DropdownMenu.Trigger asChild>
-            <div className="relative cursor-pointer group">
-              <button
-                type="button"
-                aria-label="Bildirimler"
-                className={cn(
-                  "ff-shape-button w-9 h-9 flex items-center justify-center",
-                  "border border-[#E0E0E0] text-[#666666]",
-                  "hover:border-[#ff4fd8] hover:text-[#ff4fd8]",
-                  "transition-colors duration-150"
-                )}
-              >
-                <Bell size={15} />
-              </button>
-              {/* Badge — outside the clipped button */}
-              <span
-                aria-label="3 bildirim"
-                className={cn(
-                  "absolute -top-1 -right-1 z-10",
-                  "w-4 h-4 flex items-center justify-center rounded-full",
-                  "bg-[#ff4fd8] text-white text-[9px] font-bold",
-                  "shadow-[0_0_10px_#ff4fd8]/40",
-                )}
-              >
-                3
-              </span>
-            </div>
-          </DropdownMenu.Trigger>
-
-          <DropdownMenu.Portal>
-            <DropdownMenu.Content
-              align="end"
-              sideOffset={8}
-              className={cn(
-                "ff-shape-container z-50 min-w-[320px] max-w-[380px]",
-                "bg-[#F7F7F5] border border-[#E0E0E0]",
-                "shadow-2xl animate-ff-fadeIn overflow-hidden"
-              )}
-            >
-              <div className="px-4 py-3 border-b border-[#E0E0E0] flex items-center justify-between">
-                <h3 className="text-[13px] font-bold text-[#0D0D0D]">Bildirimler</h3>
-                <span className="text-[10px] text-[#ff4fd8] font-medium cursor-pointer hover:underline">
-                  Tümünü okundu işaretle
-                </span>
-              </div>
-
-              <div className="max-h-[350px] overflow-y-auto">
-                {/* AI Assistant Suggestion */}
-                <div className="p-4 border-b border-[#E0E0E0] hover:bg-[#F7F7F5] transition-colors cursor-pointer group">
-                  <div className="flex gap-3">
-                    <div className="w-8 h-8 rounded-full bg-[rgba(255, 79, 216,0.1)] flex items-center justify-center shrink-0 border border-[rgba(255, 79, 216,0.2)]">
-                      <Search size={14} className="text-[#ff4fd8]" />
-                    </div>
-                    <div className="space-y-1">
-                      <p className="text-[12px] text-[#0D0D0D] leading-tight">
-                        <span className="font-bold">AI Asistan:</span> Yeni bir blog konusu önerisi var: &quot;2024 Tasarım Trendleri&quot;
-                      </p>
-                      <p className="text-[10px] text-[#666666]">2 dakika önce</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* System Update */}
-                <div className="p-4 border-b border-[#E0E0E0] hover:bg-[#F7F7F5] transition-colors cursor-pointer">
-                  <div className="flex gap-3">
-                    <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center shrink-0 border border-blue-500/20">
-                      <Settings size={14} className="text-blue-400" />
-                    </div>
-                    <div className="space-y-1">
-                      <p className="text-[12px] text-[#0D0D0D] leading-tight">
-                        <span className="font-bold">Sistem:</span> Yedekleme başarıyla tamamlandı.
-                      </p>
-                      <p className="text-[10px] text-[#666666]">1 saat önce</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* New User */}
-                <div className="p-4 hover:bg-[#F7F7F5] transition-colors cursor-pointer">
-                  <div className="flex gap-3">
-                    <div className="w-8 h-8 rounded-full bg-green-500/10 flex items-center justify-center shrink-0 border border-green-500/20">
-                      <User size={14} className="text-green-400" />
-                    </div>
-                    <div className="space-y-1">
-                      <p className="text-[12px] text-[#0D0D0D] leading-tight">
-                        <span className="font-bold">Kullanıcı:</span> Yeni bir ekip üyesi kaydoldu: Selin Yılmaz
-                      </p>
-                      <p className="text-[10px] text-[#666666]">5 saat önce</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="px-4 py-2 bg-[#F7F7F5] border-t border-[#E0E0E0] text-center">
-                <Link href="/admin/bildirimler" className="text-[11px] font-bold text-[#666666] hover:text-[#FF4FD8] transition-colors">
-                  Tüm Bildirimleri Gör
-                </Link>
-              </div>
-            </DropdownMenu.Content>
-          </DropdownMenu.Portal>
-        </DropdownMenu.Root>
+        {/* Gerçek-zamanlı aktivite bildirimleri */}
+        <AdminNotifications />
 
         {/* User menu */}
         <DropdownMenu.Root>

@@ -343,30 +343,30 @@ export function PageBuilder({ initialPage }: PageBuilderProps) {
             <aside
               className={cn(
                 mobilePane === "sections" ? "block" : "hidden",
-                "lg:block min-h-0 w-full lg:w-72 flex-1 lg:flex-none",
+                "lg:block min-h-0 w-full lg:w-90 flex-1 lg:flex-none",
                 "overflow-y-auto bg-[#f7f7f5] lg:border-r border-[#CCCCCC]",
               )}
             >
               <SectionPanel />
             </aside>
 
-            {/* Center: Sortable Canvas */}
+            {/* Center: Sortable Canvas — sıralama listesi (dar, sabit genişlik) */}
             <main
               className={cn(
                 mobilePane === "canvas" ? "block" : "hidden",
-                "lg:block min-h-0 w-full flex-1 lg:min-w-[280px]",
-                "overflow-y-auto bg-[#f7f7f5]",
+                "lg:block min-h-0 w-full lg:w-[450px] lg:flex-none",
+                "overflow-y-auto bg-[#f7f7f5] lg:border-r border-[#CCCCCC]",
               )}
             >
               <SortableCanvas />
             </main>
 
-            {/* Right: Property Editor */}
+            {/* Right: Property Editor — asıl düzenleme alanı (kalan tüm genişlik) */}
             <aside
               className={cn(
                 mobilePane === "properties" ? "block" : "hidden",
-                "lg:block min-h-0 w-full lg:w-80 flex-1 lg:flex-none",
-                "overflow-y-auto bg-[#f7f7f5] lg:border-l border-[#CCCCCC]",
+                "lg:block min-h-0 w-full flex-1 lg:min-w-0",
+                "overflow-y-auto bg-[#f7f7f5] lg:border-r border-[#CCCCCC]",
               )}
             >
               <PropertyEditor />
