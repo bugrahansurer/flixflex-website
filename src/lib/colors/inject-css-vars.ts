@@ -11,6 +11,19 @@
 import type { ColorTokens, ThemeSettings, ShapeVariant } from "./types"
 import type React from "react"
 
+// #RRGGBB rengini verilen oranda koyultur (0..1). Hex değilse null.
+// Beyaz yazı taşıyan zeminler için erişilebilir (≥4.5:1) ton üretmekte kullanılır.
+function darkenHex(hex: string, amount: number): string | null {
+  const m = hex.trim().match(/^#?([0-9a-fA-F]{6})$/)
+  if (!m) return null
+  const n = parseInt(m[1], 16)
+  const f = Math.max(0, 1 - amount)
+  const r = Math.round(((n >> 16) & 255) * f)
+  const g = Math.round(((n >> 8) & 255) * f)
+  const b = Math.round((n & 255) * f)
+  return `#${((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1)}`
+}
+
 // ── Shape token resolution ───────────────────────────────
 // Returns { radius, clipPath } for a given shape variant.
 // Used as `border-radius: var(--ff-shape-button-radius)` and
@@ -66,13 +79,26 @@ export function cssVarsFromPalette(
   font-display: swap;
 }`).join("\n")
 
-  // Generate Google Fonts import ONLY for non-custom fonts
+  // next/font (layout.tsx) ile self-host edilen fontlar — Google'dan TEKRAR
+  // yüklenmesi hem gereksiz (çift indirme) hem render-blocking gecikme yaratır.
+  // Bunları literal aile adı yerine next/font'un CSS değişkenine eşliyoruz;
+  // böylece varsayılan temada (Syne + DM Sans) hiç Google isteği gitmez.
+  const SELF_HOSTED: Record<string, string> = {
+    "Syne":    "var(--font-syne)",
+    "DM Sans": "var(--font-dm-sans)",
+    "Geist":   "var(--font-sans)",
+  }
+  const familyValue = (name: string) =>
+    SELF_HOSTED[name] ?? `"${name}"`
+
+  // Google Fonts import YALNIZCA custom da self-host da OLMAYAN fontlar için.
   const googleFontsToImport = [fonts.display, fonts.body]
     .filter(name => !customFonts.some(cf => cf.name === name))
+    .filter(name => !SELF_HOSTED[name])
     .map(f => f.replace(/\s+/g, '+'))
 
   const fontImport = googleFontsToImport.length > 0
-    ? `@import url('https://fonts.googleapis.com/css2?family=${googleFontsToImport.join('&family=')}:wght@300;400;500;600;700;800&display=swap');`
+    ? `@import url('https://fonts.googleapis.com/css2?family=${googleFontsToImport.join('&family=')}:wght@400;600;700&display=swap');`
     : ""
 
   return `
@@ -81,12 +107,13 @@ ${fontImport}
 
 :root {
   /* Typography */
-  --font-display:       "${fonts.display}", system-ui, sans-serif;
-  --font-body:          "${fonts.body}", system-ui, sans-serif;
+  --font-display:       ${familyValue(fonts.display)}, system-ui, sans-serif;
+  --font-body:          ${familyValue(fonts.body)}, system-ui, sans-serif;
   --font-body-size:     ${settings.fontBodySize}px;
   --font-heading-size:  ${settings.fontHeadingSize}px;
 
   --ff-purple:          ${colors.primary};
+  --ff-purple-strong:   ${darkenHex(colors.primary, 0.35) ?? "#C71585"};
   --ff-purple-hover:    ${colors.primaryHover};
   --ff-purple-muted:    ${colors.primaryMuted};
   --ff-purple-glow:     ${colors.primaryGlow};

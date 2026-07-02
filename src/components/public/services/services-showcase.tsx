@@ -155,10 +155,6 @@ export function ServicesShowcase({
                 >
                   <MotionStage design={design} />
                   <span aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent lg:bg-gradient-to-l" />
-                  <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5 text-[9px] font-medium text-white/70 backdrop-blur-md">
-                    <Sparkles className="h-2.5 w-2.5" style={{ color: "#FF4FD8" }} />
-                    Motion
-                  </span>
                 </Link>
               </motion.div>
             )

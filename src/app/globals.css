@@ -18,6 +18,9 @@
   --ff-purple: #FF4FD8;
   --ff-purple-hover: #dc2db6;
   --ff-purple-dark: #dd2bb7;
+  /* Beyaz yazı taşıyan zeminler için erişilebilir (≥4.5:1) koyu ton.
+     --ff-purple (#FF4FD8) + beyaz sadece 2.83:1; bu ton ~5.4:1. */
+  --ff-purple-strong: #C71585;
   --ff-purple-light: #ff4fd833;
   --ff-purple-muted: rgba(255, 79, 216, 0.12);
   --ff-purple-border: rgba(255, 79, 216, 0.25);

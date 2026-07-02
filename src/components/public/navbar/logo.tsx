@@ -52,7 +52,7 @@ export function FlixFlexLogo({ className, size = "md", logoUrl, logoHeight, tran
           <motion.span
             className={cn(
               "ff-shape-button relative flex items-center justify-center",
-              "bg-[var(--ff-purple)] text-white font-bold tracking-tight",
+              "bg-[var(--ff-purple-strong)] text-white font-bold tracking-tight",
               "transition-shadow duration-300",
               "group-hover:shadow-[0_0_20px_rgba(255, 79, 216,0.5)]",
               s.mark

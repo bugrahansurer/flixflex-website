@@ -128,7 +128,7 @@ function Card({ item, index }: { item: PortfolioItem; index: number }) {
               className="h-[40px] w-fit max-w-40 flex-shrink-0 object-contain"
             />
           ) : (
-            <span className="flex h-[30px] w-fit flex-shrink-0 items-center justify-center rounded-full bg-[var(--ff-purple)] text-[10px] font-bold text-white">
+            <span className="flex h-[30px] w-fit min-w-[30px] flex-shrink-0 items-center justify-center rounded-full bg-[var(--ff-purple)] text-[10px] font-bold text-white">
               {item.client ? item.client.charAt(0) : "P"}
             </span>
           )}

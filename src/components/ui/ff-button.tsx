@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 // ── Variant & Size Maps ───────────────────────────
 const variantClasses: Record<string, string> = {
   primary:
-    "bg-[var(--ff-purple)] text-white border border-[var(--ff-purple)] " +
+    "bg-[var(--ff-purple-strong)] text-white border border-[var(--ff-purple-strong)] " +
     "hover:bg-[var(--ff-purple-hover)] hover:border-[var(--ff-purple-hover)] " +
     "hover:shadow-[0_4px_24px_rgb(var(--ff-purple)/0.45)]",
   secondary:

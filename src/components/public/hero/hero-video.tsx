@@ -9,7 +9,7 @@ import { fadeInUp, withDelay } from "@/lib/animations"
 import { cn } from "@/lib/utils"
 import { ScrollIndicator } from "./scroll-indicator"
 import MuxPlayer from "@/components/ui/lazy-mux-player"
-import { getMuxData } from "@/lib/mux-url"
+import { getMuxData, muxThumbnail } from "@/lib/mux-url"
 
 interface HeroVideoSectionProps {
   title?: string
@@ -55,6 +55,12 @@ export function HeroVideoSection({
   const isMux = effectiveVideoUrl.includes("mux.com") || (!effectiveVideoUrl.includes("/") && effectiveVideoUrl.length > 10)
   const { playbackId, src } = getMuxData(effectiveVideoUrl)
 
+  // LCP optimizasyonu: MuxPlayer dynamic(ssr:false) → poster'ı geç getirir.
+  // Poster'ı SSR'da anında görünen, fetchPriority=high bir <img> olarak da
+  // basıyoruz; video hazır olunca üzerini örter. LCP ilk HTML'de bulunur.
+  const posterSrc =
+    posterUrl || (playbackId ? muxThumbnail(playbackId, { width: 1200 }) : undefined)
+
   return (
     <section
       ref={containerRef}
@@ -66,6 +72,18 @@ export function HeroVideoSection({
         className="absolute inset-0 z-0 h-full w-full"
       >
         <div className="relative h-full w-full overflow-hidden">
+          {/* SSR poster — LCP için anında boyanır, video yüklenince altında kalır */}
+          {posterSrc && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={posterSrc}
+              alt=""
+              aria-hidden
+              fetchPriority="high"
+              decoding="async"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          )}
           {isMux || src ? (
             <MuxPlayer
               playbackId={playbackId || undefined}

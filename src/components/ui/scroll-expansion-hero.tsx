@@ -10,7 +10,7 @@ import Image from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ChevronDown } from '@/lib/icons';
 import MuxPlayer from "@/components/ui/lazy-mux-player";
-import { getMuxPlaybackId } from "@/lib/mux-url";
+import { getMuxPlaybackId, muxThumbnail } from "@/lib/mux-url";
 
 export interface ScrollExpandMediaProps {
   mediaType?: 'video' | 'image';
@@ -171,6 +171,12 @@ export const ScrollExpandMedia = ({
   const firstWord = title ? title.split(' ')[0] : '';
   const restOfTitle = title ? title.split(' ').slice(1).join(' ') : '';
 
+  // LCP optimizasyonu: MuxPlayer dynamic(ssr:false) → poster'ı geç getirir.
+  // Poster'ı SSR'da anında görünen fetchPriority=high <img> olarak da basıyoruz.
+  const muxId = getMuxPlaybackId(mediaSrc);
+  const effectivePoster =
+    posterSrc || (muxId ? muxThumbnail(muxId, { width: 1200 }) : undefined);
+
   return (
     <div
       ref={sectionRef}
@@ -263,15 +269,27 @@ export const ScrollExpandMedia = ({
               </div>
             ) : (
               <div className='relative w-full h-full pointer-events-none rounded-[inherit]'>
-                {getMuxPlaybackId(mediaSrc) ? (
+                {/* SSR poster — LCP için anında boyanır, video yüklenince altında kalır */}
+                {effectivePoster && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={effectivePoster}
+                    alt=''
+                    aria-hidden
+                    fetchPriority='high'
+                    decoding='async'
+                    className='absolute inset-0 w-full h-full object-cover rounded-[inherit]'
+                  />
+                )}
+                {muxId ? (
                   <MuxPlayer
-                    playbackId={getMuxPlaybackId(mediaSrc)!}
+                    playbackId={muxId}
                     streamType='on-demand'
                     autoPlay='muted'
                     muted
                     loop
                     playsInline
-                    poster={posterSrc || undefined}
+                    poster={effectivePoster || undefined}
                     nohotkeys
                     className='w-full h-full rounded-[inherit] [--controls:none] [--media-object-fit:cover]'
                   />

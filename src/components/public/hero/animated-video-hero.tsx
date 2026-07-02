@@ -10,7 +10,7 @@ import {
   useReducedMotion,
 } from "framer-motion"
 import MuxPlayer from "@/components/ui/lazy-mux-player"
-import { getMuxData } from "@/lib/mux-url"
+import { getMuxData, muxThumbnail } from "@/lib/mux-url"
 import { cn } from "@/lib/utils"
 import { useMediaQuery } from "@/hooks/use-media-query"
 
@@ -136,6 +136,13 @@ export function HeroVideo({
     (!activeVideoUrl.includes("/") && activeVideoUrl.length > 10)
   const { playbackId, src } = getMuxData(activeVideoUrl)
 
+  // LCP optimizasyonu: MuxPlayer dynamic(ssr:false) olduğundan poster'ı yalnızca
+  // hydrate sonrası getirir (geç keşif → yüksek LCP). Bunu önlemek için poster'ı
+  // SSR'da anında görünen, fetchPriority=high bir <img> olarak da basıyoruz;
+  // video hazır olunca üzerini örter. Böylece LCP öğesi ilk HTML'de bulunur.
+  const posterSrc =
+    posterUrl || (playbackId ? muxThumbnail(playbackId, { width: 1200 }) : undefined)
+
   return (
     <motion.div
       style={shouldReduce ? {} : { y, scale, opacity }}
@@ -144,6 +151,18 @@ export function HeroVideo({
 
       {/* Video wrapper */}
       <div className="relative h-full w-full overflow-hidden">
+        {/* SSR poster — LCP için anında boyanır, video yüklenince altında kalır */}
+        {posterSrc && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={posterSrc}
+            alt=""
+            aria-hidden
+            fetchPriority="high"
+            decoding="async"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        )}
         {isMux || src ? (
           <MuxPlayer
             playbackId={playbackId || undefined}

@@ -97,5 +97,12 @@
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
-  }
+  },
+  "browserslist": [
+    "Chrome >= 100",
+    "Firefox >= 100",
+    "Edge >= 100",
+    "Safari >= 15.4",
+    "iOS >= 15.4"
+  ]
 }
