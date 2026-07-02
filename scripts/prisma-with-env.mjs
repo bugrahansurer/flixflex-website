@@ -4,11 +4,10 @@ import { existsSync, readFileSync } from "node:fs"
 import { spawnSync } from "node:child_process"
 import { join } from "node:path"
 
+// Yalnızca DATABASE_URL — eski entegrasyonun POSTGRES_*/PRISMA_ değişkenleri
+// (db.prisma.io) migration/seed'i yanlış DB'ye yönlendirmesin.
 const databaseUrlKeys = [
   "DATABASE_URL",
-  "POSTGRES_PRISMA_URL",
-  "PRISMA_DATABASE_URL",
-  "POSTGRES_URL",
 ]
 
 function parseEnvFile(path) {

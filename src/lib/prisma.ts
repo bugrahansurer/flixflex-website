@@ -4,6 +4,15 @@ import { normalizeDatabaseUrlEnv } from "@/lib/database-url"
 const databaseUrl = normalizeDatabaseUrlEnv()
 const hasDbUrl = Boolean(databaseUrl)
 
+// Tanı: hangi DB host'una bağlanıldığını (kimlik bilgisi olmadan) logla.
+// Vercel loglarında "neon.tech" görülmeli; "db.prisma.io" görülürse env yanlış.
+if (databaseUrl) {
+  const host = databaseUrl.match(/@([^/?]+)/)?.[1] ?? "bilinmiyor"
+  console.log(`[prisma] DB host: ${host}`)
+} else {
+  console.warn("[prisma] DATABASE_URL tanımsız — DB olmadan (fallback içerikle) çalışılıyor")
+}
+
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | null | undefined
 }

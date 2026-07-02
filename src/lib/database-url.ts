@@ -1,8 +1,8 @@
+// Yalnızca DATABASE_URL yetkili kaynak. Eski Vercel Prisma Postgres
+// entegrasyonunun enjekte ettiği POSTGRES_*/PRISMA_DATABASE_URL (db.prisma.io)
+// artık kullanılmıyor — böylece o değişkenler kalsa bile Neon URL'sini ezemez.
 const DATABASE_URL_KEYS = [
   "DATABASE_URL",
-  "POSTGRES_PRISMA_URL",
-  "PRISMA_DATABASE_URL",
-  "POSTGRES_URL",
 ] as const
 
 export type DatabaseUrlKey = (typeof DATABASE_URL_KEYS)[number]
