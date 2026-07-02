@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma"
 import { del } from "@vercel/blob"
 import { auth } from "@/lib/auth"
 import { hasPermission } from "@/lib/rbac/permissions"
+import { video } from "@/lib/mux"
 
 // ── GET: List media ────────────────────────────────
 export async function GET(req: Request) {
@@ -67,7 +68,18 @@ export async function DELETE(req: Request) {
 
     // 2. Delete from Vercel Blob (if it's a blob URL)
     if (media.url.includes("blob.vercel-storage.com")) {
-      await del(media.url)
+      await del(media.url).catch((err) => console.error("[media/delete] blob del failed:", err))
+    }
+
+    // 3. Delete the underlying Mux asset (aksi halde DB'den silinse de Mux'ta
+    //    video kalıp depolama/ücret üretmeye devam eder). Hata olsa da (ör.
+    //    asset zaten yok) isteği düşürme — DB silme zaten başarılı.
+    if (media.muxAssetId) {
+      try {
+        await video.assets.delete(media.muxAssetId)
+      } catch (err) {
+        console.error("[media/delete] Mux asset delete failed:", media.muxAssetId, err)
+      }
     }
 
     return NextResponse.json({ success: true })

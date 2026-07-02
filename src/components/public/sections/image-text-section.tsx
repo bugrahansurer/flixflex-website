@@ -64,7 +64,7 @@ export function ImageTextSection({
                 className={cn(
                   "ff-shape-button inline-flex items-center gap-2.5",
                   "px-8 py-4 text-sm font-bold",
-                  "bg-[var(--ff-purple)] text-white hover:bg-[var(--ff-purple-hover)] transition-all"
+                  "bg-[var(--ff-purple-strong)] text-white hover:bg-[var(--ff-purple-hover)] transition-all"
                 )}
               >
                 {ctaLabel}

@@ -109,7 +109,7 @@ export function FlixFlexNavbar({ siteSettings = {}, megaMenuServices = [] }: Fli
                     "group inline-flex items-center justify-center gap-1.5 cursor-pointer",
                     "px-4 py-2 text-[11px] font-medium transition-colors duration-300",
                     solid
-                      ? "bg-[var(--ff-purple)] text-white border border-[var(--ff-purple)] hover:bg-[var(--ff-purple-hover)] hover:border-[var(--ff-purple-hover)] hover:shadow-[0_6px_24px_rgba(255,79,216,0.4)]"
+                      ? "bg-[var(--ff-purple-strong)] text-white border border-[var(--ff-purple-strong)] hover:bg-[var(--ff-purple-hover)] hover:border-[var(--ff-purple-hover)] hover:shadow-[0_6px_24px_rgba(255,79,216,0.4)]"
                       : darkBg
                         ? "bg-white/10 backdrop-blur-md text-white border border-white/20 hover:bg-white/20 hover:border-white/40"
                         : "bg-foreground/10 backdrop-blur-md text-black border border-foreground/30 hover:bg-black/10 hover:border-black/40"

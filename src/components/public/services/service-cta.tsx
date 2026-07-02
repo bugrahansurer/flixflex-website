@@ -88,7 +88,7 @@ export function ServiceCta({ serviceTitle }: ServiceCtaProps) {
                 "ff-shape-button",
                 "group inline-flex items-center justify-center gap-2.5",
                 "px-10 py-5 h-9 text-[15px] font-medium",
-                "bg-[var(--ff-purple)] text-white border border-[var(--ff-purple)]",
+                "bg-[var(--ff-purple-strong)] text-white border border-[var(--ff-purple-strong)]",
                 "hover:bg-[var(--ff-purple-hover)] hover:border-[var(--ff-purple-hover)]",
                 "hover:shadow-[0_4px_32px_rgba(255, 79, 216,0.5)]",
                 "transition-all duration-200"

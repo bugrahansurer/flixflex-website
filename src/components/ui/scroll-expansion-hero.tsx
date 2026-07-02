@@ -10,7 +10,7 @@ import Image from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ChevronDown } from '@/lib/icons';
 import MuxPlayer from "@/components/ui/lazy-mux-player";
-import { getMuxPlaybackId, muxThumbnail } from "@/lib/mux-url";
+import { getMuxPlaybackId, muxThumbnail, muxPosterSrcSet } from "@/lib/mux-url";
 
 export interface ScrollExpandMediaProps {
   mediaType?: 'video' | 'image';
@@ -274,6 +274,8 @@ export const ScrollExpandMedia = ({
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={effectivePoster}
+                    srcSet={muxId ? muxPosterSrcSet(muxId) : undefined}
+                    sizes='100vw'
                     alt=''
                     aria-hidden
                     fetchPriority='high'
@@ -291,6 +293,7 @@ export const ScrollExpandMedia = ({
                     playsInline
                     poster={effectivePoster || undefined}
                     nohotkeys
+                    onError={() => { /* headless/kısıtlı ağda geçici MediaError'ı sessizce geç */ }}
                     className='w-full h-full rounded-[inherit] [--controls:none] [--media-object-fit:cover]'
                   />
                 ) : (

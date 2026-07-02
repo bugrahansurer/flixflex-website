@@ -34,9 +34,27 @@ interface MediaItem {
   muxPlaybackId: string | null
   width?: number | null
   height?: number | null
+  duration?: number | null
   createdAt: string
   size: number
   folderId: string | null
+}
+
+// Saniyeyi mm:ss biçimine çevirir (Mux'tan gelen süre bilgisi).
+function formatDuration(sec?: number | null): string | null {
+  if (!sec || sec <= 0) return null
+  const m = Math.floor(sec / 60)
+  const s = Math.round(sec % 60)
+  return `${m}:${s.toString().padStart(2, "0")}`
+}
+
+// Yükseklikten çözünürlük etiketi (4K / 1080p …).
+function resolutionLabel(height?: number | null): string | null {
+  if (!height) return null
+  if (height >= 2160) return "4K"
+  if (height >= 1080) return "1080p"
+  if (height >= 720) return "720p"
+  return `${height}p`
 }
 
 export default function MediaPage() {
@@ -197,7 +215,7 @@ export default function MediaPage() {
       if (isVideo) {
         const res = await fetch("/api/media/upload-url", {
           method: "POST",
-          body: JSON.stringify({ title: file.name, type: "video" }),
+          body: JSON.stringify({ title: file.name, type: "video", size: file.size }),
         })
         const data = await res.json()
         if (!res.ok) throw new Error(data.error || "Yükleme hazırlığı başarısız oldu")
@@ -612,15 +630,14 @@ export default function MediaPage() {
                             <span className="ff-shape-button px-2.5 py-0.5 rounded-sm bg-[#f7f7f5] border border-[#CCCCCC] text-[8px] font-bold text-[#ff4fd8]">
                               {item.mimeType?.split('/').pop()?.toUpperCase() || item.type.toUpperCase()}
                             </span>
-                            <span className="text-[9px] text-[#666666] font-medium">
-                              {item.type === "video" && item.height ? (
-                                item.height >= 2160 ? "4K" :
-                                  item.height >= 1080 ? "1080p" :
-                                    item.height >= 720 ? "720p" :
-                                      item.height + "p"
-                              ) : (
-                                item.size ? (item.size / (1024 * 1024)).toFixed(2) + " MB" : "0.00 MB"
-                              )}
+                            <span className="text-[9px] text-[#666666] font-medium truncate max-w-[90px]">
+                              {item.type === "video"
+                                ? [
+                                    resolutionLabel(item.height),
+                                    formatDuration(item.duration),
+                                    item.size ? (item.size / (1024 * 1024)).toFixed(1) + " MB" : null,
+                                  ].filter(Boolean).join(" · ") || "—"
+                                : item.size ? (item.size / (1024 * 1024)).toFixed(2) + " MB" : "0.00 MB"}
                             </span>
                           </div>
                           <span className="text-[8px] text-[var(--foreground-faint)]">
@@ -692,8 +709,32 @@ export default function MediaPage() {
                 <div className="hidden sm:block w-px h-8 bg-white/10" />
                 <div>
                   <p className="text-sm font-bold opacity-60">Boyut</p>
-                  <p className="text-md font-medium">{(previewItem.size / (1024 * 1024)).toFixed(2)} MB</p>
+                  <p className="text-md font-medium">
+                    {previewItem.size ? (previewItem.size / (1024 * 1024)).toFixed(2) + " MB" : "—"}
+                  </p>
                 </div>
+                {previewItem.type === "video" && resolutionLabel(previewItem.height) && (
+                  <>
+                    <div className="hidden sm:block w-px h-8 bg-white/10" />
+                    <div>
+                      <p className="text-sm font-bold opacity-60">Çözünürlük</p>
+                      <p className="text-md font-medium">
+                        {previewItem.width && previewItem.height
+                          ? `${previewItem.width}×${previewItem.height}`
+                          : resolutionLabel(previewItem.height)}
+                      </p>
+                    </div>
+                  </>
+                )}
+                {previewItem.type === "video" && formatDuration(previewItem.duration) && (
+                  <>
+                    <div className="hidden sm:block w-px h-8 bg-white/10" />
+                    <div>
+                      <p className="text-sm font-bold opacity-60">Süre</p>
+                      <p className="text-md font-medium">{formatDuration(previewItem.duration)}</p>
+                    </div>
+                  </>
+                )}
                 <div className="hidden sm:block w-px h-8 bg-white/10" />
                 <div>
                   <p className="text-sm font-bold opacity-60">Tür</p>

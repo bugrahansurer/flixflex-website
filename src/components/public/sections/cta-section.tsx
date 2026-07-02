@@ -120,7 +120,7 @@ export function CTASection({
                 className={cn(
                   "ff-shape-button group inline-flex items-center justify-center gap-2",
                   "px-6 py-3 text-sm font-medium",
-                  "bg-[var(--ff-purple)] text-white border border-[var(--ff-purple)]",
+                  "bg-[var(--ff-purple-strong)] text-white border border-[var(--ff-purple-strong)]",
                   "hover:shadow-[0_6px_28px_rgba(255,79,216,0.35)]",
                   "transition-shadow duration-300 whitespace-nowrap"
                 )}

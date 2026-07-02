@@ -37,6 +37,9 @@ export async function POST(req: Request) {
       // Ignored, use defaults
     }
     const { title, type } = body
+    // Mux, streaming asset'i için byte-boyutu döndürmez; bu yüzden orijinal
+    // dosya boyutunu istemciden alıp saklıyoruz (kart/önizlemede gösterilir).
+    const size = typeof body.size === "number" && body.size > 0 ? Math.round(body.size) : undefined
 
     if (type !== "video") {
       return NextResponse.json({ error: "Bu endpoint şu an yalnızca video yüklemelerini destekler." }, { status: 400 })
@@ -78,6 +81,7 @@ export async function POST(req: Request) {
           url:        "",
           muxUploadId: upload.id,
           muxStatus:  "uploading",
+          size,
         },
       })
 

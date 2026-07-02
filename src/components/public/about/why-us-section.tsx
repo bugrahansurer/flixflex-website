@@ -12,7 +12,7 @@ import { DIFFERENTIATORS, type Differentiator } from "./about-data"
 function BrandMark() {
   return (
     <span className="inline-flex items-center gap-2">
-      <span className="flex items-center justify-center w-7 h-7 md:w-8 md:h-8 shrink-0 bg-[var(--ff-purple)] text-white font-bold text-[10px] md:text-xs tracking-tight">
+      <span className="flex items-center justify-center w-7 h-7 md:w-8 md:h-8 shrink-0 bg-[var(--ff-purple-strong)] text-white font-bold text-[10px] md:text-xs tracking-tight">
         FF
       </span>
       <span className="font-display font-extrabold tracking-tight leading-none text-base md:text-lg text-[var(--foreground)]">
@@ -30,7 +30,7 @@ function VsBadge({ className }: { className?: string }) {
       className={cn(
         "flex items-center justify-center shrink-0",
         "w-9 h-9 md:w-11 md:h-11 rounded-full",
-        "bg-[var(--ff-purple)] text-white",
+        "bg-[var(--ff-purple-strong)] text-white",
         "font-display font-extrabold text-[10px] md:text-xs tracking-tight",
         "shadow-[0_0_18px_rgba(255,79,216,0.5)]",
         className
@@ -245,7 +245,7 @@ export function WhyUsSection({ eyebrow, headline, subheadline, items }: WhyUsSec
               "ff-shape-button",
               "group inline-flex items-center justify-center gap-2.5",
               "px-4 py-2 text-sm font-medium",
-              "bg-[var(--ff-purple)] text-white border border-[var(--ff-purple)]",
+              "bg-[var(--ff-purple-strong)] text-white border border-[var(--ff-purple-strong)]",
               "hover:bg-[var(--ff-purple-hover)] hover:border-[var(--ff-purple-hover)]",
               "hover:shadow-[0_4px_24px_rgba(255, 79, 216,0.45)]",
               "transition-all duration-200"

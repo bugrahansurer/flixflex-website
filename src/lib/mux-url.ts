@@ -43,3 +43,14 @@ export function muxThumbnail(playbackId: string, opts?: { time?: number; width?:
   const q = params.toString()
   return `https://image.mux.com/${playbackId}/thumbnail.webp${q ? `?${q}` : ""}`
 }
+
+/**
+ * Full-bleed hero poster için duyarlı srcSet. Tarayıcı cihaz genişliğine göre
+ * (sizes="100vw") uygun boyutu seçer — mobilde küçük, masaüstünde büyük görsel
+ * indirir. Böylece "poster'ı doğru boyutlandır" (overize) uyarısı önlenir.
+ */
+export function muxPosterSrcSet(playbackId: string): string {
+  return [640, 828, 1080, 1600]
+    .map((w) => `${muxThumbnail(playbackId, { width: w })} ${w}w`)
+    .join(", ")
+}

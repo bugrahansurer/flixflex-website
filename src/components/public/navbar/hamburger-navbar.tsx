@@ -240,7 +240,7 @@ export function HamburgerNavbar({ siteSettings = {} }: HamburgerNavbarProps) {
                     className={cn(
                       "ff-shape-button h-11 group inline-flex items-center justify-center gap-2.5 cursor-pointer",
                       "px-6 py-3 text-[12px] font-medium",
-                      "bg-[var(--ff-purple)] text-white border border-[var(--ff-purple)]",
+                      "bg-[var(--ff-purple-strong)] text-white border border-[var(--ff-purple-strong)]",
                       "hover:bg-[var(--ff-purple-hover)] hover:border-[var(--ff-purple-hover)]",
                       "transition-colors duration-200"
                     )}

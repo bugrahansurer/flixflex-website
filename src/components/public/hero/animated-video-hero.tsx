@@ -10,7 +10,7 @@ import {
   useReducedMotion,
 } from "framer-motion"
 import MuxPlayer from "@/components/ui/lazy-mux-player"
-import { getMuxData, muxThumbnail } from "@/lib/mux-url"
+import { getMuxData, muxThumbnail, muxPosterSrcSet } from "@/lib/mux-url"
 import { cn } from "@/lib/utils"
 import { useMediaQuery } from "@/hooks/use-media-query"
 
@@ -156,6 +156,8 @@ export function HeroVideo({
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={posterSrc}
+            srcSet={playbackId ? muxPosterSrcSet(playbackId) : undefined}
+            sizes="100vw"
             alt=""
             aria-hidden
             fetchPriority="high"
@@ -173,6 +175,7 @@ export function HeroVideo({
             playsInline
             poster={posterUrl}
             nohotkeys
+            onError={() => { /* headless/kısıtlı ağda geçici MediaError'ı sessizce geç */ }}
             streamType="on-demand"
             className="absolute inset-0 w-full h-full"
             style={{

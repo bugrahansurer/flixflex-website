@@ -9,7 +9,7 @@ import { fadeInUp, withDelay } from "@/lib/animations"
 import { cn } from "@/lib/utils"
 import { ScrollIndicator } from "./scroll-indicator"
 import MuxPlayer from "@/components/ui/lazy-mux-player"
-import { getMuxData, muxThumbnail } from "@/lib/mux-url"
+import { getMuxData, muxThumbnail, muxPosterSrcSet } from "@/lib/mux-url"
 
 interface HeroVideoSectionProps {
   title?: string
@@ -77,6 +77,8 @@ export function HeroVideoSection({
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={posterSrc}
+              srcSet={playbackId ? muxPosterSrcSet(playbackId) : undefined}
+              sizes="100vw"
               alt=""
               aria-hidden
               fetchPriority="high"
@@ -94,6 +96,7 @@ export function HeroVideoSection({
               playsInline
               poster={posterUrl}
               nohotkeys
+              onError={() => { /* headless/kısıtlı ağda geçici MediaError'ı sessizce geç */ }}
               className="absolute inset-0 w-full h-full object-cover"
               style={{
                 objectFit: "cover",

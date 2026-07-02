@@ -187,7 +187,7 @@ export function MobileMenu({ open, onClose, links, siteSettings = {} }: MobileMe
                 className={cn(
                   "ff-shape-container group flex w-full items-center justify-center gap-2.5",
                   "px-8 py-4 text-sm font-medium",
-                  "bg-[var(--ff-purple)] text-white border border-[var(--ff-purple)]",
+                  "bg-[var(--ff-purple-strong)] text-white border border-[var(--ff-purple-strong)]",
                   "hover:bg-[var(--ff-purple-hover)] hover:border-[var(--ff-purple-hover)]",
                   "transition-colors duration-200"
                 )}

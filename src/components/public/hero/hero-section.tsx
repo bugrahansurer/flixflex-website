@@ -136,7 +136,7 @@ export function HeroSection({
           <Magnetic>
             <Link
               href={primaryCta?.href || "/iletisim"}
-              className="ff-shape-button group inline-flex items-center justify-center gap-2.5 border border-[var(--ff-purple)] bg-[var(--ff-purple)] px-8 py-4 text-sm font-medium uppercase tracking-[0.05em] text-white transition-shadow duration-300 hover:shadow-[0_8px_36px_rgba(255,79,216,0.45)]"
+              className="ff-shape-button group inline-flex items-center justify-center gap-2.5 border border-[var(--ff-purple-strong)] bg-[var(--ff-purple-strong)] px-8 py-4 text-sm font-medium uppercase tracking-[0.05em] text-white transition-shadow duration-300 hover:shadow-[0_8px_36px_rgba(255,79,216,0.45)]"
             >
               {primaryCta?.label || "Keşfet"}
               <ArrowUpRight size={16} className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />

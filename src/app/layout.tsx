@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Syne, DM_Sans, Geist } from "next/font/google"
+import { Syne, DM_Sans, Geist, Outfit, Inter } from "next/font/google"
 import { cookies, headers } from "next/headers"
 import "./globals.css"
 import { ThemeProvider } from "@/components/shared/theme-provider"
@@ -22,6 +22,22 @@ const dmSans = DM_Sans({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600"],
   variable: "--font-dm-sans",
+  display: "swap",
+})
+
+// Aktif temanın varsayılan fontları (Outfit + Inter) da self-host edilir;
+// böylece tema bunları seçtiğinde runtime Google Fonts isteği gitmez.
+const outfit = Outfit({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-outfit",
+  display: "swap",
+})
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-inter",
   display: "swap",
 })
 
@@ -71,7 +87,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       // suppressHydrationWarning is kept for any residual client-side attribute
       // adjustments (e.g. color-scheme style) that happen synchronously on mount.
       suppressHydrationWarning
-      className={cn(syne.variable, dmSans.variable, theme, "font-sans", geist.variable)}
+      className={cn(syne.variable, dmSans.variable, outfit.variable, inter.variable, theme, "font-sans", geist.variable)}
     >
       <body className="min-h-screen antialiased bg-[var(--background)] text-[var(--foreground)]">
         {/* LCP/medya kaynaklarına erken bağlantı — hero video poster (Mux) ve

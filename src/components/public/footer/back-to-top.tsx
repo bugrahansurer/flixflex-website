@@ -30,7 +30,7 @@ export function BackToTop() {
           className={cn(
             "ff-shape-button fixed bottom-22 right-6 md:bottom-6 z-40",
             "w-11 h-11 flex items-center justify-center",
-            "bg-[var(--ff-purple)] text-white",
+            "bg-[var(--ff-purple-strong)] text-white",
             "shadow-[0_10px_30px_rgba(255, 79, 216,0.35)]",
             "hover:bg-[var(--ff-purple-dark)] hover:shadow-[0_15px_40px_var(--ff-purple)/0.5)]",
             "transition-colors duration-200"

@@ -165,7 +165,7 @@ export function ServicesShowcase({
           <div className="mt-14 flex justify-center">
             <Link
               href={ctaHref}
-              className="ff-shape-button group inline-flex items-center gap-1.5 bg-[var(--ff-purple)] px-6 py-3 text-sm font-semibold text-white transition-colors duration-300 hover:bg-[var(--ff-purple-hover)]"
+              className="ff-shape-button group inline-flex items-center gap-1.5 bg-[var(--ff-purple-strong)] px-6 py-3 text-sm font-semibold text-white transition-colors duration-300 hover:bg-[var(--ff-purple-hover)]"
             >
               {ctaLabel}
               <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />

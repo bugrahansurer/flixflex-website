@@ -87,6 +87,8 @@ export function cssVarsFromPalette(
     "Syne":    "var(--font-syne)",
     "DM Sans": "var(--font-dm-sans)",
     "Geist":   "var(--font-sans)",
+    "Outfit":  "var(--font-outfit)",
+    "Inter":   "var(--font-inter)",
   }
   const familyValue = (name: string) =>
     SELF_HOSTED[name] ?? `"${name}"`
