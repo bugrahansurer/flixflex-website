@@ -75,3 +75,4 @@ prisma/backups/db_dump.sql
 # Stray / geçici tasarım dosyaları
 .backups/
 /manifesto-*.jpeg
+old-dump.json
