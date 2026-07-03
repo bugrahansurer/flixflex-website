@@ -1,11 +1,15 @@
 // ═══════════════════════════════════════════════════════════
 // FlixFlex — Third-party marketing pixels (GA4 / GTM / Meta Pixel)
 //
-// Injected into the public site ONLY when the corresponding ID is set
-// in Ayarlar → Entegrasyonlar. IDs are validated against strict formats
-// before injection so a malformed / malicious settings value can never
-// break out of the inline script. These fire for the ad platforms;
-// our own dashboard/report numbers come from first-party tracking.
+// GTM + Consent Mode "beforeInteractive" ile SUNUCUDA HTML'e render edilir;
+// böylece GTM'in "Test Et" (sunucu-fetch) doğrulaması etiketi tanır ve
+// script'ler erken çalışır. ID'ler enjeksiyondan önce katı formata karşı
+// doğrulanır — bozuk/zararlı bir ayar değeri snippet'ten kaçamaz.
+//
+// Google Consent Mode v2: varsayılan izin "denied"; çerez banner'ı
+// (CookieConsent) kabul edilince gtag('consent','update', granted) çağırır.
+// Böylece GTM/GA yüklenir + tespit edilir ama izin verilene kadar çerezsiz
+// (cookieless) çalışır.
 // ═══════════════════════════════════════════════════════════
 
 import Script from "next/script"
@@ -21,12 +25,47 @@ interface SitePixelsProps {
 }
 
 export function SitePixels({ gaId, gtmId, pixelId }: SitePixelsProps) {
-  const ga = gaId && GA_RE.test(gaId) ? gaId : null
-  const gtm = gtmId && GTM_RE.test(gtmId) ? gtmId : null
-  const pixel = pixelId && PIXEL_RE.test(pixelId) ? pixelId : null
+  // Ayar değerleri kopyala-yapıştırla baştaki/sondaki boşluk içerebilir
+  // (ör. " GTM-PBLDVMD2"). Doğrulamadan önce trim et — aksi halde regex
+  // başarısız olur ve etiket HİÇ enjekte edilmez.
+  const gaClean = gaId?.trim()
+  const gtmClean = gtmId?.trim()
+  const pixelClean = pixelId?.trim()
+
+  const ga = gaClean && GA_RE.test(gaClean) ? gaClean : null
+  const gtm = gtmClean && GTM_RE.test(gtmClean) ? gtmClean : null
+  const pixel = pixelClean && PIXEL_RE.test(pixelClean) ? pixelClean : null
+
+  if (!ga && !gtm && !pixel) return null
 
   return (
     <>
+      {/* ── Consent Mode v2 varsayılanı — tüm etiketlerden ÖNCE ── */}
+      <Script id="ff-consent-default" strategy="beforeInteractive">
+        {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}` +
+          `var _c=(document.cookie.match(/(?:^|; )ff_cookie_consent=([^;]+)/)||[])[1];` +
+          `var _g=_c==='accepted'?'granted':'denied';` +
+          `gtag('consent','default',{ad_storage:_g,analytics_storage:_g,ad_user_data:_g,ad_personalization:_g,wait_for_update:500});`}
+      </Script>
+
+      {/* ── Google Tag Manager (standart snippet, sunucuda render) ── */}
+      {gtm && (
+        <>
+          <Script id="ff-gtm" strategy="beforeInteractive">
+            {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${gtm}');`}
+          </Script>
+          <noscript>
+            <iframe
+              src={`https://www.googletagmanager.com/ns.html?id=${gtm}`}
+              height="0"
+              width="0"
+              style={{ display: "none", visibility: "hidden" }}
+              title="gtm"
+            />
+          </noscript>
+        </>
+      )}
+
       {/* ── Google Analytics 4 (gtag.js) ── */}
       {ga && (
         <>
@@ -35,16 +74,9 @@ export function SitePixels({ gaId, gtmId, pixelId }: SitePixelsProps) {
             strategy="afterInteractive"
           />
           <Script id="ff-ga4-init" strategy="afterInteractive">
-            {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${ga}',{send_page_view:true});`}
+            {`gtag('js',new Date());gtag('config','${ga}',{send_page_view:true});`}
           </Script>
         </>
-      )}
-
-      {/* ── Google Tag Manager ── */}
-      {gtm && (
-        <Script id="ff-gtm-init" strategy="afterInteractive">
-          {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${gtm}');`}
-        </Script>
       )}
 
       {/* ── Meta (Facebook) Pixel ── */}

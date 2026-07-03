@@ -9,6 +9,7 @@ import { getSetting } from "@/lib/settings"
 import { auth } from "@/lib/auth"
 import { AnalyticsTracker } from "@/components/analytics/analytics-tracker"
 import { SitePixels } from "@/components/analytics/site-pixels"
+import { CookieConsent } from "@/components/analytics/cookie-consent"
 
 export default async function PublicLayout({
   children,
@@ -84,6 +85,7 @@ export default async function PublicLayout({
       </PageTransition>
       <FlixFlexFooter siteSettings={siteSettings} />
       <AppointmentModal />
+      <CookieConsent />
     </ParallaxProvider>
   )
 }

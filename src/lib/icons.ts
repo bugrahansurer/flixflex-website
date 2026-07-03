@@ -35,6 +35,7 @@ export {
   IconCalendar as Calendar,
   IconCalendarEvent as CalendarDays,
   IconCamera as Camera,
+  IconCookie as Cookie,
   IconCheck as Check,
   IconCircleCheck as CheckCircle,
   IconCircleCheck as CheckCircle2,

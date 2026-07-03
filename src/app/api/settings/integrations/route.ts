@@ -39,10 +39,11 @@ export async function POST(req: NextRequest) {
     if (body.geminiKey !== undefined)    await setSetting("ai.provider.gemini.key",    encryptSecret(body.geminiKey))
     if (body.defaultModel !== undefined) await setSetting("ai.default.model",          body.defaultModel)
 
-    // Analytics — public IDs, stored as-is
-    if (body.gaMeasurementId !== undefined) await setSetting("analytics.google.ga4", body.gaMeasurementId)
-    if (body.gtmId !== undefined)           await setSetting("analytics.google.gtm", body.gtmId)
-    if (body.pixelId !== undefined)         await setSetting("analytics.meta.pixel", body.pixelId)
+    // Analytics — public IDs, stored trimmed (baştaki/sondaki boşluk snippet
+    // regex'ini bozup etiketin hiç enjekte edilmemesine yol açıyordu).
+    if (body.gaMeasurementId !== undefined) await setSetting("analytics.google.ga4", String(body.gaMeasurementId).trim())
+    if (body.gtmId !== undefined)           await setSetting("analytics.google.gtm", String(body.gtmId).trim())
+    if (body.pixelId !== undefined)         await setSetting("analytics.meta.pixel", String(body.pixelId).trim())
 
     // Marketing — encrypt API keys at rest
     if (body.resendApiKey !== undefined) await setSetting("mail.resend.key", encryptSecret(body.resendApiKey))
