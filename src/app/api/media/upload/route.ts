@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { put } from "@vercel/blob"
+import { r2Put, isR2Configured } from "@/lib/r2"
 import sharp from "sharp"
 import { auth } from "@/lib/auth"
 import { hasPermission } from "@/lib/rbac/permissions"
@@ -276,10 +276,10 @@ export async function POST(req: Request) {
       )
     }
 
-    // ── Blob token check ─────────────────────────────────────
-    if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    // ── R2 config check ──────────────────────────────────────
+    if (!isR2Configured()) {
       return NextResponse.json(
-        { error: "Vercel Blob token yapılandırılmamış." },
+        { error: "Cloudflare R2 depolama yapılandırılmamış." },
         { status: 503 }
       )
     }
@@ -300,19 +300,15 @@ export async function POST(req: Request) {
     // ── Compress / process with sharp ────────────────────────
     const processed = await processImage(rawBuffer, file.type, file.name)
 
-    // ── Upload compressed buffer to Vercel Blob ──────────────
+    // ── Upload compressed buffer to Cloudflare R2 ────────────
     const blobPath = safeBlobPath(file.name, processed.ext)
-    let blob: Awaited<ReturnType<typeof put>>
+    let blob: { url: string }
     try {
-      blob = await put(blobPath, processed.buffer, {
-        access:          "public",
-        addRandomSuffix: false,
-        contentType:     processed.mimeType,
-      })
+      blob = await r2Put(blobPath, processed.buffer, processed.mimeType)
     } catch (blobErr) {
-      // Log full error server-side only; never expose blob SDK internals
-      // (may contain storage endpoint URLs or token fragments) to the client.
-      console.error("[media/upload BLOB_ERROR]", blobErr)
+      // Log full error server-side only; never expose storage SDK internals
+      // (may contain endpoint URLs or credential fragments) to the client.
+      console.error("[media/upload R2_ERROR]", blobErr)
       return NextResponse.json(
         { error: "Depolama servisi şu an kullanılamıyor." },
         { status: 503 }

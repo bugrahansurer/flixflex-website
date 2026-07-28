@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { z } from "zod"
 import { prisma } from "@/lib/prisma"
 import { del } from "@vercel/blob"
+import { r2DeleteByUrl, isR2Url } from "@/lib/r2"
 import { auth } from "@/lib/auth"
 import { hasPermission } from "@/lib/rbac/permissions"
 import { video } from "@/lib/mux"
@@ -66,8 +67,10 @@ export async function DELETE(req: Request) {
     // 1. Delete from DB
     await prisma.media.delete({ where: { id } })
 
-    // 2. Delete from Vercel Blob (if it's a blob URL)
-    if (media.url.includes("blob.vercel-storage.com")) {
+    // 2. Delete from storage — R2 (current) or Vercel Blob (legacy records)
+    if (isR2Url(media.url)) {
+      await r2DeleteByUrl(media.url).catch((err) => console.error("[media/delete] r2 del failed:", err))
+    } else if (media.url.includes("blob.vercel-storage.com")) {
       await del(media.url).catch((err) => console.error("[media/delete] blob del failed:", err))
     }
 

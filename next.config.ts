@@ -22,6 +22,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "*.supabase.co" },
       { protocol: "https", hostname: "cdn.pixabay.com" },
       { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },
+      { protocol: "https", hostname: "*.r2.dev" },
       { protocol: "https", hostname: "image.mux.com" },
       { protocol: "https", hostname: "me7aitdbxq.ufs.sh" },
     ],
