@@ -16,11 +16,20 @@ import {
 import { getPageBySlug } from "@/lib/page-data"
 import { listPublishedPortfolio, listPublishedMainServices } from "@/lib/content-store"
 import { PageRenderer } from "@/components/public/page-renderer"
+import { getSetting } from "@/lib/settings"
 
-export const metadata: Metadata = {
-  title: "FlixFlex — Markaları Domine Eder",
-  description:
-    "Hız. Güç. Esneklik. FlixFlex; markaları bir sonraki seviyeye taşıyan next-gen reklam ajansıdır.",
+export async function generateMetadata(): Promise<Metadata> {
+  const [metaTitle, metaDescription] = await Promise.all([
+    getSetting<string>("site_meta_title"),
+    getSetting<string>("site_meta_description"),
+  ])
+  return {
+    // absolute: ana sayfa başlığı "%s | FlixFlex" şablonuna girmesin
+    title: { absolute: metaTitle || "FlixFlex — Markaları Domine Eder" },
+    description:
+      metaDescription ||
+      "Hız. Güç. Esneklik. FlixFlex; markaları bir sonraki seviyeye taşıyan next-gen reklam ajansıdır.",
+  }
 }
 
 export default async function HomePage() {
