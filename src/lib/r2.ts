@@ -1,20 +1,29 @@
 // ═══════════════════════════════════════════════════════════
 // Cloudflare R2 storage client (REST API üzerinden)
 //
-// NOT: R2'nin S3-uyumlu endpoint'i (*.r2.cloudflarestorage.com)
+// NOT 1: R2'nin S3-uyumlu endpoint'i (*.r2.cloudflarestorage.com)
 // bazı ISS'lerde SNI seviyesinde engelli (TR'de doğrulandı).
 // Bu yüzden nesne yükleme/silme işlemleri api.cloudflare.com
 // üzerinden yapılır — dashboard'la aynı altyapı, her yerden erişilir.
-// Dosya servis etme tarafı zaten r2.dev / custom domain kullanır.
+//
+// NOT 2: r2.dev bazı ISS'lerde engelli ve IPv6 üzerinden hatalı 404
+// dönebiliyor. Bu yüzden medya URL'leri site-yerel `/media-cdn/<key>`
+// biçiminde üretilir; app/media-cdn/[...key]/route.ts bu isteği
+// api.cloudflare.com üzerinden karşılar. Tarayıcı hiçbir zaman
+// r2.dev'e doğrudan bağlanmaz.
 //
 // Gerekli env:
 //   CLOUDFLARE_ACCOUNT_ID  hesap ID'si
 //   CLOUDFLARE_API_TOKEN   R2 yetkili API token (cfat_...)
 //   R2_BUCKET              bucket adı (örn. flixflex-media)
-//   R2_PUBLIC_BASE_URL     https://pub-xxxx.r2.dev (sonda / olmadan)
+//   R2_PUBLIC_BASE_URL     https://pub-xxxx.r2.dev (rewrite hedefi,
+//                          sonda / olmadan)
 // ═══════════════════════════════════════════════════════════
 
 const API_BASE = "https://api.cloudflare.com/client/v4"
+
+/** Site-yerel medya yolu ön eki (next.config rewrite kaynağıyla aynı). */
+export const MEDIA_CDN_PREFIX = "/media-cdn"
 
 /** True when every R2 env var required for uploads is present. */
 export function isR2Configured(): boolean {
@@ -55,18 +64,34 @@ export async function r2Put(
     const text = await res.text().catch(() => "")
     throw new Error(`R2 PUT failed (${res.status}): ${text.slice(0, 300)}`)
   }
-  const base = process.env.R2_PUBLIC_BASE_URL!.replace(/\/+$/, "")
-  return { url: `${base}/${key}` }
+  // Site-yerel yol döndürülür (ISS engellerinden bağımsız); rewrite
+  // bunu r2.dev'e proxy'ler. DB'ye de bu göreli yol yazılır.
+  return { url: `${MEDIA_CDN_PREFIX}/${key}` }
 }
 
 /**
- * Delete an object from R2 given its public URL.
- * Silently ignores URLs that don't belong to our public base.
+ * Extract the R2 object key from a stored media URL.
+ * Supports both current site-local paths (/media-cdn/<key>) and
+ * legacy absolute r2.dev URLs written before the proxy migration.
+ * Returns null for foreign URLs (e.g. Vercel Blob, Mux).
+ */
+function keyFromUrl(url: string): string | null {
+  if (url.startsWith(`${MEDIA_CDN_PREFIX}/`)) {
+    return decodeURIComponent(url.slice(MEDIA_CDN_PREFIX.length + 1)) || null
+  }
+  const base = process.env.R2_PUBLIC_BASE_URL?.replace(/\/+$/, "")
+  if (base && url.startsWith(`${base}/`)) {
+    return decodeURIComponent(url.slice(base.length + 1)) || null
+  }
+  return null
+}
+
+/**
+ * Delete an object from R2 given its stored media URL.
+ * Silently ignores URLs that don't belong to R2.
  */
 export async function r2DeleteByUrl(url: string): Promise<void> {
-  const base = process.env.R2_PUBLIC_BASE_URL?.replace(/\/+$/, "")
-  if (!base || !url.startsWith(`${base}/`)) return
-  const key = decodeURIComponent(url.slice(base.length + 1))
+  const key = keyFromUrl(url)
   if (!key) return
   const res = await fetch(objectApiUrl(key), {
     method: "DELETE",
@@ -79,8 +104,7 @@ export async function r2DeleteByUrl(url: string): Promise<void> {
   }
 }
 
-/** True when the given URL points at our R2 public bucket. */
+/** True when the given URL points at an R2 object (current or legacy form). */
 export function isR2Url(url: string): boolean {
-  const base = process.env.R2_PUBLIC_BASE_URL?.replace(/\/+$/, "")
-  return Boolean(base && url.startsWith(`${base}/`))
+  return keyFromUrl(url) !== null
 }
