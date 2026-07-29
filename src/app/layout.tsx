@@ -53,11 +53,16 @@ export async function generateMetadata(): Promise<Metadata> {
   // Favicon yalnızca admin'den (Ayarlar → Site → Site Favicon) seçildiyse gösterilir.
   // Seçilmediyse hiç favicon tanımlanmaz — statik favicon.ico kaldırıldığı için
   // Next/Vercel varsayılan faviconu da çıkmaz (site faviconsuz olur).
-  const favicon = await getSetting<string>("site_favicon")
+  const [favicon, metaTitle, metaDescription] = await Promise.all([
+    getSetting<string>("site_favicon"),
+    getSetting<string>("site_meta_title"),
+    getSetting<string>("site_meta_description"),
+  ])
+  const defaultTitle = metaTitle || "FlixFlex — Next-Gen Reklam Ajansı"
   return {
     metadataBase: new URL(metadataBaseUrl),
-    title: { default: "FlixFlex — Next-Gen Reklam Ajansı", template: "%s | FlixFlex" },
-    description: "Hız. Güç. Esneklik. FlixFlex ile markanızı büyütün.",
+    title: { default: defaultTitle, template: "%s | FlixFlex" },
+    description: metaDescription || "Hız. Güç. Esneklik. FlixFlex ile markanızı büyütün.",
     openGraph: {
       type: "website",
       locale: "tr_TR",
