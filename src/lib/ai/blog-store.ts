@@ -18,9 +18,9 @@ import type { BlogPost } from "@/components/public/blog/blog-data"
 import { slugify, readingTime } from "@/lib/utils"
 
 const DEFAULT_AUTHOR = {
-  name: "FlixFlex AI",
-  role: "AI Content Engine",
-  initials: "AI",
+  name: "Buğrahan Sürer",
+  role: "Founder & Creative Director",
+  initials: "BS",
 }
 
 const DEFAULT_GRADIENT = "from-[var(--ff-purple)]/30 via-[var(--ff-purple-dark)]/20 to-[var(--ff-dark)]"
