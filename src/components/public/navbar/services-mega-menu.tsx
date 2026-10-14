@@ -1,5 +1,6 @@
 "use client"
 
+import { CtaLink } from "@/components/public/cta-link"
 import * as React from "react"
 import Link from "next/link"
 import { AnimatePresence, motion } from "framer-motion"
@@ -383,7 +384,7 @@ function CtaPanel() {
       </div>
 
       {/* CTA button */}
-      <Link
+      <CtaLink
         href="/iletisim"
         className={cn(
           "ff-shape-button",
@@ -401,7 +402,7 @@ function CtaPanel() {
           size={13}
           className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
         />
-      </Link>
+      </CtaLink>
 
       {/* Secondary link */}
       <Link

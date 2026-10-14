@@ -1,5 +1,6 @@
 "use client"
 
+import { CtaLink } from "@/components/public/cta-link"
 import * as React from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
@@ -82,9 +83,9 @@ export function ParentServicePage({ service, serviceIndex }: ParentServicePagePr
               </p>
 
               <div className="flex flex-wrap gap-4 mt-2">
-                <Link href="/iletisim" className="ff-btn ff-btn-primary inline-flex items-center h-9 font-semibold text-xs gap-2">
+                <CtaLink href="/iletisim" className="ff-btn ff-btn-primary inline-flex items-center h-9 font-semibold text-xs gap-2">
                   Hemen Başlayalım
-                </Link>
+                </CtaLink>
                 <Link href="/hizmetler" className="ff-btn ff-btn-ghost inline-flex items-center gap-2">
                   ← Tüm Hizmetler
                 </Link>

@@ -1,7 +1,7 @@
 "use client"
 
+import { CtaLink } from "@/components/public/cta-link"
 import * as React from "react"
-import Link from "next/link"
 import { motion, useScroll, useTransform } from "framer-motion"
 import { ArrowUpRight, Play, Volume2, VolumeX } from "@/lib/icons"
 import { AnimatedHeading } from "@/components/ui"
@@ -177,7 +177,7 @@ export function HeroVideoSection({
             animate="visible"
             className="flex flex-wrap items-center justify-center gap-5"
           >
-            <Link
+            <CtaLink
               href={primaryCta?.href || "/iletisim"}
               className={cn(
                 "ff-shape-button",
@@ -189,9 +189,9 @@ export function HeroVideoSection({
             >
               {primaryCta?.label || "Projeyi Başlat"}
               <ArrowUpRight size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-            </Link>
+            </CtaLink>
 
-            <Link
+            <CtaLink
               href={secondaryCta?.href || "/portfolio"}
               className={cn(
                 "ff-shape-button",
@@ -203,7 +203,7 @@ export function HeroVideoSection({
             >
               <Play size={16} fill="currentColor" />
               {secondaryCta?.label || "Showreel İzle"}
-            </Link>
+            </CtaLink>
           </motion.div>
         </motion.div>
       </div>

@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils"
 import { sanitizeHtml } from "@/lib/sanitize"
 import { StarField } from "@/components/ui/star-field"
 import { ArrowUpRight, Maximize2, X, Play, Pause } from "@/lib/icons"
+import { CtaLink } from "@/components/public/cta-link"
 
 // ═══════════════════════════════════════════════════
 // ModernManifestoSection — BBDO-style Per-Line Justified Edition
@@ -905,7 +906,7 @@ export function ModernManifestoSection({
             {/* Interactive Call to Action */}
             {ctaLabel && (
               <div className="lg:col-span-4 lg:flex lg:justify-end">
-                <a
+                <CtaLink
                   href={ctaHref || "#"}
                   className="ff-shape-button group relative inline-flex items-center gap-3.5 h-12 px-8 py-2 bg-[var(--foreground)]/5 border border-[var(--border)] hover:border-[var(--ff-purple)]/40 text-xs font-bold text-[var(--foreground)] overflow-hidden transition-all duration-300"
                 >
@@ -923,7 +924,7 @@ export function ModernManifestoSection({
                   <div className="absolute inset-0 scale-95 group-hover:scale-100 opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none" style={{
                     boxShadow: `inset 0 0 12px ${accentHex}20`
                   }} />
-                </a>
+                </CtaLink>
               </div>
             )}
           </div>

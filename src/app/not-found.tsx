@@ -61,8 +61,11 @@ export default function NotFound() {
             <Home size={14} />
             Ana Sayfaya Dön
           </Link>
-          <Link
-            href="/iletisim"
+          {/* 404 kök layout'ta (randevu modal'ı yok) — ana sayfaya tam yükleme
+              ile gidip formu ?randevu=1 parametresiyle açar */}
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+          <a
+            href="/?randevu=1"
             className="ff-shape-button group inline-flex items-center justify-center h-9 gap-2.5 px-3 text-xs font-medium bg-transparent text-[var(--foreground)] border border-[var(--border)] hover:border-[var(--ff-purple)] hover:text-[var(--ff-purple)] transition-all duration-200"
           >
             İletişime Geç
@@ -70,7 +73,7 @@ export default function NotFound() {
               size={14}
               className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
             />
-          </Link>
+          </a>
         </div>
       </div>
     </main>

@@ -1,6 +1,6 @@
 "use client"
 
-import Link from "next/link"
+import { CtaLink } from "@/components/public/cta-link"
 import { motion } from "framer-motion"
 import { X, Check } from "@/lib/icons"
 import { cn } from "@/lib/utils"
@@ -239,7 +239,7 @@ export function WhyUsSection({ eyebrow, headline, subheadline, items }: WhyUsSec
           <p className="text-base md:text-lg text-[var(--foreground-muted)] max-w-xl leading-relaxed">
             Markanız için doğru ortağı buldunuz. Bir adım atmak yeter.
           </p>
-          <Link
+          <CtaLink
             href="/iletisim"
             className={cn(
               "ff-shape-button",
@@ -267,7 +267,7 @@ export function WhyUsSection({ eyebrow, headline, subheadline, items }: WhyUsSec
                 strokeLinecap="square"
               />
             </svg>
-          </Link>
+          </CtaLink>
         </motion.div>
       </div>
     </section>

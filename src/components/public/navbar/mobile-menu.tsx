@@ -1,5 +1,6 @@
 "use client"
 
+import { CtaLink } from "@/components/public/cta-link"
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -181,7 +182,7 @@ export function MobileMenu({ open, onClose, links, siteSettings = {} }: MobileMe
               variants={mobileMenuItemVariants}
               className="mt-10 space-y-4"
             >
-              <Link
+              <CtaLink
                 href="/iletisim"
                 onClick={onClose}
                 className={cn(
@@ -194,7 +195,7 @@ export function MobileMenu({ open, onClose, links, siteSettings = {} }: MobileMe
               >
                 Seninle Büyüyelim
                 <ArrowUpRight size={16} />
-              </Link>
+              </CtaLink>
               <div className="flex items-center justify-between pt-2">
                 <span className="text-xs uppercase tracking-widest text-[var(--foreground-muted)]">
                   Tema

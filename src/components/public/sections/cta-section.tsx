@@ -1,7 +1,7 @@
 "use client"
 
+import { CtaLink } from "@/components/public/cta-link"
 import React from "react"
-import Link from "next/link"
 import { motion } from "framer-motion"
 import { ArrowUpRight } from "@/lib/icons"
 import { cn } from "@/lib/utils"
@@ -115,7 +115,7 @@ export function CTASection({
             className="flex flex-col sm:flex-row items-center gap-3"
           >
             <Magnetic>
-              <Link
+              <CtaLink
                 href={primaryCTA.href}
                 className={cn(
                   "ff-shape-button group inline-flex items-center justify-center gap-2",
@@ -131,11 +131,11 @@ export function CTASection({
                   aria-hidden
                   className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                 />
-              </Link>
+              </CtaLink>
             </Magnetic>
 
             <Magnetic>
-              <Link
+              <CtaLink
                 href={secondaryCTA.href}
                 className={cn(
                   "ff-shape-button group inline-flex items-center justify-center gap-2",
@@ -151,7 +151,7 @@ export function CTASection({
                   aria-hidden
                   className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                 />
-              </Link>
+              </CtaLink>
             </Magnetic>
           </motion.div>
 

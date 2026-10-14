@@ -1,6 +1,6 @@
 "use client"
 
-import Link from "next/link"
+import { CtaLink } from "@/components/public/cta-link"
 import { useRef } from "react"
 import { motion } from "framer-motion"
 import { ExternalLink } from "@/lib/icons"
@@ -162,12 +162,12 @@ export function TeamSection({ eyebrow, headline, subheadline, members }: TeamSec
           className="mt-12 text-center text-xs text-[var(--foreground-faint)]"
         >
           + Büyümeye devam ediyoruz — ekibimize katılmak için{" "}
-          <Link
+          <CtaLink
             href="/iletisim"
             className="text-[var(--ff-purple)] underline underline-offset-2 hover:no-underline transition-all"
           >
             bize ulaşın
-          </Link>
+          </CtaLink>
           .
         </motion.p>
       </div>

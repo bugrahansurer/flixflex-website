@@ -1,5 +1,6 @@
 "use client"
 
+import { CtaLink } from "@/components/public/cta-link"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { ArrowUpRight } from "@/lib/icons"
@@ -82,7 +83,7 @@ export function ServiceCta({ serviceTitle }: ServiceCtaProps) {
             variants={fadeInUp}
             className="flex flex-col sm:flex-row items-center gap-4"
           >
-            <Link
+            <CtaLink
               href="/iletisim"
               className={cn(
                 "ff-shape-button",
@@ -100,7 +101,7 @@ export function ServiceCta({ serviceTitle }: ServiceCtaProps) {
                 aria-hidden
                 className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
               />
-            </Link>
+            </CtaLink>
 
             <Link
               href="/hizmetler"

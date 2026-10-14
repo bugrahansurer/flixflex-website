@@ -9,8 +9,8 @@
 // dashboard görseli / starfield kaldırıldı.
 // ═══════════════════════════════════════════════════════════
 
+import { CtaLink } from "@/components/public/cta-link"
 import * as React from "react"
-import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { ArrowUpRight, Play } from "@/lib/icons"
 import { cn } from "@/lib/utils"
@@ -134,22 +134,22 @@ export function HeroSection({
           className="mt-10 flex flex-wrap items-center justify-center gap-4"
         >
           <Magnetic>
-            <Link
+            <CtaLink
               href={primaryCta?.href || "/iletisim"}
               className="ff-shape-button group inline-flex items-center justify-center gap-2.5 border border-[var(--ff-purple-strong)] bg-[var(--ff-purple-strong)] px-8 py-4 text-sm font-medium uppercase tracking-[0.05em] text-white transition-shadow duration-300 hover:shadow-[0_8px_36px_rgba(255,79,216,0.45)]"
             >
               {primaryCta?.label || "Keşfet"}
               <ArrowUpRight size={16} className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </Link>
+            </CtaLink>
           </Magnetic>
           <Magnetic>
-            <Link
+            <CtaLink
               href={secondaryCta?.href || "/portfolio"}
               className="ff-shape-button group inline-flex items-center justify-center gap-2.5 border border-[var(--ff-purple)] bg-transparent px-8 py-4 text-sm font-medium uppercase tracking-[0.05em] text-[var(--ff-purple)] transition-colors duration-300 hover:bg-[var(--ff-purple)]/10"
             >
               <Play size={14} />
               {secondaryCta?.label || "Portfolyomuzu Gör"}
-            </Link>
+            </CtaLink>
           </Magnetic>
         </motion.div>
 

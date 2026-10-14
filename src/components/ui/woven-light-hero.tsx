@@ -4,6 +4,7 @@ import React, { useRef, useEffect } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import * as THREE from 'three';
 import { usePrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion';
+import { CtaLink } from '@/components/public/cta-link';
 
 export interface WovenLightHeroProps {
   headline?: string;
@@ -88,13 +89,13 @@ export const WovenLightHero = ({
           {subheadline}
         </motion.p>
         <motion.div initial={{ opacity: 0 }} animate={buttonControls} className="mt-10">
-          <a
+          <CtaLink
             href={ctaHref}
             className="inline-block rounded-full border-2 border-[var(--ff-purple)]/20 bg-[var(--ff-purple)]/10 px-8 py-3 font-semibold text-[var(--ff-purple)] backdrop-blur-sm transition-all hover:bg-[var(--ff-purple)]/20 dark:border-[var(--ff-purple)]/20 dark:bg-[var(--ff-purple)]/10 dark:text-[var(--ff-purple)] dark:hover:bg-[var(--ff-purple)]/20"
             style={{ fontFamily: "'Inter', sans-serif" }}
           >
             {ctaLabel}
-          </a>
+          </CtaLink>
         </motion.div>
       </div>
     </div>

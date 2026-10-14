@@ -1,7 +1,7 @@
 "use client"
 
+import { CtaLink } from "@/components/public/cta-link"
 import * as React from "react"
-import Link from "next/link"
 import Image from "next/image"
 import { motion } from "framer-motion"
 import { ArrowUpRight } from "@/lib/icons"
@@ -59,7 +59,7 @@ export function ImageTextSection({
               </p>
             )}
             {ctaLabel && ctaHref && (
-              <Link
+              <CtaLink
                 href={ctaHref}
                 className={cn(
                   "ff-shape-button inline-flex items-center gap-2.5",
@@ -69,7 +69,7 @@ export function ImageTextSection({
               >
                 {ctaLabel}
                 <ArrowUpRight size={18} />
-              </Link>
+              </CtaLink>
             )}
           </motion.div>
 

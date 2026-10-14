@@ -8,6 +8,7 @@
 // Page-builder section'ı ("services-showcase") — admin'den düzenlenebilir.
 // ═══════════════════════════════════════════════════════════
 
+import { CtaLink } from "@/components/public/cta-link"
 import * as React from "react"
 import Link from "next/link"
 import { motion, useReducedMotion } from "framer-motion"
@@ -163,13 +164,13 @@ export function ServicesShowcase({
 
         {ctaLabel && ctaHref && (
           <div className="mt-14 flex justify-center">
-            <Link
+            <CtaLink
               href={ctaHref}
               className="ff-shape-button group inline-flex items-center gap-1.5 bg-[var(--ff-purple-strong)] px-6 py-3 text-sm font-semibold text-white transition-colors duration-300 hover:bg-[var(--ff-purple-hover)]"
             >
               {ctaLabel}
               <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </Link>
+            </CtaLink>
           </div>
         )}
       </div>
