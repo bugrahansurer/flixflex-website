@@ -1,6 +1,7 @@
 "use client"
 
 import { CtaLink } from "@/components/public/cta-link"
+import Image from "next/image"
 import { motion } from "framer-motion"
 import { X, Check } from "@/lib/icons"
 import { cn } from "@/lib/utils"
@@ -11,14 +12,13 @@ import { DIFFERENTIATORS, type Differentiator } from "./about-data"
 // ── Brand mark (inline, theme-safe, no link) ──────────
 function BrandMark() {
   return (
-    <span className="inline-flex items-center gap-2">
-      <span className="flex items-center justify-center w-7 h-7 md:w-8 md:h-8 shrink-0 bg-[var(--ff-purple-strong)] text-white font-bold text-[10px] md:text-xs tracking-tight">
-        FF
-      </span>
-      <span className="font-display font-extrabold tracking-tight leading-none text-base md:text-lg text-[var(--foreground)]">
-        Flix<span className="text-[var(--ff-purple)]">Flex</span>
-      </span>
-    </span>
+    <Image
+      src="/logo/flixflex-logo-green.webp"
+      alt="FlixFlex"
+      width={559}
+      height={96}
+      className="h-6 md:h-7 w-auto shrink-0"
+    />
   )
 }
 
