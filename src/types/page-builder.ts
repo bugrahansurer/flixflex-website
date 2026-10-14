@@ -175,6 +175,7 @@ export const videoTestimonialsPropsSchema = z.object({
     name: z.string().default("İsim Soyisim"),
     role: z.string().default("Görev"),
     company: z.string().default("Marka"),
+    logoUrl: z.string().optional(),
   })).default([
     { videoUrl: "", posterUrl: "", name: "Elif Şahin", role: "CMO", company: "Novatek" },
     { videoUrl: "", posterUrl: "", name: "Mert Yıldırım", role: "Kurucu", company: "Orbitly" },

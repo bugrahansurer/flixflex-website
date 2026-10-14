@@ -21,6 +21,8 @@ export interface VideoTestimonialItem {
   name?: string
   role?: string
   company?: string
+  /** Müşteri/marka logosu — varsa baş harf yuvarlağının yerine gösterilir */
+  logoUrl?: string
 }
 
 interface VideoTestimonialsSectionProps {
@@ -84,9 +86,22 @@ function VideoCard({ item, index }: { item: VideoTestimonialItem; index: number 
 
       {/* Footer — kişi bilgisi */}
       <div className="flex items-center gap-3 pt-4">
-        <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-ff-purple/10 backdrop-blur-xs border border-ff-purple/32 font-display text-[13px] font-bold text-ff-purple">
-          {initialsOf(item.name)}
-        </span>
+        {item.logoUrl ? (
+          <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-white border border-ff-purple/32">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={item.logoUrl}
+              alt={item.company ? `${item.company} logosu` : ""}
+              loading="lazy"
+              decoding="async"
+              className="h-full w-full object-contain p-1.5"
+            />
+          </span>
+        ) : (
+          <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-ff-purple/10 backdrop-blur-xs border border-ff-purple/32 font-display text-[13px] font-bold text-ff-purple">
+            {initialsOf(item.name)}
+          </span>
+        )}
         <div className="min-w-0">
           <p className="truncate text-[13.5px] font-semibold text-[var(--foreground)]">{item.name || "İsim Soyisim"}</p>
           <p className="truncate text-[11.5px] text-[var(--foreground-muted)] -mt-1">

@@ -464,15 +464,15 @@ function JsonDraftField({
 }
 
 // ── Video Referanslar öğe editörü ─────────────────
-interface VTItem { videoUrl?: string; name?: string; role?: string; company?: string; posterUrl?: string }
+interface VTItem { videoUrl?: string; name?: string; role?: string; company?: string; posterUrl?: string; logoUrl?: string }
 
 function VideoTestimonialItemsEditor({ value, onChange }: { value: unknown; onChange: (v: unknown) => void }) {
   const items: VTItem[] = Array.isArray(value) ? (value as VTItem[]) : []
-  const [pickerFor, setPickerFor] = React.useState<number | null>(null)
+  const [pickerFor, setPickerFor] = React.useState<{ index: number; kind: "video" | "logo" } | null>(null)
 
   const patch = (i: number, p: Partial<VTItem>) =>
     onChange(items.map((it, idx) => (idx === i ? { ...it, ...p } : it)))
-  const add = () => onChange([...items, { videoUrl: "", name: "", role: "", company: "" }])
+  const add = () => onChange([...items, { videoUrl: "", name: "", role: "", company: "", logoUrl: "" }])
   const remove = (i: number) => onChange(items.filter((_, idx) => idx !== i))
 
   const inputCls = cn(
@@ -507,7 +507,7 @@ function VideoTestimonialItemsEditor({ value, onChange }: { value: unknown; onCh
             )}
             <button
               type="button"
-              onClick={() => setPickerFor(i)}
+              onClick={() => setPickerFor({ index: i, kind: "video" })}
               className={cn(
                 "ff-shape-button h-8 flex items-center justify-center gap-2 border border-dashed border-[#CCCCCC]",
                 "text-[10.5px] font-semibold text-[#666666] hover:border-[#ff4fd8] hover:text-[#ff4fd8] hover:bg-[#ff4fd8]/5 transition-all duration-150",
@@ -515,6 +515,33 @@ function VideoTestimonialItemsEditor({ value, onChange }: { value: unknown; onCh
             >
               <Video size={12} /> {fileName ? "Videoyu Değiştir" : "Video Seç"}
             </button>
+
+            {/* Müşteri logosu — sitede isim yanındaki yuvarlakta görünür */}
+            <div className="flex items-center gap-2">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#CCCCCC] bg-white">
+                {it.logoUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={it.logoUrl} alt="" className="h-full w-full object-contain p-1" />
+                ) : (
+                  <ImageIcon size={12} className="text-[#999999]" />
+                )}
+              </span>
+              <button
+                type="button"
+                onClick={() => setPickerFor({ index: i, kind: "logo" })}
+                className={cn(
+                  "ff-shape-button h-8 flex-1 flex items-center justify-center gap-2 border border-dashed border-[#CCCCCC]",
+                  "text-[10.5px] font-semibold text-[#666666] hover:border-[#ff4fd8] hover:text-[#ff4fd8] hover:bg-[#ff4fd8]/5 transition-all duration-150",
+                )}
+              >
+                <ImageIcon size={12} /> {it.logoUrl ? "Logoyu Değiştir" : "Müşteri Logosu Seç"}
+              </button>
+              {it.logoUrl && (
+                <button type="button" onClick={() => patch(i, { logoUrl: "" })} className="text-[#999999] hover:text-[#e03434] shrink-0" title="Logoyu kaldır">
+                  <X size={12} />
+                </button>
+              )}
+            </div>
 
             {/* Kişi bilgisi */}
             <input className={inputCls} placeholder="İsim Soyisim" value={it.name ?? ""} onChange={(e) => patch(i, { name: e.target.value })} />
@@ -539,8 +566,11 @@ function VideoTestimonialItemsEditor({ value, onChange }: { value: unknown; onCh
 
       {pickerFor !== null && (
         <MediaPicker
-          allowedTypes={["video"]}
-          onSelect={(url) => { patch(pickerFor, { videoUrl: url }); setPickerFor(null) }}
+          allowedTypes={[pickerFor.kind === "logo" ? "image" : "video"]}
+          onSelect={(url) => {
+            patch(pickerFor.index, pickerFor.kind === "logo" ? { logoUrl: url } : { videoUrl: url })
+            setPickerFor(null)
+          }}
           onClose={() => setPickerFor(null)}
         />
       )}
