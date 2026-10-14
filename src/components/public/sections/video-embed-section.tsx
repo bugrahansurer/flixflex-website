@@ -4,10 +4,10 @@ import * as React from "react"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { fadeInUp } from "@/lib/animations"
-import MuxPlayer from "@/components/ui/lazy-mux-player"
-import { getMuxData } from "@/lib/mux-url"
 
-const isMuxUrl = (url: string) => url.includes("mux.com")
+// Doğrudan video dosyası mı (R2/CDN), yoksa YouTube/Vimeo gibi gömülebilir sayfa mı?
+const isDirectVideoUrl = (url: string) =>
+  /\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(url) || url.startsWith("/media-cdn/")
 
 interface VideoEmbedSectionProps {
   headline?: string
@@ -58,20 +58,18 @@ export function VideoEmbedSection({
             ratioClass
           )}>
             {videoUrl ? (
-              isMuxUrl(videoUrl) ? (() => {
-                const { playbackId, src } = getMuxData(videoUrl)
-                return (
-                  <MuxPlayer
-                    playbackId={playbackId || undefined}
-                    src={src || undefined}
-                    autoPlay={autoplay}
-                    muted={autoplay}
-                    className="absolute inset-0 w-full h-full"
-                    style={{ objectFit: "cover" }}
-                    streamType="on-demand"
-                  />
-                )
-              })() : (
+              isDirectVideoUrl(videoUrl) ? (
+                <video
+                  src={videoUrl}
+                  autoPlay={autoplay}
+                  muted={autoplay}
+                  loop={autoplay}
+                  controls={!autoplay}
+                  playsInline
+                  preload="metadata"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              ) : (
                 <iframe
                   src={`${embedUrl}${autoplay ? "?autoplay=1&mute=1" : ""}`}
                   title={headline || "Video Embed"}

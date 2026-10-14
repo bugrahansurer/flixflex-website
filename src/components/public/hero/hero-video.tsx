@@ -8,8 +8,6 @@ import { AnimatedHeading } from "@/components/ui"
 import { fadeInUp, withDelay } from "@/lib/animations"
 import { cn } from "@/lib/utils"
 import { ScrollIndicator } from "./scroll-indicator"
-import MuxPlayer from "@/components/ui/lazy-mux-player"
-import { getMuxData, muxThumbnail, muxPosterSrcSet } from "@/lib/mux-url"
 
 interface HeroVideoSectionProps {
   title?: string
@@ -52,14 +50,6 @@ export function HeroVideoSection({
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
 
   const effectiveVideoUrl = (isMobile && videoUrlMobile) ? videoUrlMobile : videoUrl
-  const isMux = effectiveVideoUrl.includes("mux.com") || (!effectiveVideoUrl.includes("/") && effectiveVideoUrl.length > 10)
-  const { playbackId, src } = getMuxData(effectiveVideoUrl)
-
-  // LCP optimizasyonu: MuxPlayer dynamic(ssr:false) → poster'ı geç getirir.
-  // Poster'ı SSR'da anında görünen, fetchPriority=high bir <img> olarak da
-  // basıyoruz; video hazır olunca üzerini örter. LCP ilk HTML'de bulunur.
-  const posterSrc =
-    posterUrl || (playbackId ? muxThumbnail(playbackId, { width: 1200 }) : undefined)
 
   return (
     <section
@@ -73,12 +63,10 @@ export function HeroVideoSection({
       >
         <div className="relative h-full w-full overflow-hidden">
           {/* SSR poster — LCP için anında boyanır, video yüklenince altında kalır */}
-          {posterSrc && (
+          {posterUrl && (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={posterSrc}
-              srcSet={playbackId ? muxPosterSrcSet(playbackId) : undefined}
-              sizes="100vw"
+              src={posterUrl}
               alt=""
               aria-hidden
               fetchPriority="high"
@@ -86,42 +74,17 @@ export function HeroVideoSection({
               className="absolute inset-0 w-full h-full object-cover"
             />
           )}
-          {isMux || src ? (
-            <MuxPlayer
-              playbackId={playbackId || undefined}
-              src={src || undefined}
-              autoPlay
-              muted={isMuted}
-              loop
-              playsInline
-              poster={posterUrl}
-              nohotkeys
-              onError={() => { /* headless/kısıtlı ağda geçici MediaError'ı sessizce geç */ }}
-              className="absolute inset-0 w-full h-full object-cover"
-              style={{
-                objectFit: "cover",
-                width: "100%",
-                height: "100%"
-              }}
-              streamType="on-demand"
-            />
-          ) : (
-            <video
-              autoPlay
-              muted={isMuted}
-              loop
-              playsInline
-              poster={posterUrl}
-              className="absolute inset-0 w-full h-full object-cover"
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover"
-              }}
-            >
-              <source src={effectiveVideoUrl} type="video/mp4" />
-            </video>
-          )}
+          <video
+            key={effectiveVideoUrl}
+            src={effectiveVideoUrl}
+            autoPlay
+            muted={isMuted}
+            loop
+            playsInline
+            preload="auto"
+            poster={posterUrl}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
         </div>
       </motion.div>
 

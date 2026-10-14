@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils"
 import { FFButton, FFInput } from "@/components/ui"
 import * as Dialog from "@radix-ui/react-dialog"
 import { toast } from "sonner"
+import { uploadMediaFile } from "@/lib/upload-client"
 
 interface MediaItem {
   id: string
@@ -61,26 +62,13 @@ export function ImagePicker({ value, onChange, label }: ImagePickerProps) {
     if (!file) return
 
     setUploading(true)
-    const formData = new FormData()
-    formData.append("file", file)
 
     try {
-      const res = await fetch("/api/media/upload", {
-        method: "POST",
-        body: formData,
-      })
-      const json = await res.json().catch(() => null)
-
-      if (!res.ok) {
-        throw new Error(json?.details || json?.error || "Görsel yüklenemedi")
-      }
-
-      if (json.success) {
-        setItems((prev) => [json.data, ...prev])
-        onChange(json.data.url)
-        setIsOpen(false)
-        toast.success("Görsel yüklendi")
-      }
+      const media = await uploadMediaFile(file)
+      setItems((prev) => [{ id: media.id, title: media.title, type: media.type, url: media.url, thumbnail: media.url }, ...prev])
+      onChange(media.url)
+      setIsOpen(false)
+      toast.success("Görsel yüklendi")
     } catch (err: unknown) {
       console.error(err)
       toast.error(err instanceof Error ? err.message : "Görsel yüklenemedi")

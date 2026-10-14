@@ -95,11 +95,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       className={cn(syne.variable, dmSans.variable, outfit.variable, inter.variable, theme, "font-sans", geist.variable)}
     >
       <body className="min-h-screen antialiased bg-[var(--background)] text-[var(--foreground)]">
-        {/* LCP/medya kaynaklarına erken bağlantı — hero video poster (Mux) ve
-            akış için el sıkışma gecikmesini azaltır. App Router bu <link>'leri
-            otomatik <head>'e taşır. */}
-        <link rel="preconnect" href="https://image.mux.com" />
-        <link rel="preconnect" href="https://stream.mux.com" />
+        {/* LCP/medya kaynağına (R2 CDN) erken bağlantı — hero video/poster için
+            el sıkışma gecikmesini azaltır. App Router bu <link>'i otomatik
+            <head>'e taşır. */}
+        {process.env.R2_PUBLIC_BASE_URL?.startsWith("https://") && (
+          <link rel="preconnect" href={new URL(process.env.R2_PUBLIC_BASE_URL).origin} />
+        )}
         {/* Active palette CSS vars — rendered server-side to avoid FOUC */}
         <ActivePaletteStyle />
         {/* a11y: skip to content for keyboard users */}

@@ -1,11 +1,9 @@
 import { NextResponse } from "next/server"
 import { z } from "zod"
 import { prisma } from "@/lib/prisma"
-import { del } from "@vercel/blob"
-import { r2DeleteByUrl, isR2Url } from "@/lib/r2"
+import { r2DeleteByUrl } from "@/lib/r2"
 import { auth } from "@/lib/auth"
 import { hasPermission } from "@/lib/rbac/permissions"
-import { video } from "@/lib/mux"
 
 // ── GET: List media ────────────────────────────────
 export async function GET(req: Request) {
@@ -67,22 +65,10 @@ export async function DELETE(req: Request) {
     // 1. Delete from DB
     await prisma.media.delete({ where: { id } })
 
-    // 2. Delete from storage — R2 (current) or Vercel Blob (legacy records)
-    if (isR2Url(media.url)) {
-      await r2DeleteByUrl(media.url).catch((err) => console.error("[media/delete] r2 del failed:", err))
-    } else if (media.url.includes("blob.vercel-storage.com")) {
-      await del(media.url).catch((err) => console.error("[media/delete] blob del failed:", err))
-    }
-
-    // 3. Delete the underlying Mux asset (aksi halde DB'den silinse de Mux'ta
-    //    video kalıp depolama/ücret üretmeye devam eder). Hata olsa da (ör.
-    //    asset zaten yok) isteği düşürme — DB silme zaten başarılı.
-    if (media.muxAssetId) {
-      try {
-        await video.assets.delete(media.muxAssetId)
-      } catch (err) {
-        console.error("[media/delete] Mux asset delete failed:", media.muxAssetId, err)
-      }
+    // 2. Delete from R2 (dosya + varsa ayrı poster). Hata olsa da isteği
+    //    düşürme — DB silme zaten başarılı.
+    for (const url of new Set([media.url, media.thumbnail].filter(Boolean) as string[])) {
+      await r2DeleteByUrl(url).catch((err) => console.error("[media/delete] r2 del failed:", err))
     }
 
     return NextResponse.json({ success: true })

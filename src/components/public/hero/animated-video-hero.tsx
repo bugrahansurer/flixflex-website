@@ -9,8 +9,6 @@ import {
   type MotionValue,
   useReducedMotion,
 } from "framer-motion"
-import MuxPlayer from "@/components/ui/lazy-mux-player"
-import { getMuxData, muxThumbnail, muxPosterSrcSet } from "@/lib/mux-url"
 import { cn } from "@/lib/utils"
 import { useMediaQuery } from "@/hooks/use-media-query"
 
@@ -96,9 +94,9 @@ export function VideoHeroProvider({
 
 // ── HeroVideo (background) ──────────────────────────────────
 interface HeroVideoProps {
-  /** Video source URL or Mux playbackId (desktop) */
+  /** Video source URL (desktop) */
   videoUrl?: string
-  /** Video source URL or Mux playbackId for mobile (optional, falls back to videoUrl) */
+  /** Video source URL for mobile (optional, falls back to videoUrl) */
   videoUrlMobile?: string
   /** Poster image before video loads */
   posterUrl?: string
@@ -130,19 +128,6 @@ export function HeroVideo({
   const activeVideoUrl =
     isMobileViewport && videoUrlMobile ? videoUrlMobile : videoUrl
 
-  // ── Video source detection ────────────────────────────
-  const isMux =
-    activeVideoUrl.includes("mux.com") ||
-    (!activeVideoUrl.includes("/") && activeVideoUrl.length > 10)
-  const { playbackId, src } = getMuxData(activeVideoUrl)
-
-  // LCP optimizasyonu: MuxPlayer dynamic(ssr:false) olduğundan poster'ı yalnızca
-  // hydrate sonrası getirir (geç keşif → yüksek LCP). Bunu önlemek için poster'ı
-  // SSR'da anında görünen, fetchPriority=high bir <img> olarak da basıyoruz;
-  // video hazır olunca üzerini örter. Böylece LCP öğesi ilk HTML'de bulunur.
-  const posterSrc =
-    posterUrl || (playbackId ? muxThumbnail(playbackId, { width: 1200 }) : undefined)
-
   return (
     <motion.div
       style={shouldReduce ? {} : { y, scale, opacity }}
@@ -152,12 +137,10 @@ export function HeroVideo({
       {/* Video wrapper */}
       <div className="relative h-full w-full overflow-hidden">
         {/* SSR poster — LCP için anında boyanır, video yüklenince altında kalır */}
-        {posterSrc && (
+        {posterUrl && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={posterSrc}
-            srcSet={playbackId ? muxPosterSrcSet(playbackId) : undefined}
-            sizes="100vw"
+            src={posterUrl}
             alt=""
             aria-hidden
             fetchPriority="high"
@@ -165,41 +148,17 @@ export function HeroVideo({
             className="absolute inset-0 w-full h-full object-cover"
           />
         )}
-        {isMux || src ? (
-          <MuxPlayer
-            playbackId={playbackId || undefined}
-            src={src || undefined}
-            autoPlay
-            muted
-            loop
-            playsInline
-            poster={posterUrl}
-            nohotkeys
-            onError={() => { /* headless/kısıtlı ağda geçici MediaError'ı sessizce geç */ }}
-            streamType="on-demand"
-            className="absolute inset-0 w-full h-full"
-            style={{
-              width: "100%",
-              height: "100%",
-              // MuxPlayer shadow DOM CSS variables — bu değişkenler
-              // shadow boundary'yi aşarak iç <video> elementine ulaşır.
-              ["--media-object-fit" as string]: "cover",
-              ["--media-object-position" as string]: "center center",
-            }}
-          />
-        ) : (
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            poster={posterUrl}
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
-          >
-            <source src={videoUrl} type="video/mp4" />
-          </video>
-        )}
+        <video
+          key={activeVideoUrl}
+          src={activeVideoUrl}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          poster={posterUrl}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
       </div>
     </motion.div>
   )

@@ -4,7 +4,7 @@
 // FlixFlex — Video Referanslar (page-builder section'ı)
 // Metin referanslarının video karşılığı: müşteri video görüşlerini
 // izlenebilir kartlarda gösterir. Admin'den (Sayfalar) eklenir; her öğe
-// bir video (Mux veya doğrudan URL) + isim/görev/marka içerir.
+// bir video (R2'deki dosya URL'si) + isim/görev/marka içerir.
 // ═══════════════════════════════════════════════════════════
 
 import * as React from "react"
@@ -12,8 +12,6 @@ import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { Eyebrow } from "@/components/ui/eyebrow"
 import { Quote } from "@/lib/icons"
-import MuxPlayer from "@/components/ui/lazy-mux-player"
-import { getMuxPlaybackId } from "@/lib/mux-url"
 
 export interface VideoTestimonialItem {
   videoUrl?: string
@@ -39,7 +37,6 @@ function initialsOf(name?: string): string {
 }
 
 function VideoCard({ item, index }: { item: VideoTestimonialItem; index: number }) {
-  const muxId = getMuxPlaybackId(item.videoUrl)
   const hasVideo = Boolean(item.videoUrl)
 
   return (
@@ -56,17 +53,10 @@ function VideoCard({ item, index }: { item: VideoTestimonialItem; index: number 
     >
       {/* Video */}
       <div className="ff-shape-container relative aspect-[4/5] w-full overflow-hidden bg-[var(--surface)]">
-        {muxId ? (
-          <MuxPlayer
-            playbackId={muxId}
-            streamType="on-demand"
-            poster={item.posterUrl || undefined}
-            playsInline
-            className="h-full w-full [--media-object-fit:cover]"
-          />
-        ) : hasVideo ? (
+        {hasVideo ? (
           <video
-            src={item.videoUrl}
+            // Poster yoksa ilk kareyi göster (#t medya fragmanı)
+            src={item.posterUrl ? item.videoUrl : `${item.videoUrl}#t=0.1`}
             poster={item.posterUrl || undefined}
             controls
             playsInline

@@ -51,12 +51,6 @@ const serverSchema = z.object({
   RESEND_API_KEY: z.string().startsWith("re_").optional(),
   RESEND_FROM_EMAIL: z.string().email().optional(),
 
-  // Mux Media
-  MUX_TOKEN_ID:     z.string().optional(),
-  MUX_TOKEN_SECRET: z.string().optional(),
-  // Mux webhook signing secret — production deployers MUST set this.
-  // Kept optional so dev environments without webhook integration still build.
-  MUX_WEBHOOK_SECRET: z.string().min(16).optional(),
 
   // Dev-only fallback admin credentials gate (see lib/auth/index.ts)
   NEXTAUTH_FALLBACK_ADMIN: z.string().optional(),

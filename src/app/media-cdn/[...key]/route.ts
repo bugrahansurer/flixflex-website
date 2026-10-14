@@ -1,62 +1,60 @@
 // ═══════════════════════════════════════════════════════════
-// /media-cdn/<key> — R2 medya proxy'si
+// /media-cdn/<key> — eski medya yolu (geriye dönük uyumluluk)
 //
-// Medya dosyalarını sitenin KENDİ adresinden servis eder. Tarayıcı
-// hiçbir zaman r2.dev'e bağlanmaz; çünkü:
-//   1. r2.dev bazı ISS'lerde engelli (TR mobil operatörleri),
-//   2. r2.dev IPv6 üzerinden hatalı 404 dönebiliyor (doğrulandı).
-// Nesne, her yerden erişilebilen api.cloudflare.com üzerinden
-// çekilir ve immutable cache header'ıyla döndürülür — Vercel CDN
-// yanıtı kenarda önbellekler, R2'ye istek nadiren gider.
+// Medya artık bucket'ın public adresinden (R2_PUBLIC_BASE_URL,
+// örn. https://cdn.flixflex.com.tr) Cloudflare kenarından servis
+// ediliyor. Bu rota, DB'de/içerikte kalmış eski `/media-cdn/...`
+// linklerini oraya kalıcı olarak yönlendirir.
+//
+// Public adres tanımlı değilse (örn. lokal geliştirme) nesneyi
+// R2'den Range destekli akıtır — video ileri/geri sarma çalışır.
 // ═══════════════════════════════════════════════════════════
+
+import { isR2Configured, r2Get, r2PublicBase, r2PublicUrl, MEDIA_CDN_PREFIX } from "@/lib/r2"
 
 export const runtime = "nodejs"
 
-const API_BASE = "https://api.cloudflare.com/client/v4"
-
 export async function GET(
-  _req: Request,
+  req: Request,
   { params }: { params: Promise<{ key: string[] }> },
 ) {
   const { key: segments } = await params
 
-  // safeBlobPath her anahtarı "media/" altına yazar; proxy'nin token'lı
-  // erişimi yalnızca bu ön eke açılır (bucket'ta başka veri olursa
-  // dışarı sızmasın).
-  const key = segments.join("/")
+  // Yalnızca "media/" ön ekine izin ver — bucket'ta başka veri olursa dışarı sızmasın.
+  const key = segments.map(decodeURIComponent).join("/")
   if (!key.startsWith("media/") || key.includes("..")) {
     return new Response("Not found", { status: 404 })
   }
 
-  const acc = process.env.CLOUDFLARE_ACCOUNT_ID
-  const token = process.env.CLOUDFLARE_API_TOKEN
-  const bucket = process.env.R2_BUCKET
-  if (!acc || !token || !bucket) {
+  if (r2PublicBase() !== MEDIA_CDN_PREFIX) {
+    return Response.redirect(r2PublicUrl(key), 308)
+  }
+
+  if (!isR2Configured()) {
     return new Response("Storage not configured", { status: 503 })
   }
 
-  const encodedKey = segments.map(encodeURIComponent).join("/")
-  const upstream = await fetch(
-    `${API_BASE}/accounts/${acc}/r2/buckets/${bucket}/objects/${encodedKey}`,
-    { headers: { Authorization: `Bearer ${token}` } },
-  ).catch(() => null)
+  const range = req.headers.get("range")
+  const upstream = await r2Get(key, range).catch(() => null)
 
-  if (!upstream || !upstream.ok) {
+  if (!upstream || !(upstream.ok || upstream.status === 206)) {
     return new Response("Not found", {
       status: upstream?.status === 404 ? 404 : 502,
-      // Silinmiş/eksik dosya için kısa negatif cache — yeniden yüklenirse
-      // birkaç dakika içinde düzelsin, ama CDN 404 fırtınasını da emsin.
       headers: { "Cache-Control": "public, max-age=60, s-maxage=300" },
     })
   }
 
-  return new Response(upstream.body, {
-    status: 200,
-    headers: {
-      "Content-Type": upstream.headers.get("content-type") ?? "application/octet-stream",
-      // Anahtarlar UUID'li ve değişmez → süresiz önbellek güvenli.
-      "Cache-Control": "public, max-age=31536000, s-maxage=31536000, immutable",
-      "X-Content-Type-Options": "nosniff",
-    },
+  const headers = new Headers({
+    "Content-Type": upstream.headers.get("content-type") ?? "application/octet-stream",
+    // Anahtarlar UUID'li ve değişmez → süresiz önbellek güvenli.
+    "Cache-Control": "public, max-age=31536000, s-maxage=31536000, immutable",
+    "Accept-Ranges": "bytes",
+    "X-Content-Type-Options": "nosniff",
   })
+  for (const h of ["content-length", "content-range", "etag", "last-modified"]) {
+    const v = upstream.headers.get(h)
+    if (v) headers.set(h, v)
+  }
+
+  return new Response(upstream.body, { status: upstream.status, headers })
 }

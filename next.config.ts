@@ -1,5 +1,14 @@
 import type { NextConfig } from "next"
 
+// Medya R2'de: public custom domain'den okunur, tarayıcı büyük dosyaları
+// imzalı URL ile S3 endpoint'ine yükler. CSP ve next/image bunlara izin vermeli.
+const mediaOrigin = process.env.R2_PUBLIC_BASE_URL?.startsWith("https://")
+  ? new URL(process.env.R2_PUBLIC_BASE_URL).origin
+  : ""
+const r2UploadOrigin = process.env.CLOUDFLARE_ACCOUNT_ID
+  ? `https://${process.env.CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`
+  : ""
+
 const nextConfig: NextConfig = {
   // ── Dev cross-origin (HMR over LAN IP) ────────────
   // Next.js 16 blocks dev assets / HMR websocket requests from
@@ -21,9 +30,11 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "randomuser.me" },
       { protocol: "https", hostname: "*.supabase.co" },
       { protocol: "https", hostname: "cdn.pixabay.com" },
+      { protocol: "https", hostname: "cdn.flixflex.com.tr" },
+      // Geçiş dönemi: R2 taşıma script'i çalışana kadar eski linkler
+      // (scripts/migrate-media-to-r2.mjs sonrası kaldırılacak)
       { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },
       { protocol: "https", hostname: "*.r2.dev" },
-      { protocol: "https", hostname: "image.mux.com" },
       { protocol: "https", hostname: "me7aitdbxq.ufs.sh" },
     ],
     formats: ["image/avif", "image/webp"],
@@ -65,18 +76,18 @@ const nextConfig: NextConfig = {
           // ── CSP: locks down script/style/font/img/media/connect sources.
           // 'unsafe-inline' on script-src is required by Next.js today
           // (for the hydration runtime). Can be tightened with nonces
-          // in a follow-up. Mux player + Anthropic + Google Fonts
+          // in a follow-up. R2 medya + Anthropic + Google Fonts
           // origins are allow-listed explicitly.
           {
             key: "Content-Security-Policy",
             value:
               "default-src 'self'; " +
-              `script-src 'self' 'unsafe-inline' ${evalRule}https://*.mux.com https://www.gstatic.com https://www.googletagmanager.com https://*.google-analytics.com https://connect.facebook.net; ` +
+              `script-src 'self' 'unsafe-inline' ${evalRule}https://www.gstatic.com https://www.googletagmanager.com https://*.google-analytics.com https://connect.facebook.net; ` +
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
               "font-src 'self' https://fonts.gstatic.com data:; " +
               "img-src 'self' data: blob: https:; " +
-              "media-src 'self' blob: https://*.mux.com; " +
-              `connect-src 'self' ${wsRules}https://*.mux.com https://*.litix.io https://api.anthropic.com https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://connect.facebook.net https://www.facebook.com; ` +
+              `media-src 'self' blob: ${mediaOrigin}; ` +
+              `connect-src 'self' ${wsRules}${r2UploadOrigin} https://api.anthropic.com https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://connect.facebook.net https://www.facebook.com; ` +
               "frame-src 'self' https://www.googletagmanager.com https://td.doubleclick.net; " +
               "frame-ancestors 'none';",
           },

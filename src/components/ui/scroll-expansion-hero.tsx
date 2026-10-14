@@ -9,8 +9,6 @@ import {
 import Image from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ChevronDown } from '@/lib/icons';
-import MuxPlayer from "@/components/ui/lazy-mux-player";
-import { getMuxPlaybackId, muxThumbnail, muxPosterSrcSet } from "@/lib/mux-url";
 
 export interface ScrollExpandMediaProps {
   mediaType?: 'video' | 'image';
@@ -171,11 +169,8 @@ export const ScrollExpandMedia = ({
   const firstWord = title ? title.split(' ')[0] : '';
   const restOfTitle = title ? title.split(' ').slice(1).join(' ') : '';
 
-  // LCP optimizasyonu: MuxPlayer dynamic(ssr:false) → poster'ı geç getirir.
-  // Poster'ı SSR'da anında görünen fetchPriority=high <img> olarak da basıyoruz.
-  const muxId = getMuxPlaybackId(mediaSrc);
-  const effectivePoster =
-    posterSrc || (muxId ? muxThumbnail(muxId, { width: 1200 }) : undefined);
+  // LCP optimizasyonu: poster'ı SSR'da anında görünen fetchPriority=high <img> olarak da basıyoruz.
+  const effectivePoster = posterSrc;
 
   return (
     <div
@@ -274,8 +269,6 @@ export const ScrollExpandMedia = ({
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={effectivePoster}
-                    srcSet={muxId ? muxPosterSrcSet(muxId) : undefined}
-                    sizes='100vw'
                     alt=''
                     aria-hidden
                     fetchPriority='high'
@@ -283,34 +276,19 @@ export const ScrollExpandMedia = ({
                     className='absolute inset-0 w-full h-full object-cover rounded-[inherit]'
                   />
                 )}
-                {muxId ? (
-                  <MuxPlayer
-                    playbackId={muxId}
-                    streamType='on-demand'
-                    autoPlay='muted'
-                    muted
-                    loop
-                    playsInline
-                    poster={effectivePoster || undefined}
-                    nohotkeys
-                    onError={() => { /* headless/kısıtlı ağda geçici MediaError'ı sessizce geç */ }}
-                    className='w-full h-full rounded-[inherit] [--controls:none] [--media-object-fit:cover]'
-                  />
-                ) : (
-                  <video
-                    src={mediaSrc}
-                    poster={posterSrc}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    preload='auto'
-                    className='w-full h-full object-cover rounded-[inherit]'
-                    controls={false}
-                    disablePictureInPicture
-                    disableRemotePlayback
-                  />
-                )}
+                <video
+                  src={mediaSrc}
+                  poster={posterSrc}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload='auto'
+                  className='relative w-full h-full object-cover rounded-[inherit]'
+                  controls={false}
+                  disablePictureInPicture
+                  disableRemotePlayback
+                />
                 <div
                   className='absolute inset-0 z-10'
                   style={{ pointerEvents: 'none' }}

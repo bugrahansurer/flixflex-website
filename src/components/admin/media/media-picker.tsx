@@ -34,8 +34,6 @@ interface MediaItem {
   mimeType: string | null
   url: string
   thumbnail: string | null
-  muxStatus: string | null
-  muxPlaybackId: string | null
   createdAt: string
   size: number
   folderId: string | null
@@ -406,7 +404,7 @@ export function MediaPicker({ onSelect, onClose, allowedTypes = ["image", "video
                                   {item.thumbnail ? (
                                     <img src={item.thumbnail} alt="" className="w-full h-full object-cover opacity-60" />
                                   ) : (
-                                    <Video size={20} className="text-[#666666]" />
+                                    <video src={`${item.url}#t=0.1`} preload="metadata" muted playsInline className="w-full h-full object-cover opacity-60" />
                                   )}
                                 </div>
                               )}
@@ -515,7 +513,7 @@ export function MediaPicker({ onSelect, onClose, allowedTypes = ["image", "video
                           {selectedItem.thumbnail ? (
                             <img src={selectedItem.thumbnail} alt="" className="w-full h-full object-cover opacity-80" />
                           ) : (
-                            <Video size={24} className="text-[#666666]" />
+                            <video src={`${selectedItem.url}#t=0.1`} preload="metadata" muted playsInline className="w-full h-full object-cover opacity-80" />
                           )}
                         </div>
                       )}

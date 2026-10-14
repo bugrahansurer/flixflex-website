@@ -2,12 +2,12 @@
 
 import * as React from "react"
 import Image from "next/image"
-import { Upload, Video, Image as ImageIcon, Trash2, Loader2, Play, ExternalLink, FolderPlus, Folder, ChevronRight, FileText, File, SortAsc, SortDesc, Calendar, Type, ArrowUpDown, ZoomIn, X as XIcon, RefreshCw } from "@/lib/icons"
+import { Upload, Image as ImageIcon, Trash2, Loader2, Play, ExternalLink, FolderPlus, Folder, ChevronRight, FileText, File, SortAsc, SortDesc, Calendar, Type, ArrowUpDown, ZoomIn, X as XIcon } from "@/lib/icons"
 import { cn } from "@/lib/utils"
-import MuxPlayer from "@mux/mux-player-react"
 import { toast } from "sonner"
 import * as Dialog from "@radix-ui/react-dialog"
 import { useCan } from "@/components/admin/rbac/permission-context"
+import { uploadMediaFile } from "@/lib/upload-client"
 
 type SortField = "createdAt" | "title" | "type" | "size"
 type SortOrder = "asc" | "desc"
@@ -30,8 +30,6 @@ interface MediaItem {
   mimeType: string | null
   url: string
   thumbnail: string | null
-  muxStatus: string | null
-  muxPlaybackId: string | null
   width?: number | null
   height?: number | null
   duration?: number | null
@@ -40,7 +38,7 @@ interface MediaItem {
   folderId: string | null
 }
 
-// Saniyeyi mm:ss biçimine çevirir (Mux'tan gelen süre bilgisi).
+// Saniyeyi mm:ss biçimine çevirir (yüklemede tarayıcının okuduğu süre).
 function formatDuration(sec?: number | null): string | null {
   if (!sec || sec <= 0) return null
   const m = Math.floor(sec / 60)
@@ -63,7 +61,7 @@ export default function MediaPage() {
   const [folders, setFolders] = React.useState<MediaFolder[]>([])
   const [loading, setLoading] = React.useState(true)
   const [uploading, setUploading] = React.useState(false)
-  const [uploadCount, setUploadCount] = React.useState<{ done: number; total: number } | null>(null)
+  const [uploadCount, setUploadCount] = React.useState<{ done: number; total: number; percent?: number } | null>(null)
   const [filter, setFilter] = React.useState<"all" | "folder" | "image" | "video">("all")
   const [currentFolderId, setCurrentFolderId] = React.useState<string | null>(null)
   const [folderPath, setFolderPath] = React.useState<{ id: string, name: string }[]>([])
@@ -182,24 +180,6 @@ export default function MediaPage() {
     await moveMedia(mediaId, targetFolderId)
   }
 
-  const handleSyncMux = async () => {
-    try {
-      setLoading(true)
-      const res = await fetch("/api/media/sync-mux", { method: "POST" })
-      const data = await res.json()
-      if (data.success) {
-        toast.success(data.message)
-        await refreshMedia()
-      } else {
-        toast.error(data.error || "Senkronizasyon hatası")
-      }
-    } catch {
-      toast.error("Sunucu bağlantı hatası")
-    } finally {
-      setLoading(false)
-    }
-  }
-
   React.useEffect(() => {
     const timeoutId = window.setTimeout(() => {
       void loadMedia()
@@ -208,34 +188,17 @@ export default function MediaPage() {
     return () => window.clearTimeout(timeoutId)
   }, [loadMedia])
 
-  // Upload a single file. Returns true on success.
-  const uploadOne = async (file: File): Promise<boolean> => {
-    const isVideo = file.type.startsWith("video/")
+  // Upload a single file. Returns the error message on failure, null on success.
+  const uploadOne = async (file: File, index: number, total: number): Promise<string | null> => {
     try {
-      if (isVideo) {
-        const res = await fetch("/api/media/upload-url", {
-          method: "POST",
-          body: JSON.stringify({ title: file.name, type: "video", size: file.size }),
-        })
-        const data = await res.json()
-        if (!res.ok) throw new Error(data.error || "Yükleme hazırlığı başarısız oldu")
-        await fetch(data.uploadUrl, {
-          method: "PUT",
-          body: file,
-          headers: { "Content-Type": file.type },
-        })
-        return true
-      }
-      const formData = new FormData()
-      formData.append("file", file)
-      if (currentFolderId) formData.append("folderId", currentFolderId)
-      const res = await fetch("/api/media/upload", { method: "POST", body: formData })
-      const data = await res.json().catch(() => null)
-      if (!res.ok) throw new Error(data?.details || data?.error || "Dosya yüklenemedi")
-      return true
+      await uploadMediaFile(file, {
+        folderId: currentFolderId,
+        onProgress: (f) => setUploadCount({ done: index, total, percent: Math.round(f * 100) }),
+      })
+      return null
     } catch (err) {
       console.error("[upload]", file.name, err)
-      return false
+      return err instanceof Error ? err.message : "Dosya yüklenemedi"
     }
   }
 
@@ -247,16 +210,14 @@ export default function MediaPage() {
     setUploadCount({ done: 0, total: files.length })
 
     let ok = 0
-    let fail = 0
-    let hasVideo = false
+    let lastError: string | null = null
 
-    // Sequential upload — keeps the server/Mux from being hammered and
+    // Sequential upload — keeps the server from being hammered and
     // lets us report a clean per-file progress count.
     for (let i = 0; i < files.length; i++) {
-      if (files[i].type.startsWith("video/")) hasVideo = true
-      const success = await uploadOne(files[i])
-      if (success) ok++
-      else fail++
+      const error = await uploadOne(files[i], i, files.length)
+      if (error) lastError = `${files[i].name}: ${error}`
+      else ok++
       setUploadCount({ done: i + 1, total: files.length })
     }
 
@@ -264,15 +225,9 @@ export default function MediaPage() {
     setUploadCount(null)
     if (fileInputRef.current) fileInputRef.current.value = ""
 
-    if (ok > 0) {
-      toast.success(
-        `${ok} dosya yüklendi` +
-        (fail ? `, ${fail} başarısız` : "") +
-        (hasVideo ? " · videolar işleniyor olabilir" : "")
-      )
-    } else {
-      toast.error("Hiçbir dosya yüklenemedi")
-    }
+    const fail = files.length - ok
+    if (ok > 0) toast.success(`${ok} dosya yüklendi` + (fail ? `, ${fail} başarısız` : ""))
+    if (lastError) toast.error(lastError)
     await refreshMedia()
   }
 
@@ -410,15 +365,6 @@ export default function MediaPage() {
               </button>
             )}
 
-            <button
-              onClick={handleSyncMux}
-              disabled={loading || uploading}
-              title="Mux'tan Videoları Çek"
-              className="ff-shape-button inline-flex items-center justify-center w-9 h-9 border border-[#CCCCCC] text-[#666666] hover:text-[#ff4fd8] transition-all disabled:opacity-50"
-            >
-              <RefreshCw size={16} className={cn(loading && "animate-spin")} />
-            </button>
-
             {can("media", "create") && (
               <>
                 <button
@@ -427,7 +373,10 @@ export default function MediaPage() {
                   className="ff-shape-button inline-flex items-center gap-2 h-9 px-6 bg-[#ff4fd8] text-white font-bold text-[12px] hover:bg-[#ff4fd8]/90 transition-all disabled:opacity-50"
                 >
                   {uploading ? <Loader2 className="animate-spin" size={16} /> : <Upload size={16} />}
-                  {uploadCount ? `Yükleniyor ${uploadCount.done}/${uploadCount.total}` : "Yükle"}
+                  {uploadCount
+                    ? `Yükleniyor ${uploadCount.done}/${uploadCount.total}` +
+                      (uploadCount.percent != null ? ` · %${uploadCount.percent}` : "")
+                    : "Yükle"}
                 </button>
                 <input
                   type="file"
@@ -562,21 +511,19 @@ export default function MediaPage() {
                                 className="object-cover opacity-60"
                               />
                             ) : (
-                              <div className="w-full h-full flex items-center justify-center bg-[#F0F0F0]">
-                                <Video size={18} className="text-[#666666]" />
-                              </div>
+                              // Poster yoksa ilk kare: tarayıcı yalnızca meta veriyi + ilk kareyi çeker
+                              <video
+                                src={`${item.url}#t=0.1`}
+                                preload="metadata"
+                                muted
+                                playsInline
+                                className="w-full h-full object-cover opacity-60"
+                              />
                             )}
                             <div className="absolute inset-0 flex items-center justify-center">
-                              {item.muxStatus === "ready" ? (
-                                <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-[#ff4fd8] text-[#ff4fd8] group-hover:scale-110 transition-transform">
-                                  <Play size={18} className="ml-1" />
-                                </div>
-                              ) : (
-                                <div className="flex flex-col items-center gap-2">
-                                  <Loader2 className="animate-spin text-[#ff4fd8]" size={20} />
-                                  <span className="text-[9px] text-[#ff4fd8]">İşleniyor</span>
-                                </div>
-                              )}
+                              <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-[#ff4fd8] text-[#ff4fd8] group-hover:scale-110 transition-transform">
+                                <Play size={18} className="ml-1" />
+                              </div>
                             </div>
                           </div>
                         ) : (
@@ -672,11 +619,13 @@ export default function MediaPage() {
                 </div>
               ) : previewItem?.type === "video" ? (
                 <div className="w-full max-w-4xl aspect-video ff-shape-container overflow-hidden shadow-2xl animate-ff-scaleIn">
-                  <MuxPlayer
-                    playbackId={previewItem.muxPlaybackId || ""}
+                  <video
+                    src={previewItem.url}
+                    poster={previewItem.thumbnail || undefined}
+                    controls
                     autoPlay
-                    className="w-full h-full"
-                    streamType="on-demand"
+                    playsInline
+                    className="w-full h-full bg-black"
                   />
                 </div>
               ) : (

@@ -1,108 +1,64 @@
 // ═══════════════════════════════════════════════════════════
 // FlixFlex — /api/media/upload-url
-// POST: creates a Mux direct-upload URL for the authenticated
-// admin user. Auth-gated (media:create).
+// POST: büyük dosyalar (video, büyük görsel/belge) için kısa ömürlü
+// imzalı R2 PUT URL'si üretir. Tarayıcı dosyayı doğrudan R2'ye
+// yükler, ardından /api/media/upload-complete ile kaydı oluşturur.
+// Auth-gated (media:create).
 // ═══════════════════════════════════════════════════════════
 
 import { NextResponse } from "next/server"
-import { video } from "@/lib/mux"
+import { z } from "zod"
 import { auth } from "@/lib/auth"
 import { hasPermission } from "@/lib/rbac/permissions"
-import { env } from "@/lib/env"
-import { prisma } from "@/lib/prisma"
+import { isR2Configured, r2PresignPut, safeMediaKey } from "@/lib/r2"
+import { ALLOWED_MIMES, extOf, maxDirectBytes } from "@/lib/media-upload"
+import { checkLimit, getClientIp, rateLimitResponse, MEDIA_UPLOAD } from "@/lib/rate-limit"
+
+const bodySchema = z.object({
+  fileName: z.string().min(1).max(255),
+  contentType: z.string().min(1).max(128),
+  size: z.number().int().positive(),
+})
 
 export async function POST(req: Request) {
+  const session = await auth().catch(() => null)
+  if (!session?.user) {
+    return NextResponse.json({ error: "Yetkisiz erişim" }, { status: 401 })
+  }
+  if (!hasPermission(session.user.permissions ?? [], "media", "create")) {
+    return NextResponse.json({ error: "Bu işlem için yetkiniz yok." }, { status: 403 })
+  }
+
+  const rlResult = await checkLimit(MEDIA_UPLOAD, getClientIp(req))
+  if (!rlResult.allowed) return rateLimitResponse(rlResult)
+
+  const parsed = bodySchema.safeParse(await req.json().catch(() => null))
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Geçersiz istek" }, { status: 400 })
+  }
+  const { fileName, contentType, size } = parsed.data
+
+  if (!ALLOWED_MIMES.includes(contentType)) {
+    return NextResponse.json({ error: `Desteklenmeyen dosya türü: ${contentType}.` }, { status: 415 })
+  }
+  const max = maxDirectBytes(contentType)
+  if (size > max) {
+    return NextResponse.json(
+      { error: `Dosya ${Math.round(max / 1024 / 1024)} MB sınırını aşıyor.` },
+      { status: 413 },
+    )
+  }
+
+  if (!isR2Configured()) {
+    return NextResponse.json({ error: "Cloudflare R2 depolama yapılandırılmamış." }, { status: 503 })
+  }
+
   try {
-    // ── AuthZ (Safe Access) ──────────────────────────────────
-    const session = await auth().catch(() => null)
-    if (!session?.user) {
-      return NextResponse.json({ error: "Yetkisiz erişim" }, { status: 401 })
-    }
-    if (!hasPermission(session.user.permissions ?? [], "media", "create")) {
-      return NextResponse.json({ error: "Bu işlem için yetkiniz yok." }, { status: 403 })
-    }
-
-    // ── Database Check ───────────────────────────────────────
-    if (!prisma) {
-      return NextResponse.json({ 
-        error: "Veritabanı bağlantısı yok, video yükleme şu an başlatılamaz.",
-        status: "maintenance"
-      }, { status: 503 })
-    }
-
-    let body: any = {}
-    try {
-      body = await req.json()
-    } catch {
-      // Ignored, use defaults
-    }
-    const { title, type } = body
-    // Mux, streaming asset'i için byte-boyutu döndürmez; bu yüzden orijinal
-    // dosya boyutunu istemciden alıp saklıyoruz (kart/önizlemede gösterilir).
-    const size = typeof body.size === "number" && body.size > 0 ? Math.round(body.size) : undefined
-
-    if (type !== "video") {
-      return NextResponse.json({ error: "Bu endpoint şu an yalnızca video yüklemelerini destekler." }, { status: 400 })
-    }
-
-    const corsOrigin =
-      process.env.NEXT_PUBLIC_APP_URL ||
-      env.NEXT_PUBLIC_APP_URL ||
-      "http://localhost:3000"
-
-    // Check if Mux is configured
-    if (!process.env.MUX_TOKEN_ID || !process.env.MUX_TOKEN_SECRET) {
-      return NextResponse.json(
-        { error: "Mux entegrasyonu yapılandırılmamış." },
-        { status: 500 }
-      )
-    }
-
-    // Create a direct upload URL from Mux
-    let upload;
-    try {
-      upload = await video.uploads.create({
-        new_asset_settings: {
-          playback_policy: ["public"],
-        },
-        cors_origin: corsOrigin,
-      })
-    } catch (muxErr: any) {
-      console.error("[media/upload-url MUX_ERROR]", muxErr)
-      return NextResponse.json({ error: "Mux servisine ulaşılamıyor." }, { status: 502 })
-    }
-
-    // Create a placeholder record in the DB
-    try {
-      const media = await prisma.media.create({
-        data: {
-          title:       title || "Untitled Video",
-          type:       "video",
-          url:        "",
-          muxUploadId: upload.id,
-          muxStatus:  "uploading",
-          size,
-        },
-      })
-
-      return NextResponse.json({
-        success:   true,
-        uploadUrl: upload.url,
-        uploadId:  upload.id,
-        mediaId:   media.id,
-      })
-    } catch (dbErr: any) {
-      console.error("[media/upload-url DB_ERROR]", dbErr)
-      // If DB fails here, we still give the upload URL but the user might lose track of the video ID
-      return NextResponse.json({
-        success:   true,
-        warning:   "Veritabanı kaydı oluşturulamadı, ancak yükleme URL'si hazır.",
-        uploadUrl: upload.url,
-        uploadId:  upload.id,
-      })
-    }
-  } catch (err: any) {
-    console.error("[media/upload-url GLOBAL_FATAL]", err)
-    return NextResponse.json({ error: "Sunucu hatası" }, { status: 500 })
+    const key = safeMediaKey(fileName, extOf(fileName))
+    const uploadUrl = await r2PresignPut(key, contentType)
+    return NextResponse.json({ success: true, uploadUrl, key })
+  } catch (err) {
+    console.error("[media/upload-url PRESIGN_ERROR]", err)
+    return NextResponse.json({ error: "Depolama servisi şu an kullanılamıyor." }, { status: 503 })
   }
 }
