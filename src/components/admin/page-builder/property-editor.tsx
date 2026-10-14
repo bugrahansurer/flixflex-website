@@ -69,6 +69,7 @@ function FieldLabel({ name }: { name: string }) {
     accentColor: "Vurgu Rengi",
     highlight: "Vurgulanan Kelime(ler)",
     hideStats: "İstatistikleri Gizle",
+    hideStatus: "\"Şu an müsaitiz\" Satırını Gizle",
     paragraphs: "Paragraflar",
     factsEyebrow: "Rakamlar — Üst Başlık",
     factsHeadline: "Rakamlar — Başlık",

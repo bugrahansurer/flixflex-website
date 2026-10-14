@@ -18,6 +18,8 @@ export interface CTASectionProps {
   primaryCTA?: { label: string; href: string }
   secondaryCTA?: { label: string; href: string }
   variant?: "dark" | "light"
+  /** "Şu an müsaitiz · İstanbul, Türkiye" satırını gizle */
+  hideStatus?: boolean
 }
 
 // ── Defaults ───────────────────────────────────────────────────
@@ -49,6 +51,7 @@ export function CTASection({
   primaryCTA = DEFAULT_PRIMARY_CTA,
   secondaryCTA = DEFAULT_SECONDARY_CTA,
   variant = "dark",
+  hideStatus = false,
 }: CTASectionProps) {
   const isDark = variant === "dark"
 
@@ -156,13 +159,15 @@ export function CTASection({
           </motion.div>
 
           {/* Kompakt durum göstergesi */}
-          <motion.div
-            variants={fadeInUp}
-            className="mt-8 flex items-center gap-2 text-[11px] text-[var(--foreground-muted)]"
-          >
-            <span className="ff-shape-button w-1.5 h-1.5 bg-[var(--ff-purple)] animate-pulse" aria-hidden />
-            <span>Şu an müsaitiz · İstanbul, Türkiye</span>
-          </motion.div>
+          {!hideStatus && (
+            <motion.div
+              variants={fadeInUp}
+              className="mt-8 flex items-center gap-2 text-[11px] text-[var(--foreground-muted)]"
+            >
+              <span className="ff-shape-button w-1.5 h-1.5 bg-[var(--ff-purple)] animate-pulse" aria-hidden />
+              <span>Şu an müsaitiz · İstanbul, Türkiye</span>
+            </motion.div>
+          )}
         </motion.div>
       </div>
     </section>

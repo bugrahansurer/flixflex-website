@@ -56,6 +56,7 @@ export default async function PortfolioPage() {
           description="Portföyümüzü beğendiyseniz, sizin projenizi de bu sayfaya taşıyalım. Brief'inizi paylaşın."
           primaryCTA={{ label: "Brief Gönder", href: "/iletisim" }}
           secondaryCTA={{ label: "Hizmetlerimiz", href: "/hizmetler" }}
+          hideStatus
         />
       </>
     )
