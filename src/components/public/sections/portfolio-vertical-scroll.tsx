@@ -89,12 +89,15 @@ const FALLBACK_IMAGES = [
   "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&fit=crop&q=80",
 ]
 
-function Card({ item, index }: { item: PortfolioItem; index: number }) {
+function Card({ item, index, clone = false }: { item: PortfolioItem; index: number; clone?: boolean }) {
   const coverImage = item.coverImage || FALLBACK_IMAGES[index % FALLBACK_IMAGES.length]
 
   return (
     <Link
       href={`/portfolio/${item.slug}`}
+      // Sonsuz döngü kopyaları ekran okuyucu ve klavye için gizli
+      aria-hidden={clone || undefined}
+      tabIndex={clone ? -1 : undefined}
       className={cn(
         "group relative flex-shrink-0 w-[260px] md:w-[300px] aspect-[5/8] overflow-hidden",
         "ff-shape-container border border-[var(--border)]/40 cursor-pointer select-none snap-center",
@@ -163,19 +166,27 @@ function Card({ item, index }: { item: PortfolioItem; index: number }) {
 export function PortfolioVerticalScrollSection({
   headline = "Seçili İşlerimiz",
   subheadline = "FlixFlex imzalı yüksek dönüşümlü kreatif tasarımlar",
+  direction = "left",
   speed = "normal",
   pauseOnHover = true,
   maxItems = 12,
   items,
 }: PortfolioVerticalScrollSectionProps) {
   const viewportRef = useRef<HTMLDivElement>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [scrollWidth, setScrollWidth] = useState(0)
+  const trackRef = useRef<HTMLDivElement>(null)
+  const setRef = useRef<HTMLDivElement>(null)
+  // Viewport'u boşluksuz doldurmak için gereken kopya sayısı (en az 2)
+  const [copies, setCopies] = useState(2)
 
   // Marquee state kept in refs (no re-renders): paused = hover, drag = active grab.
+  // offset ondalıklı tutulur — scrollLeft tam sayıya yuvarlandığı için
+  // yüksek tazeleme hızlı ekranlarda (120/144 Hz) kare başına <1px adım
+  // kayboluyor ve şerit hiç ilerlemiyordu.
   const pausedRef = useRef(false)
-  const dragRef = useRef({ active: false, captured: false, startX: 0, startScroll: 0, moved: false })
-  const dirRef = useRef(1)
+  const visibleRef = useRef(true)
+  const offsetRef = useRef(0)
+  const setWidthRef = useRef(0)
+  const dragRef = useRef({ active: false, captured: false, startX: 0, startOffset: 0, moved: false })
 
   // Slice raw items to maxItems size
   const displayItems = useMemo(() => {
@@ -183,54 +194,63 @@ export function PortfolioVerticalScrollSection({
     return rawItems.slice(0, maxItems)
   }, [items, maxItems])
 
-  useEffect(() => {
-    if (!containerRef.current || !viewportRef.current) return
-
-    const calculateScrollWidth = () => {
-      const containerW = containerRef.current!.scrollWidth
-      const viewportW = viewportRef.current!.clientWidth
-      const diff = containerW - viewportW
-      setScrollWidth(diff > 0 ? diff : 0)
-    }
-
-    // Short delay to ensure browser layout and fonts are fully loaded
-    const timer = setTimeout(calculateScrollWidth, 100)
-
-    window.addEventListener("resize", calculateScrollWidth)
-    return () => {
-      clearTimeout(timer)
-      window.removeEventListener("resize", calculateScrollWidth)
-    }
-  }, [displayItems])
-
-  // Auto-scroll driven in JS (so it coexists with manual drag). The track
-  // ping-pongs across the overflow and pauses while hovering or dragging.
+  // Tek bir set genişliğini ölç; görseller/fontlar yüklenip boyut değişince de güncellenir.
   useEffect(() => {
     const vp = viewportRef.current
-    if (!vp || scrollWidth <= 0) return
+    const set = setRef.current
+    if (!vp || !set) return
 
-    const pxPerSec = speed === "slow" ? 25 : speed === "fast" ? 180 : 60
+    const measure = () => {
+      const setW = set.offsetWidth
+      setWidthRef.current = setW
+      if (setW > 0) setCopies(Math.max(2, Math.ceil(vp.clientWidth / setW) + 1))
+    }
+
+    measure()
+    const ro = new ResizeObserver(measure)
+    ro.observe(vp)
+    ro.observe(set)
+    return () => ro.disconnect()
+  }, [displayItems])
+
+  // Ekran dışındayken animasyonu durdur
+  useEffect(() => {
+    const vp = viewportRef.current
+    if (!vp) return
+    const io = new IntersectionObserver(([entry]) => { visibleRef.current = entry.isIntersecting })
+    io.observe(vp)
+    return () => io.disconnect()
+  }, [])
+
+  // Kesintisiz sonsuz döngü: şerit transform ile kayar, bir set genişliğinde
+  // başa sarar. Hover ve sürükleme sırasında durur.
+  useEffect(() => {
+    const track = trackRef.current
+    if (!track) return
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    const pxPerSec = (speed === "slow" ? 25 : speed === "fast" ? 180 : 60) * (direction === "right" ? -1 : 1)
     let raf = 0
     let last = 0
 
     const step = (ts: number) => {
-      if (!last) last = ts
-      const dt = Math.min((ts - last) / 1000, 0.05) // clamp big frame gaps
+      const dt = last ? Math.min((ts - last) / 1000, 0.05) : 0 // clamp big frame gaps
       last = ts
 
-      if (!pausedRef.current && !dragRef.current.active) {
-        const max = vp.scrollWidth - vp.clientWidth
-        let next = vp.scrollLeft + pxPerSec * dt * dirRef.current
-        if (next >= max) { next = max; dirRef.current = -1 }
-        else if (next <= 0) { next = 0; dirRef.current = 1 }
-        vp.scrollLeft = next
+      const setW = setWidthRef.current
+      if (setW > 0) {
+        if (!reduceMotion && visibleRef.current && !pausedRef.current && !dragRef.current.active) {
+          offsetRef.current += pxPerSec * dt
+        }
+        offsetRef.current = ((offsetRef.current % setW) + setW) % setW
+        track.style.transform = `translate3d(${-offsetRef.current}px, 0, 0)`
       }
       raf = requestAnimationFrame(step)
     }
 
     raf = requestAnimationFrame(step)
     return () => cancelAnimationFrame(raf)
-  }, [scrollWidth, speed])
+  }, [speed, direction])
 
   return (
     <section className="relative bg-[var(--background)] text-[var(--foreground)] py-16 md:py-20 overflow-hidden">
@@ -275,10 +295,8 @@ export function PortfolioVerticalScrollSection({
         onPointerEnter={() => { if (pauseOnHover) pausedRef.current = true }}
         onPointerLeave={() => { pausedRef.current = false }}
         onPointerDown={(e) => {
-          const vp = viewportRef.current
-          if (!vp) return
           // Don't capture yet — a plain click must reach the card link.
-          dragRef.current = { active: true, captured: false, startX: e.clientX, startScroll: vp.scrollLeft, moved: false }
+          dragRef.current = { active: true, captured: false, startX: e.clientX, startOffset: offsetRef.current, moved: false }
         }}
         onPointerMove={(e) => {
           const d = dragRef.current
@@ -293,7 +311,8 @@ export function PortfolioVerticalScrollSection({
             vp.setPointerCapture?.(e.pointerId)
             d.captured = true
           }
-          if (d.moved) vp.scrollLeft = d.startScroll - dx
+          // Sarma (wrap) rAF döngüsünde yapılır
+          if (d.moved) offsetRef.current = d.startOffset - dx
         }}
         onPointerUp={(e) => {
           const d = dragRef.current
@@ -316,11 +335,16 @@ export function PortfolioVerticalScrollSection({
           }
         }}
         onDragStart={(e) => e.preventDefault()}
-        className="hidden md:block relative w-full overflow-x-auto scrollbar-none select-none cursor-grab active:cursor-grabbing"
+        className="hidden md:block relative w-full overflow-hidden select-none cursor-grab active:cursor-grabbing touch-pan-y"
       >
-        <div ref={containerRef} className="flex gap-6 my-6 px-6 w-max">
-          {displayItems.map((item, index) => (
-            <Card key={`desktop-${item.slug}-${index}`} item={item} index={index} />
+        <div ref={trackRef} className="flex w-max my-6 will-change-transform">
+          {Array.from({ length: copies }, (_, copy) => (
+            // Her set sağında gap kadar boşluk taşır — setler arası aralık kartlar arasıyla aynı
+            <div key={copy} ref={copy === 0 ? setRef : undefined} className="flex gap-6 pr-6">
+              {displayItems.map((item, index) => (
+                <Card key={`desktop-${copy}-${item.slug}-${index}`} item={item} index={index} clone={copy > 0} />
+              ))}
+            </div>
           ))}
         </div>
       </div>
