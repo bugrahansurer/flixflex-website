@@ -113,21 +113,6 @@ export function BlogTemplateEditorial({ post, related }: EditorialTemplateProps)
           <p className="text-white/65 text-lg md:text-xl leading-[1.7] max-w-2xl">
             {post.excerpt}
           </p>
-
-          {/* Author */}
-          <div className="flex items-center gap-3 mt-8">
-            <span className="ff-shape-container w-10 h-10 flex items-center justify-center text-sm font-bold text-white bg-[rgba(0,0,0,0.3)] border border-white/20 flex-shrink-0">
-              {post.author.initials}
-            </span>
-            <div>
-              <p className="text-sm font-semibold text-white leading-none mb-1">
-                {post.author.name}
-              </p>
-              <p className="text-[12px] text-white/70 leading-none">
-                {post.author.role}
-              </p>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -166,26 +151,6 @@ export function BlogTemplateEditorial({ post, related }: EditorialTemplateProps)
                   <TableOfContents toc={toc} />
                 </div>
               )}
-
-              {/* Author card */}
-              <div className="ff-shape-container border border-[var(--border)] p-6">
-                <p className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[var(--ff-purple)] mb-4">
-                  Yazar
-                </p>
-                <div className="flex items-center gap-3">
-                  <span className="ff-shape-container w-8 h-8 -mt-1 flex items-center justify-center text-xs font-bold text-white bg-[var(--ff-purple)] flex-shrink-0">
-                    {post.author.initials}
-                  </span>
-                  <div>
-                    <p className="font-semibold text-[var(--foreground)] text-sm leading-snug -mb-0.5">
-                      {post.author.name}
-                    </p>
-                    <p className="text-[12px] text-[var(--foreground-faint)] leading-snug">
-                      {formatDate(post.publishedAt)}
-                    </p>
-                  </div>
-                </div>
-              </div>
 
               {/* Related in sidebar — compact list */}
               {related.length > 0 && (

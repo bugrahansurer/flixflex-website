@@ -135,22 +135,12 @@ export function BlogTemplateVisual({ post, related }: VisualTemplateProps) {
         </div>
       </section>
 
-      {/* ── Author + excerpt ────────────────────────── */}
+      {/* ── Date + excerpt ──────────────────────────── */}
       <section className="mx-auto max-w-[1440px] px-6 md:px-10 xl:px-16 pt-10 pb-4">
         <div className="flex flex-col md:flex-row md:items-center gap-6 md:gap-10 pb-10 border-b border-[var(--border)]">
-          <div className="flex items-center gap-3 flex-shrink-0">
-            <span className="ff-shape-container w-8 h-8 -mt-1 flex items-center justify-center text-xs font-bold text-white bg-[var(--ff-purple)] flex-shrink-0">
-              {post.author.initials}
-            </span>
-            <div>
-              <p className="font-semibold text-[var(--foreground)] text-sm leading-none mb-0.5">
-                {post.author.name}
-              </p>
-              <p className="text-[12px] text-[var(--foreground-faint)] leading-none">
-                {formatDate(post.publishedAt)}
-              </p>
-            </div>
-          </div>
+          <p className="text-[12px] text-[var(--foreground-faint)] leading-none flex-shrink-0">
+            {formatDate(post.publishedAt)}
+          </p>
 
           <p className="text-base md:text-lg text-[var(--foreground-muted)] leading-relaxed border-l border-[var(--ff-purple)] pl-5 md:border-l-0 md:pl-0">
             {post.excerpt}

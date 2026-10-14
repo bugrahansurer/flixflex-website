@@ -30,7 +30,6 @@ export async function generateMetadata({
   return {
     title: `${post.title} | FlixFlex`,
     description: post.excerpt,
-    authors: [{ name: post.author.name }],
     keywords: post.tags,
     openGraph: {
       title: post.title,
@@ -39,7 +38,6 @@ export async function generateMetadata({
       url,
       siteName: "FlixFlex",
       publishedTime: post.publishedAt,
-      authors: [post.author.name],
       tags: post.tags,
     },
     twitter: {

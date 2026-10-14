@@ -93,19 +93,11 @@ export function BlogTemplateClassic({ post, related }: ClassicTemplateProps) {
             {post.excerpt}
           </p>
 
-          {/* Author strip */}
-          <div className="flex items-center gap-3 pb-8 mb-8 border-b border-[var(--border)]">
-            <span className="ff-shape-container w-8 h-8 -mt-1 flex items-center justify-center text-xs font-bold text-white bg-[var(--ff-purple)] flex-shrink-0">
-              {post.author.initials}
-            </span>
-            <div>
-              <p className="text-sm font-semibold text-[var(--foreground)] leading-none mb-0.5">
-                {post.author.name}
-              </p>
-              <p className="text-[12px] text-[var(--foreground-faint)] leading-none">
-                {formatDate(post.publishedAt)}
-              </p>
-            </div>
+          {/* Date strip */}
+          <div className="pb-8 mb-8 border-b border-[var(--border)]">
+            <p className="text-[12px] text-[var(--foreground-faint)] leading-none">
+              {formatDate(post.publishedAt)}
+            </p>
           </div>
 
           {/* Body content */}

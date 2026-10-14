@@ -90,21 +90,11 @@ export function FeaturedPost({ post }: FeaturedPostProps) {
             {post.excerpt}
           </p>
 
-          {/* Author + CTA row */}
+          {/* Date + CTA row */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:justify-between">
-            <div className="flex items-center gap-3">
-              <span className="ff-shape-container w-9 h-9 flex items-center justify-center text-[11px] font-bold text-white bg-[var(--ff-purple)] flex-shrink-0">
-                {post.author.initials}
-              </span>
-              <div>
-                <p className="text-sm font-semibold text-white leading-none mb-1">
-                  {post.author.name}
-                </p>
-                <p className="text-[11px] text-white/70 leading-none">
-                  {post.author.role} · {formatDate(post.publishedAt)}
-                </p>
-              </div>
-            </div>
+            <p className="text-[11px] text-white/70 leading-none">
+              {formatDate(post.publishedAt)}
+            </p>
 
             <Link
               href={`/blog/${post.slug}`}

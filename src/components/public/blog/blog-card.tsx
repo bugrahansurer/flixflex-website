@@ -83,25 +83,11 @@ export const BlogCard = memo(function BlogCard({ post, className }: BlogCardProp
           {post.excerpt}
         </p>
 
-        {/* Author + date strip */}
+        {/* Date strip */}
         <div className="flex items-center justify-between pt-3 border-t border-[var(--border)] mt-auto">
-          <div className="flex items-center gap-2.5">
-            {/* Avatar initials */}
-            <span
-              className="ff-shape-container w-7 h-7 flex items-center justify-center text-[10px] font-bold text-white bg-[var(--ff-purple)] flex-shrink-0"
-              aria-hidden
-            >
-              {post.author.initials}
-            </span>
-            <div className="flex flex-col gap-0.5">
-              <span className="text-[11px] font-semibold text-[var(--foreground)] leading-none">
-                {post.author.name}
-              </span>
-              <span className="text-[10px] text-[var(--foreground-faint)] leading-none">
-                {formatDate(post.publishedAt)}
-              </span>
-            </div>
-          </div>
+          <span className="text-[10px] text-[var(--foreground-faint)] leading-none">
+            {formatDate(post.publishedAt)}
+          </span>
 
           <Link
             href={`/blog/${post.slug}`}
