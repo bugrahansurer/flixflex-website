@@ -11,7 +11,7 @@ import { X } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 import { usePageBuilder } from "@/store/page-builder"
 import { useShallow } from "zustand/react/shallow"
-import { SECTION_SCHEMAS } from "@/types/page-builder"
+import { SECTION_SCHEMAS, DEFAULT_STORY_FACTS } from "@/types/page-builder"
 import { SECTION_REGISTRY } from "@/lib/page-builder/section-registry"
 import { FFSelect, FFSelectItem } from "@/components/ui/ff-select"
 import { MediaPicker } from "@/components/admin/media/media-picker"
@@ -24,6 +24,8 @@ interface FieldProps {
   value: unknown
   schema: { description?: string }
   onChange: (val: unknown) => void
+  /** Alan boşken sitede gösterilen varsayılan metin */
+  placeholder?: string
 }
 
 function FieldLabel({ name }: { name: string }) {
@@ -65,6 +67,11 @@ function FieldLabel({ name }: { name: string }) {
     backgroundColor: "Arka Plan Rengi",
     textColor: "Yazı Rengi",
     accentColor: "Vurgu Rengi",
+    highlight: "Vurgulanan Kelime(ler)",
+    hideStats: "İstatistikleri Gizle",
+    paragraphs: "Paragraflar",
+    factsEyebrow: "Rakamlar — Üst Başlık",
+    factsHeadline: "Rakamlar — Başlık",
   }
 
   const label = labels[name] || name
@@ -78,12 +85,13 @@ function FieldLabel({ name }: { name: string }) {
   )
 }
 
-function TextField({ name, value, onChange }: FieldProps) {
+function TextField({ name, value, onChange, placeholder }: FieldProps) {
   return (
     <div>
       <FieldLabel name={name} />
       <input
         value={typeof value === "string" ? value : ""}
+        placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
         className={cn(
           "ff-shape-container w-full px-3 py-2 text-[12px]",
@@ -96,12 +104,13 @@ function TextField({ name, value, onChange }: FieldProps) {
   )
 }
 
-function TextareaField({ name, value, onChange }: FieldProps) {
+function TextareaField({ name, value, onChange, placeholder }: FieldProps) {
   return (
     <div>
       <FieldLabel name={name} />
       <textarea
         value={typeof value === "string" ? value : ""}
+        placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
         rows={3}
         className={cn(
@@ -938,6 +947,55 @@ function StringListEditor({
   )
 }
 
+// ── Hikaye: "Rakamlarla FlixFlex" editörü ────────
+interface FactItem { value?: string; label?: string; detail?: string }
+
+function StoryFactsEditor({ value, onChange }: { value: unknown; onChange: (v: unknown) => void }) {
+  // Hiç düzenlenmemişse sitede görünen varsayılan liste ile başla
+  const items: FactItem[] = Array.isArray(value) ? (value as FactItem[]) : DEFAULT_STORY_FACTS
+  const patch = (i: number, p: Partial<FactItem>) =>
+    onChange(items.map((it, idx) => (idx === i ? { ...it, ...p } : it)))
+  const add = () => onChange([...items, { value: "", label: "", detail: "" }])
+  const remove = (i: number) => onChange(items.filter((_, idx) => idx !== i))
+
+  return (
+    <RepeaterShell title="Rakamlar" count={items.length} onAdd={add} addLabel="+ Rakam Ekle">
+      <div className="flex flex-col gap-2.5">
+        {items.map((it, i) => (
+          <ItemCard key={i} index={i} onRemove={() => remove(i)}>
+            <div className="grid grid-cols-[96px_1fr] gap-2">
+              <FieldMini label="Değer">
+                <input
+                  className={cn(repeaterInput, "px-2.5 py-1.5 text-[12px] font-semibold")}
+                  placeholder="150+"
+                  value={it.value ?? ""}
+                  onChange={(e) => patch(i, { value: e.target.value })}
+                />
+              </FieldMini>
+              <FieldMini label="Etiket">
+                <input
+                  className={cn(repeaterInput, "px-2.5 py-1.5 text-[11px]")}
+                  placeholder="Tamamlanan Proje"
+                  value={it.label ?? ""}
+                  onChange={(e) => patch(i, { label: e.target.value })}
+                />
+              </FieldMini>
+            </div>
+            <FieldMini label="Açıklama">
+              <input
+                className={cn(repeaterInput, "px-2.5 py-1.5 text-[11px]")}
+                placeholder="Türkiye & MENA bölgesi"
+                value={it.detail ?? ""}
+                onChange={(e) => patch(i, { detail: e.target.value })}
+              />
+            </FieldMini>
+          </ItemCard>
+        ))}
+      </div>
+    </RepeaterShell>
+  )
+}
+
 // ── Parallax katman editörü ───────────────────────
 interface ParallaxLayer { imageUrl?: string; speed?: number }
 
@@ -1043,6 +1101,11 @@ export function PropertyEditor() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const shape = (schema as any).shape ?? {}
   const props = section.props as Record<string, unknown>
+  // Şema varsayılanları — boş alanlarda sitede görünen metni placeholder olarak göster
+  const parsedDefaults = schema?.safeParse({})
+  const defaults = (parsedDefaults?.success ? parsedDefaults.data : {}) as Record<string, unknown>
+  const placeholderOf = (name: string) =>
+    typeof defaults[name] === "string" ? (defaults[name] as string) : undefined
 
   return (
     <div className="flex flex-col h-full">
@@ -1132,6 +1195,11 @@ export function PropertyEditor() {
             // Hikaye paragrafları (metin listesi)
             if (fieldName === "paragraphs" && section.type === "story") {
               return <StringListEditor key={fieldName} value={currentVal} onChange={(v) => handleChange(fieldName, v)} title="Paragraflar" placeholder="Paragraf metni…" addLabel="+ Paragraf Ekle" multiline />
+            }
+
+            // Hikaye — "Rakamlarla FlixFlex" listesi (değer/etiket/açıklama)
+            if (fieldName === "facts" && section.type === "story") {
+              return <StoryFactsEditor key={fieldName} value={currentVal} onChange={(v) => handleChange(fieldName, v)} />
             }
 
             // Parallax katmanları (görsel + hız)
@@ -1265,6 +1333,7 @@ export function PropertyEditor() {
                   name={fieldName}
                   value={currentVal}
                   schema={innerDef}
+                  placeholder={placeholderOf(fieldName)}
                   onChange={(v) => handleChange(fieldName, v)}
                 />
               )
@@ -1276,6 +1345,7 @@ export function PropertyEditor() {
                 name={fieldName}
                 value={currentVal}
                 schema={innerDef}
+                placeholder={placeholderOf(fieldName)}
                 onChange={(v) => handleChange(fieldName, v)}
               />
             )

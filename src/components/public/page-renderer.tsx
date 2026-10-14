@@ -180,7 +180,23 @@ const SECTION_RENDERERS: Partial<Record<SectionType, (
       </div>
     </section>
   ),
-  "portfolio-hero": () => <PortfolioHero totalProjects={2} clientCount={1} yearCount={1} categoryCount={1} />,
+  "portfolio-hero": (s, ctx) => {
+    const items = (ctx?.portfolioItems ?? []) as { client?: string; year?: string | number; category?: string }[]
+    const p = s.props as { eyebrow?: string; headline?: string; highlight?: string; description?: string; hideStats?: boolean }
+    return (
+      <PortfolioHero
+        totalProjects={items.length}
+        clientCount={new Set(items.map((i) => i.client)).size}
+        yearCount={new Set(items.map((i) => i.year)).size}
+        categoryCount={new Set(items.map((i) => i.category)).size}
+        eyebrow={p.eyebrow}
+        headline={p.headline}
+        highlight={p.highlight}
+        description={p.description}
+        showStats={!p.hideStats}
+      />
+    )
+  },
   "portfolio-grid": (s, ctx) => <PortfolioSection items={ctx?.portfolioItems as any} />,
   "blog-hero": () => {
     return (

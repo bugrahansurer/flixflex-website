@@ -4,15 +4,13 @@ import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { Eyebrow } from "@/components/ui/eyebrow"
 import { fadeInUp, staggerContainer } from "@/lib/animations"
+import { DEFAULT_STORY_FACTS } from "@/types/page-builder"
 
-// ── Quick facts / timeline data ───────────────────────
-const FACTS = [
-  { year: "2020", label: "Kuruluş", detail: "İstanbul, Türkiye" },
-  { year: "50+",  label: "Aktif Müşteri", detail: "Startup'tan holdinge" },
-  { year: "150+", label: "Tamamlanan Proje", detail: "Türkiye & MENA bölgesi" },
-  { year: "8",    label: "Kişilik Ekip", detail: "Tam kadrolu uzmanlar" },
-  { year: "340%", label: "Ort. Büyüme", detail: "İlk 6 ayda ölçülen ortalama" },
-]
+interface StoryFact {
+  value?: string
+  label?: string
+  detail?: string
+}
 
 // ── Fact item ─────────────────────────────────────────
 function FactItem({
@@ -52,9 +50,11 @@ function FactItem({
         <p className="font-semibold text-sm md:text-base text-[var(--foreground)] leading-tight">
           {label}
         </p>
-        <p className="text-xs md:text-sm text-[var(--foreground-faint)] mt-0.5">
-          {detail}
-        </p>
+        {detail && (
+          <p className="text-xs md:text-sm text-[var(--foreground-faint)] mt-0.5">
+            {detail}
+          </p>
+        )}
       </div>
 
       {/* Index number — decorative */}
@@ -76,10 +76,24 @@ interface StorySectionProps {
   eyebrow?: string
   headline?: string
   paragraphs?: string[]
+  factsEyebrow?: string
+  factsHeadline?: string
+  facts?: StoryFact[]
 }
 
-export function StorySection({ eyebrow, headline, paragraphs }: StorySectionProps = {}) {
+export function StorySection({
+  eyebrow,
+  headline,
+  paragraphs,
+  factsEyebrow,
+  factsHeadline,
+  facts,
+}: StorySectionProps = {}) {
   const paras = paragraphs && paragraphs.length > 0 ? paragraphs : DEFAULT_STORY_PARAGRAPHS
+  // Admin'de liste hiç düzenlenmediyse varsayılanlar; boş satırlar atlanır.
+  const factList = (Array.isArray(facts) ? facts : DEFAULT_STORY_FACTS).filter(
+    (f) => f.value?.trim() || f.label?.trim()
+  )
   return (
     <section
       className={cn(
@@ -160,20 +174,20 @@ export function StorySection({ eyebrow, headline, paragraphs }: StorySectionProp
               variants={fadeInUp}
               className="mb-8"
             >
-              <Eyebrow className="mb-2">Rakamlarla FlixFlex</Eyebrow>
+              <Eyebrow className="mb-2">{factsEyebrow || "Rakamlarla FlixFlex"}</Eyebrow>
               <h3 className="font-display text-xl md:text-2xl font-bold text-[var(--foreground)] tracking-tight">
-                5 yılda ne yaptık
+                {factsHeadline || "5 yılda ne yaptık"}
               </h3>
             </motion.div>
 
             {/* Facts list */}
             <div className="space-y-2">
-              {FACTS.map((fact, i) => (
+              {factList.map((fact, i) => (
                 <FactItem
-                  key={fact.label}
-                  year={fact.year}
-                  label={fact.label}
-                  detail={fact.detail}
+                  key={i}
+                  year={fact.value ?? ""}
+                  label={fact.label ?? ""}
+                  detail={fact.detail ?? ""}
                   index={i}
                 />
               ))}

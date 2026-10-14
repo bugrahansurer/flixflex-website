@@ -274,12 +274,39 @@ export const manifestoPropsSchema = z.object({
 })
 
 // ── About: Story ──
+export const DEFAULT_STORY_FACTS = [
+  { value: "2020", label: "Kuruluş", detail: "İstanbul, Türkiye" },
+  { value: "50+",  label: "Aktif Müşteri", detail: "Startup'tan holdinge" },
+  { value: "150+", label: "Tamamlanan Proje", detail: "Türkiye & MENA bölgesi" },
+  { value: "8",    label: "Kişilik Ekip", detail: "Tam kadrolu uzmanlar" },
+  { value: "340%", label: "Ort. Büyüme", detail: "İlk 6 ayda ölçülen ortalama" },
+]
+
 export const storyPropsSchema = z.object({
   eyebrow: z.string().default("Hikâyemiz"),
-  headline: z.string().default("Küçük bir ekip, büyük bir vizyon."),
+  headline: z.string().default("Sıfırdan değil, sıfırı domine ederek."),
   paragraphs: z.array(z.string()).optional(),
+  // Sağ sütun — "Rakamlarla FlixFlex" listesi
+  factsEyebrow: z.string().default("Rakamlarla FlixFlex"),
+  factsHeadline: z.string().default("5 yılda ne yaptık"),
+  facts: z.array(z.object({
+    value: z.string().default(""),
+    label: z.string().default(""),
+    detail: z.string().default(""),
+  })).optional(),
   hideMobileDock: z.boolean().default(false),
 })
+
+// ── Portfolio: Hero ──
+export const portfolioHeroPropsSchema = z.object({
+  eyebrow: z.string().default("Portfolyo"),
+  headline: z.string().default("Birlikte büyüttüğümüz markalar."),
+  highlight: z.string().default("markalar."),
+  description: z.string().default("Strateji, yaratıcılık ve verinin kesiştiği noktada doğan projeler. Her biri bir sorunun çözümü, her biri ölçülebilir bir başarı. İşte FlixFlex imzası taşıyan seçili çalışmalarımız."),
+  hideStats: z.boolean().default(false),
+  hideMobileDock: z.boolean().default(false),
+})
+export type PortfolioHeroProps = z.infer<typeof portfolioHeroPropsSchema>
 
 // ── About: Values ──
 export const valuesPropsSchema = z.object({
@@ -427,7 +454,7 @@ export const SECTION_SCHEMAS: Record<SectionType, z.ZodObject<z.ZodRawShape>> = 
   "why-us": whyUsPropsSchema,
   "services-list": z.object({}),
   "services-showcase": servicesShowcasePropsSchema,
-  "portfolio-hero": z.object({}),
+  "portfolio-hero": portfolioHeroPropsSchema,
   "portfolio-grid": z.object({}),
   "blog-hero": z.object({}),
   "blog-grid": z.object({}),

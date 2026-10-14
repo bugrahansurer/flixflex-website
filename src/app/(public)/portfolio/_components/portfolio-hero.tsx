@@ -11,6 +11,26 @@ interface PortfolioHeroProps {
   clientCount: number
   yearCount: number
   categoryCount: number
+  /** Admin'den düzenlenebilir metinler (sayfa düzenleyici → Portfolyo Hero) */
+  eyebrow?: string
+  headline?: string
+  /** Başlıkta mor vurgulanacak kısım (başlığın içinde geçmeli) */
+  highlight?: string
+  description?: string
+  showStats?: boolean
+}
+
+const DEFAULT_HEADLINE = "Birlikte büyüttüğümüz markalar."
+const DEFAULT_HIGHLIGHT = "markalar."
+const DEFAULT_DESCRIPTION =
+  "Strateji, yaratıcılık ve verinin kesiştiği noktada doğan projeler. Her biri bir sorunun çözümü, her biri ölçülebilir bir başarı. İşte FlixFlex imzası taşıyan seçili çalışmalarımız."
+
+/** Başlığı vurgulanan parçanın etrafından böler (ilk eşleşme). */
+function splitHighlight(text: string, highlight?: string): [string, string, string] {
+  const h = highlight?.trim()
+  const i = h ? text.indexOf(h) : -1
+  if (!h || i < 0) return [text, "", ""]
+  return [text.slice(0, i), h, text.slice(i + h.length)]
 }
 
 interface StatPillProps {
@@ -49,7 +69,16 @@ export function PortfolioHero({
   clientCount,
   yearCount,
   categoryCount,
+  eyebrow,
+  headline,
+  highlight,
+  description,
+  showStats = true,
 }: PortfolioHeroProps) {
+  const [before, marked, after] = headline?.trim()
+    ? splitHighlight(headline, highlight)
+    : splitHighlight(DEFAULT_HEADLINE, DEFAULT_HIGHLIGHT)
+
   const stats: StatPillProps[] = [
     { value: `${totalProjects}+`, label: "Proje", index: 0 },
     { value: `${clientCount}+`, label: "Müşteri", index: 1 },
@@ -87,7 +116,7 @@ export function PortfolioHero({
         >
           {/* Eyebrow */}
           <motion.div variants={fadeInUp} className="mb-5">
-            <Eyebrow>Portfolyo</Eyebrow>
+            <Eyebrow>{eyebrow || "Portfolyo"}</Eyebrow>
           </motion.div>
 
           {/* Heading */}
@@ -98,8 +127,9 @@ export function PortfolioHero({
               "text-[clamp(44px,7vw,96px)]"
             )}
           >
-            Domine ettiğimiz{" "}
-            <span className="text-[var(--ff-purple)]">markalar.</span>
+            {before}
+            {marked && <span className="text-[var(--ff-purple)]">{marked}</span>}
+            {after}
           </motion.h1>
 
           {/* Description */}
@@ -110,18 +140,18 @@ export function PortfolioHero({
               "text-[var(--foreground-muted)] max-w-2xl"
             )}
           >
-            Strateji, yaratıcılık ve verinin kesiştiği noktada doğan projeler.
-            Her biri bir sorunun çözümü, her biri ölçülebilir bir başarı.
-            İşte FlixFlex imzası taşıyan seçili çalışmalarımız.
+            {description?.trim() || DEFAULT_DESCRIPTION}
           </motion.p>
         </motion.div>
 
         {/* Stats strip */}
-        <div className="mt-12 md:mt-16 flex flex-wrap gap-3">
-          {stats.map((stat) => (
-            <StatPill key={stat.label} {...stat} />
-          ))}
-        </div>
+        {showStats && (
+          <div className="mt-12 md:mt-16 flex flex-wrap gap-3">
+            {stats.map((stat) => (
+              <StatPill key={stat.label} {...stat} />
+            ))}
+          </div>
+        )}
 
         {/* Bottom border accent */}
         <motion.div
