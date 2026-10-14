@@ -31,10 +31,6 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "*.supabase.co" },
       { protocol: "https", hostname: "cdn.pixabay.com" },
       { protocol: "https", hostname: "cdn.flixflex.com.tr" },
-      // Geçiş dönemi: R2 taşıma script'i çalışana kadar eski linkler
-      // (scripts/migrate-media-to-r2.mjs sonrası kaldırılacak)
-      { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },
-      { protocol: "https", hostname: "*.r2.dev" },
       { protocol: "https", hostname: "me7aitdbxq.ufs.sh" },
     ],
     formats: ["image/avif", "image/webp"],

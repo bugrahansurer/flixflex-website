@@ -76,3 +76,4 @@ prisma/backups/db_dump.sql
 .backups/
 /manifesto-*.jpeg
 old-dump.json
+backups/
