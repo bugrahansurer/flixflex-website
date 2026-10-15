@@ -47,6 +47,10 @@ export const ScrollExpandMedia = ({
   const [mediaFullyExpanded, setMediaFullyExpanded] = useState<boolean>(false);
   const [touchStartY, setTouchStartY] = useState<number>(0);
   const [isMobileState, setIsMobileState] = useState<boolean>(false);
+  // Kapak görseli varsa video, sayfa yüklemesi (load) bitene kadar indirilmez:
+  // kartta videonun ilk karesi (kapak) görünür, ilk boyama için gereken
+  // dosyalar bant genişliğini videoyla paylaşmaz. Kapak yoksa hemen yüklenir.
+  const [loadVideo, setLoadVideo] = useState<boolean>(!posterSrc);
 
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const prefersReducedMotion = useReducedMotion();
@@ -159,6 +163,17 @@ export const ScrollExpandMedia = ({
       window.removeEventListener('touchend', handleTouchEnd);
     };
   }, [scrollProgress, mediaFullyExpanded, touchStartY]);
+
+  useEffect(() => {
+    if (loadVideo) return;
+    const start = () => setLoadVideo(true);
+    if (document.readyState === 'complete') {
+      start();
+      return;
+    }
+    window.addEventListener('load', start, { once: true });
+    return () => window.removeEventListener('load', start);
+  }, [loadVideo]);
 
   useEffect(() => {
     const checkIfMobile = (): void => {
@@ -276,8 +291,7 @@ export const ScrollExpandMedia = ({
                 {/* SSR poster — LCP için anında boyanır, video yüklenince altında kalır */}
                 {effectivePoster && (
                   <picture>
-                    {posterSrcMobile && <source media={MOBILE_MEDIA_QUERY} srcSet={posterSrcMobile} />}
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    {posterSrcMobile && <source media={MOBILE_MEDIA_QUERY} srcSet={posterSrcMobile} />}
                     <img
                       src={effectivePoster}
                       alt=''
@@ -291,8 +305,8 @@ export const ScrollExpandMedia = ({
                 {/* Mobil video varsa tarayıcı ekran genişliğine göre doğru
                     kaynağı SSR'dan itibaren seçer — iki video birden inmez. */}
                 <video
-                  key={mediaSrcMobile ? 'responsive' : 'single'}
-                  src={mediaSrcMobile ? undefined : mediaSrc}
+                  key={`${mediaSrcMobile ? 'responsive' : 'single'}-${loadVideo ? 'on' : 'off'}`}
+                  src={!loadVideo || mediaSrcMobile ? undefined : mediaSrc}
                   // Mobil kapak ayrıysa video poster'ı boş bırakılır; altta
                   // <picture> doğru kapağı gösterir.
                   poster={posterSrcMobile ? undefined : posterSrc}
@@ -300,13 +314,13 @@ export const ScrollExpandMedia = ({
                   muted
                   loop
                   playsInline
-                  preload='auto'
+                  preload={loadVideo ? 'auto' : 'none'}
                   className='relative w-full h-full object-cover rounded-[inherit]'
                   controls={false}
                   disablePictureInPicture
                   disableRemotePlayback
                 >
-                  {mediaSrcMobile && (
+                  {loadVideo && mediaSrcMobile && (
                     <>
                       <source media={MOBILE_MEDIA_QUERY} src={mediaSrcMobile} />
                       <source src={mediaSrc} />
