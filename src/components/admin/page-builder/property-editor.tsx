@@ -69,6 +69,11 @@ function FieldLabel({ name }: { name: string }) {
     accentColor: "Vurgu Rengi",
     highlight: "Vurgulanan Kelime(ler)",
     hideStats: "İstatistikleri Gizle",
+    mediaSrc: "Medya (Masaüstü)",
+    mediaSrcMobile: "Mobil Medya (dikey, boşsa masaüstü kullanılır)",
+    posterSrc: "Kapak Görseli (Masaüstü)",
+    posterSrcMobile: "Mobil Kapak Görseli (boşsa masaüstü kullanılır)",
+    bgImageSrc: "Arka Plan Görseli",
     hideStatus: "\"Şu an müsaitiz\" Satırını Gizle",
     paragraphs: "Paragraflar",
     factsEyebrow: "Rakamlar — Üst Başlık",
@@ -305,7 +310,7 @@ function MediaField({ name, value, onChange, sectionType, sectionProps }: MediaF
   const isVideo =
     name.toLowerCase().includes("video") ||
     name.toLowerCase().includes("videourl") ||
-    (sectionType === "scroll-expansion-hero" && name === "mediaSrc" && sectionProps?.mediaType === "video")
+    (sectionType === "scroll-expansion-hero" && (name === "mediaSrc" || name === "mediaSrcMobile") && sectionProps?.mediaType !== "image")
 
   const currentUrl = typeof value === "string" ? value : ""
   const fileName = currentUrl ? currentUrl.split("/").pop() ?? currentUrl : ""

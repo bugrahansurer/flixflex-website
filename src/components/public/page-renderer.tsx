@@ -376,7 +376,9 @@ const SECTION_RENDERERS: Partial<Record<SectionType, (
       <ScrollExpandMedia
         mediaType={p.mediaType}
         mediaSrc={p.mediaSrc}
+        mediaSrcMobile={p.mediaSrcMobile || undefined}
         posterSrc={p.posterSrc}
+        posterSrcMobile={p.posterSrcMobile || undefined}
         bgImageSrc={p.bgImageSrc}
         title={p.title}
         date={p.date}

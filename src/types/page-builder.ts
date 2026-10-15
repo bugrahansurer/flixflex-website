@@ -379,7 +379,10 @@ export type WovenLightHeroProps = z.infer<typeof wovenLightHeroPropsSchema>
 export const scrollExpandMediaPropsSchema = z.object({
   mediaType: z.enum(["video", "image"]).default("video"),
   mediaSrc: z.string().default("https://me7aitdbxq.ufs.sh/f/2wsMIGDMQRdYuZ5R8ahEEZ4aQK56LizRdfBSqeDMsmUIrJN1"),
+  // Mobil (<768px) için ayrı dikey video/görsel — boşsa masaüstü kullanılır
+  mediaSrcMobile: z.string().default(""),
   posterSrc: z.string().default("https://images.pexels.com/videos/5752729/space-earth-universe-cosmos-5752729.jpeg"),
+  posterSrcMobile: z.string().default(""),
   bgImageSrc: z.string().default("https://me7aitdbxq.ufs.sh/f/2wsMIGDMQRdYMNjMlBUYHaeYpxduXPVNwf8mnFA61L7rkcoS"),
   title: z.string().default("Immersive Video Experience"),
   date: z.string().default("Cosmic Journey"),

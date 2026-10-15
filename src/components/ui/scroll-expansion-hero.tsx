@@ -10,10 +10,17 @@ import Image from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ChevronDown } from '@/lib/icons';
 
+/** isMobileState ile aynı kırılım (< 768px) */
+const MOBILE_MEDIA_QUERY = '(max-width: 767px)';
+
 export interface ScrollExpandMediaProps {
   mediaType?: 'video' | 'image';
   mediaSrc: string;
+  /** Mobil (<768px) için ayrı, dikey medya — boşsa mediaSrc kullanılır */
+  mediaSrcMobile?: string;
   posterSrc?: string;
+  /** Mobil kapak görseli — boşsa posterSrc kullanılır */
+  posterSrcMobile?: string;
   bgImageSrc: string;
   title?: string;
   date?: string;
@@ -25,7 +32,9 @@ export interface ScrollExpandMediaProps {
 export const ScrollExpandMedia = ({
   mediaType = 'video',
   mediaSrc,
+  mediaSrcMobile,
   posterSrc,
+  posterSrcMobile,
   bgImageSrc,
   title,
   date,
@@ -266,19 +275,27 @@ export const ScrollExpandMedia = ({
               <div className='relative w-full h-full pointer-events-none rounded-[inherit]'>
                 {/* SSR poster — LCP için anında boyanır, video yüklenince altında kalır */}
                 {effectivePoster && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={effectivePoster}
-                    alt=''
-                    aria-hidden
-                    fetchPriority='high'
-                    decoding='async'
-                    className='absolute inset-0 w-full h-full object-cover rounded-[inherit]'
-                  />
+                  <picture>
+                    {posterSrcMobile && <source media={MOBILE_MEDIA_QUERY} srcSet={posterSrcMobile} />}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={effectivePoster}
+                      alt=''
+                      aria-hidden
+                      fetchPriority='high'
+                      decoding='async'
+                      className='absolute inset-0 w-full h-full object-cover rounded-[inherit]'
+                    />
+                  </picture>
                 )}
+                {/* Mobil video varsa tarayıcı ekran genişliğine göre doğru
+                    kaynağı SSR'dan itibaren seçer — iki video birden inmez. */}
                 <video
-                  src={mediaSrc}
-                  poster={posterSrc}
+                  key={mediaSrcMobile ? 'responsive' : 'single'}
+                  src={mediaSrcMobile ? undefined : mediaSrc}
+                  // Mobil kapak ayrıysa video poster'ı boş bırakılır; altta
+                  // <picture> doğru kapağı gösterir.
+                  poster={posterSrcMobile ? undefined : posterSrc}
                   autoPlay
                   muted
                   loop
@@ -288,7 +305,14 @@ export const ScrollExpandMedia = ({
                   controls={false}
                   disablePictureInPicture
                   disableRemotePlayback
-                />
+                >
+                  {mediaSrcMobile && (
+                    <>
+                      <source media={MOBILE_MEDIA_QUERY} src={mediaSrcMobile} />
+                      <source src={mediaSrc} />
+                    </>
+                  )}
+                </video>
                 <div
                   className='absolute inset-0 z-10'
                   style={{ pointerEvents: 'none' }}
@@ -309,8 +333,17 @@ export const ScrollExpandMedia = ({
                 alt={title || 'Media content'}
                 fill
                 sizes="100vw"
-                className='object-cover rounded-[inherit]'
+                className={`object-cover rounded-[inherit]${mediaSrcMobile ? ' hidden md:block' : ''}`}
               />
+              {mediaSrcMobile && (
+                <Image
+                  src={mediaSrcMobile}
+                  alt={title || 'Media content'}
+                  fill
+                  sizes="100vw"
+                  className='object-cover rounded-[inherit] md:hidden'
+                />
+              )}
 
               <motion.div
                 className='absolute inset-0 bg-black/50 rounded-[inherit]'
