@@ -37,14 +37,6 @@ function ContactDecor() {
           "shadow-[0_16px_48px_-12px_rgba(255, 79, 216,0.25)]"
         )}
       >
-        {/* Pulsing dot + label */}
-        <span className="flex items-center gap-2 text-[10px] text-[var(--foreground-faint)]">
-          <span className="w-1.5 h-1.5 bg-[var(--ff-purple)] animate-pulse" />
-          Şu an müsaitiz
-        </span>
-        <p className="font-display font-bold text-[var(--foreground)] text-sm">
-          İstanbul, TR
-        </p>
         {/* Animated response bar */}
         <div className="w-3/4 h-1 bg-[var(--border)] mt-1">
           <motion.div

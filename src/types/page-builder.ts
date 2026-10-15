@@ -194,7 +194,6 @@ export const ctaPropsSchema = z.object({
   secondaryCtaLabel: z.string().default("Portfolyoyu Gör"),
   secondaryCtaHref: z.string().default("/portfolio"),
   variant: z.enum(["dark", "light"]).default("dark"),
-  hideStatus: z.boolean().default(false),
   hideMobileDock: z.boolean().default(false),
 })
 

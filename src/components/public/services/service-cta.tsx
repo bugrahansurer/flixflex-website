@@ -122,14 +122,6 @@ export function ServiceCta({ serviceTitle }: ServiceCtaProps) {
               />
             </Link>
           </motion.div>
-
-          <motion.div
-            variants={fadeInUp}
-            className="mt-10 flex items-center gap-2 text-[11px] text-[var(--foreground-muted)]"
-          >
-            <span className="w-1.5 h-1.5 bg-[var(--ff-purple)] animate-pulse" aria-hidden />
-            <span>Şu an müsaitiz · İstanbul, TR</span>
-          </motion.div>
         </motion.div>
       </div>
     </section>

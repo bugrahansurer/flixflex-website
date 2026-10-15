@@ -260,7 +260,6 @@ const SECTION_RENDERERS: Partial<Record<SectionType, (
         primaryCTA={p.primaryCtaLabel ? { label: p.primaryCtaLabel, href: p.primaryCtaHref } : undefined}
         secondaryCTA={p.secondaryCtaLabel ? { label: p.secondaryCtaLabel, href: p.secondaryCtaHref } : undefined}
         variant={p.variant as "dark" | "light" | undefined}
-        hideStatus={p.hideStatus}
       />
     )
   },

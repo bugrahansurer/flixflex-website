@@ -74,7 +74,6 @@ function FieldLabel({ name }: { name: string }) {
     posterSrc: "Kapak Görseli (Masaüstü)",
     posterSrcMobile: "Mobil Kapak Görseli (boşsa masaüstü kullanılır)",
     bgImageSrc: "Arka Plan Görseli",
-    hideStatus: "\"Şu an müsaitiz\" Satırını Gizle",
     paragraphs: "Paragraflar",
     factsEyebrow: "Rakamlar — Üst Başlık",
     factsHeadline: "Rakamlar — Başlık",
