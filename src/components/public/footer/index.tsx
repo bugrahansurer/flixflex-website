@@ -19,7 +19,7 @@ export function FlixFlexFooter({ siteSettings = {} }: { siteSettings?: Record<st
   const tagline =
     siteSettings.site_tagline ||
     "Hız. Güç. Esneklik. Markaları bir sonraki seviyeye taşıyan next-gen reklam ajansı."
-  const email = siteSettings.site_email || "hello@flixflex.com"
+  const email = siteSettings.site_email || "info@flixflex.com.tr"
   const phone = siteSettings.site_phone || ""
   const address = siteSettings.site_address || "Levent, İstanbul · Türkiye"
   const socialLinks = parseSocialLinks(siteSettings.site_social_links)

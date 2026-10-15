@@ -41,7 +41,7 @@ export async function generateMetadata({
     openGraph: {
       title: `${service.title} — FlixFlex`,
       description: service.description,
-      url: `https://flixflex.com/hizmetler/${slug}`,
+      url: `https://flixflex.com.tr/hizmetler/${slug}`,
       type: "website",
     },
   }

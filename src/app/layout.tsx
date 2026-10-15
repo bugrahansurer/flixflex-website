@@ -51,7 +51,7 @@ const metadataBaseUrl = process.env.NEXT_PUBLIC_APP_URL
   ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
   : process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
-  : "https://flixflex.com"
+  : "https://flixflex.com.tr"
 
 export async function generateMetadata(): Promise<Metadata> {
   // Favicon yalnızca admin'den (Ayarlar → Site → Site Favicon) seçildiyse gösterilir.

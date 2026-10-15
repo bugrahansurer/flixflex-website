@@ -15,7 +15,7 @@ export function BlogShare({ title, slug, className }: BlogShareProps) {
 
   // Start with the canonical URL on BOTH server and first client render so
   // hydration matches; swap to the real origin after mount (preview/staging).
-  const [url, setUrl] = useState(`https://flixflex.com/blog/${slug}`)
+  const [url, setUrl] = useState(`https://flixflex.com.tr/blog/${slug}`)
   useEffect(() => {
     setUrl(`${window.location.origin}/blog/${slug}`)
   }, [slug])

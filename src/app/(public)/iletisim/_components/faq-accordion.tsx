@@ -144,8 +144,8 @@ export function FaqAccordion({ headline, subheadline, items }: FaqAccordionProps
               ) : (
                 <>
                   Cevap bulamadığınız sorularınız için{" "}
-                  <a href="mailto:hello@flixflex.com" className="text-[var(--ff-purple)] hover:underline">
-                    hello@flixflex.com
+                  <a href="mailto:info@flixflex.com.tr" className="text-[var(--ff-purple)] hover:underline">
+                    info@flixflex.com.tr
                   </a>{" "}
                   adresine yazabilirsiniz.
                 </>

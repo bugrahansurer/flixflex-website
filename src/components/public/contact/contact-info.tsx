@@ -83,7 +83,7 @@ export interface ContactInfoProps {
 // ── Main component ─────────────────────────────────────────
 // Değerler admin → Ayarlar → Site'den gelir (prop). Boşsa mevcut varsayılanlara düşer.
 export function ContactInfo({ email, phone, address, workingHours, social }: ContactInfoProps = {}) {
-  const emailVal = email?.trim() || "iletisim@flixflex.com"
+  const emailVal = email?.trim() || "info@flixflex.com.tr"
   const phoneVal = phone?.trim() || "+90 532 383 35 54"
   const addressVal = address?.trim() || "Mutsan Mh. İkitelli Sk. No:14 D:41, İstanbul"
   const hoursVal = workingHours?.trim() || "Pazartesi – Cuma · 09:00 – 18:00"

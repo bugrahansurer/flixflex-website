@@ -171,10 +171,10 @@ export function ContactForm() {
               <p className="text-xs mt-0.5 text-red-400">
                 Sorun devam ederse{" "}
                 <a
-                  href="mailto:hello@flixflex.com"
+                  href="mailto:info@flixflex.com.tr"
                   className="underline underline-offset-2"
                 >
-                  hello@flixflex.com
+                  info@flixflex.com.tr
                 </a>{" "}
                 adresine yazabilirsiniz.
               </p>
@@ -340,7 +340,7 @@ export function ContactForm() {
           </span>
           <span className="text-[12px] leading-relaxed text-[var(--foreground-muted)] mt-1">
             <a
-              href="/kvkk"
+              href="/kvkk-aydinlatma-metni"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[var(--ff-purple)] hover:underline"

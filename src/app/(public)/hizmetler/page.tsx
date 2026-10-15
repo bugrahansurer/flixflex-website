@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title: "Hizmetler — FlixFlex",
     description:
       "Veri odaklı büyüme, yaratıcı strateji ve marka kimliği. FlixFlex ile markanızı bir üst seviyeye taşıyın.",
-    url: "https://flixflex.com/hizmetler",
+    url: "https://flixflex.com.tr/hizmetler",
     type: "website",
   },
 }

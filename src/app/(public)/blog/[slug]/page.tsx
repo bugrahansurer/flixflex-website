@@ -25,7 +25,7 @@ export async function generateMetadata({
     }
   }
 
-  const url = `https://flixflex.com/blog/${post.slug}`
+  const url = `https://flixflex.com.tr/blog/${post.slug}`
 
   return {
     title: `${post.title} | FlixFlex`,

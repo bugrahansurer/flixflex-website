@@ -55,7 +55,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "İletişim · FlixFlex",
     description: "Brief gönderin, birlikte büyüyelim.",
-    url: "https://flixflex.com/iletisim",
+    url: "https://flixflex.com.tr/iletisim",
   },
 }
 
