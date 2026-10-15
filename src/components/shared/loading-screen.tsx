@@ -26,17 +26,27 @@ export function LoadingScreen({ logoUrl, logoHeight }: LoadingScreenProps) {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- hydration mismatch guard
     setVisible(true)
     const prevOverflow = document.body.style.overflow
+    const prevPaddingRight = document.body.style.paddingRight
+    // Kaydırma kilitlenince masaüstü kaydırma çubuğu kaybolur ve sayfa
+    // genişler; ortalanmış içerik kayar (CLS). Çubuğun genişliği kadar
+    // sağ boşluk vererek içerik genişliğini sabit tutuyoruz.
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
+    if (scrollbarWidth > 0) document.body.style.paddingRight = `${scrollbarWidth}px`
     document.body.style.overflow = "hidden"
+    const unlock = () => {
+      document.body.style.overflow = prevOverflow
+      document.body.style.paddingRight = prevPaddingRight
+    }
 
     const timer = window.setTimeout(() => {
       setVisible(false)
       window.sessionStorage.setItem(STORAGE_KEY, "1")
-      document.body.style.overflow = prevOverflow
+      unlock()
     }, DURATION_MS)
 
     return () => {
       window.clearTimeout(timer)
-      document.body.style.overflow = prevOverflow
+      unlock()
     }
   }, [])
 
