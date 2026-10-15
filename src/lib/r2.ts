@@ -79,10 +79,15 @@ export async function r2Put(
   body: Buffer | Uint8Array,
   contentType: string,
 ): Promise<{ url: string }> {
-  const res = await s3().fetch(objectUrl(key), {
+  // aws4fetch gövdeyi Request içine sarınca Node bazı durumlarda isteği
+  // Content-Length'siz (chunked) gönderiyor ve R2 411 MissingContentLength
+  // dönüyor. Bunun yerine imzalı URL alıp düz bayt dizisini Content-Length
+  // ile gönderiyoruz (tarayıcı yüklemesiyle aynı yol).
+  const bytes = new Uint8Array(body)
+  const res = await fetch(await r2PresignPut(key, contentType, 300), {
     method: "PUT",
-    headers: { "Content-Type": contentType },
-    body: new Uint8Array(body),
+    headers: { "Content-Type": contentType, "Content-Length": String(bytes.byteLength) },
+    body: bytes,
   })
   if (!res.ok) {
     const text = await res.text().catch(() => "")
