@@ -5,7 +5,23 @@
 // tarayıcıdan doğrudan R2'ye) aynı kuralları paylaşır.
 // ═══════════════════════════════════════════════════════════
 
-import sharp from "sharp"
+import type SharpType from "sharp"
+
+// sharp yerel bir kütüphane (libvips) gerektirir. Modül seviyesinde import
+// edilirse, yüklenemediği ortamda bu dosyayı kullanan TÜM rotalar (görsel
+// işlemeyen video upload-url dahil) çöker. Bu yüzden yalnızca görsel
+// işlenirken yüklenir; yüklenemezse dosya sıkıştırılmadan kaydedilir.
+let sharpPromise: Promise<typeof SharpType | null> | null = null
+function loadSharp(): Promise<typeof SharpType | null> {
+  sharpPromise ??= import("sharp")
+    .then((m) => m.default)
+    .catch((err) => {
+      console.error("[media SHARP_LOAD_ERROR]", (err as Error).message)
+      sharpPromise = null // sonraki istekte tekrar dene
+      return null
+    })
+  return sharpPromise
+}
 
 export const ALLOWED_MIMES = [
   "image/png",
@@ -75,6 +91,8 @@ export interface ProcessedImage {
 
 /** Tiny 16×16 WebP base64 blur placeholder. Returns null on failure — never throws. */
 async function generateBlur(buf: Buffer): Promise<string | null> {
+  const sharp = await loadSharp()
+  if (!sharp) return null
   try {
     const tiny = await sharp(buf, { limitInputPixels: SHARP_PIXEL_LIMIT })
       .resize(16, 16, { fit: "inside" })
@@ -97,6 +115,11 @@ export async function processMedia(buf: Buffer, mimeType: string, originalName: 
   const passthrough: ProcessedImage = {
     buffer: buf, mimeType, ext: extOf(originalName), width: null, height: null, blurDataUrl: null,
   }
+
+  if (!RASTER_MIMES.has(mimeType) && mimeType !== "image/gif") return passthrough
+
+  const sharp = await loadSharp()
+  if (!sharp) return passthrough
 
   if (mimeType === "image/gif") {
     try {

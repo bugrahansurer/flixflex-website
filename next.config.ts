@@ -36,6 +36,17 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
   },
 
+  // ── sharp (libvips) — Vercel paketine dahil et ───
+  // sharp'ın Linux .node modülü libvips-cpp.so'yu rpath ile yükler; dosya
+  // izleyici (NFT) bunu takip etmediği için medya rotalarında
+  // "libvips-cpp.so: cannot open shared object file" hatası oluşuyordu.
+  outputFileTracingIncludes: {
+    "/api/media/**": [
+      "./node_modules/@img/sharp-linux-x64/**/*",
+      "./node_modules/@img/sharp-libvips-linux-x64/**/*",
+    ],
+  },
+
   // ── Performance ──────────────────────────────────
   experimental: {
     optimizePackageImports: [
