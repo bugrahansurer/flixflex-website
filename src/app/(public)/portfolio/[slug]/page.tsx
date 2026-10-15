@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { CTASection, PORTFOLIO } from "@/components/public"
+import { CTASection } from "@/components/public/sections/cta-section"
+import { PORTFOLIO } from "@/components/public/sections/portfolio-data"
 import { listPublishedPortfolio, getPublishedPortfolioBySlug } from "@/lib/content-store"
 import { ProjectHero } from "./_components/project-hero"
 import { ProjectCover } from "./_components/project-cover"

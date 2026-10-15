@@ -8,7 +8,7 @@ import { staggerContainer, fadeInUp } from "@/lib/animations"
 import { cn } from "@/lib/utils"
 import type { PortfolioItem } from "@/components/public"
 import { StarField } from "@/components/ui/star-field"
-import { TiltCard } from "@/components/ui"
+import { TiltCard } from "@/components/ui/tilt-card"
 
 interface ProjectHeroProps {
   project: PortfolioItem

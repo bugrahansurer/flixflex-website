@@ -6,7 +6,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { AnimatePresence, motion } from "framer-motion"
 import { X, ArrowUpRight } from "@/lib/icons"
-import { ThemeToggle } from "@/components/ui"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 import {
   mobileMenuVariants,
   mobileMenuItemVariants,

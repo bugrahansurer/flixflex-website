@@ -5,7 +5,7 @@
 
 import Image from "next/image"
 import { cn, formatDate } from "@/lib/utils"
-import { FFBadge } from "@/components/ui"
+import { FFBadge } from "@/components/ui/ff-badge"
 import { CTASection } from "@/components/public/sections/cta-section"
 import { MarkdownRenderer } from "../markdown-renderer"
 import { BlogShare } from "../blog-share"

@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { CTASection } from "@/components/public"
+import { CTASection } from "@/components/public/sections/cta-section"
 import { ServicesShowcase } from "@/components/public/services/services-showcase"
 
 import { getPageBySlug } from "@/lib/page-data"

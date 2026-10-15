@@ -3,45 +3,53 @@
 import * as React from "react"
 import type { SectionBlock, SectionType } from "@/types/page-builder"
 import type { SocialLinkItem } from "@/lib/social-platforms"
-import {
-  HeroSection,
-  HeroVideoSection,
-  StatsSection,
-  ServicesSection,
-  PortfolioSection,
-  PortfolioVerticalScrollSection,
-  TestimonialsSection,
-  CTASection,
-  ManifestoSection,
-  StorySection,
-  ValuesSection,
-  TeamSection,
-  WhyUsSection,
-  ServicesListAnimated,
-  ContactForm,
-  ContactInfo,
-  TextContentSection,
-  ImageTextSection,
-  VideoEmbedSection,
-  BlogListClient,
-  AppointmentCardSection,
-  ModernManifestoSection,
-} from "@/components/public"
+import dynamic from "next/dynamic"
 import type { Service } from "@/components/public/sections/services-data"
 import type { BlogPost } from "@/components/public/blog/blog-data"
-import { PortfolioHero } from "@/app/(public)/portfolio/_components/portfolio-hero"
-import { HeroStrip as ContactHero } from "@/app/(public)/iletisim/_components/hero-strip"
-import { FaqAccordion } from "@/app/(public)/iletisim/_components/faq-accordion"
-import { DemoRadialScrollGalleryBento } from "@/components/ui/portfolio-and-image-gallery"
-import { DemoPortfolioGallery } from "@/components/ui/portfolio-gallery"
-import { DemoOfferCarousel } from "@/components/ui/offer-carousel"
-import { DemoProjectShowcase } from "@/components/ui/project-showcase"
-import { AnimatedVideoHero, VideoHeroProvider } from "@/components/public/hero/animated-video-hero"
-import { ParallaxScrolling } from "@/components/public/parallax-scrolling"
-import { ServicesShowcase } from "@/components/public/services/services-showcase"
-import { VideoTestimonialsSection, type VideoTestimonialItem } from "@/components/public/sections/video-testimonials-section"
-import { PoemAnimation, ScrollExpandMedia, FlowArt, FlowSection } from "@/components/ui"
-import dynamic from "next/dynamic"
+import type { VideoTestimonialItem } from "@/components/public/sections/video-testimonials-section"
+
+// ── Bölüm bileşenleri — sayfa bazında kod bölme ──────────────
+// Her bölüm next/dynamic ile ayrı chunk'a ayrılır: sunucu render'ı (SSR)
+// aynen sürer, HTML birebir aynıdır; tarayıcı yalnızca sayfada gerçekten
+// bulunan bölümlerin JS'ini indirir (gsap, video hero'lar vb. her sayfaya
+// yüklenmez).
+const HeroSection = dynamic(() => import("@/components/public/hero/hero-section").then((m) => m.HeroSection))
+const HeroVideoSection = dynamic(() => import("@/components/public/hero/hero-video").then((m) => m.HeroVideoSection))
+const StatsSection = dynamic(() => import("@/components/public/sections/stats-section").then((m) => m.StatsSection))
+const ServicesSection = dynamic(() => import("@/components/public/sections/services-section").then((m) => m.ServicesSection))
+const PortfolioSection = dynamic(() => import("@/components/public/sections/portfolio-section").then((m) => m.PortfolioSection))
+const PortfolioVerticalScrollSection = dynamic(() => import("@/components/public/sections/portfolio-vertical-scroll").then((m) => m.PortfolioVerticalScrollSection))
+const TestimonialsSection = dynamic(() => import("@/components/public/sections/testimonials-section").then((m) => m.TestimonialsSection))
+const CTASection = dynamic(() => import("@/components/public/sections/cta-section").then((m) => m.CTASection))
+const ManifestoSection = dynamic(() => import("@/components/public/about/manifesto-section").then((m) => m.ManifestoSection))
+const StorySection = dynamic(() => import("@/components/public/about/story-section").then((m) => m.StorySection))
+const ValuesSection = dynamic(() => import("@/components/public/about/values-section").then((m) => m.ValuesSection))
+const TeamSection = dynamic(() => import("@/components/public/about/team-section").then((m) => m.TeamSection))
+const WhyUsSection = dynamic(() => import("@/components/public/about/why-us-section").then((m) => m.WhyUsSection))
+const ServicesListAnimated = dynamic(() => import("@/components/public/services/services-list-animated").then((m) => m.ServicesListAnimated))
+const ContactForm = dynamic(() => import("@/components/public/contact/contact-form").then((m) => m.ContactForm))
+const ContactInfo = dynamic(() => import("@/components/public/contact/contact-info").then((m) => m.ContactInfo))
+const TextContentSection = dynamic(() => import("@/components/public/sections/text-content-section").then((m) => m.TextContentSection))
+const ImageTextSection = dynamic(() => import("@/components/public/sections/image-text-section").then((m) => m.ImageTextSection))
+const VideoEmbedSection = dynamic(() => import("@/components/public/sections/video-embed-section").then((m) => m.VideoEmbedSection))
+const BlogListClient = dynamic(() => import("@/components/public/blog/blog-list-client").then((m) => m.BlogListClient))
+const AppointmentCardSection = dynamic(() => import("@/components/public/sections/appointment-card-section").then((m) => m.AppointmentCardSection))
+const ModernManifestoSection = dynamic(() => import("@/components/public/sections/modern-manifesto").then((m) => m.ModernManifestoSection))
+const PortfolioHero = dynamic(() => import("@/app/(public)/portfolio/_components/portfolio-hero").then((m) => m.PortfolioHero))
+const ContactHero = dynamic(() => import("@/app/(public)/iletisim/_components/hero-strip").then((m) => m.HeroStrip))
+const FaqAccordion = dynamic(() => import("@/app/(public)/iletisim/_components/faq-accordion").then((m) => m.FaqAccordion))
+const DemoRadialScrollGalleryBento = dynamic(() => import("@/components/ui/portfolio-and-image-gallery").then((m) => m.DemoRadialScrollGalleryBento))
+const DemoPortfolioGallery = dynamic(() => import("@/components/ui/portfolio-gallery").then((m) => m.DemoPortfolioGallery))
+const DemoOfferCarousel = dynamic(() => import("@/components/ui/offer-carousel").then((m) => m.DemoOfferCarousel))
+const DemoProjectShowcase = dynamic(() => import("@/components/ui/project-showcase").then((m) => m.DemoProjectShowcase))
+const AnimatedVideoHeroSection = dynamic(() => import("@/components/public/hero/animated-video-hero-section").then((m) => m.AnimatedVideoHeroSection))
+const ParallaxScrolling = dynamic(() => import("@/components/public/parallax-scrolling").then((m) => m.ParallaxScrolling))
+const ServicesShowcase = dynamic(() => import("@/components/public/services/services-showcase").then((m) => m.ServicesShowcase))
+const VideoTestimonialsSection = dynamic(() => import("@/components/public/sections/video-testimonials-section").then((m) => m.VideoTestimonialsSection))
+const PoemAnimation = dynamic(() => import("@/components/ui/3d-animation").then((m) => m.PoemAnimation))
+const ScrollExpandMedia = dynamic(() => import("@/components/ui/scroll-expansion-hero").then((m) => m.ScrollExpandMedia))
+const FlowArt = dynamic(() => import("@/components/ui/story-scroll").then((m) => m.FlowArt))
+const FlowSection = dynamic(() => import("@/components/ui/story-scroll").then((m) => m.FlowSection))
 // Lazy — pulls in three.js (~600KB); only loaded on pages that actually use it.
 const WovenLightHero = dynamic(
   () => import("@/components/ui/woven-light-hero").then((m) => m.WovenLightHero),
@@ -308,36 +316,7 @@ const SECTION_RENDERERS: Partial<Record<SectionType, (
   "portfolio-marquee-gallery": (s, ctx) => <DemoPortfolioGallery items={ctx?.portfolioItems} />,
   "portfolio-offer-carousel": (s, ctx) => <DemoOfferCarousel items={ctx?.portfolioItems} />,
   "portfolio-project-showcase": (s, ctx) => <DemoProjectShowcase items={ctx?.portfolioItems} />,
-  "hero-animated-video": (s) => {
-    const p = s.props as any
-    return (
-      <VideoHeroProvider>
-        <AnimatedVideoHero.Video
-          videoUrl={p.videoSrc}
-          videoUrlMobile={p.videoSrcMobile}
-        />
-        <AnimatedVideoHero.Content>
-          <div className="flex flex-col items-center gap-4">
-            {p.headline && (
-              <h1 className="font-display text-4xl md:text-6xl lg:text-8xl font-extrabold text-white tracking-tight leading-none">
-                {p.headline}
-              </h1>
-            )}
-            {p.subheadline && (
-              <p className="text-lg md:text-xl text-white/80 max-w-2xl">
-                {p.subheadline}
-              </p>
-            )}
-          </div>
-        </AnimatedVideoHero.Content>
-        {p.clipPathVariant && p.clipPathVariant !== "none" && (
-          <AnimatedVideoHero.ClipMask insetRange={p.clipPathVariant === "circle" ? [15, 45] : [0, 35]}>
-            <div className="absolute inset-0 bg-[var(--background)]" />
-          </AnimatedVideoHero.ClipMask>
-        )}
-      </VideoHeroProvider>
-    )
-  },
+  "hero-animated-video": (s) => <AnimatedVideoHeroSection {...(s.props as any)} />,
   "parallax": (s) => {
     const p = s.props as any
     return (

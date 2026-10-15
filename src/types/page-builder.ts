@@ -276,13 +276,7 @@ export const manifestoPropsSchema = z.object({
 })
 
 // ── About: Story ──
-export const DEFAULT_STORY_FACTS = [
-  { value: "2020", label: "Kuruluş", detail: "İstanbul, Türkiye" },
-  { value: "50+",  label: "Aktif Müşteri", detail: "Startup'tan holdinge" },
-  { value: "150+", label: "Tamamlanan Proje", detail: "Türkiye & MENA bölgesi" },
-  { value: "8",    label: "Kişilik Ekip", detail: "Tam kadrolu uzmanlar" },
-  { value: "340%", label: "Ort. Büyüme", detail: "İlk 6 ayda ölçülen ortalama" },
-]
+export { DEFAULT_STORY_FACTS } from "@/components/public/about/story-facts"
 
 export const storyPropsSchema = z.object({
   eyebrow: z.string().default("Hikâyemiz"),

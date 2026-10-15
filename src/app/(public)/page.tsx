@@ -1,17 +1,15 @@
 import type { Metadata } from "next"
-import {
-  HeroSection,
-  StatsSection,
-  ServicesSection,
-  SERVICES,
-  PORTFOLIO,
-  BrandStorySection,
-  PortfolioSection,
-  TestimonialsSection,
-  CTASection,
-  ScrollAnimation,
-  ContainerTextScroll,
-} from "@/components/public"
+import { HeroSection } from "@/components/public/hero/hero-section"
+import { StatsSection } from "@/components/public/sections/stats-section"
+import { ServicesSection } from "@/components/public/sections/services-section"
+import { SERVICES } from "@/components/public/sections/services-data"
+import { PORTFOLIO } from "@/components/public/sections/portfolio-data"
+import { BrandStorySection } from "@/components/public/sections/brand-story"
+import { PortfolioSection } from "@/components/public/sections/portfolio-section"
+import { TestimonialsSection } from "@/components/public/sections/testimonials-section"
+import { CTASection } from "@/components/public/sections/cta-section"
+import { ScrollAnimation } from "@/components/public/scroll-animation"
+import { ContainerTextScroll } from "@/components/public/container-text-scroll"
 
 import { getPageBySlug } from "@/lib/page-data"
 import { listPublishedPortfolio, listPublishedMainServices } from "@/lib/content-store"

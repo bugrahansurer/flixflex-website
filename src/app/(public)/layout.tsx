@@ -1,5 +1,7 @@
 import NextTopLoader from "nextjs-toploader"
-import { FlixFlexFooter, AppointmentModal, ParallaxProvider } from "@/components/public"
+import { FlixFlexFooter } from "@/components/public/footer"
+import { AppointmentModalLazy as AppointmentModal } from "@/components/public/appointment-modal-lazy"
+import { ParallaxProvider } from "@/components/public/parallax-provider"
 import { ThemedNavbar } from "@/components/public/navbar/themed-navbar"
 import { PageTransition } from "@/components/shared/page-transition"
 import { LoadingScreen } from "@/components/shared/loading-screen"

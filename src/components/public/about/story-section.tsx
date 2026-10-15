@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { Eyebrow } from "@/components/ui/eyebrow"
 import { fadeInUp, staggerContainer } from "@/lib/animations"
-import { DEFAULT_STORY_FACTS } from "@/types/page-builder"
+import { DEFAULT_STORY_FACTS } from "./story-facts"
 
 interface StoryFact {
   value?: string

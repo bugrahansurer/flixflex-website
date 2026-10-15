@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
-import { PortfolioSection, CTASection } from "@/components/public"
+import { PortfolioSection } from "@/components/public/sections/portfolio-section"
+import { CTASection } from "@/components/public/sections/cta-section"
 import { PortfolioHero } from "./_components/portfolio-hero"
 
 import { getPageBySlug } from "@/lib/page-data"

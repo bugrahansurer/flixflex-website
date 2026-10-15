@@ -3,19 +3,22 @@ import { Syne, DM_Sans, Geist, Outfit, Inter } from "next/font/google"
 import { cookies, headers } from "next/headers"
 import "./globals.css"
 import { ThemeProvider } from "@/components/shared/theme-provider"
-import { FFCursor } from "@/components/ui"
+import { FFCursor } from "@/components/ui/ff-cursor"
 import { ActivePaletteStyle } from "@/lib/colors/palette-provider"
 import { cn } from "@/lib/utils";
 import { Toaster } from "sonner"
 import { getSetting } from "@/lib/settings"
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+// Aktif tema yalnızca Outfit + Inter kullanır; diğer aileler tanımlı kalır
+// (tema değişirse kullanılabilir) ama her sayfada önceden yüklenmez (preload:false).
+const geist = Geist({subsets:['latin'],variable:'--font-sans',preload:false});
 
 const syne = Syne({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
   variable: "--font-syne",
   display: "swap",
+  preload: false,
 })
 
 const dmSans = DM_Sans({
@@ -23,6 +26,7 @@ const dmSans = DM_Sans({
   weight: ["300", "400", "500", "600"],
   variable: "--font-dm-sans",
   display: "swap",
+  preload: false,
 })
 
 // Aktif temanın varsayılan fontları (Outfit + Inter) da self-host edilir;

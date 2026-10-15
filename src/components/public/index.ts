@@ -74,7 +74,8 @@ export {
 }                             from "./blog/blog-data"
 export type { BlogPost, BlogCategory } from "./blog/blog-data"
 
-export { AppointmentModal } from "./appointment-modal"
+// Tembel yüklenen sarmalayıcı — modal kodu ilk açılışta indirilir
+export { AppointmentModalLazy as AppointmentModal } from "./appointment-modal-lazy"
 export { AppointmentCardSection } from "./sections/appointment-card-section"
 export { ModernManifestoSection } from "./sections/modern-manifesto"
 

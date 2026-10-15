@@ -92,15 +92,6 @@ export function AppointmentModal() {
     }
   }, [isOpen, currentYear, currentMonth, fetchSlots])
 
-  // ?randevu=1 ile gelinirse formu aç (404 sayfası, paylaşılan linkler) ve parametreyi temizle
-  React.useEffect(() => {
-    const url = new URL(window.location.href)
-    if (!url.searchParams.has("randevu")) return
-    setIsOpen(true)
-    url.searchParams.delete("randevu")
-    window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash)
-  }, [setIsOpen])
-
   // Reset form when modal closes
   React.useEffect(() => {
     if (!isOpen) {

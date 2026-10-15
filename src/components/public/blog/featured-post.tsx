@@ -1,7 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { cn, formatDate } from "@/lib/utils"
-import { FFBadge } from "@/components/ui"
+import { FFBadge } from "@/components/ui/ff-badge"
 import { ArrowRight } from "@/lib/icons"
 import type { BlogPost } from "./blog-data"
 

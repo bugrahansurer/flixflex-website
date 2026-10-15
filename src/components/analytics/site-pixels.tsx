@@ -66,14 +66,17 @@ export function SitePixels({ gaId, gtmId, pixelId }: SitePixelsProps) {
         </>
       )}
 
-      {/* ── Google Analytics 4 (gtag.js) ── */}
+      {/* ── Google Analytics 4 (gtag.js) ──
+          lazyOnload: 176 KB'lık gtag.js sayfa yüklendikten sonra iner; ilk
+          boyamayı ve etkileşimi geciktirmez. Komutlar dataLayer kuyruğunda
+          bekler, page_view kaybolmaz. */}
       {ga && (
         <>
           <Script
             src={`https://www.googletagmanager.com/gtag/js?id=${ga}`}
-            strategy="afterInteractive"
+            strategy="lazyOnload"
           />
-          <Script id="ff-ga4-init" strategy="afterInteractive">
+          <Script id="ff-ga4-init" strategy="lazyOnload">
             {`gtag('js',new Date());gtag('config','${ga}',{send_page_view:true});`}
           </Script>
         </>

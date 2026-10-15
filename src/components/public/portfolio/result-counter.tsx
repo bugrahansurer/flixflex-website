@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { FFStatCounter } from "@/components/ui"
+import { FFStatCounter } from "@/components/ui/ff-stat-counter"
 import { Eyebrow } from "@/components/ui/eyebrow"
 import { cn } from "@/lib/utils"
 import { staggerContainer, fadeInUp } from "@/lib/animations"

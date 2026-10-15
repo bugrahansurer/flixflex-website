@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next"
-import { SERVICES } from "@/components/public"
-import { PORTFOLIO } from "@/components/public"
+import { SERVICES } from "@/components/public/sections/services-data"
+import { PORTFOLIO } from "@/components/public/sections/portfolio-data"
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ??

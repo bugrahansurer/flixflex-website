@@ -3,7 +3,7 @@
 import * as React from "react"
 import { motion, useMotionValueEvent, useScroll } from "framer-motion"
 import { Menu, ArrowUpRight } from "@/lib/icons"
-import { ThemeToggle } from "@/components/ui"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { cn } from "@/lib/utils"
 import { Magnetic } from "@/components/ui/magnetic"
 import { FlixFlexLogo } from "./logo"
