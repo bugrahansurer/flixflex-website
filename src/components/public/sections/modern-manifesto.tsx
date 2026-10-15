@@ -181,6 +181,13 @@ function partitionBalanced(
 
 /* ── Media Type Auto-Detection Helper ────────────── */
 
+/** CDN'deki webp görselin 480px sürümü (*.w480.webp) — yalnızca bizim CDN için. */
+function smallVariantOf(url: string): string | null {
+  if (!/^https:\/\/cdn\.flixflex\.com\.tr\/media\/.+\.webp$/i.test(url)) return null
+  if (/\.w480\.webp$/i.test(url)) return null
+  return url.replace(/\.webp$/i, ".w480.webp")
+}
+
 function getResolvedMediaType(url?: string, type?: "video" | "image"): "video" | "image" {
   if (!url) return "image"
 
@@ -304,6 +311,14 @@ function MediaCapsule({ url, mediaType, accentHex, onExpand, width }: MediaCapsu
         ) : (
           <img
             src={url}
+            // Kapsül en fazla ~474px genişliğinde (mobilde ~130px). CDN'deki
+            // görsellerin yanında 480px'lik bir sürüm (*.w480.webp) varsa
+            // küçük ekranlar onu indirir; yoksa onError orijinale döner.
+            srcSet={smallVariantOf(url) ? `${smallVariantOf(url)} 480w, ${url} 1200w` : undefined}
+            sizes={smallVariantOf(url) ? "(max-width: 1279px) 33vw, 474px" : undefined}
+            onError={(e) => {
+              if (e.currentTarget.hasAttribute("srcset")) e.currentTarget.removeAttribute("srcset")
+            }}
             alt="manifesto visual capsule"
             className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover/capsule:scale-110"
             loading="lazy"
@@ -501,7 +516,7 @@ export function ModernManifestoSection({
     // separated by single spaces, media as fixed em-width boxes — so the fit is
     // pixel-accurate. `el.className` is copied so the ruler inherits the same
     // font-family/weight/uppercase/letter-spacing that affect glyph widths.
-    const measureRun = (run: LineItem[], wordSpacingPx = 0): number => {
+    const makeRuler = (run: LineItem[], wordSpacingPx = 0): HTMLDivElement => {
       const ruler = document.createElement("div")
       ruler.setAttribute("aria-hidden", "true")
       ruler.className = el.className
@@ -525,10 +540,21 @@ export function ModernManifestoSection({
         }
         ruler.appendChild(s)
       })
-      el.appendChild(ruler)
-      const w = ruler.offsetWidth
-      el.removeChild(ruler)
-      return w
+      return ruler
+    }
+
+    // Toplu ölçüm: tüm ruler'lar tek seferde eklenip tek yerleşim hesabıyla
+    // okunur (her ruler için ayrı zorunlu reflow yerine). Ruler'lar
+    // position:absolute olduğundan birbirlerinin genişliğini etkilemez —
+    // sonuçlar tek tek ölçümle birebir aynıdır.
+    const measureRuns = (specs: { run: LineItem[]; ws?: number }[]): number[] => {
+      const rulers = specs.map((sp) => makeRuler(sp.run, sp.ws ?? 0))
+      const frag = document.createDocumentFragment()
+      rulers.forEach((r) => frag.appendChild(r))
+      el.appendChild(frag)
+      const widths = rulers.map((r) => r.offsetWidth)
+      rulers.forEach((r) => el.removeChild(r))
+      return widths
     }
 
     const fit = () => {
@@ -543,7 +569,7 @@ export function ModernManifestoSection({
 
       // Per-item widths drive the split; an approximate space width is fine here
       // because the final fill uses exact per-line measurements below.
-      const widths = its.map((it) => measureRun([it]))
+      const widths = measureRuns(its.map((it) => ({ run: [it] })))
       const spaceApprox = REF_FONT * 0.28
 
       // Break into 4 lines of as-equal-as-possible natural width.
@@ -556,7 +582,12 @@ export function ModernManifestoSection({
 
       // Exact natural widths at REF_FONT (media at its natural em width).
       const PROBE = 10
-      const nat = lineRuns.map((r) => measureRun(r, 0))
+      // Satır genişlikleri + kelime-boşluğu sondası tek toplu ölçümde
+      const lineMeasures = measureRuns(
+        lineRuns.flatMap((r) => [{ run: r, ws: 0 }, { run: r, ws: PROBE }]),
+      )
+      const nat = lineRuns.map((_, i) => lineMeasures[i * 2])
+      const probed = lineRuns.map((_, i) => lineMeasures[i * 2 + 1])
 
       // ONE shared font size = the largest that still fits the WIDEST line at
       // its natural width (so no line overflows and no media has to shrink).
@@ -601,7 +632,7 @@ export function ModernManifestoSection({
           const w0 = nat[i] * (lineFont / REF_FONT)
           const slack = Math.max(0, containerW - w0)
           if (slack > 0.5) {
-            const spaces = Math.max(1, (measureRun(run, PROBE) - nat[i]) / PROBE)
+            const spaces = Math.max(1, (probed[i] - nat[i]) / PROBE)
             wordSpacingPx = slack / spaces
           }
         }
