@@ -3,7 +3,6 @@ import { Syne, DM_Sans, Geist, Outfit, Inter } from "next/font/google"
 import { cookies, headers } from "next/headers"
 import "./globals.css"
 import { ThemeProvider } from "@/components/shared/theme-provider"
-import { FFCursor } from "@/components/ui/ff-cursor"
 import { ActivePaletteStyle } from "@/lib/colors/palette-provider"
 import { cn } from "@/lib/utils";
 import { Toaster } from "sonner"
@@ -115,7 +114,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           İçeriğe geç
         </a>
         <ThemeProvider serverTheme={theme} enableSystem={false}>
-          <FFCursor />
           {children}
           <Toaster position="bottom-right" theme={theme} expand={false} richColors />
         </ThemeProvider>

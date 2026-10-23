@@ -27,7 +27,6 @@ export type { FFSelectProps } from "./ff-select"
 export { FFDivider }            from "./ff-divider"
 export { FFStatCounter }        from "./ff-stat-counter"
 export { FFMarquee, MarqueeTag } from "./ff-marquee"
-export { FFCursor }             from "./ff-cursor"
 export { FFSlider }             from "./ff-slider"
 
 // ── Theme ─────────────────────────────────────────
