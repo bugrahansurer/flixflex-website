@@ -490,6 +490,10 @@ export function ModernManifestoSection({
   // paused) and re-runs only when the available WIDTH changes, plus once web
   // fonts finish loading (their glyph widths move the fit).
   const TARGET_LINES = 4
+  // Mobilde (dar kap) daha çok, daha kısa satır: font büyür ve başlık BBDO
+  // gibi kareye yakın bir blok olarak ekranı doldurur.
+  const MOBILE_TARGET_LINES = 6
+  const MOBILE_MAX_WIDTH = 640
   const MIN_FONT = 12
   const MAX_FONT = 400
   const REF_FONT = 100 // reference px size used only for ruler measurement
@@ -573,12 +577,23 @@ export function ModernManifestoSection({
       const spaceApprox = REF_FONT * 0.28
 
       // Break into 4 lines of as-equal-as-possible natural width.
+      const isMobileLayout = containerW < MOBILE_MAX_WIDTH
       const groups = partitionBalanced(
         widths,
         spaceApprox,
-        Math.min(TARGET_LINES, its.length),
+        Math.min(isMobileLayout ? MOBILE_TARGET_LINES : TARGET_LINES, its.length),
       )
       const lineRuns = groups.map((idxs) => idxs.map((i) => its[i]))
+
+      // Yalnızca mobil (estetik): 2. medya kapsülü kendisinden sonraki
+      // kelimeyle yer değiştirir ("[medya2] FLEX" → "FLEX [medya2]").
+      // Satırın genişliği sıradan etkilenmez; masaüstü düzeni aynen kalır.
+      if (isMobileLayout) {
+        for (const run of lineRuns) {
+          const i = run.findIndex((it) => it.kind === "media" && it.index === 2)
+          if (i >= 0 && run[i + 1]?.kind === "word") [run[i], run[i + 1]] = [run[i + 1], run[i]]
+        }
+      }
 
       // Exact natural widths at REF_FONT (media at its natural em width).
       const PROBE = 10
@@ -777,7 +792,7 @@ export function ModernManifestoSection({
         // width, so on wide screens the type — and therefore the headline — can
         // be taller than one viewport. Letting the section grow keeps the
         // headline AND the dashboard fully visible instead of clipping them.
-        "relative flex flex-col items-center justify-center w-full min-h-screen overflow-hidden py-24 md:py-20",
+        "relative flex flex-col items-center justify-center w-full min-h-screen overflow-hidden py-12 md:py-20",
         // Background/text come from the resolved theme vars in `style` below;
         // keep only the structural classes here so the section adapts to the
         // active light/dark theme instead of being locked to a dark palette.
