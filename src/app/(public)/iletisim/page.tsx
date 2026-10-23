@@ -49,14 +49,15 @@ async function getContactSettings(): Promise<ContactSettings> {
 }
 
 export const metadata: Metadata = {
-  title: "İletişim · FlixFlex Reklam Ajansı",
+  title: "İletişim — Ücretsiz Ön Görüşme ve Teklif",
   description:
-    "Projenizi bizimle paylaşın. 24 saat içinde yanıt garantisi — İstanbul merkezli next-gen dijital ajans.",
+    "Projenizi bizimle paylaşın, 24 saat içinde dönüş yapalım. FlixFlex Reklam Ajansı — Kırklarsırtı Mh. Celal Bayar Cd., Tarsus, Mersin. Tel: +90 544 607 08 72.",
   openGraph: {
-    title: "İletişim · FlixFlex",
+    title: "FlixFlex İletişim",
     description: "Brief gönderin, birlikte büyüyelim.",
-    url: "https://flixflex.com.tr/iletisim",
+    url: "/iletisim",
   },
+  alternates: { canonical: "/iletisim" },
 }
 
 export default async function IletisimPage() {

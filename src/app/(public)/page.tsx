@@ -23,10 +23,12 @@ export async function generateMetadata(): Promise<Metadata> {
   ])
   return {
     // absolute: ana sayfa başlığı "%s | FlixFlex" şablonuna girmesin
-    title: { absolute: metaTitle || "FlixFlex — Markaları Domine Eder" },
+    title: { absolute: metaTitle || "FlixFlex — Mersin Reklam ve Dijital Pazarlama Ajansı" },
     description:
       metaDescription ||
-      "Hız. Güç. Esneklik. FlixFlex; markaları bir sonraki seviyeye taşıyan next-gen reklam ajansıdır.",
+      "FlixFlex; Tarsus, Mersin merkezli yeni nesil reklam ve dijital pazarlama ajansıdır. Google Ads, Meta reklamları, sosyal medya yönetimi, marka kimliği ve web tasarım.",
+    alternates: { canonical: "/" },
+    openGraph: { url: "/", type: "website" },
   }
 }
 
@@ -95,5 +97,12 @@ export default async function HomePage() {
     )
   }
 
-  return <PageRenderer sections={pageData.sections} portfolioItems={portfolioItems} servicesItems={servicesItems} />
+  return (
+    <>
+      {/* SEO/erişilebilirlik: sayfanın ana başlığı. Görsel hero başlığı iki
+          parçalı (h2) olduğundan H1 ekranda gösterilmeden eklenir. */}
+      <h1 className="sr-only">FlixFlex — Mersin Reklam ve Dijital Pazarlama Ajansı</h1>
+      <PageRenderer sections={pageData.sections} portfolioItems={portfolioItems} servicesItems={servicesItems} />
+    </>
+  )
 }

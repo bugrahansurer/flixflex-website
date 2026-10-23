@@ -67,7 +67,7 @@ function FactItem({
 
 // ── Section ───────────────────────────────────────────
 const DEFAULT_STORY_PARAGRAPHS = [
-  "FlixFlex, 2020 yılında İstanbul'da bir garaj ofisinde, iki kişilik bir ekibin \"neden Türk markalar dijitalde hak ettiği yerde değil?\" sorusundan doğdu. Cevap ne şablonlarda ne de ajans klişelerindeydi; cesaret, strateji ve veriydi.",
+  "FlixFlex, 2020 yılında Tarsus'ta bir garaj ofisinde, iki kişilik bir ekibin \"neden Türk markalar dijitalde hak ettiği yerde değil?\" sorusundan doğdu. Cevap ne şablonlarda ne de ajans klişelerindeydi; cesaret, strateji ve veriydi.",
   "İlk yılımızda 5 startup ile çalıştık — bütçeler küçük, hedefler büyüktü. Her bütçeyi sanki kendi paramızmış gibi harcadık, her sonucu şeffaf raporladık. Kulaktan kulağa yayılan itibar, bugün 50+ aktif müşteri portföyüne dönüştü.",
   "Bugün FlixFlex; strateji, yaratıcılık ve performans pazarlamasını tek çatı altında birleştiren 8 kişilik bir ekip. Biz sadece reklam yapmıyoruz — markaları bir sonraki seviyeye taşıyoruz.",
 ]

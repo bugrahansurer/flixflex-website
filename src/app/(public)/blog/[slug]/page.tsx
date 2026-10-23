@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { JsonLd, SITE_URL, breadcrumbLd } from "@/components/seo/json-ld"
 import { notFound } from "next/navigation"
 import { ReadingProgressBar } from "@/components/public/blog/reading-progress-bar"
 import { BlogTemplateClassic } from "@/components/public/blog/templates/blog-template-classic"
@@ -21,14 +22,14 @@ export async function generateMetadata({
 
   if (!post) {
     return {
-      title: "Yazı Bulunamadı | FlixFlex",
+      title: "Yazı Bulunamadı",
     }
   }
 
-  const url = `https://flixflex.com.tr/blog/${post.slug}`
+  const url = `/blog/${post.slug}`
 
   return {
-    title: `${post.title} | FlixFlex`,
+    title: post.title,
     description: post.excerpt,
     keywords: post.tags,
     openGraph: {
@@ -49,6 +50,31 @@ export async function generateMetadata({
       canonical: url,
     },
   }
+}
+
+// ── SSS → FAQPage ────────────────────────────────────────
+// İçerikteki "## Sık sorulan sorular" bölümündeki "### Soru" + paragraf
+// çiftlerini yapılandırılmış veriye çevirir (arama sonuçlarında SSS).
+function extractFaq(content: string): { q: string; a: string }[] {
+  const start = content.search(/^## Sık sorulan sorular\s*$/im)
+  if (start < 0) return []
+  const rest = content.slice(start).split("\n").slice(1).join("\n")
+  const end = rest.search(/^## /m)
+  const section = end >= 0 ? rest.slice(0, end) : rest
+  return section
+    .split(/^### /m)
+    .slice(1)
+    .map((block) => {
+      const [q, ...body] = block.trim().split("\n")
+      const a = body
+        .join(" ")
+        .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+        .replace(/\*\*/g, "")
+        .replace(/\s+/g, " ")
+        .trim()
+      return { q: q.trim(), a }
+    })
+    .filter((x) => x.q && x.a)
 }
 
 // ── Template map ─────────────────────────────────────────
@@ -77,8 +103,45 @@ export default async function BlogDetailPage({
   const related = await listRelatedBlogPosts(slug, 3, safePost.category)
   const Template = TEMPLATES[safePost.template]
 
+  const faq = extractFaq(safePost.content)
+
   return (
     <>
+      {faq.length > 0 && (
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faq.map((x) => ({
+              "@type": "Question",
+              name: x.q,
+              acceptedAnswer: { "@type": "Answer", text: x.a },
+            })),
+          }}
+        />
+      )}
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "BlogPosting",
+          headline: safePost.title,
+          description: safePost.excerpt,
+          ...(safePost.coverImage ? { image: safePost.coverImage } : {}),
+          datePublished: safePost.publishedAt,
+          inLanguage: "tr-TR",
+          articleSection: safePost.category,
+          mainEntityOfPage: `${SITE_URL}/blog/${safePost.slug}`,
+          author: { "@id": `${SITE_URL}/#organization` },
+          publisher: { "@id": `${SITE_URL}/#organization` },
+        }}
+      />
+      <JsonLd
+        data={breadcrumbLd([
+          { name: "Ana Sayfa", path: "/" },
+          { name: "Blog", path: "/blog" },
+          { name: safePost.title, path: `/blog/${safePost.slug}` },
+        ])}
+      />
       <ReadingProgressBar />
       <Template post={safePost} related={related} />
     </>

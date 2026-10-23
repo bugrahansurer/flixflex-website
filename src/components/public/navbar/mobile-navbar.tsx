@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import Link from "next/link"
+import { IntentLink as Link } from "@/components/public/intent-link"
 import { usePathname } from "next/navigation"
 import { motion } from "framer-motion"
 import { Home, Briefcase, FileText, Mail, Sparkles, Star } from "@/lib/icons"

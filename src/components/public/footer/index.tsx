@@ -1,6 +1,6 @@
 "use client"
 
-import Link from "next/link"
+import { IntentLink as Link } from "@/components/public/intent-link"
 import { motion } from "framer-motion"
 import { ArrowUpRight, Mail, MapPin, Phone } from "@/lib/icons"
 import { staggerContainer, fadeInUp } from "@/lib/animations"
@@ -21,7 +21,7 @@ export function FlixFlexFooter({ siteSettings = {} }: { siteSettings?: Record<st
     "Hız. Güç. Esneklik. Markaları bir sonraki seviyeye taşıyan next-gen reklam ajansı."
   const email = siteSettings.site_email || "info@flixflex.com.tr"
   const phone = siteSettings.site_phone || ""
-  const address = siteSettings.site_address || "Levent, İstanbul · Türkiye"
+  const address = siteSettings.site_address || "Tarsus, Mersin · Türkiye"
   const socialLinks = parseSocialLinks(siteSettings.site_social_links)
   // Alt bar sağdaki kompakt konum da site_address'ten beslenir: tam adresin
   // son virgül parçasını (şehir/ülke) gösterir. Örn "…D:41, İstanbul" → "İstanbul".

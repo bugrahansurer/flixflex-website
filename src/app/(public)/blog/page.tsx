@@ -12,16 +12,18 @@ import { PageRenderer } from "@/components/public/page-renderer"
 export const revalidate = 60
 
 export const metadata: Metadata = {
-  title: "Blog & Düşünceler | FlixFlex",
+  title: "Dijital Pazarlama Blogu: Reklam, Sosyal Medya ve E-Ticaret Rehberleri",
   description:
-    "Dijital pazarlama, marka stratejisi, performans ve yaratıcılık üzerine FlixFlex ekibinin içgörüleri.",
+    "Instagram ve Google reklam bütçeleri, sosyal medya yönetimi, e-ticaret ve dönüşüm üzerine işletmeler için pratik rehberler. FlixFlex — Tarsus, Mersin.",
   openGraph: {
-    title: "Blog & Düşünceler | FlixFlex",
+    title: "FlixFlex Blog — Dijital Pazarlama Rehberleri",
     description:
-      "Dijital pazarlama, marka stratejisi, performans ve yaratıcılık üzerine FlixFlex ekibinin içgörüleri.",
+      "Reklam bütçesi, sosyal medya, e-ticaret ve dönüşüm üzerine işletmeler için pratik rehberler.",
     type: "website",
     siteName: "FlixFlex",
+    url: "/blog",
   },
+  alternates: { canonical: "/blog" },
 }
 
 export default async function BlogPage() {

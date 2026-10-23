@@ -15,8 +15,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!page) return {}
 
   return {
-    title: `${page.title} — FlixFlex`,
+    title: page.title,
     description: page.description,
+    alternates: { canonical: `/${slug}` },
   }
 }
 

@@ -77,7 +77,7 @@ export interface ContactInfoProps {
 export function ContactInfo({ email, phone, address, workingHours, social }: ContactInfoProps = {}) {
   const emailVal = email?.trim() || "info@flixflex.com.tr"
   const phoneVal = phone?.trim() || "+90 532 383 35 54"
-  const addressVal = address?.trim() || "Mutsan Mh. İkitelli Sk. No:14 D:41, İstanbul"
+  const addressVal = address?.trim() || "Kırklarsırtı Mh. Celal Bayar Cd., Tarsus · Mersin"
   const hoursVal = workingHours?.trim() || "Pazartesi – Cuma · 09:00 – 18:00"
   const socialList = social && social.length > 0 ? social.filter((s) => s?.url) : DEFAULT_SOCIAL_LINKS
 

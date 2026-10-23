@@ -214,9 +214,9 @@ const SECTION_RENDERERS: Partial<Record<SectionType, (
             <span className="ff-shape-container inline-flex items-center gap-1.5 px-3 py-1 bg-[var(--ff-purple)]/10 backdrop-blur-xs border border-[var(--ff-purple)]/20 text-[11px] font-semibold text-[var(--ff-purple)]">
               Blog Yazıları
             </span>
-            <h2 className="font-display text-xl md:text-2xl lg:text-3xl font-extrabold text-[var(--foreground)] tracking-tight">
+            <h1 className="font-display text-xl md:text-2xl lg:text-3xl font-extrabold text-[var(--foreground)] tracking-tight">
               Haberdar Kalın
-            </h2>
+            </h1>
             <p className="text-xs text-[var(--foreground-muted)] max-w-xl">
               En güncel ve ilgi çekici blog yazılarını aşağıdan inceleyebilirsiniz.
             </p>

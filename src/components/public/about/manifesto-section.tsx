@@ -78,7 +78,7 @@ export function ManifestoSection({
         </motion.div>
 
         {/* Manifesto cümlesi — kelime-kelime reveal, vurgu gradient */}
-        <h2 className="font-display font-extrabold leading-[1.06] tracking-[-0.02em] text-[clamp(30px,5.4vw,68px)]">
+        <h1 className="font-display font-extrabold leading-[1.06] tracking-[-0.02em] text-[clamp(30px,5.4vw,68px)]">
           {words.map((w, i) => (
             <span
               key={i}
@@ -95,7 +95,7 @@ export function ManifestoSection({
               </motion.span>
             </span>
           ))}
-        </h2>
+        </h1>
 
         {/* Destek metni */}
         {description && (

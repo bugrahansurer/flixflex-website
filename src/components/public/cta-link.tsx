@@ -10,6 +10,7 @@
 
 import * as React from "react"
 import Link from "next/link"
+import { IntentLink } from "@/components/public/intent-link"
 import { useUIStore } from "@/lib/ui-store"
 
 /** Bu href randevu formunu mu hedefliyor? */
@@ -25,10 +26,11 @@ export function CtaLink({ href, onClick, children, ...rest }: CtaLinkProps) {
   const setAppointmentModalOpen = useUIStore((s) => s.setAppointmentModalOpen)
 
   if (!isAppointmentHref(href)) {
+    // Normal sayfa linki: yalnızca niyet anında önceden indir (bkz. IntentLink)
     return (
-      <Link href={href} onClick={onClick} {...rest}>
+      <IntentLink href={href} onClick={onClick} {...rest}>
         {children}
-      </Link>
+      </IntentLink>
     )
   }
 
@@ -36,6 +38,8 @@ export function CtaLink({ href, onClick, children, ...rest }: CtaLinkProps) {
   return (
     <Link
       href={href}
+      // Formu açar, /iletisim'e gitmez — sayfayı boşuna önceden indirme.
+      prefetch={false}
       {...rest}
       onClick={(e) => {
         onClick?.(e)

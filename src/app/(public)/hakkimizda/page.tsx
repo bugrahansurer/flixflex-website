@@ -12,9 +12,11 @@ import { listPublishedPortfolio } from "@/lib/content-store"
 import { PageRenderer } from "@/components/public/page-renderer"
 
 export const metadata: Metadata = {
-  title: "Hakkımızda — FlixFlex",
+  title: "Hakkımızda — Tarsus, Mersin Merkezli Dijital Reklam Ajansı",
   description:
-    "FlixFlex'in hikâyesi, ekibi, değerleri ve rakiplerden nasıl ayrıştığı. 2020'den bu yana İstanbul merkezli next-gen dijital reklam ajansı.",
+    "FlixFlex'in hikâyesi, ekibi ve değerleri. 2020'den bu yana Tarsus, Mersin merkezli; Türkiye genelinde markalara performans pazarlaması, sosyal medya ve marka kimliği hizmeti veren yeni nesil reklam ajansı.",
+  openGraph: { url: "/hakkimizda", type: "website" },
+  alternates: { canonical: "/hakkimizda" },
 }
 
 export default async function HakkimizdaPage() {

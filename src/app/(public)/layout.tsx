@@ -12,6 +12,7 @@ import { auth } from "@/lib/auth"
 import { AnalyticsTracker } from "@/components/analytics/analytics-tracker"
 import { SitePixels } from "@/components/analytics/site-pixels"
 import { CookieConsent } from "@/components/analytics/cookie-consent"
+import { SiteJsonLd } from "@/components/seo/site-json-ld"
 
 export default async function PublicLayout({
   children,
@@ -29,7 +30,7 @@ export default async function PublicLayout({
           key: { in: [
             "site_logo", "site_logo_white", "site_logo_height", "site_logo_mobile_height",
             "site_name", "site_tagline", "site_email", "site_phone", "site_address",
-            "site_social_links",
+            "site_social_links", "site_working_hours",
             "analytics.google.ga4", "analytics.google.gtm", "analytics.meta.pixel",
           ] }
         }
@@ -58,6 +59,8 @@ export default async function PublicLayout({
 
   return (
     <ParallaxProvider>
+      {/* Yapılandırılmış veri: ajans, adres, iletişim, sosyal hesaplar */}
+      <SiteJsonLd settings={siteSettings} />
       {/* First-party analytics + ad-platform pixels (only what's configured) */}
       <AnalyticsTracker />
       <SitePixels

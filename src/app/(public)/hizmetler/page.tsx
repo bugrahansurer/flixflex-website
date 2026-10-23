@@ -10,16 +10,17 @@ import { Eyebrow } from "@/components/ui/eyebrow"
 
 // ── SEO ────────────────────────────────────────────────────
 export const metadata: Metadata = {
-  title: "Hizmetler — FlixFlex Digital Agency",
+  title: "Hizmetler — Google Ads, Meta Reklamları, Sosyal Medya ve Web Tasarım",
   description:
-    "FlixFlex'in 6 temel hizmeti: Performance Marketing, Creative Direction, Social Media Management, Brand Identity, Content Production ve Web & Digital. Markanızı domine etmek için doğru araçlar.",
+    "Performans pazarlaması, Google Ads ve Meta/TikTok reklam yönetimi, sosyal medya yönetimi, marka kimliği, web sitesi ve e-ticaret çözümleri. Tarsus, Mersin merkezli FlixFlex, Türkiye geneline hizmet verir.",
   openGraph: {
-    title: "Hizmetler — FlixFlex",
+    title: "FlixFlex Hizmetleri",
     description:
-      "Veri odaklı büyüme, yaratıcı strateji ve marka kimliği. FlixFlex ile markanızı bir üst seviyeye taşıyın.",
-    url: "https://flixflex.com.tr/hizmetler",
+      "Veri odaklı büyüme, yaratıcı strateji ve marka kimliği. Reklam yönetiminden web sitesine tüm dijital pazarlama hizmetleri.",
+    url: "/hizmetler",
     type: "website",
   },
+  alternates: { canonical: "/hizmetler" },
 }
 
 export const revalidate = 60

@@ -8,18 +8,18 @@ import { PageRenderer } from "@/components/public/page-renderer"
 import { listPublishedPortfolio } from "@/lib/content-store"
 
 export const metadata: Metadata = {
-  title: "Portfolyo — FlixFlex | Seçili İşlerimiz",
+  title: "Portfolyo — Reklam, Sosyal Medya ve Marka Projelerimiz",
   description:
-    "Branding, performans, web ve içerik alanlarında teslim ettiğimiz 150+ projeye göz atın. Ölçülebilir sonuçlar, cesur tasarımlar.",
+    "Bursaspor, Pet Gourmet, Kurt Ofis ve daha fazlası: performans reklamcılığı, sosyal medya yönetimi ve marka kimliği alanlarında birlikte büyüttüğümüz markalar.",
   openGraph: {
-    title: "Portfolyo — FlixFlex",
+    title: "FlixFlex Portfolyo",
     description:
-      "Branding, performans, web ve içerik alanlarında teslim ettiğimiz 150+ projeye göz atın.",
-    url: "https://flixflex.com.tr/portfolio",
+      "Performans reklamcılığı, sosyal medya ve marka kimliği alanlarında birlikte büyüttüğümüz markalar.",
+    url: "/portfolio",
     type: "website",
   },
   alternates: {
-    canonical: "https://flixflex.com.tr/portfolio",
+    canonical: "/portfolio",
   },
 }
 

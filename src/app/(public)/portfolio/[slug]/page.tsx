@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { JsonLd, SITE_URL, breadcrumbLd } from "@/components/seo/json-ld"
 import { notFound } from "next/navigation"
 import { CTASection } from "@/components/public/sections/cta-section"
 import { PORTFOLIO } from "@/components/public/sections/portfolio-data"
@@ -29,20 +30,20 @@ export async function generateMetadata({
   const project = await getPublishedPortfolioBySlug(slug)
 
   if (!project) {
-    return { title: "Proje Bulunamadı — FlixFlex" }
+    return { title: "Proje Bulunamadı" }
   }
 
   return {
-    title: `${project.title} — ${project.client} | FlixFlex Portfolyo`,
+    title: `${project.title} — ${project.client} Projesi`,
     description: project.description,
     openGraph: {
       title: `${project.title} — ${project.client}`,
       description: project.description,
-      url: `https://flixflex.com.tr/portfolio/${slug}`,
+      url: `/portfolio/${slug}`,
       type: "article",
     },
     alternates: {
-      canonical: `https://flixflex.com.tr/portfolio/${slug}`,
+      canonical: `/portfolio/${slug}`,
     },
   }
 }
@@ -76,6 +77,23 @@ export default async function ProjectDetailPage({
 
   return (
     <>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "CreativeWork",
+          name: `${project.title} — ${project.client}`,
+          description: project.description,
+          url: `${SITE_URL}/portfolio/${slug}`,
+          creator: { "@id": `${SITE_URL}/#organization` },
+        }}
+      />
+      <JsonLd
+        data={breadcrumbLd([
+          { name: "Ana Sayfa", path: "/" },
+          { name: "Portfolyo", path: "/portfolio" },
+          { name: project.title, path: `/portfolio/${slug}` },
+        ])}
+      />
       <ProjectHero project={project} />
       <ProjectCover project={project} />
       <ProjectNarrative project={project} />

@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import Link from "next/link"
+import { IntentLink as Link } from "@/components/public/intent-link"
 import { usePathname } from "next/navigation"
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion"
 import { Menu, X, ArrowUpRight } from "@/lib/icons"

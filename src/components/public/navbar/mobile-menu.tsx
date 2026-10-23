@@ -2,7 +2,7 @@
 
 import { CtaLink } from "@/components/public/cta-link"
 import * as React from "react"
-import Link from "next/link"
+import { IntentLink as Link } from "@/components/public/intent-link"
 import { usePathname } from "next/navigation"
 import { AnimatePresence, motion } from "framer-motion"
 import { X, ArrowUpRight } from "@/lib/icons"
@@ -208,7 +208,7 @@ export function MobileMenu({ open, onClose, links, siteSettings = {} }: MobileMe
           {/* Footer */}
           <div className="px-6 py-5 border-t border-[var(--border)] text-[12px] text-[var(--foreground-faint)] flex items-center justify-between">
             <span>© {siteSettings.site_name || 'FlixFlex'} {new Date().getFullYear()}</span>
-            <span className="text-[var(--ff-purple)]">{siteSettings.site_address || 'İstanbul · Türkiye'}</span>
+            <span className="text-[var(--ff-purple)]">{siteSettings.site_address || 'Tarsus, Mersin · Türkiye'}</span>
           </div>
         </motion.div>
       )}

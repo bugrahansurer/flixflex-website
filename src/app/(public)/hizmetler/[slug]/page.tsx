@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { JsonLd, SITE_URL, breadcrumbLd } from "@/components/seo/json-ld"
 import { CtaLink } from "@/components/public/cta-link"
 import Link from "next/link"
 import { notFound } from "next/navigation"
@@ -32,18 +33,26 @@ export async function generateMetadata({
   const service = await getPublishedServiceBySlug(slug)
 
   if (!service) {
-    return { title: "Hizmet Bulunamadı — FlixFlex" }
+    return { title: "Hizmet Bulunamadı" }
   }
 
+  // Kısa açıklamalar meta için yetersiz: sayfadaki metne dokunmadan
+  // yalnızca meta açıklamaya konum + marka bilgisi eklenir.
+  const metaDescription =
+    (service.description || "").length < 120
+      ? `${service.description ? service.description.trim().replace(/.?$/, ".") + " " : ""}${service.title} hizmeti — FlixFlex, Tarsus, Mersin merkezli dijital pazarlama ajansı; Türkiye geneline hizmet verir.`
+      : service.description
+
   return {
-    title: `${service.title} — FlixFlex Hizmetleri`,
-    description: service.description,
+    title: `${service.title} — Mersin Dijital Pazarlama Ajansı`,
+    description: metaDescription,
     openGraph: {
       title: `${service.title} — FlixFlex`,
-      description: service.description,
-      url: `https://flixflex.com.tr/hizmetler/${slug}`,
+      description: metaDescription,
+      url: `/hizmetler/${slug}`,
       type: "website",
     },
+    alternates: { canonical: `/hizmetler/${slug}` },
   }
 }
 
@@ -67,18 +76,51 @@ export default async function ServiceDetailPage({
   const serviceWithChildren = await getPublishedServiceBySlug(slug)
   const children = serviceWithChildren?.children
 
+  // Yapılandırılmış veri: hizmet + breadcrumb
+  const seoLd = (
+    <>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Service",
+          name: resolvedService.title,
+          description: resolvedService.description,
+          url: `${SITE_URL}/hizmetler/${slug}`,
+          serviceType: resolvedService.title,
+          provider: { "@id": `${SITE_URL}/#organization` },
+          areaServed: [
+            { "@type": "City", name: "Tarsus" },
+            { "@type": "AdministrativeArea", name: "Mersin" },
+            { "@type": "Country", name: "Türkiye" },
+          ],
+        }}
+      />
+      <JsonLd
+        data={breadcrumbLd([
+          { name: "Ana Sayfa", path: "/" },
+          { name: "Hizmetler", path: "/hizmetler" },
+          { name: resolvedService.title, path: `/hizmetler/${slug}` },
+        ])}
+      />
+    </>
+  )
+
   if (children && children.length > 0) {
     return (
+      <>
+      {seoLd}
       <ParentServicePage
         service={{ ...resolvedService, children }}
         services={services}
         serviceIndex={serviceIndex}
       />
+      </>
     )
   }
 
   return (
     <>
+      {seoLd}
       {/* ══════════════════════════════════════════════════
           1. HERO
       ══════════════════════════════════════════════════ */}

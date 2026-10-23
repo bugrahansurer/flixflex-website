@@ -1,6 +1,6 @@
 "use client"
 
-import Link from "next/link"
+import { IntentLink as Link } from "@/components/public/intent-link"
 import Image from "next/image"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"

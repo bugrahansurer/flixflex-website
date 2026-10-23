@@ -7,11 +7,40 @@ import type { ReactNode } from "react"
 import { cn } from "@/lib/utils"
 
 // ── Inline bold (**text**) ────────────────────────────────
-function parseBold(text: string): ReactNode[] {
+function parseBoldOnly(text: string, keyPrefix = ""): ReactNode[] {
   const parts = text.split(/\*\*(.*?)\*\*/g)
   return parts.map((part, i) =>
-    i % 2 === 1 ? <strong key={i} className="font-semibold text-[var(--foreground)]">{part}</strong> : part
+    i % 2 === 1 ? <strong key={`${keyPrefix}b${i}`} className="font-semibold text-[var(--foreground)]">{part}</strong> : part
   )
+}
+
+// ── Inline link [metin](/adres) + bold ────────────────────
+// Yalnızca site içi (/…) ve https bağlantıları; dış bağlantılar yeni sekmede.
+function parseBold(text: string): ReactNode[] {
+  const out: ReactNode[] = []
+  const re = /\[([^\]]+)\]\((\/[^)\s]*|https:\/\/[^)\s]+)\)/g
+  let last = 0
+  let m: RegExpExecArray | null
+  let n = 0
+  while ((m = re.exec(text))) {
+    if (m.index > last) out.push(...parseBoldOnly(text.slice(last, m.index), `t${n}`))
+    const [, label, href] = m
+    const external = href.startsWith("http")
+    out.push(
+      <a
+        key={`l${n}`}
+        href={href}
+        {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+        className="font-medium text-[var(--ff-purple)] underline underline-offset-4 decoration-[var(--ff-purple)]/40 hover:decoration-[var(--ff-purple)] transition-colors"
+      >
+        {parseBoldOnly(label, `l${n}`)}
+      </a>
+    )
+    last = m.index + m[0].length
+    n++
+  }
+  if (last < text.length) out.push(...parseBoldOnly(text.slice(last), `t${n}`))
+  return out
 }
 
 // ── Block renderer ────────────────────────────────────────

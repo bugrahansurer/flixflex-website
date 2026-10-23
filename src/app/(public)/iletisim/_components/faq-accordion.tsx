@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Plus, Minus } from "@/lib/icons"
 import * as React from "react"
 import { cn } from "@/lib/utils"
+import { JsonLd } from "@/components/seo/json-ld"
 import { Eyebrow } from "@/components/ui/eyebrow"
 import { staggerContainer, fadeInUp, accordionContent } from "@/lib/animations"
 
@@ -114,8 +115,22 @@ export function FaqAccordion({ headline, subheadline, items }: FaqAccordionProps
   const lead = words.slice(0, -1).join(" ")
   const last = words[words.length - 1]
 
+  // Yapılandırılmış veri: SSS (Google'da genişletilebilir soru-cevap)
+  const faqLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: list
+      .filter((q) => q.question.trim() && q.answer.trim())
+      .map((q) => ({
+        "@type": "Question",
+        name: q.question,
+        acceptedAnswer: { "@type": "Answer", text: q.answer.replace(/<[^>]+>/g, "") },
+      })),
+  }
+
   return (
     <section className="bg-[var(--background)] py-20 md:py-28 border-t border-[var(--border)]">
+      {faqLd.mainEntity.length > 0 && <JsonLd data={faqLd} />}
       <div className="mx-auto max-w-[1440px] px-6 md:px-10 xl:px-16">
         <div className="grid lg:grid-cols-12 gap-10 lg:gap-16">
           {/* Left: heading */}

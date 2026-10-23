@@ -2,7 +2,7 @@
 
 import { CtaLink } from "@/components/public/cta-link"
 import * as React from "react"
-import Link from "next/link"
+import { IntentLink as Link } from "@/components/public/intent-link"
 import { AnimatePresence, motion } from "framer-motion"
 import { createPortal } from "react-dom"
 import { usePathname } from "next/navigation"
