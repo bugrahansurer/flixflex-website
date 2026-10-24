@@ -6,12 +6,26 @@ import {
   useState,
   ReactNode,
 } from 'react';
-import Image from 'next/image';
+import Image, { getImageProps } from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ChevronDown } from '@/lib/icons';
 
 /** isMobileState ile aynı kırılım (< 768px) */
 const MOBILE_MEDIA_QUERY = '(max-width: 767px)';
+
+/** Kartın ilk (kapalı) genişliği: mobil 240px, masaüstü 320px */
+const POSTER_SIZES = '(max-width: 767px) 240px, 320px';
+
+/**
+ * Kapak görselinin karta göre boyutlandırılmış srcset'i (Next görsel
+ * optimizasyonu). Açılışta 1080px+ orijinal yerine kart boyutunda bir sürüm
+ * iner; ilk boyama için gereken CSS/font ile bant genişliği yarışmaz.
+ * Yalnızca optimizasyona izin verilen kaynaklar (kendi CDN'imiz / yerel).
+ */
+function posterSrcSet(src?: string): string | undefined {
+  if (!src || !(src.startsWith('https://cdn.flixflex.com.tr/') || src.startsWith('/'))) return undefined;
+  return getImageProps({ src, alt: '', width: 320, height: 420, sizes: POSTER_SIZES }).props.srcSet;
+}
 
 export interface ScrollExpandMediaProps {
   mediaType?: 'video' | 'image';
@@ -195,6 +209,11 @@ export const ScrollExpandMedia = ({
 
   // LCP optimizasyonu: poster'ı SSR'da anında görünen fetchPriority=high <img> olarak da basıyoruz.
   const effectivePoster = posterSrc;
+  // Kart büyümeye başlayınca (ilk kaydırma) tam çözünürlüklü orijinale geçilir;
+  // tarayıcı yenisi inene kadar eskisini gösterdiği için geçiş görünmez.
+  const posterHiRes = scrollProgress > 0;
+  const posterSet = posterHiRes ? undefined : posterSrcSet(posterSrc);
+  const posterMobileSet = posterHiRes ? undefined : posterSrcSet(posterSrcMobile);
 
   return (
     <div
@@ -291,9 +310,17 @@ export const ScrollExpandMedia = ({
                 {/* SSR poster — LCP için anında boyanır, video yüklenince altında kalır */}
                 {effectivePoster && (
                   <picture>
-                    {posterSrcMobile && <source media={MOBILE_MEDIA_QUERY} srcSet={posterSrcMobile} />}
+                    {posterSrcMobile && (
+                      <source
+                        media={MOBILE_MEDIA_QUERY}
+                        srcSet={posterMobileSet ?? posterSrcMobile}
+                        sizes={posterMobileSet ? POSTER_SIZES : undefined}
+                      />
+                    )}
                     <img
                       src={effectivePoster}
+                      srcSet={posterSet}
+                      sizes={posterSet ? POSTER_SIZES : undefined}
                       alt=''
                       aria-hidden
                       fetchPriority='high'
@@ -307,9 +334,8 @@ export const ScrollExpandMedia = ({
                 <video
                   key={`${mediaSrcMobile ? 'responsive' : 'single'}-${loadVideo ? 'on' : 'off'}`}
                   src={!loadVideo || mediaSrcMobile ? undefined : mediaSrc}
-                  // Mobil kapak ayrıysa video poster'ı boş bırakılır; altta
-                  // <picture> doğru kapağı gösterir.
-                  poster={posterSrcMobile ? undefined : posterSrc}
+                  // poster verilmez: kapak altta <picture> ile gösteriliyor;
+                  // video poster'ı aynı görselin tam boyunu ikinci kez indirir.
                   autoPlay
                   muted
                   loop

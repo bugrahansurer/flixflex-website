@@ -2,7 +2,15 @@
 
 import * as React from "react"
 import { AnimatePresence, motion } from "framer-motion"
+import { getImageProps } from "next/image"
 import { cn } from "@/lib/utils"
+
+/** Logo yüksekliğinin 1x/2x katlarında optimize sürüm (yalnızca kendi CDN'imiz / yerel). */
+function optimizedLogoSrcSet(src: string, height: number): string | undefined {
+  if (!(src.startsWith("https://cdn.flixflex.com.tr/") || src.startsWith("/"))) return undefined
+  // Genişlik bilinmiyor; logolar genelde yataydır — 4:1'e kadar keskin kalsın.
+  return getImageProps({ src, alt: "", width: height * 4, height }).props.srcSet
+}
 
 const STORAGE_KEY = "ff:loadingScreen:seen"
 // Snappier than before — minimalist loaders shouldn't linger.
@@ -75,6 +83,8 @@ export function LoadingScreen({ logoUrl, logoHeight }: LoadingScreenProps) {
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={logoUrl}
+                // Ham logo dosyası (ör. 1250px) yerine görünen boya uygun sürüm.
+                srcSet={optimizedLogoSrcSet(logoUrl, logoHeight || 44)}
                 alt="FlixFlex"
                 className="w-auto object-contain"
                 style={{ height: logoHeight || 44 }}
