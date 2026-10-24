@@ -27,6 +27,8 @@ export async function generateMetadata({
   }
 
   const url = `/blog/${post.slug}`
+  const shareImage = post.ogImage || post.coverImage
+  const images = shareImage ? [{ url: shareImage, alt: post.title }] : undefined
 
   return {
     title: post.title,
@@ -40,11 +42,13 @@ export async function generateMetadata({
       siteName: "FlixFlex",
       publishedTime: post.publishedAt,
       tags: post.tags,
+      ...(images ? { images } : {}),
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: post.excerpt,
+      ...(images ? { images } : {}),
     },
     alternates: {
       canonical: url,

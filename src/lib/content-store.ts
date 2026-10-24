@@ -279,6 +279,7 @@ type BlogRow = {
   excerpt: string | null
   content: string
   coverImage: string | null
+  ogImage?: string | null
   coverGradient: string | null
   template: string
   category: string | null
@@ -301,6 +302,7 @@ function mapBlogPost(row: BlogRow): PublicBlogPost {
     excerpt: row.excerpt ?? "",
     content: row.content,
     coverImage: row.coverImage ?? null,
+    ogImage: row.ogImage ?? null,
     coverGradient: row.coverGradient ?? DEFAULT_BLOG_GRADIENT,
     template,
     category: row.category ?? "Genel",

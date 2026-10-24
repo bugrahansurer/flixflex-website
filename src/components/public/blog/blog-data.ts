@@ -10,6 +10,8 @@ export interface BlogPost {
   content: string
   /** Admin-uploaded cover image URL (preferred over coverGradient when set). */
   coverImage?: string | null
+  /** Paylaşım (Open Graph) görseli; yoksa kapak kullanılır. */
+  ogImage?: string | null
   coverGradient: string
   template: "classic" | "editorial" | "visual"
   category: string
