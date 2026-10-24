@@ -6,6 +6,7 @@ import {
   useState,
   ReactNode,
 } from 'react';
+import { preload } from 'react-dom';
 import Image, { getImageProps } from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ChevronDown } from '@/lib/icons';
@@ -214,6 +215,15 @@ export const ScrollExpandMedia = ({
   const posterHiRes = scrollProgress > 0;
   const posterSet = posterHiRes ? undefined : posterSrcSet(posterSrc);
   const posterMobileSet = posterHiRes ? undefined : posterSrcSet(posterSrcMobile);
+  // Kapak (LCP öğesi) <head>'de önceden yüklenir; tarayıcı gövdedeki <img>'ye
+  // gelmeyi beklemeden isteği başlatır. Mobil/masaüstü kapakları media ile
+  // ayrılır — her cihaz yalnızca kendi kapağını indirir.
+  if (posterMobileSet && posterSrcMobile) {
+    preload(posterSrcMobile, { as: 'image', imageSrcSet: posterMobileSet, imageSizes: POSTER_SIZES, fetchPriority: 'high', media: MOBILE_MEDIA_QUERY });
+  }
+  if (posterSet && posterSrc) {
+    preload(posterSrc, { as: 'image', imageSrcSet: posterSet, imageSizes: POSTER_SIZES, fetchPriority: 'high', media: posterMobileSet ? '(min-width: 768px)' : undefined });
+  }
 
   return (
     <div
