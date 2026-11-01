@@ -34,7 +34,8 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${project.title} — ${project.client} Projesi`,
+    // Proje başlığı zaten müşteri adını içeriyor; tekrar eklemek başlığı 70+ karaktere taşıyordu.
+    title: project.title,
     description: project.description,
     openGraph: {
       title: `${project.title} — ${project.client}`,

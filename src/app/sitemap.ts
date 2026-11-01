@@ -19,6 +19,10 @@ const STATIC_PAGES: Array<{ path: string; changeFrequency: Entry["changeFrequenc
   { path: "/blog",       changeFrequency: "daily",   priority: 0.8 },
   { path: "/hakkimizda", changeFrequency: "monthly", priority: 0.7 },
   { path: "/iletisim",   changeFrequency: "yearly",  priority: 0.7 },
+  // Şehir açılış sayfaları (src/components/public/local/local-pages.ts)
+  { path: "/mersin-web-tasarim",         changeFrequency: "monthly", priority: 0.8 },
+  { path: "/adana-web-tasarim",          changeFrequency: "monthly", priority: 0.8 },
+  { path: "/mersin-sosyal-medya-ajansi", changeFrequency: "monthly", priority: 0.8 },
 ]
 
 // Kendi rotası olan ya da ana sayfa olan sayfa kayıtları (yukarıda zaten var)

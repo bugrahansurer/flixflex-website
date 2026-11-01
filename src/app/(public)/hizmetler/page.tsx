@@ -10,7 +10,7 @@ import { Eyebrow } from "@/components/ui/eyebrow"
 
 // ── SEO ────────────────────────────────────────────────────
 export const metadata: Metadata = {
-  title: "Hizmetler — Google Ads, Meta Reklamları, Sosyal Medya ve Web Tasarım",
+  title: "Hizmetlerimiz — Reklam, Sosyal Medya ve Web Tasarım",
   description:
     "Performans pazarlaması, Google Ads ve Meta/TikTok reklam yönetimi, sosyal medya yönetimi, marka kimliği, web sitesi ve e-ticaret çözümleri. Tarsus, Mersin merkezli FlixFlex, Türkiye geneline hizmet verir.",
   openGraph: {

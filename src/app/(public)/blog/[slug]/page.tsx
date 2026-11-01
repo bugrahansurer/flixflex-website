@@ -31,7 +31,8 @@ export async function generateMetadata({
   const images = shareImage ? [{ url: shareImage, alt: post.title }] : undefined
 
   return {
-    title: post.title,
+    // Uzun başlıklarda " | FlixFlex" eki atlanır; Google 60-70 karakterden sonrasını keser.
+    title: post.title.length > 55 ? { absolute: post.title } : post.title,
     description: post.excerpt,
     keywords: post.tags,
     openGraph: {

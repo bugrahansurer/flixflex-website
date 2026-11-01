@@ -12,6 +12,8 @@ import { DeliverablesGrid } from "@/components/public/services/deliverables-grid
 import { CaseStudyTeaser } from "@/components/public/services/case-study-teaser"
 import { ServiceCta } from "@/components/public/services/service-cta"
 import { ServiceHeroVisual } from "@/components/public/services/service-hero-visual"
+import { ServiceGuideSection } from "@/components/public/services/service-guide"
+import { SERVICE_GUIDES } from "@/components/public/services/service-guides"
 import { ParentServicePage } from "./parent-service-page"
 import { StarField } from "@/components/ui/star-field"
 import { Eyebrow } from "@/components/ui/eyebrow"
@@ -38,13 +40,17 @@ export async function generateMetadata({
 
   // Kısa açıklamalar meta için yetersiz: sayfadaki metne dokunmadan
   // yalnızca meta açıklamaya konum + marka bilgisi eklenir.
+  // Öncelik: koddaki SEO rehberi → admin'deki SEO alanları → otomatik.
+  const guide = SERVICE_GUIDES[slug]
   const metaDescription =
-    (service.description || "").length < 120
+    guide?.seoDescription ||
+    service.metaDescription?.trim() ||
+    ((service.description || "").length < 120
       ? `${service.description ? service.description.trim().replace(/.?$/, ".") + " " : ""}${service.title} hizmeti — FlixFlex, Tarsus, Mersin merkezli dijital pazarlama ajansı; Türkiye geneline hizmet verir.`
-      : service.description
+      : service.description)
 
   return {
-    title: `${service.title} — Mersin Dijital Pazarlama Ajansı`,
+    title: guide?.seoTitle || service.metaTitle?.trim() || `${service.title} — Mersin Dijital Pazarlama Ajansı`,
     description: metaDescription,
     openGraph: {
       title: `${service.title} — FlixFlex`,
@@ -252,6 +258,9 @@ export default async function ServiceDetailPage({
           <DeliverablesGrid items={resolvedService.deliverables} />
         </div>
       </section>
+
+      {/* Uzun içerik + SSS (yalnızca rehberi yazılmış hizmetlerde) */}
+      {SERVICE_GUIDES[slug] && <ServiceGuideSection guide={SERVICE_GUIDES[slug]} />}
 
       {/* ══════════════════════════════════════════════════
           4. CASE STUDY TEASER

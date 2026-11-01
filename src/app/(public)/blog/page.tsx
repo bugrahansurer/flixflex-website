@@ -12,7 +12,7 @@ import { PageRenderer } from "@/components/public/page-renderer"
 export const revalidate = 60
 
 export const metadata: Metadata = {
-  title: "Dijital Pazarlama Blogu: Reklam, Sosyal Medya ve E-Ticaret Rehberleri",
+  title: "Dijital Pazarlama Blogu — Reklam ve E-Ticaret Rehberleri",
   description:
     "Instagram ve Google reklam bütçeleri, sosyal medya yönetimi, e-ticaret ve dönüşüm üzerine işletmeler için pratik rehberler. FlixFlex — Tarsus, Mersin.",
   openGraph: {

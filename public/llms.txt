@@ -1,0 +1,36 @@
+# FlixFlex
+
+> FlixFlex, Tarsus (Mersin) merkezli bir reklam ve dijital pazarlama ajansıdır. Markalara performans reklamları (Google Ads, Meta, TikTok), sosyal medya yönetimi, kreatif yönetimi, marka kimliği, web sitesi ve e-ticaret çözümleri sunar. Mersin, Tarsus ve Adana başta olmak üzere Türkiye geneline hizmet verir.
+
+FlixFlex adı iki fikirden gelir: Flix, kaydırmayı durduran an; Flex, o anı kalıcı büyümeye çeviren esneklik. Şablon yerine markaya özel strateji, aylık PDF yerine canlı veri, şeffaf fiyat ve yazılı teslim taahhüdü ile çalışır. Aylık, 3, 6 ve 12 aylık paketler sunulur. İletişim: info@flixflex.com.tr
+
+## Hizmetler
+
+- [Performans Pazarlaması](https://flixflex.com.tr/hizmetler/performans-pazarlamasi): Reklam bütçesini satışa çeviren veri odaklı kampanya yönetimi
+- [Google Ads Yönetimi](https://flixflex.com.tr/hizmetler/google-ads-yonetimi): Arama, Performance Max ve YouTube kampanyaları
+- [Meta ve TikTok Reklamları](https://flixflex.com.tr/hizmetler/meta-tiktok-reklamlari): Instagram, Facebook ve TikTok reklam yönetimi
+- [Sosyal Medya Yönetimi](https://flixflex.com.tr/hizmetler/sosyal-medya-yonetimi): İçerik planı, üretim ve topluluk yönetimi
+- [Kreatif Yönetimi](https://flixflex.com.tr/hizmetler/yaratici-yonetim): Reklam kreatifleri ve motion design
+- [Marka Kimliği](https://flixflex.com.tr/hizmetler/marka-kimligi): Logo, renk, tipografi ve marka dili
+- [Web Sitesi Tasarımı](https://flixflex.com.tr/hizmetler/web-sitesi-tasarimi): Mersin ve Türkiye geneli için hızlı, dönüşüm odaklı web siteleri
+- [E-ticaret Çözümleri](https://flixflex.com.tr/hizmetler/e-ticaret-cozumleri): E-ticaret sitesi kurulumu ve büyütme
+- [Dönüşüm Optimizasyonu](https://flixflex.com.tr/hizmetler/donusum-optimizasyonu): Site ve reklam dönüşüm oranını artırma
+- [Video Prodüksiyon](https://flixflex.com.tr/hizmetler/video-produksiyon): Reklam videoları ve içerik üretimi
+
+## Rehberler
+
+- [Instagram Reklam Fiyatları 2026](https://flixflex.com.tr/blog/instagram-reklam-fiyatlari-2026)
+- [Google Ads Maliyeti 2026](https://flixflex.com.tr/blog/google-ads-maliyeti-2026)
+- [Sosyal Medya Yönetimi Fiyatları 2026](https://flixflex.com.tr/blog/sosyal-medya-yonetimi-fiyatlari-2026)
+- [E-Ticaret Sitesi Kurma Maliyeti 2026](https://flixflex.com.tr/blog/e-ticaret-sitesi-kurma-maliyeti-2026)
+- [Reklam Ajansı Nasıl Seçilir?](https://flixflex.com.tr/blog/reklam-ajansi-nasil-secilir)
+- [Instagram Reklamları Neden İşe Yaramıyor?](https://flixflex.com.tr/blog/instagram-reklamlari-neden-ise-yaramiyor)
+- [Reklam Verdim Satış Gelmiyor](https://flixflex.com.tr/blog/reklam-verdim-satis-gelmiyor)
+- [Meta Pixel ve Conversion API Kurulumu](https://flixflex.com.tr/blog/meta-pixel-conversion-api-kurulumu)
+- [Mersin'de Dijital Pazarlama Rehberi](https://flixflex.com.tr/blog/mersin-dijital-pazarlama-rehberi)
+
+## Kurumsal
+
+- [Hakkımızda](https://flixflex.com.tr/hakkimizda)
+- [Portfolyo](https://flixflex.com.tr/portfolio): Bursaspor, Filinta Kuruyemiş, Pet Gourmet ve diğer projeler
+- [İletişim ve ücretsiz ön görüşme](https://flixflex.com.tr/iletisim)

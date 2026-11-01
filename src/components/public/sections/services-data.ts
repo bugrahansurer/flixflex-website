@@ -63,6 +63,9 @@ export interface Service {
   gradient?: string | null
   /** Seçili motion design preset anahtarı (boş → hizmet adından otomatik) */
   motionDesign?: string | null
+  /** Admin'den girilen SEO başlığı / açıklaması (boş → otomatik) */
+  metaTitle?: string | null
+  metaDescription?: string | null
 }
 
 export const SERVICES: Service[] = [

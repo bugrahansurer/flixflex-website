@@ -77,23 +77,27 @@ export function ManifestoSection({
           <Eyebrow align="center">{eyebrow}</Eyebrow>
         </motion.div>
 
-        {/* Manifesto cümlesi — kelime-kelime reveal, vurgu gradient */}
+        {/* Manifesto cümlesi — kelime-kelime reveal, vurgu gradient.
+            Kelimeler arasında gerçek boşluk karakteri var (margin değil);
+            yoksa arama motorları başlığı tek kelime gibi okur. */}
         <h1 className="font-display font-extrabold leading-[1.06] tracking-[-0.02em] text-[clamp(30px,5.4vw,68px)]">
           {words.map((w, i) => (
-            <span
-              key={i}
-              className={cn("inline-block overflow-hidden align-bottom", i < words.length - 1 && "mr-[0.26em]")}
-              style={{ paddingBottom: "0.08em" }}
-            >
-              <motion.span
-                className={cn("inline-block", isHighlighted(w, highlight) && "ff-hero-gradient-text")}
-                initial={{ y: "115%" }}
-                animate={{ y: "0%" }}
-                transition={{ duration: 0.65, delay: 0.1 + i * 0.05, ease: EASE }}
+            <React.Fragment key={i}>
+              <span
+                className="inline-block overflow-hidden align-bottom"
+                style={{ paddingBottom: "0.08em" }}
               >
-                {w}
-              </motion.span>
-            </span>
+                <motion.span
+                  className={cn("inline-block", isHighlighted(w, highlight) && "ff-hero-gradient-text")}
+                  initial={{ y: "115%" }}
+                  animate={{ y: "0%" }}
+                  transition={{ duration: 0.65, delay: 0.1 + i * 0.05, ease: EASE }}
+                >
+                  {w}
+                </motion.span>
+              </span>
+              {i < words.length - 1 && " "}
+            </React.Fragment>
           ))}
         </h1>
 
