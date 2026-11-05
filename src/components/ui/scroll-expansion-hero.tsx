@@ -28,6 +28,26 @@ function posterSrcSet(src?: string): string | undefined {
   return getImageProps({ src, alt: '', width: 320, height: 420, sizes: POSTER_SIZES }).props.srcSet;
 }
 
+/**
+ * Tekerlek olayını piksele çevirir. Firefox fare tekerleğinde satır (deltaMode 1)
+ * bildirir; piksel gibi okunursa kart neredeyse hiç büyümez.
+ */
+function wheelDeltaPx(e: globalThis.WheelEvent): number {
+  if (e.deltaMode === 1) return e.deltaY * 40;
+  if (e.deltaMode === 2) return e.deltaY * window.innerHeight;
+  return e.deltaY;
+}
+
+/**
+ * Kaydırma miktarının karttaki ilerlemeye karşılığı. Fare dişlisi (~120px)
+ * 0.0009/px ile aynı kalır; touchpad'in küçük olayları (<30px) iki kat etkilidir,
+ * yoksa kartı açmak için onlarca hamle gerekir. Eğri süreklidir, sıçrama yapmaz.
+ */
+function wheelProgressDelta(px: number): number {
+  const abs = Math.abs(px);
+  return Math.sign(px) * Math.max(abs * 0.0009, Math.min(abs * 0.0018, 0.054));
+}
+
 export interface ScrollExpandMediaProps {
   mediaType?: 'video' | 'image';
   mediaSrc: string;
@@ -59,8 +79,6 @@ export const ScrollExpandMedia = ({
 }: ScrollExpandMediaProps) => {
   const [scrollProgress, setScrollProgress] = useState<number>(0);
   const [showContent, setShowContent] = useState<boolean>(false);
-  const [mediaFullyExpanded, setMediaFullyExpanded] = useState<boolean>(false);
-  const [touchStartY, setTouchStartY] = useState<number>(0);
   const [isMobileState, setIsMobileState] = useState<boolean>(false);
   // Kapak görseli varsa video, sayfa yüklemesi (load) bitene kadar indirilmez:
   // kartta videonun ilk karesi (kapak) görünür, ilk boyama için gereken
@@ -68,79 +86,84 @@ export const ScrollExpandMedia = ({
   const [loadVideo, setLoadVideo] = useState<boolean>(!posterSrc);
 
   const sectionRef = useRef<HTMLDivElement | null>(null);
+  // Güncel değerler ref'te tutulur: touchpad olayları render'dan hızlı gelir,
+  // state'ten okunursa araya giren olaylar eski değerin üstüne yazılıp kaybolur.
+  const progressRef = useRef<number>(0);
+  const expandedRef = useRef<boolean>(false);
+  const touchStartYRef = useRef<number>(0);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     /* eslint-disable-next-line react-hooks/set-state-in-effect */
     setScrollProgress(0);
     setShowContent(false);
-    setMediaFullyExpanded(false);
+    progressRef.current = 0;
+    expandedRef.current = false;
   }, [mediaType]);
 
   useEffect(() => {
-    const handleWheel = (e: globalThis.WheelEvent) => {
-      if (mediaFullyExpanded && e.deltaY < 0 && window.scrollY <= 5) {
-        setMediaFullyExpanded(false);
-        e.preventDefault();
-      } else if (!mediaFullyExpanded) {
-        e.preventDefault();
-        const scrollDelta = e.deltaY * 0.0009;
-        const newProgress = Math.min(
-          Math.max(scrollProgress + scrollDelta, 0),
-          1
-        );
-        setScrollProgress(newProgress);
+    let frame = 0;
+    const flushProgress = (): void => {
+      frame = 0;
+      setScrollProgress(progressRef.current);
+    };
 
-        if (newProgress >= 1) {
-          setMediaFullyExpanded(true);
-          setShowContent(true);
-        } else if (newProgress < 0.75) {
-          setShowContent(false);
-        }
+    // Her olay ref'e işlenir; ekran kare başına bir kez güncellenir.
+    const advance = (delta: number): void => {
+      const newProgress = Math.min(Math.max(progressRef.current + delta, 0), 1);
+      progressRef.current = newProgress;
+      if (!frame) frame = requestAnimationFrame(flushProgress);
+
+      if (newProgress >= 1) {
+        expandedRef.current = true;
+        setShowContent(true);
+      } else if (newProgress < 0.75) {
+        setShowContent(false);
+      }
+    };
+
+    const handleWheel = (e: globalThis.WheelEvent) => {
+      // Touchpad'de iki parmakla yakınlaştırma (ctrl) ve yatay hareket (geri
+      // kaydırma) tarayıcıda kalsın.
+      if (e.ctrlKey || e.deltaY === 0) return;
+
+      if (expandedRef.current && e.deltaY < 0 && window.scrollY <= 5) {
+        expandedRef.current = false;
+        e.preventDefault();
+      } else if (!expandedRef.current) {
+        e.preventDefault();
+        advance(wheelProgressDelta(wheelDeltaPx(e)));
       }
     };
 
     const handleTouchStart = (e: globalThis.TouchEvent) => {
-      setTouchStartY(e.touches[0].clientY);
+      touchStartYRef.current = e.touches[0].clientY;
     };
 
     const handleTouchMove = (e: globalThis.TouchEvent) => {
-      if (!touchStartY) return;
+      if (!touchStartYRef.current) return;
 
       const touchY = e.touches[0].clientY;
-      const deltaY = touchStartY - touchY;
+      const deltaY = touchStartYRef.current - touchY;
 
-      if (mediaFullyExpanded && deltaY < -20 && window.scrollY <= 5) {
-        setMediaFullyExpanded(false);
+      if (expandedRef.current && deltaY < -20 && window.scrollY <= 5) {
+        expandedRef.current = false;
         e.preventDefault();
-      } else if (!mediaFullyExpanded) {
+      } else if (!expandedRef.current) {
         e.preventDefault();
         // Increase sensitivity for mobile, especially when scrolling back
         const scrollFactor = deltaY < 0 ? 0.008 : 0.005; // Higher sensitivity for scrolling back
-        const scrollDelta = deltaY * scrollFactor;
-        const newProgress = Math.min(
-          Math.max(scrollProgress + scrollDelta, 0),
-          1
-        );
-        setScrollProgress(newProgress);
-
-        if (newProgress >= 1) {
-          setMediaFullyExpanded(true);
-          setShowContent(true);
-        } else if (newProgress < 0.75) {
-          setShowContent(false);
-        }
-
-        setTouchStartY(touchY);
+        advance(deltaY * scrollFactor);
+        touchStartYRef.current = touchY;
       }
     };
 
     const handleTouchEnd = (): void => {
-      setTouchStartY(0);
+      touchStartYRef.current = 0;
     };
 
     const handleScroll = (): void => {
-      if (!mediaFullyExpanded) {
+      if (!expandedRef.current) {
         window.scrollTo(0, 0);
       }
     };
@@ -162,6 +185,7 @@ export const ScrollExpandMedia = ({
     window.addEventListener('touchend', handleTouchEnd);
 
     return () => {
+      cancelAnimationFrame(frame);
       window.removeEventListener(
         'wheel',
         handleWheel
@@ -177,7 +201,7 @@ export const ScrollExpandMedia = ({
       );
       window.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [scrollProgress, mediaFullyExpanded, touchStartY]);
+  }, []);
 
   useEffect(() => {
     if (loadVideo) return;

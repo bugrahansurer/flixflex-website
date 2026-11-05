@@ -4,7 +4,6 @@ import { AppointmentModalLazy as AppointmentModal } from "@/components/public/ap
 import { ParallaxProvider } from "@/components/public/parallax-provider"
 import { ThemedNavbar } from "@/components/public/navbar/themed-navbar"
 import { PageTransition } from "@/components/shared/page-transition"
-import { LoadingScreen } from "@/components/shared/loading-screen"
 import { MaintenanceScreen } from "@/components/shared/maintenance-screen"
 import { prisma } from "@/lib/prisma"
 import { getSetting } from "@/lib/settings"
@@ -77,10 +76,6 @@ export default async function PublicLayout({
         speed={300}
         easing="cubic-bezier(0.16, 1, 0.3, 1)"
         crawlSpeed={180}
-      />
-      <LoadingScreen
-        logoUrl={siteSettings.site_logo_white || siteSettings.site_logo}
-        logoHeight={siteSettings.site_logo_height ? parseInt(siteSettings.site_logo_height) : undefined}
       />
       <ThemedNavbar />
       <PageTransition>
