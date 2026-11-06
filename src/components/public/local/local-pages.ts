@@ -37,7 +37,7 @@ export const LOCAL_PAGES: Record<string, LocalPage> = {
           heading: "Mersin'de web tasarım ajansı arayanlar için",
           paragraphs: [
             "Mersin; limanı, serbest bölgesi, narenciye ve tarım ihracatı, lojistik firmaları, turizmi ve hızla büyüyen hizmet sektörüyle Türkiye'nin en hareketli ticaret şehirlerinden biri. Bu çeşitlilik web sitelerine de yansıyor: ihracat yapan bir firmanın çoklu dil desteğine, bir klinik ya da restoranın hızlı randevu ve rezervasyona, bir mağazanın ise Instagram'dan gelen ziyaretçiyi satışa çevirecek sayfalara ihtiyacı var.",
-            "FlixFlex, 2020'den bu yana Tarsus merkezli olarak çalışan bir dijital ajans. Mersin web tasarım projelerinde işletmenin ne sattığını, kime sattığını ve müşterinin siteye nereden geldiğini anlayarak işe başlıyoruz. Hazır tema yerine markanıza özel tasarım yapıyoruz.",
+            "FlixFlex, 2020'den bu yana Tarsus merkezli olarak çalışan bir dijital ajans. Mersin web tasarım hizmeti verirken işletmenin ne sattığını, kime sattığını ve müşterinin siteye nereden geldiğini anlayarak işe başlıyoruz. Hazır tema yerine markanıza özel, SEO uyumlu tasarım yapıyoruz.",
           ],
         },
         {
@@ -266,6 +266,106 @@ export const LOCAL_PAGES: Record<string, LocalPage> = {
         {
           q: "Ücretsiz inceleme nasıl işliyor?",
           a: "Mevcut hesabınıza ve reklamlarınıza 20 dakika birlikte bakıyoruz. İşinize yarayacak bir şey bulamazsak kahveniz bizden.",
+        },
+      ],
+    },
+  },
+
+  "mersin-reklam-ajansi": {
+    slug: "mersin-reklam-ajansi",
+    title: "Mersin Reklam Ajansı — Meta, Google ve Sosyal Medya",
+    description:
+      "Mersin reklam ajansı FlixFlex: Meta ve Google reklamları, sosyal medya yönetimi, kreatif üretim ve web sitesi tek ekipte. Tarsus merkezli ekipten ücretsiz inceleme alın.",
+    h1: "Mersin Reklam Ajansı",
+    lead: "Mersin'deki işletmeler için reklam kampanyalarını kuruyor, kreatifleri üretiyor ve her gün takip ediyoruz. Ne kadar harcadığınızı ve karşılığında ne aldığınızı canlı görüyorsunuz.",
+    serviceName: "Reklam ve Dijital Pazarlama",
+    city: "Mersin",
+    areaServed: ["Mersin", "Tarsus", "Mezitli", "Yenişehir", "Toroslar", "Akdeniz", "Erdemli", "Silifke"],
+    guide: {
+      eyebrow: "Mersin Reklam Ajansı",
+      sections: [
+        {
+          heading: "Mersin'de reklam ajansı arayanlar için",
+          paragraphs: [
+            "Mersin'de müşteriye ulaşmanın en hızlı yolu artık telefonun ekranından geçiyor. İnsanlar bir işletmeyi önce Instagram'da görüyor, sonra Google'da aratıyor, sonra yorumlarına bakıyor. Bu üç yerde de iyi görünmeyen bir işletme, işi iyi olsa bile müşteriyi rakibine kaptırıyor.",
+            "FlixFlex, Tarsus merkezli bir reklam ajansı. 2020'den beri çalışıyoruz, Mersin'in ticaretini ve sezonlarını yakından biliyoruz. Reklamı kuran, kreatifi üreten ve sonucu ölçen ekip aynı.",
+          ],
+        },
+        {
+          heading: "Mersin reklam ajansı olarak neler yapıyoruz?",
+          bullets: [
+            "Meta reklamları: Instagram ve Facebook'ta mesaj, arama ve satış getiren kampanyalar. Ayrıntılar [Instagram reklam ajansı](/hizmetler/meta-tiktok-reklamlari) sayfamızda.",
+            "Google reklamları: sizi arayan kişinin karşısına çıkan arama ve alışveriş kampanyaları. Ayrıntılar [Google Ads ajansı](/hizmetler/google-ads-yonetimi) sayfamızda.",
+            "Sosyal medya yönetimi: içerik takvimi, tasarım, Reels ve hesap yönetimi. Ayrıntılar [Mersin sosyal medya ajansı](/mersin-sosyal-medya-ajansi) sayfamızda.",
+            "Kreatif üretim: kaydırmayı durduran reklam videoları, motion design ve görseller.",
+            "Web sitesi: reklamdan gelen kişiyi müşteriye çeviren sayfalar. Ayrıntılar [Mersin web tasarım](/mersin-web-tasarim) sayfamızda.",
+            "Marka kimliği: logo, renk ve marka dili. Ayrıntılar [marka kimliği](/hizmetler/marka-kimligi) sayfamızda.",
+          ],
+        },
+        {
+          heading: "Mersin'deki işletmeler için reklam nasıl kurulur?",
+          paragraphs: [
+            "Mersin tek tip bir pazar değil. Mezitli'deki bir kafenin kitlesi ile Tarsus'taki bir ofis mobilyacısının kitlesi aynı değil. Yazın Erdemli ve Silifke sahillerine gelen ziyaretçiler, liman ve lojistik çevresindeki firmalar, narenciye ve tarım ihracatçıları farklı mesajlar ister.",
+            "Bu yüzden önce konumu ve hedefi netleştiriyoruz. Reklamı ilçe düzeyinde ya da işletmenizin çevresindeki birkaç kilometreye daraltabiliyoruz. Böylece bütçeniz size gelemeyecek kişilere harcanmıyor.",
+          ],
+        },
+        {
+          heading: "Hangi sektörlerle çalışıyoruz?",
+          bullets: [
+            "E-ticaret: katalog reklamları ve yeniden pazarlama. Filinta Kuruyemiş ve Filinta Moda'yı e-ticarete biz hazırladık.",
+            "Yerel mağazalar: mesaj ve arama getiren kampanyalar. Kurt Ofis Tarsus'u performans pazarlamada üst seviyeye taşıdık.",
+            "Yeme içme: mekân ve menü tanıtımı, konum hedefli reklamlar. Jozi Pub Bahçeli bunun örneklerinden biri.",
+            "Kurumsal şirketler: kimlik, sosyal medya ve reklam birlikte. Mysan Grup Enerji ile bu şekilde çalıştık.",
+          ],
+          paragraphs: ["Tüm projelere [portfolyo](/portfolio) sayfamızdan bakabilirsiniz."],
+        },
+        {
+          heading: "Mersin'de reklam ajansı seçerken nelere bakmalı?",
+          bullets: [
+            "Reklam hesabı kimin adına? Hesap, pixel ve tüm veriler sizde kalmalı.",
+            "Kreatifi kim üretiyor? Ayrı bir firmaya gidiyorsa süreç uzar ve mesaj dağılır.",
+            "Sonuçları nasıl göreceksiniz? Ay sonu PDF'i yerine canlı veri isteyin.",
+            "Hangi rakam konuşuluyor? Beğeni değil, satış ve mesaj başı maliyet konuşulmalı.",
+            "Örnek işleri var mı? Gerçek marka adlarıyla sorun.",
+          ],
+          paragraphs: [
+            "Seçim için daha ayrıntılı bir liste [Reklam Ajansı Nasıl Seçilir?](/blog/reklam-ajansi-nasil-secilir) yazımızda var. Yerel işletmeler için adımlar [Mersin Reklam ve Dijital Pazarlama Rehberi](/blog/mersin-dijital-pazarlama-rehberi) yazımızda.",
+          ],
+        },
+        {
+          heading: "Neden FlixFlex?",
+          bullets: [
+            "Şablon yok: her markanın dili ve reklam planı ayrı kurulur.",
+            "Canlı veri: harcamayı ve sonuçları istediğiniz an panelden görürsünüz.",
+            "Hızlı dönüş: sorularınıza aynı gün cevap veriyoruz.",
+            "Yazılı teslim sözü: söz verdiğimiz işi zamanında teslim etmezsek o ayın ücretini almıyoruz.",
+          ],
+        },
+      ],
+      faqs: [
+        {
+          q: "Mersin'de yüz yüze görüşebilir miyiz?",
+          a: "Evet. Tarsus merkezliyiz, Mersin'deki işletmelerle gerektiğinde yüz yüze görüşüyoruz. Görüşmelerin çoğunu online da yapabiliyoruz.",
+        },
+        {
+          q: "Mersin'de reklam vermek ne kadar tutar?",
+          a: "Tutar sektöre, hedefe ve kitleye göre değişir. Önce kaç müşteri istediğinizi konuşuyor, bütçeyi bu hedeften geriye doğru hesaplıyoruz. Reklam bütçesi doğrudan Meta'ya ya da Google'a ödenir.",
+        },
+        {
+          q: "Tabela ve baskı işi yapıyor musunuz?",
+          a: "Odağımız dijital reklam, sosyal medya, kreatif üretim ve web sitesi. Tabela ve baskı işleri ana hizmetimiz değil.",
+        },
+        {
+          q: "Küçük bir işletmeyim, benim için uygun mu?",
+          a: "Evet. Küçük bütçeyle konum hedefli başlayıp sonuç geldikçe büyütmek mümkün. Tek bir hizmetle de başlayabilirsiniz.",
+        },
+        {
+          q: "Ne zaman sonuç alırım?",
+          a: "Reklamlarda ilk veriler genellikle birkaç hafta içinde netleşir. Sonuçlar sektöre, bütçeye ve teklife göre değiştiği için kesin rakam vaat etmiyoruz.",
+        },
+        {
+          q: "Ücretsiz inceleme nasıl işliyor?",
+          a: "Mevcut reklamlarınıza 20 dakika birlikte bakıyoruz. İşinize yarayacak bir şey bulamazsak kahveniz bizden.",
         },
       ],
     },

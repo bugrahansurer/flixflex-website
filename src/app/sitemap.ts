@@ -23,6 +23,7 @@ const STATIC_PAGES: Array<{ path: string; changeFrequency: Entry["changeFrequenc
   { path: "/mersin-web-tasarim",         changeFrequency: "monthly", priority: 0.8 },
   { path: "/adana-web-tasarim",          changeFrequency: "monthly", priority: 0.8 },
   { path: "/mersin-sosyal-medya-ajansi", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/mersin-reklam-ajansi",       changeFrequency: "monthly", priority: 0.9 },
   { path: "/adana-reklam-ajansi",        changeFrequency: "monthly", priority: 0.8 },
   { path: "/ikas-partner-ajansi",        changeFrequency: "monthly", priority: 0.8 },
 ]
