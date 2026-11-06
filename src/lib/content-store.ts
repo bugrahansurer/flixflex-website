@@ -277,6 +277,8 @@ function deriveInitials(name: string): string {
 }
 
 type BlogRow = {
+  metaTitle?: string | null
+  metaDescription?: string | null
   id: string
   title: string
   slug: string
@@ -304,6 +306,8 @@ function mapBlogPost(row: BlogRow): PublicBlogPost {
     title: row.title,
     slug: row.slug,
     excerpt: row.excerpt ?? "",
+    metaTitle: row.metaTitle ?? null,
+    metaDescription: row.metaDescription ?? null,
     content: row.content,
     coverImage: row.coverImage ?? null,
     ogImage: row.ogImage ?? null,
@@ -338,7 +342,9 @@ export const getPublishedBlogBySlug = cache(async (slug: string): Promise<Public
 
   try {
     const row = await prisma.blogPost.findUnique({ where: { slug } })
-    if (!row || row.status !== "published") return getStaticPost(slug) ?? null
+    // Statik örnek yazılar yalnızca veritabanına ulaşılamazsa kullanılır;
+    // aksi halde veritabanında olmayan eski yazılar canlıda indekslenebilir kalıyordu.
+    if (!row || row.status !== "published") return null
     return mapBlogPost(row)
   } catch (err) {
     console.error("[getPublishedBlogBySlug] DB error:", err)

@@ -9,6 +9,7 @@ import { ServiceGuideSection } from "@/components/public/services/service-guide"
 import { ServiceCta } from "@/components/public/services/service-cta"
 import { PortfolioSection } from "@/components/public/sections/portfolio-section"
 import { listPublishedPortfolio } from "@/lib/content-store"
+import { DEFAULT_OG_IMAGES } from "@/lib/seo"
 import { LOCAL_PAGES } from "./local-pages"
 
 export function localPageMetadata(slug: string): Metadata {
@@ -17,7 +18,13 @@ export function localPageMetadata(slug: string): Metadata {
   return {
     title: page.title,
     description: page.description,
-    openGraph: { title: `${page.h1} — FlixFlex`, description: page.description, url: `/${slug}`, type: "website" },
+    openGraph: {
+      title: `${page.h1} — FlixFlex`,
+      description: page.description,
+      url: `/${slug}`,
+      type: "website",
+      images: DEFAULT_OG_IMAGES,
+    },
     alternates: { canonical: `/${slug}` },
   }
 }

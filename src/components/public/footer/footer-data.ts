@@ -11,6 +11,11 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
       { label: "Performans Reklamı", href: "/hizmetler/performans-pazarlamasi" },
       { label: "Web & UX Tasarım", href: "/hizmetler/web-ve-dijital" },
       { label: "İçerik & Yaratıcılık", href: "/hizmetler/icerik-uretimi" },
+      { label: "Mersin Web Tasarım", href: "/mersin-web-tasarim" },
+      { label: "Adana Web Tasarım", href: "/adana-web-tasarim" },
+      { label: "Mersin Sosyal Medya Ajansı", href: "/mersin-sosyal-medya-ajansi" },
+      { label: "Adana Reklam Ajansı", href: "/adana-reklam-ajansi" },
+      { label: "ikas Partner Ajansı", href: "/ikas-partner-ajansi" },
     ],
   },
   {

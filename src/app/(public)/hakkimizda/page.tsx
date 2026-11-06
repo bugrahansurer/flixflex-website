@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { DEFAULT_OG_IMAGES } from "@/lib/seo"
 import {
   ManifestoSection,
   StorySection,
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
   title: "Hakkımızda — Tarsus, Mersin Merkezli Dijital Reklam Ajansı",
   description:
     "FlixFlex'in hikâyesi, ekibi ve değerleri. 2020'den bu yana Tarsus, Mersin merkezli; Türkiye genelinde markalara performans pazarlaması, sosyal medya ve marka kimliği hizmeti veren yeni nesil reklam ajansı.",
-  openGraph: { url: "/hakkimizda", type: "website" },
+  openGraph: { url: "/hakkimizda", type: "website", images: DEFAULT_OG_IMAGES },
   alternates: { canonical: "/hakkimizda" },
 }
 

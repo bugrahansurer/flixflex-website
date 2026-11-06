@@ -15,6 +15,7 @@ import { getPageBySlug } from "@/lib/page-data"
 import { listPublishedPortfolio, listPublishedMainServices } from "@/lib/content-store"
 import { PageRenderer } from "@/components/public/page-renderer"
 import { getSetting } from "@/lib/settings"
+import { DEFAULT_OG_IMAGES } from "@/lib/seo"
 
 export async function generateMetadata(): Promise<Metadata> {
   const [metaTitle, metaDescription] = await Promise.all([
@@ -23,12 +24,12 @@ export async function generateMetadata(): Promise<Metadata> {
   ])
   return {
     // absolute: ana sayfa başlığı "%s | FlixFlex" şablonuna girmesin
-    title: { absolute: metaTitle || "FlixFlex — Mersin Reklam ve Dijital Pazarlama Ajansı" },
+    title: { absolute: metaTitle || "Mersin Reklam Ajansı ve Dijital Pazarlama | FlixFlex" },
     description:
       metaDescription ||
-      "FlixFlex; Tarsus, Mersin merkezli yeni nesil reklam ve dijital pazarlama ajansıdır. Google Ads, Meta reklamları, sosyal medya yönetimi, marka kimliği ve web tasarım.",
+      "Mersin reklam ajansı FlixFlex: Meta ve Google reklamları, sosyal medya yönetimi, web tasarım ve marka kimliği tek ekipte. Tarsus merkezli, Türkiye geneline hizmet.",
     alternates: { canonical: "/" },
-    openGraph: { url: "/", type: "website" },
+    openGraph: { url: "/", type: "website", images: DEFAULT_OG_IMAGES },
   }
 }
 
@@ -101,7 +102,7 @@ export default async function HomePage() {
     <>
       {/* SEO/erişilebilirlik: sayfanın ana başlığı. Görsel hero başlığı iki
           parçalı (h2) olduğundan H1 ekranda gösterilmeden eklenir. */}
-      <h1 className="sr-only">FlixFlex — Mersin Reklam ve Dijital Pazarlama Ajansı</h1>
+      <h1 className="sr-only">Mersin Reklam Ajansı FlixFlex: Reklam, Sosyal Medya ve Web Tasarım</h1>
       <PageRenderer sections={pageData.sections} portfolioItems={portfolioItems} servicesItems={servicesItems} />
     </>
   )

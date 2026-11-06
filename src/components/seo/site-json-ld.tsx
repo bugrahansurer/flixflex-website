@@ -83,6 +83,7 @@ export function SiteJsonLd({ settings }: { settings: Record<string, string> }) {
       "Marka kimliği",
       "Web sitesi tasarımı",
       "E-ticaret",
+      "ikas e-ticaret altyapısı",
       "SEO",
     ],
     ...(sameAs.length ? { sameAs } : {}),

@@ -33,6 +33,8 @@ export default async function CustomPage({ params }: Props) {
 
   return (
     <main className="min-h-screen pt-20">
+       {/* Yönetilen sayfalarda görünür başlık h2 olabildiği için ana başlık ayrıca eklenir */}
+       <h1 className="sr-only">{page.title}</h1>
        <PageRenderer sections={page.sections} portfolioItems={portfolioItems} />
     </main>
   )

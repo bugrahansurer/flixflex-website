@@ -4,6 +4,7 @@ import { Eyebrow } from "@/components/ui/eyebrow"
 import { CTASection } from "@/components/public/sections/cta-section"
 import { FeaturedPost } from "@/components/public/blog/featured-post"
 import { BlogListClient } from "@/components/public/blog/blog-list-client"
+import { DEFAULT_OG_IMAGES } from "@/lib/seo"
 
 import { getPageBySlug } from "@/lib/page-data"
 import { listPublishedPortfolio, listPublishedBlogPosts } from "@/lib/content-store"
@@ -22,6 +23,7 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "FlixFlex",
     url: "/blog",
+    images: DEFAULT_OG_IMAGES,
   },
   alternates: { canonical: "/blog" },
 }

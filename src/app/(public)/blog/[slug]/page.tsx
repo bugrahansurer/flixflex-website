@@ -7,6 +7,7 @@ import { BlogTemplateEditorial } from "@/components/public/blog/templates/blog-t
 import { BlogTemplateVisual } from "@/components/public/blog/templates/blog-template-visual"
 import type { BlogPost } from "@/components/public/blog/blog-data"
 import { getPublishedBlogBySlug, listRelatedBlogPosts } from "@/lib/content-store"
+import { DEFAULT_OG_IMAGES } from "@/lib/seo"
 import type { JSX } from "react"
 
 export const revalidate = 60
@@ -28,28 +29,31 @@ export async function generateMetadata({
 
   const url = `/blog/${post.slug}`
   const shareImage = post.ogImage || post.coverImage
-  const images = shareImage ? [{ url: shareImage, alt: post.title }] : undefined
+  const images = shareImage ? [{ url: shareImage, alt: post.title }] : DEFAULT_OG_IMAGES
+  // Admin'deki SEO alanları doluysa onlar kullanılır; böylece başlık H1'in kopyası olmaz.
+  const seoTitle = post.metaTitle?.trim() || post.title
+  const description = post.metaDescription?.trim() || post.excerpt
 
   return {
     // Uzun başlıklarda " | FlixFlex" eki atlanır; Google 60-70 karakterden sonrasını keser.
-    title: post.title.length > 55 ? { absolute: post.title } : post.title,
-    description: post.excerpt,
+    title: seoTitle.length > 55 ? { absolute: seoTitle } : seoTitle,
+    description,
     keywords: post.tags,
     openGraph: {
-      title: post.title,
-      description: post.excerpt,
+      title: seoTitle,
+      description,
       type: "article",
       url,
       siteName: "FlixFlex",
       publishedTime: post.publishedAt,
       tags: post.tags,
-      ...(images ? { images } : {}),
+      images,
     },
     twitter: {
       card: "summary_large_image",
-      title: post.title,
-      description: post.excerpt,
-      ...(images ? { images } : {}),
+      title: seoTitle,
+      description,
+      images,
     },
     alternates: {
       canonical: url,

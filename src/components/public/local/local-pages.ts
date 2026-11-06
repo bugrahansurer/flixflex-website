@@ -270,4 +270,175 @@ export const LOCAL_PAGES: Record<string, LocalPage> = {
       ],
     },
   },
+
+  "adana-reklam-ajansi": {
+    slug: "adana-reklam-ajansi",
+    title: "Adana Reklam Ajansı — Meta, Google ve Sosyal Medya",
+    description:
+      "Adana reklam ajansı FlixFlex: Meta ve Google reklamları, sosyal medya yönetimi ve web tasarım tek ekipte. Seyhan, Çukurova ve tüm Adana'ya hizmet.",
+    h1: "Adana Reklam Ajansı",
+    lead: "Adana'daki işletmeler için reklam kampanyalarını kuruyor, kreatifleri üretiyor ve her gün takip ediyoruz. Reklamın kaç müşteri getirdiğini de birlikte görüyoruz.",
+    serviceName: "Reklam ve Dijital Pazarlama",
+    city: "Adana",
+    areaServed: ["Adana", "Seyhan", "Çukurova", "Yüreğir", "Sarıçam", "Ceyhan", "Kozan"],
+    guide: {
+      eyebrow: "Adana Reklam Ajansı",
+      sections: [
+        {
+          heading: "Adana'da reklam ajansı arayan işletmeler için",
+          paragraphs: [
+            "Adana'da müşteriye ulaşmanın yolu değişti. Tabela ve el ilanı hâlâ işe yarıyor ama müşterilerin çoğu artık önce telefonuna bakıyor. Instagram'da karşısına çıkan reklamı görüyor ya da Google'da \"Adana\" diye başlayan bir arama yapıyor. Reklam bütçenizin sonuç vermesi için bu iki anda da doğru mesajla orada olmanız gerekiyor.",
+            "FlixFlex, Tarsus merkezli bir reklam ve dijital pazarlama ajansı. Adana'ya kısa bir mesafedeyiz. Şehrin ticaretini, rekabetini ve sezonlarını yakından takip ediyoruz.",
+          ],
+        },
+        {
+          heading: "Adana reklam ajansı olarak neler yapıyoruz?",
+          bullets: [
+            "Meta reklamları: Instagram ve Facebook'ta mesaj, arama ve satış getiren kampanyalar. Detaylar [Meta ve TikTok Reklamları](/hizmetler/meta-tiktok-reklamlari) sayfamızda.",
+            "Google reklamları: sizi arayan kişinin karşısına çıkan arama ve alışveriş kampanyaları. Detaylar [Google Ads Yönetimi](/hizmetler/google-ads-yonetimi) sayfamızda.",
+            "Sosyal medya yönetimi: içerik takvimi, tasarım, Reels ve hesap yönetimi.",
+            "Kreatif üretim: kaydırmayı durduran reklam videoları, motion design ve görseller.",
+            "Web sitesi: reklamdan gelen ziyaretçiyi müşteriye çeviren sayfalar. Bunun için [Adana Web Tasarım](/adana-web-tasarim) sayfamıza bakabilirsiniz.",
+          ],
+        },
+        {
+          heading: "Adana'nın sektörlerine göre reklam",
+          paragraphs: [
+            "Her sektör aynı reklamla büyümez. Bir kliniğin randevuya, bir restoranın rezervasyona, bir üreticinin bayi ve toptan talebine ihtiyacı var. Kampanyayı bu hedefe göre kuruyoruz.",
+          ],
+          bullets: [
+            "Sağlık ve klinikler: randevu ve WhatsApp mesajı getiren kampanyalar. Reklam metinlerini sağlık reklamı kurallarına uygun hazırlıyoruz.",
+            "Yeme içme: Seyhan ve Çukurova'da konum hedefli reklamlar, yol tarifi ve rezervasyon odaklı kampanyalar.",
+            "Tekstil, gıda ve üretim: Adana'dan Türkiye geneline satış için katalog reklamları ve Google alışveriş kampanyaları.",
+            "Perakende ve mağazalar: kampanya dönemlerinde mağazaya ziyaret ve online sipariş getiren reklamlar.",
+          ],
+        },
+        {
+          heading: "Reklam bütçenizi nasıl kullanıyoruz?",
+          paragraphs: [
+            "Adana'da hizmet veren bir işletmenin reklamını başka şehirlerde göstermek bütçeyi boşa harcar. Bu yüzden önce konum ayarını yapıyoruz. Reklamı ilçe ya da işletmenizin çevresi düzeyinde hedefleyebiliyoruz.",
+            "Reklam bütçesi kendi kartınızla doğrudan Meta'ya ya da Google'a ödenir. Biz yalnızca yönetim ücreti alırız. Harcamanın tamamını kendi hesabınızda görürsünüz.",
+          ],
+        },
+        {
+          heading: "Neden FlixFlex?",
+          bullets: [
+            "Tek ekip: reklamı kuran, kreatifi üreten ve siteyi yapan ekip aynı.",
+            "Canlı veri: aylık PDF beklemeden harcamayı ve sonuçları panelden görürsünüz.",
+            "Hızlı dönüş: sorularınıza aynı gün cevap veriyoruz.",
+            "Yazılı teslim sözü: söz verdiğimiz işi zamanında teslim etmezsek o ayın ücretini almıyoruz.",
+          ],
+        },
+      ],
+      faqs: [
+        {
+          q: "Adana'da yüz yüze görüşebilir miyiz?",
+          a: "Evet. Tarsus merkezliyiz ve Adana'ya yakınız. Gerektiğinde yüz yüze görüşüyoruz, görüşmelerin çoğunu online da yapabiliyoruz.",
+        },
+        {
+          q: "Adana'da reklam vermek ne kadar tutar?",
+          a: "Tutar sektöre, hedef kitleye ve hedefe göre değişir. Önce kaç müşteri istediğinizi konuşuyor, bütçeyi bu hedeften geriye doğru hesaplıyoruz.",
+        },
+        {
+          q: "Sadece reklam yönetimi alabilir miyim?",
+          a: "Evet. Sosyal medya yönetimi ya da web sitesi almadan yalnızca reklam yönetimiyle de çalışabiliriz.",
+        },
+        {
+          q: "Ne zaman sonuç alırım?",
+          a: "İlk veriler genellikle birkaç hafta içinde netleşir. Sonuçlar sektöre, bütçeye ve teklife göre değiştiği için kesin rakam vaat etmiyoruz.",
+        },
+        {
+          q: "Ücretsiz inceleme nasıl işliyor?",
+          a: "Mevcut reklamlarınıza 20 dakika birlikte bakıyoruz. İşinize yarayacak bir şey bulamazsak kahveniz bizden.",
+        },
+      ],
+    },
+  },
+
+  "ikas-partner-ajansi": {
+    slug: "ikas-partner-ajansi",
+    title: "ikas Partner Ajansı — Mağaza Kurulumu ve Reklam",
+    description:
+      "ikas partner ajansı FlixFlex: ikas altyapısında mağaza kurulumu, tema, ürün taşıma, SEO ve Meta reklamları tek ekipte. Reklamı yöneten ekip mağazayı da kuruyor.",
+    h1: "ikas Partner Ajansı",
+    lead: "ikas altyapısında e-ticaret sitenizi kuruyor, ürünlerinizi taşıyor ve reklamlarla satışa geçiriyoruz. Mağazayı kuran ekip reklamı da yönetiyor.",
+    serviceName: "ikas Mağaza Kurulumu ve E-Ticaret Yönetimi",
+    city: "ikas",
+    areaServed: ["Türkiye", "Mersin", "Tarsus", "Adana"],
+    guide: {
+      eyebrow: "ikas ile E-Ticaret",
+      sections: [
+        {
+          heading: "ikas partner ajansı ne yapar?",
+          paragraphs: [
+            "ikas, Türkiye'de kullanılan yeni nesil bir e-ticaret altyapısı. Mağazayı açmak kolay. Asıl iş, açtıktan sonra başlıyor: doğru kurulum, satış getiren ürün sayfaları, ölçüm ve reklam.",
+            "ikas partner ajansı bu işleri sizin yerinize yürütür. FlixFlex olarak mağaza kurulumunu ve reklamı tek ekipte topluyoruz. Filinta Kuruyemiş'in ikas mağazasında Meta reklamlarını ve e-ticaret büyümesini bu şekilde yönetiyoruz.",
+          ],
+        },
+        {
+          heading: "ikas'ta sizin için neler yapıyoruz?",
+          bullets: [
+            "Mağaza kurulumu: ikas panelinin ayarları, ödeme yöntemleri, kargo ve yasal metinler.",
+            "Tema tasarımı: markanıza uygun görünüm, ana sayfa ve ürün sayfası düzeni. Mobil öncelikli çalışıyoruz.",
+            "Ürün taşıma: başka altyapıdan ya da pazaryerinden ikas'a geçişte ürünlerin ve adreslerin taşınması.",
+            "Ölçüm kurulumu: Meta Pixel, Conversion API ve Google Analytics. Satışın hangi reklamdan geldiğini görürsünüz.",
+            "Reklam yönetimi: Meta katalog reklamları, sepeti terk edenlere yeniden pazarlama ve Google alışveriş kampanyaları.",
+            "SEO: kategori ve ürün sayfaları, başlıklar ve iç linkler.",
+          ],
+        },
+        {
+          heading: "Neden ikas altyapısı?",
+          paragraphs: [
+            "Türkiye'de satış yapan çoğu işletme için hazır altyapı en hızlı başlangıçtır. Sunucu, güvenlik ve güncelleme işleriyle uğraşmazsınız. ikas'ın tema editörü ve Aras, Yurtiçi, HepsiJET, DHL eCommerce ve Kolay Gelsin gibi kargo seçenekleri de işi kolaylaştırır.",
+            "Her işletme için doğru seçim olmayabilir. Standart dışı bir iş modeliniz varsa özel yazılım daha mantıklı olabilir. Altyapıları ve maliyetleri [E-ticaret sitesi kurma maliyeti](/blog/e-ticaret-sitesi-kurma-maliyeti-2026) yazımızda karşılaştırdık. ikas'ı daha yakından tanımak için [ikas nedir](/blog/ikas-nedir) rehberimize bakabilirsiniz.",
+          ],
+        },
+        {
+          heading: "Mağazayı kuran ekip reklamı da yönetirse ne değişir?",
+          paragraphs: [
+            "Mağazayı bir firma, reklamı başka bir firma yönetince sorun çıktığında herkes diğerini gösterir. Satış gelmiyorsa sebep reklam mı, ürün sayfası mı, ödeme adımı mı? Tek ekipte bu soruya aynı gün cevap verebiliyoruz.",
+            "Ürün sayfası zayıfsa reklamı artırmıyor, önce sayfayı düzeltiyoruz. Reklamda iyi çalışan mesajı da ana sayfaya taşıyoruz.",
+          ],
+        },
+        {
+          heading: "ikas'a geçiş süreci nasıl işler?",
+          bullets: [
+            "Görüşme: ürün sayınızı, satış kanallarınızı ve hedefinizi konuşuyoruz.",
+            "Plan: tema, sayfa yapısı ve teslim tarihi yazılı olarak netleşiyor.",
+            "Kurulum: ürünler, ödeme, kargo ve yasal metinler hazırlanıyor.",
+            "Test: deneme siparişiyle ödeme, kargo ve bildirim akışını baştan sona deniyoruz.",
+            "Yayın ve reklam: ölçüm doğrulandıktan sonra reklamları açıyoruz.",
+          ],
+        },
+        {
+          heading: "Mevcut ikas mağazanız varsa",
+          paragraphs: [
+            "Mağazanız açık ama satış beklediğiniz gibi değilse sıfırdan başlamanız gerekmez. Ölçüm kurulumuna, ürün sayfalarına, ödeme adımına ve reklam hesabınıza bakıp nerede kayıp olduğunu birlikte buluyoruz. Diğer e-ticaret işlerimiz için [E-ticaret Çözümleri](/hizmetler/e-ticaret-cozumleri) sayfamıza göz atabilirsiniz.",
+          ],
+        },
+      ],
+      faqs: [
+        {
+          q: "ikas partner ajansıyla çalışmak zorunlu mu?",
+          a: "Hayır. ikas mağazanızı kendiniz de kurabilirsiniz. Ajans; kurulum, tasarım, ölçüm ve reklam tarafında zaman kazandırmak ve hataları baştan önlemek isteyenler için mantıklıdır.",
+        },
+        {
+          q: "Başka altyapıdan ikas'a geçebilir miyim?",
+          a: "Evet. Ürünleri taşıyor, sayfa adresleri değişiyorsa eski adresleri yenilerine yönlendiriyoruz. Böylece Google'daki sıralamalarınızı korumaya çalışıyoruz.",
+        },
+        {
+          q: "ikas abonelik ücreti ajans ücretine dahil mi?",
+          a: "Hayır. ikas aboneliği ve reklam bütçesi size ait hesaplardan ödenir. Biz yalnızca kurulum ve yönetim hizmeti için ücret alırız.",
+        },
+        {
+          q: "Sadece ikas reklam yönetimi alabilir miyim?",
+          a: "Evet. Mağazanız hazırsa ölçüm kurulumunu kontrol edip yalnızca Meta ve Google reklamlarını yönetebiliriz.",
+        },
+        {
+          q: "Mersin dışındaki mağazalarla çalışıyor musunuz?",
+          a: "Evet. Tarsus merkezliyiz, Türkiye'nin her şehrindeki markalarla online çalışıyoruz.",
+        },
+      ],
+    },
+  },
 }

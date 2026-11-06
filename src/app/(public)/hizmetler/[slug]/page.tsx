@@ -14,6 +14,7 @@ import { ServiceCta } from "@/components/public/services/service-cta"
 import { ServiceHeroVisual } from "@/components/public/services/service-hero-visual"
 import { ServiceGuideSection } from "@/components/public/services/service-guide"
 import { SERVICE_GUIDES } from "@/components/public/services/service-guides"
+import { DEFAULT_OG_IMAGES } from "@/lib/seo"
 import { ParentServicePage } from "./parent-service-page"
 import { StarField } from "@/components/ui/star-field"
 import { Eyebrow } from "@/components/ui/eyebrow"
@@ -57,6 +58,7 @@ export async function generateMetadata({
       description: metaDescription,
       url: `/hizmetler/${slug}`,
       type: "website",
+      images: DEFAULT_OG_IMAGES,
     },
     alternates: { canonical: `/hizmetler/${slug}` },
   }
@@ -119,6 +121,8 @@ export default async function ServiceDetailPage({
         service={{ ...resolvedService, children }}
         services={services}
         serviceIndex={serviceIndex}
+        h1={SERVICE_GUIDES[slug]?.h1}
+        guideSlot={SERVICE_GUIDES[slug] ? <ServiceGuideSection guide={SERVICE_GUIDES[slug]} /> : null}
       />
       </>
     )
@@ -179,7 +183,7 @@ export default async function ServiceDetailPage({
                 className="font-display font-extrabold leading-[1.0] text-[var(--foreground)]"
                 style={{ fontSize: "clamp(2rem, 3vw, 4rem)" }}
               >
-                {resolvedService.title}
+                {SERVICE_GUIDES[slug]?.h1 || resolvedService.title}
               </h1>
 
               {/* Accent description */}

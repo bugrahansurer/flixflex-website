@@ -23,9 +23,13 @@ interface ParentServicePageProps {
   service: Service & { children?: Service[] }
   services: Service[]
   serviceIndex: number
+  /** Varsa görünen başlık bu olur (SEO rehberinden gelir) */
+  h1?: string
+  /** Uzun içerik + SSS; sunucu bileşeni olduğu için dışarıdan verilir */
+  guideSlot?: React.ReactNode
 }
 
-export function ParentServicePage({ service, serviceIndex }: ParentServicePageProps) {
+export function ParentServicePage({ service, serviceIndex, h1, guideSlot }: ParentServicePageProps) {
   const children = service.children ?? []
 
   return (
@@ -71,7 +75,7 @@ export function ParentServicePage({ service, serviceIndex }: ParentServicePagePr
                 className="font-display font-extrabold leading-[1.0] text-[var(--foreground)]"
                 style={{ fontSize: "clamp(2rem, 3vw, 4rem)" }}
               >
-                {service.title}
+                {h1 || service.title}
               </h1>
 
               <p className="text-base md:text-lg text-[var(--ff-purple)] font-medium leading-relaxed border-l-2 border-[var(--ff-purple)] pl-4">
@@ -164,6 +168,8 @@ export function ParentServicePage({ service, serviceIndex }: ParentServicePagePr
           <DeliverablesGrid items={service.deliverables} />
         </div>
       </section>
+
+      {guideSlot}
 
       {/* ══════════════════════════════════════════════════
           5. CASE STUDY TEASER

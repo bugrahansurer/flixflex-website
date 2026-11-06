@@ -16,6 +16,14 @@ FlixFlex adı iki fikirden gelir: Flix, kaydırmayı durduran an; Flex, o anı k
 - [E-ticaret Çözümleri](https://flixflex.com.tr/hizmetler/e-ticaret-cozumleri): E-ticaret sitesi kurulumu ve büyütme
 - [Dönüşüm Optimizasyonu](https://flixflex.com.tr/hizmetler/donusum-optimizasyonu): Site ve reklam dönüşüm oranını artırma
 - [Video Prodüksiyon](https://flixflex.com.tr/hizmetler/video-produksiyon): Reklam videoları ve içerik üretimi
+- [ikas Partner Ajansı](https://flixflex.com.tr/ikas-partner-ajansi): ikas altyapısında mağaza kurulumu, taşıma ve Meta reklamları
+
+## Şehir sayfaları
+
+- [Mersin Web Tasarım](https://flixflex.com.tr/mersin-web-tasarim)
+- [Adana Web Tasarım](https://flixflex.com.tr/adana-web-tasarim)
+- [Mersin Sosyal Medya Ajansı](https://flixflex.com.tr/mersin-sosyal-medya-ajansi)
+- [Adana Reklam Ajansı](https://flixflex.com.tr/adana-reklam-ajansi)
 
 ## Rehberler
 

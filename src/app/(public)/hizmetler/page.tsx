@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { CTASection } from "@/components/public/sections/cta-section"
 import { ServicesShowcase } from "@/components/public/services/services-showcase"
+import { DEFAULT_OG_IMAGES } from "@/lib/seo"
 
 import { getPageBySlug } from "@/lib/page-data"
 import { PageRenderer } from "@/components/public/page-renderer"
@@ -18,6 +19,7 @@ export const metadata: Metadata = {
     description:
       "Veri odaklı büyüme, yaratıcı strateji ve marka kimliği. Reklam yönetiminden web sitesine tüm dijital pazarlama hizmetleri.",
     url: "/hizmetler",
+    images: DEFAULT_OG_IMAGES,
     type: "website",
   },
   alternates: { canonical: "/hizmetler" },

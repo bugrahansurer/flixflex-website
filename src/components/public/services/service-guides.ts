@@ -15,6 +15,8 @@ export interface ServiceGuide {
   /** Sayfa <title> ve meta açıklaması; admin'deki değerlerin önüne geçer */
   seoTitle?: string
   seoDescription?: string
+  /** Sayfanın görünen ana başlığı; yoksa admin'deki hizmet adı kullanılır */
+  h1?: string
   eyebrow: string
   sections: ServiceGuideSection[]
   faqs: { q: string; a: string }[]
@@ -26,6 +28,7 @@ export const SERVICE_GUIDES: Record<string, ServiceGuide> = {
     seoTitle: "Sosyal Medya Yönetimi ve Sosyal Medya Ajansı Hizmeti",
     seoDescription:
       "Profesyonel sosyal medya yönetimi: içerik takvimi, Reels ve tasarım üretimi, hesap yönetimi ve Meta reklamları tek ekipte. Mersin merkezli sosyal medya ajansı FlixFlex.",
+    h1: "Sosyal Medya Yönetimi ve Sosyal Medya Ajansı",
     eyebrow: "Sosyal Medya Yönetimi Rehberi",
     sections: [
       {
@@ -63,6 +66,31 @@ export const SERVICE_GUIDES: Record<string, ServiceGuide> = {
           "Canlı veri. Hangi paylaşımın satış ya da mesaj getirdiğini ay sonunu beklemeden görürsünüz.",
           "Hızlı dönüş. Sorularınıza e-posta zinciri yerine aynı gün cevap veririz.",
           "Yazılı taahhüt. Söz verdiğimiz işi zamanında teslim etmezsek o ayın ücretini almayız.",
+        ],
+      },
+      {
+        heading: "Sosyal medya ajansı seçerken nelere bakmalısınız?",
+        paragraphs: [
+          "Sosyal medya ajansları arasında seçim yaparken fiyat tek ölçü olmamalı. Aynı fiyata biri hazır şablon gönderirken diğeri strateji, video ve reklamı birlikte yürütebilir. Markanın ihtiyacına göre kurulmuş bir plan görmek için teklif aşamasında şu soruları sorun.",
+        ],
+        bullets: [
+          "Daha önce benzer sektörde iş yaptınız mı, örneklerini görebilir miyim?",
+          "İçerikleri kim üretiyor, ajansın kendi ekibi mi yoksa dış kaynak mı?",
+          "Hangi rakamları paylaşacaksınız? Takipçi sayısı tek başına yeterli değildir.",
+          "Reklam hesabı ve sosyal medya hesapları kimin adına olacak? Cevap her zaman işletmeniz olmalıdır.",
+          "Dijital medya planlama yapıyor musunuz? Yani içerik ve reklam bütçesi birlikte mi planlanıyor?",
+        ],
+      },
+      {
+        heading: "Hangi sektörlerde sosyal medya yönetimi yapıyoruz?",
+        paragraphs: [
+          "Sosyal medya ajansı olarak markalara sektörlerine göre farklı bir plan kuruyoruz. Bir kuruyemiş markası için ürün videosu ve kampanya öne çıkarken, bir enerji şirketinde kurumsal dil ve güven önemlidir. Bir restoranda ise mekânın atmosferi ve konum bilgisi işi götürür.",
+        ],
+        bullets: [
+          "E-ticaret markaları: ürün tanıtımı, kampanya takvimi ve reklamla desteklenen içerikler.",
+          "Yeme içme ve eğlence: mekân, menü ve etkinlik içerikleri. Jozi Pub Bahçeli bunun örneklerinden biri.",
+          "Kurumsal şirketler: LinkedIn, işveren markası ve sektör içerikleri.",
+          "Spor kulüpleri: maç günü ve kadro tasarımları. Bursaspor Basketbol için sosyal medya tasarımları hazırladık.",
         ],
       },
       {
@@ -163,7 +191,8 @@ export const SERVICE_GUIDES: Record<string, ServiceGuide> = {
   "meta-tiktok-reklamlari": {
     seoTitle: "Instagram Reklam Ajansı — Meta ve TikTok Reklam Yönetimi",
     seoDescription:
-      "Instagram, Facebook ve TikTok reklamlarını kreatifiyle birlikte kuruyor, her gün takip ediyoruz. Meta Pixel ve Conversion API kurulumu dahil. Ücretsiz reklam incelemesi alın.",
+      "Instagram reklam ajansı FlixFlex: Instagram, Facebook ve TikTok reklamlarını kreatifiyle birlikte kuruyor, her gün takip ediyoruz. Pixel ve Conversion API kurulumu dahil.",
+    h1: "Instagram Reklam Ajansı ve Meta Reklam Yönetimi",
     eyebrow: "Meta Reklam Yönetimi Rehberi",
     sections: [
       {
@@ -210,6 +239,29 @@ export const SERVICE_GUIDES: Record<string, ServiceGuide> = {
           "Sosyal kanıt: müşteri yorumları, kullanım görüntüleri ve satış sayıları güven verir.",
           "Açık çağrı: mesaj gönder, satın al, formu doldur. Tek reklamda tek eylem.",
           "Varyasyon: aynı mesajı farklı görsel ve başlıklarla test ediyor, kazananı büyütüyoruz.",
+        ],
+      },
+      {
+        heading: "Reklam kreatifinde içerik üretim süreci",
+        paragraphs: [
+          "Meta reklamlarında sonucu en çok kreatif belirliyor. Hedefleme giderek otomatikleşiyor, bu yüzden doğru kişiyi bulmanın yolu doğru videodan geçiyor. İçerik üretim sürecimizi bu yüzden reklam ekibiyle birlikte yürütüyoruz.",
+        ],
+        bullets: [
+          "Fikir: ürününüzün çözdüğü sorunu ve müşterinin itirazlarını listeliyoruz.",
+          "Kanca: ilk 3 saniye için birkaç farklı açılış yazıyoruz.",
+          "Üretim: motion design, görsel ve kısa video varyasyonları hazırlıyoruz.",
+          "Test: varyasyonları aynı bütçeyle yayınlıyor, kazananı büyütüyoruz.",
+          "Yenileme: frekans yükselip sonuç düşmeye başlayınca yeni kreatifleri devreye alıyoruz.",
+        ],
+      },
+      {
+        heading: "Instagram reklam ajansı seçerken sormanız gereken sorular",
+        bullets: [
+          "Reklam hesabı kimin adına olacak? Hesap ve veriler işletmenizde kalmalı.",
+          "Kreatifleri kim üretiyor? Ayrı bir firmaya gidiyorsa süreç uzar.",
+          "Hangi metriği takip edeceksiniz? Beğeni değil, satış ve mesaj başı maliyet konuşulmalı.",
+          "Ne sıklıkla kontrol ediyorsunuz? Meta reklamları günlük takip ister.",
+          "Sonuçları nasıl göreceğim? Ay sonu raporu yerine canlı panel çok daha güven verir.",
         ],
       },
       {
@@ -296,13 +348,14 @@ export const SERVICE_GUIDES: Record<string, ServiceGuide> = {
   "web-sitesi-tasarimi": {
     seoTitle: "Kurumsal Web Tasarım — Web Sitesi Yaptırma",
     seoDescription:
-      "Kurumsal web tasarım ve web sitesi yaptırma: özel tasarım, mobil uyumlu, hızlı ve Google'a hazır siteler. Mersin, Adana ve Türkiye geneli. FlixFlex'ten ücretsiz teklif alın.",
+      "Kurumsal web tasarım ve web sitesi yaptırma: özel tasarım, mobil uyumlu, hızlı siteler. Mersin web tasarım ve Türkiye geneli projeler için FlixFlex'ten ücretsiz teklif alın.",
+    h1: "Kurumsal Web Tasarım ve Web Sitesi Yaptırma",
     eyebrow: "Kurumsal Web Tasarım Rehberi",
     sections: [
       {
         heading: "Kurumsal web tasarım hizmetimiz",
         paragraphs: [
-          "Kurumsal web sitesi işletmenizin internetteki vitrinidir ve günün her saati çalışan satış temsilcinizdir. FlixFlex olarak kurumsal web tasarım projelerinde markanıza özel tasarımı, hızlı altyapıyı ve satış odaklı sayfa kurgusunu birlikte kuruyoruz. Hazır tema satmıyoruz, her sayfayı işletmenizin hedefine göre tasarlıyoruz.",
+          "Web siteniz internetteki vitrininizdir. Günün her saati çalışan bir satış temsilcisi gibidir. Kurumsal web tasarım projelerinde üç şeyi birlikte kuruyoruz: markanıza özel tasarım, hızlı altyapı ve satışa götüren sayfa düzeni. Hazır tema satmıyoruz. Her sayfayı işletmenizin hedefine göre tasarlıyoruz.",
         ],
       },
       {
@@ -330,8 +383,8 @@ export const SERVICE_GUIDES: Record<string, ServiceGuide> = {
       {
         heading: "Kurumsal site mi, e-ticaret mi, tek sayfa mı?",
         paragraphs: [
-          "Hizmet veren firmalar için birkaç sayfalık kurumsal site çoğu zaman yeterlidir: ana sayfa, hizmetler, referanslar, hakkımızda ve iletişim. Ürün satıyorsanız ödeme, stok ve kargo altyapısı olan bir e-ticaret sitesine ihtiyacınız olur. Tek bir kampanya ya da ürün için reklam trafiğini karşılayacak tek sayfalık bir açılış sayfası daha hızlı ve ekonomik bir çözümdür.",
-          "Hangisinin size uygun olduğuna ihtiyacınıza göre birlikte karar veriyoruz. Gereğinden büyük bir site hem bütçeyi hem yayın süresini uzatır.",
+          "Hizmet veren firmalar için birkaç sayfalık kurumsal site çoğu zaman yeterlidir. Ana sayfa, hizmetler, referanslar, hakkımızda ve iletişim işi görür. Ürün satıyorsanız ödeme, stok ve kargo altyapısı olan bir e-ticaret sitesine ihtiyacınız olur. Tek bir kampanya için ise tek sayfalık bir açılış sayfası daha hızlı ve ekonomiktir.",
+          "Hangisinin size uygun olduğuna birlikte karar veriyoruz. Gereğinden büyük bir site hem bütçeyi hem yayın süresini uzatır. Hazır altyapıyla hızlı başlamak isteyen mağazalar için [ikas partner ajansı](/ikas-partner-ajansi) sayfamıza da bakabilirsiniz.",
         ],
       },
       {
@@ -351,7 +404,29 @@ export const SERVICE_GUIDES: Record<string, ServiceGuide> = {
       {
         heading: "Neden FlixFlex web tasarım ajansı?",
         paragraphs: [
-          "Web sitesini reklam ve sosyal medyayla birlikte düşünüyoruz. Meta reklamlarından ve Google'dan gelen ziyaretçinin satın alma ya da form doldurma adımına kolayca ulaşması için sayfaları dönüşüm odaklı kurguluyoruz. Analitik ve pixel kurulumu site yayına girdiği gün hazır olur, böylece web sitenizin kaç müşteri getirdiğini ilk günden görürsünüz.",
+          "Web sitesini reklam ve sosyal medyayla birlikte düşünüyoruz. Meta reklamlarından ve Google'dan gelen ziyaretçi, satın alma ya da form adımına kolayca ulaşmalı. Sayfaları buna göre kuruyoruz. Analitik ve pixel kurulumu da yayın günü hazır olur. Böylece web sitenizin kaç müşteri getirdiğini ilk günden görürsünüz.",
+        ],
+      },
+      {
+        heading: "Web sitesi yayına girdikten sonra ne olur?",
+        paragraphs: [
+          "Site açmak işin başlangıcı. Asıl fark yayından sonraki aylarda ortaya çıkar. Hangi sayfanın okunduğuna, hangi butona tıklandığına ve ziyaretçinin nerede çıktığına bakıyoruz. Gerekli düzeltmeleri bu verilere göre yapıyoruz.",
+        ],
+        bullets: [
+          "Search Console kurulumu: sitenizin Google'da hangi aramalarda çıktığını görürsünüz.",
+          "Yedekleme ve güvenlik: site düzenli yedeklenir, SSL sertifikası aktif kalır.",
+          "İçerik ekleme: yeni hizmet, proje ve blog yazılarını panelden kendiniz ekleyebilirsiniz.",
+          "Teknik destek: bir şey bozulursa kime yazacağınız bellidir, aynı gün dönüş yaparız.",
+        ],
+      },
+      {
+        heading: "Hangi sektörlere web sitesi yapıyoruz?",
+        bullets: [
+          "Üretim ve ihracat: ürün kataloğu, çoklu dil ve teklif formu.",
+          "Sağlık ve klinikler: hizmet sayfaları, doktor profilleri ve randevu.",
+          "Yeme içme ve turizm: menü, rezervasyon ve konum.",
+          "Mağaza ve e-ticaret: ürün sayfaları, ödeme ve kargo.",
+          "Hizmet firmaları: referans, süreç ve hızlı iletişim butonları.",
         ],
       },
       {
@@ -389,6 +464,233 @@ export const SERVICE_GUIDES: Record<string, ServiceGuide> = {
       {
         q: "E-ticaret sitesi de yapıyor musunuz?",
         a: "Evet. Ürün, ödeme ve kargo altyapısı gereken projeler için [E-ticaret Çözümleri](/hizmetler/e-ticaret-cozumleri) hizmetimize göz atabilirsiniz.",
+      },
+    ],
+  },
+
+  // ── Dijital pazarlama ajansı (üst hizmet) ─────────────────
+  "performans-pazarlamasi": {
+    seoTitle: "Dijital Pazarlama Ajansı — Performans Pazarlaması",
+    seoDescription:
+      "Dijital pazarlama ajansı FlixFlex: Meta ve Google reklamları, SEO, sosyal medya ve dönüşüm çalışmaları tek ekipte. Tarsus merkezli, Türkiye geneli. Ücretsiz inceleme alın.",
+    h1: "Dijital Pazarlama Ajansı ve Performans Yönetimi",
+    eyebrow: "Dijital Pazarlama Rehberi",
+    sections: [
+      {
+        heading: "Dijital pazarlama ajansı ne yapar?",
+        paragraphs: [
+          "Dijital pazarlama ajansı, işletmenizin internetteki müşteri yolculuğunu baştan sona yönetir. Reklam, arama motoru optimizasyonu, sosyal medya pazarlaması ve web sitesi bu yolculuğun parçalarıdır. Amaç, markaların dijital kanallarda hedef kitlelerine ulaşmasını sağlamak ve bu ilgiyi satışa çevirmektir.",
+          "FlixFlex, Tarsus merkezli bir pazarlama ajansı. Performans yönetimi tarafında her harcamanın ne getirdiğini ölçüyoruz. Aynı zamanda kreatifi, web tasarımı işini ve içeriği aynı ekipte yürütüyoruz.",
+        ],
+      },
+      {
+        heading: "Performans pazarlaması nedir?",
+        paragraphs: [
+          "Performans pazarlamasında bütçe, ölçülebilir sonuçlara göre yönetilir. Gösterim ya da beğeni değil; satış, form, mesaj ve arama sayılır. Hangi kampanya kazandırıyorsa bütçe oraya gider, kazandırmayan kampanya durur.",
+          "Bunun çalışması için ölçümün doğru kurulması gerekir. Meta Pixel, Conversion API ve Google Analytics olmadan hangi reklamın satış getirdiğini bilemezsiniz. Bu yüzden işe önce ölçümle başlıyoruz.",
+        ],
+      },
+      {
+        heading: "Dijital pazarlama hizmetlerimiz",
+        bullets: [
+          "Meta ve TikTok reklamları: Instagram, Facebook ve TikTok'ta kreatifiyle birlikte kampanya yönetimi. [Meta reklam yönetimi](/hizmetler/meta-tiktok-reklamlari)",
+          "Google Ads: sizi arayan kişiye ulaşan arama ve alışveriş kampanyaları. [Google Ads yönetimi](/hizmetler/google-ads-yonetimi)",
+          "SEO ve içerik: arama motoru sonuçlarında kalıcı görünürlük. [SEO ve içerik stratejisi](/hizmetler/seo-icerik-stratejisi)",
+          "Sosyal medya pazarlaması: içerik takvimi, üretim ve hesap yönetimi. [Sosyal medya yönetimi](/hizmetler/sosyal-medya-yonetimi)",
+          "Web sitesi ve açılış sayfaları: reklamdan gelen ziyaretçiyi müşteriye çeviren sayfalar. [Kurumsal web tasarım](/hizmetler/web-sitesi-tasarimi)",
+          "Dönüşüm optimizasyonu: aynı trafikle daha fazla satış için testler. [Dönüşüm optimizasyonu](/hizmetler/donusum-optimizasyonu)",
+        ],
+      },
+      {
+        heading: "Çalışma şeklimiz",
+        paragraphs: [
+          "Her işe aynı soruyla başlıyoruz: ayda kaç müşteri istiyorsunuz? Bütçeyi ve kanalları bu hedeften geriye doğru hesaplıyoruz. Böylece hedef kitlenize etkili bir şekilde ulaşan bir plan çıkıyor.",
+        ],
+        bullets: [
+          "İnceleme: mevcut reklamlarınıza, sitenize ve dijital varlığınıza bakıyoruz.",
+          "Plan: hangi kanala ne kadar bütçe ayrılacağını yazıyoruz.",
+          "Kurulum: ölçüm, kampanya ve kreatifleri hazırlıyoruz.",
+          "Takip: reklamları her gün kontrol ediyor, kazananı büyütüyoruz.",
+          "Değerlendirme: sonuçları canlı panelden birlikte izliyor, sıradaki adımı konuşuyoruz.",
+        ],
+      },
+      {
+        heading: "Dijital pazarlama ajansından neler beklemelisiniz?",
+        bullets: [
+          "Hesap sahipliği: reklam hesapları, pixel ve tüm veriler sizde kalmalı.",
+          "Şeffaf bütçe: reklam harcaması ile hizmet bedeli ayrı görünmeli.",
+          "Gerçek metrikler: beğeni yerine satış ve müşteri başı maliyet konuşulmalı.",
+          "Hızlı iletişim: sorularınıza aynı gün cevap verilmeli.",
+          "Yazılı söz: neyin ne zaman teslim edileceği belli olmalı.",
+        ],
+        paragraphs: [
+          "Bir dijital pazarlama ajansından bunları istemek hakkınız. Seçim yaparken yardımcı olması için [Reklam Ajansı Nasıl Seçilir?](/blog/reklam-ajansi-nasil-secilir) yazımızı okuyabilirsiniz.",
+        ],
+      },
+      {
+        heading: "Hangi işletmeler için uygun?",
+        paragraphs: [
+          "E-ticaret markaları, yerel işletmeler ve hizmet firmalarıyla çalışıyoruz. Bursaspor Basketbol, Filinta Kuruyemiş, Pet Gourmet ve Mysan Grup birlikte çalıştığımız markalardan bazıları. Dijital varlığımız kadar müşterilerimizin işleri de konuşsun diye projeleri [portfolyo](/portfolio) sayfamızda topladık.",
+          "Mersin, Tarsus ve Adana'daki işletmelerle yüz yüze de görüşüyoruz. Türkiye'nin diğer şehirlerindeki markalarla süreci online yürütüyoruz.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Dijital pazarlama ajansı ile çalışmanın maliyeti nedir?",
+        a: "Ücret, yönetilen kanal sayısına ve işin kapsamına göre değişir. Reklam bütçesi ise doğrudan Meta'ya ya da Google'a ödenir. İhtiyacınızı dinledikten sonra net bir teklif hazırlıyoruz.",
+      },
+      {
+        q: "Ne kadar sürede sonuç alırım?",
+        a: "Reklamlarda ilk veriler genellikle birkaç hafta içinde netleşir. SEO ise aylar süren bir çalışmadır. Sonuçlar sektöre ve bütçeye göre değiştiği için kesin rakam vaat etmiyoruz.",
+      },
+      {
+        q: "Tek bir hizmet alabilir miyim?",
+        a: "Evet. Yalnızca reklam, yalnızca sosyal medya ya da yalnızca web sitesiyle başlayabilirsiniz.",
+      },
+      {
+        q: "Sözleşme süresi ne kadar?",
+        a: "Aylık, 3, 6 ve 12 aylık paketlerimiz var. Tüm çalışmalar yazılı sözleşmeyle yürür.",
+      },
+      {
+        q: "Ücretsiz inceleme nasıl işliyor?",
+        a: "Mevcut reklamlarınıza 20 dakika birlikte bakıyoruz. İşinize yarayacak bir şey bulamazsak kahveniz bizden.",
+      },
+    ],
+  },
+
+  // ── Google Ads ────────────────────────────────────────────
+  "google-ads-yonetimi": {
+    seoTitle: "Google Ads Ajansı ve Google Reklam Yönetimi",
+    seoDescription:
+      "Google Ads ajansı FlixFlex: arama, alışveriş, Performance Max ve YouTube kampanyalarını kuruyor, her gün takip ediyoruz. Mersin ve Türkiye geneli. Ücretsiz inceleme alın.",
+    h1: "Google Ads Ajansı ve Google Ads Yönetimi",
+    eyebrow: "Google Ads Rehberi",
+    sections: [
+      {
+        heading: "Google Ads ajansı olarak ne yapıyoruz?",
+        paragraphs: [
+          "Google Ads, Google'ın reklam platformudur. Ürün veya hizmetlerinize ihtiyaç duyan kişi arama motoru sonuçlarında sizi ararken karşısına çıkmanızı sağlar. Bu yüzden satın almaya en yakın potansiyel müşterilere ulaşmanın en doğrudan yollarından biridir.",
+          "FlixFlex, Tarsus merkezli bir Google reklam ajansı olarak Google Ads kampanyası kurulumunu, anahtar kelime seçimini, reklam metinlerini ve günlük takibi üstleniyor. Google Ads reklamlarını diğer dijital pazarlama işlerinizle birlikte planlıyoruz.",
+        ],
+      },
+      {
+        heading: "Hangi kampanya türü size uygun?",
+        paragraphs: [
+          "Doğru kampanya türü işletmenizin hedefine göre değişir. İyi sonuçlar almak için önce bu seçimi doğru yapmak gerekir.",
+        ],
+        bullets: [
+          "Arama kampanyaları: Google'da sizi arayan kişiye metin reklamıyla ulaşırsınız. Hizmet işletmeleri için en sık tercih edilen türdür.",
+          "Alışveriş kampanyaları: ürün görseli ve fiyatınız arama sonuçlarında görünür. E-ticaret için güçlüdür.",
+          "Performance Max: Google'ın tüm kanallarında otomatik çalışır. İyi veri ve iyi görsel ister.",
+          "YouTube reklamları: videolu tanıtım ve yeniden pazarlama için.",
+          "Görüntülü reklam ağı: sitenizi ziyaret etmiş kişilere yeniden ulaşmak için.",
+        ],
+      },
+      {
+        heading: "Google Ads yönetimi sürecimiz",
+        bullets: [
+          "Hesap incelemesi: mevcut kampanyalarınızı, boşa giden aramaları ve dönüşüm ölçümünü kontrol ediyoruz.",
+          "Anahtar kelime araştırması: satın alma niyeti yüksek aramaları ve hariç tutulacak kelimeleri belirliyoruz.",
+          "Dönüşüm kurulumu: arama, form ve satın alma ölçümünü doğru kuruyoruz.",
+          "Reklam metinleri: aramaya uygun başlıklar ve ek bilgiler yazıyoruz.",
+          "Açılış sayfası: reklamı web sitesi tarafında doğru sayfaya bağlıyor, gerekirse sayfayı düzeltiyoruz.",
+          "Günlük takip: teklifleri, arama terimlerini ve bütçeyi izliyoruz.",
+        ],
+      },
+      {
+        heading: "Google Ads'te bütçe boşa nerede gider?",
+        bullets: [
+          "Geniş eşleme ve hariç tutulmayan kelimeler: alakasız aramalara ödeme yaparsınız.",
+          "Eksik dönüşüm ölçümü: algoritma kimin müşteri olduğunu öğrenemez.",
+          "Yanlış konum ayarı: hizmet vermediğiniz bölgelerde görünürsünüz.",
+          "Ana sayfaya yönlendirmek: ziyaretçi aradığını bulamayınca çıkar.",
+          "Rakip kelimelerde kontrolsüz teklif: pahalı tıklama getirir, satış getirmeyebilir.",
+        ],
+      },
+      {
+        heading: "Google Ads mi, Meta reklamları mı?",
+        paragraphs: [
+          "Google sizi zaten arayan kişiye ulaşır. Meta ise henüz aramayan ama ilgilenebilecek kişiye ulaşır. Aranan bir hizmetiniz varsa Google ile başlamak çoğu zaman mantıklıdır. Görsel olarak anlatılan bir ürününüz varsa Meta daha hızlı sonuç verebilir.",
+          "İkisini birlikte kullanan işletmelerde bütçeyi verilere göre paylaştırıyoruz. Meta tarafını [Meta ve TikTok Reklamları](/hizmetler/meta-tiktok-reklamlari) sayfamızda anlattık. Maliyetler için [Google Ads Maliyeti 2026](/blog/google-ads-maliyeti-2026) yazımıza bakabilirsiniz.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Google Ads bütçesi hizmet ücretine dahil mi?",
+        a: "Hayır. Reklam bütçesi kendi kartınızla doğrudan Google'a ödenir. Biz yalnızca yönetim hizmeti için ücret alırız.",
+      },
+      {
+        q: "Google Ads mi, SEO mu?",
+        a: "Google Ads hızlı trafik getirir ama reklam durunca trafik de durur. SEO daha yavaştır ama kalıcıdır. Çoğu işletme için en iyisi ikisini birlikte planlamaktır.",
+      },
+      {
+        q: "Google Ads hesabım kimin olur?",
+        a: "Hesap ve tüm veriler size ait olur. Biz hesabınıza yönetici olarak ekleniriz.",
+      },
+      {
+        q: "Ne zaman sonuç alırım?",
+        a: "Arama kampanyalarında tıklamalar ilk günden gelir. Maliyetlerin oturması genellikle birkaç hafta sürer. Sektöre göre değiştiği için kesin rakam vaat etmiyoruz.",
+      },
+      {
+        q: "Mersin dışında da çalışıyor musunuz?",
+        a: "Evet. Tarsus merkezliyiz, Türkiye'nin her şehrindeki işletmelerin Google Ads hesaplarını yönetiyoruz.",
+      },
+    ],
+  },
+
+  // ── E-ticaret ─────────────────────────────────────────────
+  "e-ticaret-cozumleri": {
+    seoTitle: "E-Ticaret Ajansı — E-Ticaret Sitesi Kurulumu ve Büyütme",
+    seoDescription:
+      "E-ticaret ajansı FlixFlex: ikas ve hazır altyapılarda mağaza kurulumu, ürün taşıma, ödeme ve kargo, Meta katalog reklamları ve SEO tek ekipte. Ücretsiz teklif alın.",
+    h1: "E-Ticaret Çözümleri ve E-Ticaret Sitesi Kurulumu",
+    eyebrow: "E-Ticaret Rehberi",
+    sections: [
+      {
+        heading: "E-ticaret sitesi kurmak isteyenler için",
+        paragraphs: [
+          "Kendi e-ticaret siteniz komisyon ödemeden satış yapmanızı ve müşteri verisine sahip olmanızı sağlar. Ama site açmak tek başına satış getirmez. Ödeme, kargo, ölçüm ve reklam da doğru kurulmalıdır.",
+          "FlixFlex olarak altyapı seçiminden ilk reklam kampanyasına kadar süreci birlikte yürütüyoruz. Filinta Kuruyemiş ve Filinta Moda'yı bu şekilde e-ticarete hazırladık.",
+        ],
+      },
+      {
+        heading: "E-ticaret çözümlerimiz",
+        bullets: [
+          "Altyapı seçimi: hazır altyapı mı, özel yazılım mı? İhtiyacınıza göre öneriyoruz.",
+          "Mağaza kurulumu: tema, kategori, ürün sayfası, ödeme ve kargo ayarları.",
+          "Ürün taşıma: pazaryerinden ya da eski sitenizden ürünlerin aktarılması.",
+          "Ölçüm: Meta Pixel, Conversion API, Google Analytics ve ürün kataloğu.",
+          "Reklam: Meta katalog reklamları, Google alışveriş ve yeniden pazarlama kampanyaları.",
+          "SEO: kategori ve ürün sayfalarının Google'a hazırlanması.",
+        ],
+      },
+      {
+        heading: "ikas ile e-ticaret",
+        paragraphs: [
+          "Türkiye'de satış yapan mağazalar için ikas sık tercih ettiğimiz altyapılardan biri. Kurulum, tema, taşıma ve reklam tarafında neler yaptığımızı [ikas Partner Ajansı](/ikas-partner-ajansi) sayfamızda anlattık. Platformu tanımak istiyorsanız [ikas nedir](/blog/ikas-nedir) rehberimizi okuyabilirsiniz.",
+        ],
+      },
+      {
+        heading: "E-ticaret sitesi kurmanın maliyeti",
+        paragraphs: [
+          "Maliyeti altyapı ücreti, tasarım, ödeme komisyonları, kargo, içerik ve pazarlama belirler. Bütçenin tamamını siteye harcayıp reklama para bırakmamak en sık yapılan hatadır. Tüm kalemleri [E-ticaret Sitesi Kurma Maliyeti 2026](/blog/e-ticaret-sitesi-kurma-maliyeti-2026) yazımızda açtık.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "E-ticaret sitesi ne kadar sürede açılır?",
+        a: "Hazır altyapıda ürün içerikleri hazırsa birkaç hafta içinde açılabilir. Teslim tarihini işe başlamadan yazılı olarak veriyoruz.",
+      },
+      {
+        q: "Pazaryerindeyim, ayrıca site açmalı mıyım?",
+        a: "Çoğu marka için evet. Pazaryeri yeni müşteri getirir, kendi siteniz komisyonsuz tekrar satış ve müşteri verisi sağlar.",
+      },
+      {
+        q: "Site açıldıktan sonra reklamları da yönetiyor musunuz?",
+        a: "Evet. Mağazayı kuran ekip Meta ve Google reklamlarını da yönetiyor.",
       },
     ],
   },

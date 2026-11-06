@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { PortfolioSection } from "@/components/public/sections/portfolio-section"
 import { CTASection } from "@/components/public/sections/cta-section"
 import { PortfolioHero } from "./_components/portfolio-hero"
+import { DEFAULT_OG_IMAGES } from "@/lib/seo"
 
 import { getPageBySlug } from "@/lib/page-data"
 import { PageRenderer } from "@/components/public/page-renderer"
@@ -16,6 +17,7 @@ export const metadata: Metadata = {
     description:
       "Performans reklamcılığı, sosyal medya ve marka kimliği alanlarında birlikte büyüttüğümüz markalar.",
     url: "/portfolio",
+    images: DEFAULT_OG_IMAGES,
     type: "website",
   },
   alternates: {

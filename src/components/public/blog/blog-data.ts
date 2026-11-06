@@ -7,6 +7,9 @@ export interface BlogPost {
   title: string
   slug: string
   excerpt: string
+  /** Admin SEO alanları; doluysa <title> ve meta açıklamada kullanılır */
+  metaTitle?: string | null
+  metaDescription?: string | null
   content: string
   /** Admin-uploaded cover image URL (preferred over coverGradient when set). */
   coverImage?: string | null

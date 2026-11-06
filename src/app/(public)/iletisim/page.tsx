@@ -10,6 +10,7 @@ import { ContactInfo } from "@/components/public/contact/contact-info"
 import { HeroStrip } from "./_components/hero-strip"
 import { WhyUs } from "./_components/why-us"
 import { FaqAccordion } from "./_components/faq-accordion"
+import { DEFAULT_OG_IMAGES } from "@/lib/seo"
 
 import { getPageBySlug } from "@/lib/page-data"
 import { listPublishedPortfolio } from "@/lib/content-store"
@@ -56,6 +57,7 @@ export const metadata: Metadata = {
     title: "FlixFlex İletişim",
     description: "Brief gönderin, birlikte büyüyelim.",
     url: "/iletisim",
+    images: DEFAULT_OG_IMAGES,
   },
   alternates: { canonical: "/iletisim" },
 }

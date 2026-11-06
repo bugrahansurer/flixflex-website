@@ -10,6 +10,7 @@ import { ProjectNarrative } from "./_components/project-narrative"
 import { ProjectGallerySection } from "./_components/project-gallery-section"
 import { ProjectResults } from "./_components/project-results"
 import { PrevNextNav } from "@/components/public/portfolio/prev-next"
+import { DEFAULT_OG_IMAGES } from "@/lib/seo"
 
 // ── Static params ─────────────────────────────────
 
@@ -33,15 +34,23 @@ export async function generateMetadata({
     return { title: "Proje Bulunamadı" }
   }
 
+  // Kısa proje açıklamaları meta için yetersiz: sayfadaki metne dokunmadan ajans bilgisi eklenir.
+  const baseDescription = (project.description || "").trim()
+  const description =
+    baseDescription.length >= 120
+      ? baseDescription
+      : `${baseDescription ? baseDescription.replace(/\.?$/, ". ") : ""}${project.title} projesi, FlixFlex reklam ve dijital pazarlama ajansının işlerinden biri.`
+
   return {
     // Proje başlığı zaten müşteri adını içeriyor; tekrar eklemek başlığı 70+ karaktere taşıyordu.
     title: project.title,
-    description: project.description,
+    description,
     openGraph: {
       title: `${project.title} — ${project.client}`,
-      description: project.description,
+      description,
       url: `/portfolio/${slug}`,
       type: "article",
+      images: DEFAULT_OG_IMAGES,
     },
     alternates: {
       canonical: `/portfolio/${slug}`,
