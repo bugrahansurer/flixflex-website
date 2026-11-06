@@ -147,7 +147,7 @@ export const SERVICE_GUIDES: Record<string, ServiceGuide> = {
       {
         heading: "Mersin ve Tarsus'ta sosyal medya yönetimi",
         paragraphs: [
-          "Tarsus merkezli ekibimiz Mersin, Tarsus, Mezitli, Yenişehir ve Adana'daki işletmelerle çalışıyor. Yerel bir restoranın, mağazanın ya da e-ticaret markasının hedef kitlesini bölgeyi tanıyarak planlamak, potansiyel müşterilere daha doğru içerikle ulaşmayı sağlar. Türkiye'nin diğer şehirlerindeki markalarla süreci tamamen online yürütüyoruz. Ayrıntılar için [Mersin Sosyal Medya Ajansı](/mersin-sosyal-medya-ajansi) sayfamıza göz atın.",
+          "Tarsus merkezli ekibimiz Mersin, Tarsus, Mezitli, Yenişehir ve Adana'daki işletmelerle çalışıyor. Yerel bir restoranın, mağazanın ya da e-ticaret markasının hedef kitlesini bölgeyi tanıyarak planlamak, potansiyel müşterilere daha doğru içerikle ulaşmayı sağlar. Türkiye'nin diğer şehirlerindeki markalarla süreci tamamen online yürütüyoruz. Ayrıntılar için [Mersin Sosyal Medya Ajansı](/mersin-sosyal-medya-ajansi) ve [Tarsus Sosyal Medya Yönetimi](/tarsus-sosyal-medya-yonetimi) sayfalarımıza göz atın.",
         ],
       },
     ],
@@ -304,7 +304,7 @@ export const SERVICE_GUIDES: Record<string, ServiceGuide> = {
       {
         heading: "Mersin, Tarsus ve Adana'da Meta reklam yönetimi",
         paragraphs: [
-          "Yerel işletmeler için reklamları ilçe ve semt düzeyinde hedefleyebiliyoruz. Mersin, Tarsus ve Adana'daki markalarla bölgeyi tanıyarak çalışıyor, Türkiye genelinde satış yapan markalar içinse reklam hesaplarınızı uzaktan yönetiyoruz. Mersin'deki işletmeler için [Mersin Sosyal Medya Ajansı](/mersin-sosyal-medya-ajansi) sayfamızı inceleyebilirsiniz.",
+          "Yerel işletmeler için reklamları ilçe ve semt düzeyinde hedefleyebiliyoruz. Mersin, Tarsus ve Adana'daki markalarla bölgeyi tanıyarak çalışıyor, Türkiye genelinde satış yapan markalar içinse reklam hesaplarınızı uzaktan yönetiyoruz. Bölgeye özel ayrıntılar için [Mersin Meta Reklamı](/mersin-meta-reklam) ve [Tarsus Reklam Ajansı](/tarsus-reklam-ajansi) sayfalarımızı inceleyebilirsiniz.",
         ],
       },
     ],

@@ -65,7 +65,7 @@ export function FlixFlexFooter({ siteSettings = {} }: { siteSettings?: Record<st
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
-            className="grid grid-cols-2 md:grid-cols-6 gap-10 pb-12 border-b border-[var(--border)]"
+            className="grid grid-cols-2 md:grid-cols-7 gap-10 pb-12 border-b border-[var(--border)]"
           >
             {/* Brand block */}
             <motion.div variants={fadeInUp} className="col-span-2">

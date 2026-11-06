@@ -24,6 +24,9 @@ const STATIC_PAGES: Array<{ path: string; changeFrequency: Entry["changeFrequenc
   { path: "/adana-web-tasarim",          changeFrequency: "monthly", priority: 0.8 },
   { path: "/mersin-sosyal-medya-ajansi", changeFrequency: "monthly", priority: 0.8 },
   { path: "/mersin-reklam-ajansi",       changeFrequency: "monthly", priority: 0.9 },
+  { path: "/tarsus-reklam-ajansi",       changeFrequency: "monthly", priority: 0.9 },
+  { path: "/tarsus-sosyal-medya-yonetimi", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/mersin-meta-reklam",         changeFrequency: "monthly", priority: 0.8 },
   { path: "/adana-reklam-ajansi",        changeFrequency: "monthly", priority: 0.8 },
   { path: "/ikas-partner-ajansi",        changeFrequency: "monthly", priority: 0.8 },
 ]

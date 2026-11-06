@@ -215,7 +215,7 @@ export const LOCAL_PAGES: Record<string, LocalPage> = {
           bullets: [
             "Instagram hesap yönetimi: profil düzeni, içerik takvimi, paylaşım, yorum ve mesaj takibi.",
             "İçerik üretimi: Reels, carousel, hikâye tasarımları ve motion design videolar.",
-            "Mersin Instagram reklamları: mesaj, arama ve satış getiren Meta reklamları; ilçe ve semt düzeyinde hedefleme.",
+            "[Mersin Meta reklamı](/mersin-meta-reklam): mesaj, arama ve satış getiren Instagram ve Facebook reklamları; ilçe ve semt düzeyinde hedefleme.",
             "TikTok ve Facebook: genç kitle için TikTok, yerel ve 30 yaş üstü kitle için Facebook kampanyaları.",
             "Raporlama: aylık PDF yerine hangi içeriğin ve reklamın müşteri getirdiğini gösteren canlı panel.",
           ],
@@ -288,7 +288,7 @@ export const LOCAL_PAGES: Record<string, LocalPage> = {
           heading: "Mersin'de reklam ajansı arayanlar için",
           paragraphs: [
             "Mersin'de müşteriye ulaşmanın en hızlı yolu artık telefonun ekranından geçiyor. İnsanlar bir işletmeyi önce Instagram'da görüyor, sonra Google'da aratıyor, sonra yorumlarına bakıyor. Bu üç yerde de iyi görünmeyen bir işletme, işi iyi olsa bile müşteriyi rakibine kaptırıyor.",
-            "FlixFlex, Tarsus merkezli bir reklam ajansı. 2020'den beri çalışıyoruz, Mersin'in ticaretini ve sezonlarını yakından biliyoruz. Reklamı kuran, kreatifi üreten ve sonucu ölçen ekip aynı.",
+            "FlixFlex, Tarsus merkezli bir reklam ajansı. 2020'den beri çalışıyoruz, Mersin'in ticaretini ve sezonlarını yakından biliyoruz. Mersin reklam işlerinde dijital tarafı üstleniyoruz: reklamı kuran, kreatifi üreten ve sonucu ölçen ekip aynı. Tarsus'taki işletmeler için [Tarsus reklam ajansı](/tarsus-reklam-ajansi), yalnızca Instagram ve Facebook için [Mersin Meta reklamı](/mersin-meta-reklam) sayfamıza bakabilirsiniz.",
           ],
         },
         {
@@ -365,6 +365,262 @@ export const LOCAL_PAGES: Record<string, LocalPage> = {
         },
         {
           q: "Ücretsiz inceleme nasıl işliyor?",
+          a: "Mevcut reklamlarınıza 20 dakika birlikte bakıyoruz. İşinize yarayacak bir şey bulamazsak kahveniz bizden.",
+        },
+      ],
+    },
+  },
+
+  "tarsus-reklam-ajansi": {
+    slug: "tarsus-reklam-ajansi",
+    title: "Tarsus Reklam Ajansı — Meta, Google ve Sosyal Medya",
+    description:
+      "Tarsus reklam ajansı FlixFlex: Kırklarsırtı'ndaki ofisimizden Meta ve Google reklamları, sosyal medya yönetimi ve web tasarım. Ücretsiz inceleme alın.",
+    h1: "Tarsus Reklam Ajansı",
+    lead: "Ofisimiz Tarsus'ta. Tarsuslu işletmelerin reklamlarını kuruyor, içeriklerini üretiyor ve her gün takip ediyoruz. Görüşmek için başka şehre gitmeniz gerekmiyor.",
+    serviceName: "Reklam ve Dijital Pazarlama",
+    city: "Tarsus",
+    areaServed: ["Tarsus", "Mersin"],
+    guide: {
+      eyebrow: "Tarsus'ta Reklam",
+      sections: [
+        {
+          heading: "Tarsus'ta reklam ajansı arıyorsanız",
+          paragraphs: [
+            "FlixFlex 2020'de Tarsus'ta kuruldu ve hâlâ burada, Kırklarsırtı Mahallesi Celal Bayar Caddesi'nde çalışıyor. Tarsusta reklam ajansı arayan bir işletme için bunun anlamı basit: işi aynı şehirde, yüz yüze konuşabildiğiniz bir ekiple yürütürsünüz.",
+            "Tarsus'un ticaretini de yakından biliyoruz. Organize sanayideki üreticiler, çarşıdaki mağazalar, tarım ve gıda firmaları, Kleopatra Kapısı ile Şelale çevresindeki kafe ve restoranlar aynı reklamla büyümez. Her biri için farklı bir plan kuruyoruz.",
+          ],
+        },
+        {
+          heading: "Tarsus reklam ajansı olarak neler yapıyoruz?",
+          bullets: [
+            "Meta reklamları: Instagram ve Facebook'ta mesaj, arama ve satış getiren kampanyalar. Ayrıntılar [Instagram reklam ajansı](/hizmetler/meta-tiktok-reklamlari) sayfamızda.",
+            "Google reklamları: Tarsus'ta hizmetinizi arayan kişinin karşısına çıkan kampanyalar. Ayrıntılar [Google Ads ajansı](/hizmetler/google-ads-yonetimi) sayfamızda.",
+            "Sosyal medya: içerik takvimi, tasarım, Reels ve hesap yönetimi. Ayrıntılar [Tarsus sosyal medya yönetimi](/tarsus-sosyal-medya-yonetimi) sayfamızda.",
+            "Kreatif üretim: reklam videoları, motion design ve görseller.",
+            "Web sitesi: reklamdan gelen kişiyi müşteriye çeviren sayfalar. Ayrıntılar [kurumsal web tasarım](/hizmetler/web-sitesi-tasarimi) sayfamızda.",
+          ],
+        },
+        {
+          heading: "Tarsus'ta reklam nasıl çalışır?",
+          paragraphs: [
+            "Tarsus'ta bir işletmenin bütün Türkiye'ye reklam göstermesi çoğu zaman para kaybıdır. Meta reklamlarında hedefi Tarsus'a, hatta işletmenizin çevresindeki birkaç kilometreye daraltabiliyoruz. Böylece reklamı yalnızca size gelebilecek kişiler görür.",
+            "Tarsus, Mersin ile Adana'nın arasında olduğu için sınırı doğru çizmek de önemli. Bir mobilya mağazası için iki şehre de açılmak mantıklı olabilir. Bir kafe için Tarsus yeterlidir. Bu kararı işinizin müşterisinin nereden geldiğine bakarak veriyoruz.",
+          ],
+        },
+        {
+          heading: "Tarsus'taki işletmeler için örnek planlar",
+          bullets: [
+            "Mağaza ve bayi: Tarsus ve çevresine konum hedefli reklam, WhatsApp mesajı ve mağaza trafiği. Kurt Ofis Tarsus'u performans pazarlamada üst seviyeye taşıdık.",
+            "Kafe ve restoran: mekânı ve menüyü anlatan kısa videolar, yol tarifi ve rezervasyon odaklı reklam.",
+            "Üretici ve sanayi firmaları: kurumsal web sitesi, Google reklamları ve bayi ya da toptan talep toplayan formlar.",
+            "Tarım ve gıda: Tarsus'tan Türkiye geneline online satış için e-ticaret sitesi ve katalog reklamları.",
+            "Sağlık ve güzellik: randevu getiren kampanyalar, kurallara uygun reklam metinleri.",
+          ],
+        },
+        {
+          heading: "Yerel ajansla çalışmanın farkı",
+          bullets: [
+            "Yüz yüze görüşme: ofisimize gelebilir ya da sizi işletmenizde ziyaret etmemizi isteyebilirsiniz.",
+            "Tek ekip: reklamı kuran, içeriği üreten ve siteyi yapan ekip aynı.",
+            "Canlı veri: harcamayı ve sonuçları aylık PDF beklemeden panelden görürsünüz.",
+            "Hızlı dönüş: sorularınıza aynı gün cevap veriyoruz.",
+            "Yazılı teslim sözü: söz verdiğimiz işi zamanında teslim etmezsek o ayın ücretini almıyoruz.",
+          ],
+          paragraphs: [
+            "Tarsus dışındaki şubeleriniz ya da müşterileriniz için [Mersin reklam ajansı](/mersin-reklam-ajansi) ve [Adana reklam ajansı](/adana-reklam-ajansi) sayfalarımıza da bakabilirsiniz.",
+          ],
+        },
+      ],
+      faqs: [
+        {
+          q: "Tarsus'ta ofisiniz nerede?",
+          a: "Kırklarsırtı Mahallesi, Celal Bayar Caddesi'ndeyiz. Gelmeden önce [bize yazarsanız](/iletisim) görüşme saatini ayarlayalım.",
+        },
+        {
+          q: "Tarsus'ta reklam vermek ne kadar tutar?",
+          a: "Hizmetin ve hedefin türüne göre değişir. Önce ayda kaç müşteri istediğinizi konuşuyor, bütçeyi bu hedeften geriye doğru hesaplıyoruz. Reklam bütçesi doğrudan Meta'ya ya da Google'a ödenir.",
+        },
+        {
+          q: "Küçük bir esnafım, benim için uygun mu?",
+          a: "Evet. Tarsus gibi konumu belli bir pazarda küçük bütçeyle başlamak mümkün. Sonuç geldikçe bütçeyi birlikte büyütürüz.",
+        },
+        {
+          q: "Tabela ve baskı işi yapıyor musunuz?",
+          a: "Odağımız dijital reklam, sosyal medya, kreatif üretim ve web sitesi. Tabela ve baskı işleri ana hizmetimiz değil.",
+        },
+        {
+          q: "Ne zaman sonuç alırım?",
+          a: "Reklamlarda ilk veriler genellikle birkaç hafta içinde netleşir. Sonuçlar sektöre, bütçeye ve teklife göre değiştiği için kesin rakam vaat etmiyoruz.",
+        },
+        {
+          q: "Ücretsiz inceleme nasıl işliyor?",
+          a: "Mevcut reklamlarınıza 20 dakika birlikte bakıyoruz. İşinize yarayacak bir şey bulamazsak kahveniz bizden.",
+        },
+      ],
+    },
+  },
+
+  "tarsus-sosyal-medya-yonetimi": {
+    slug: "tarsus-sosyal-medya-yonetimi",
+    title: "Tarsus Sosyal Medya Yönetimi — Instagram ve Reels",
+    description:
+      "Tarsus sosyal medya yönetimi: Instagram hesap yönetimi, içerik takvimi, Reels ve tasarım. Tarsus sosyal medya ajansı FlixFlex ile hesabınız düzenli büyüsün.",
+    h1: "Tarsus Sosyal Medya Yönetimi",
+    lead: "Tarsus'taki işletmelerin Instagram, TikTok ve Facebook hesaplarını yönetiyoruz. İçerikleri aynı şehirde, işinizi tanıyan bir ekip üretiyor.",
+    serviceName: "Sosyal Medya Yönetimi",
+    city: "Tarsus",
+    areaServed: ["Tarsus", "Mersin"],
+    guide: {
+      eyebrow: "Tarsus Sosyal Medya",
+      sections: [
+        {
+          heading: "Tarsus'ta sosyal medya neden önemli?",
+          paragraphs: [
+            "Tarsus'ta bir yeri denemeden önce çoğu kişi Instagram'ına bakıyor. Son paylaşım iki yıl önceyse ya da fotoğraflar özensizse işletme kapalı sanılabiliyor. İyi bir hesap, müşteri daha kapıdan girmeden güven veriyor.",
+            "Tarsus sosyal medya yönetimi işini bu yüzden paylaşım sayısıyla değil, gelen mesaj ve müşteriyle ölçüyoruz. Hesabınızı düzenli tutuyor, Tarsusluların ilgisini çekecek içerikler üretiyor, gerekirse reklamla destekliyoruz.",
+          ],
+        },
+        {
+          heading: "Tarsus sosyal medya hizmetimize neler dahil?",
+          bullets: [
+            "Profil düzeni: profil fotoğrafı, açıklama, öne çıkanlar ve iletişim butonları.",
+            "İçerik takvimi: ayın paylaşımlarını önceden planlıyor, onayınıza sunuyoruz.",
+            "Tasarım ve video: carousel, hikâye, Reels ve motion design içerikler.",
+            "Yorum ve mesaj takibi: sık gelen sorulara hazır cevaplar, satış mesajlarını size hızlı iletmek.",
+            "Reklam desteği: iyi giden içerikleri Tarsus'a ve çevresine reklamla göstermek.",
+            "Canlı takip: hangi içeriğin mesaj getirdiğini ay sonunu beklemeden görmek.",
+          ],
+        },
+        {
+          heading: "Tarsuslu işletmeler için hangi içerikler işe yarıyor?",
+          bullets: [
+            "Yerel bağ: Tarsus'tan tanıdık yerler, mahalleler ve insanlar. İnsanlar kendi şehrini gördüğünde durur.",
+            "Ürün ve hizmet videoları: işinizi kısa bir videoyla göstermek uzun bir yazıdan daha çok işe yarar.",
+            "Şalgam, tantuni ve cezerye gibi yerel lezzetler: yeme içme işletmeleri için bölgenin en güçlü konusu.",
+            "Müşteri yorumları: gerçek müşterilerin sözleri güveni hızlı artırır.",
+            "Kampanya ve özel günler: bayramlar, okul dönemi ve yaz sezonu için önceden hazırlanan içerikler.",
+          ],
+        },
+        {
+          heading: "Çalışma şeklimiz",
+          paragraphs: [
+            "İlk görüşmede hesabınıza birlikte bakıyoruz. Ardından 30 günlük içerik planını hazırlıyoruz. Plan onaylanınca üretim başlıyor. Ay sonunda neyin işe yaradığına bakıp bir sonraki ayı buna göre güncelliyoruz.",
+            "Aylık, 3, 6 ve 12 aylık paketlerimiz var. Fiyatı neyin belirlediğini [Sosyal Medya Yönetimi Fiyatları 2026](/blog/sosyal-medya-yonetimi-fiyatlari-2026) yazımızda anlattık. Hizmetin genel kapsamı [sosyal medya yönetimi](/hizmetler/sosyal-medya-yonetimi) sayfamızda, reklam tarafı [Tarsus reklam ajansı](/tarsus-reklam-ajansi) sayfamızda.",
+          ],
+        },
+      ],
+      faqs: [
+        {
+          q: "Tarsus'ta yüz yüze görüşebilir miyiz?",
+          a: "Evet. Ofisimiz Tarsus'ta, Kırklarsırtı Mahallesi'nde. İsterseniz işletmenizde de görüşebiliriz.",
+        },
+        {
+          q: "Sadece Instagram yönetimi alabilir miyim?",
+          a: "Evet. Tek platformla başlayıp sonuçları gördükçe TikTok ya da Facebook ekleyebilirsiniz.",
+        },
+        {
+          q: "İçerikler için neye ihtiyacınız var?",
+          a: "İşinizi anlatan kısa bir görüşme ve varsa ürün görselleri yeterli. Tasarım, video ve metinleri ekibimiz hazırlar. Telefonla çektiğiniz görüntüleri de içeriğe çevirebiliriz.",
+        },
+        {
+          q: "Şifremi paylaşmam gerekiyor mu?",
+          a: "Hayır. Meta Business Suite üzerinden şifre paylaşmadan erişim verebilirsiniz. Hesaplar her zaman sizde kalır.",
+        },
+        {
+          q: "Takipçi garantisi veriyor musunuz?",
+          a: "Hayır. Takipçi satın almıyoruz ve sayı garantisi vermiyoruz. Teslim tarihlerine ise yazılı söz veriyoruz: zamanında teslim etmezsek o ayın ücretini almıyoruz.",
+        },
+      ],
+    },
+  },
+
+  "mersin-meta-reklam": {
+    slug: "mersin-meta-reklam",
+    title: "Mersin Meta Reklamı — Instagram ve Facebook Reklamları",
+    description:
+      "Mersin Meta reklamı yönetimi: Instagram ve Facebook'ta ilçe düzeyinde hedefleme, kreatif üretimi, pixel kurulumu ve günlük takip. Ücretsiz inceleme alın.",
+    h1: "Mersin Meta Reklamı",
+    lead: "Mersin'deki işletmeler için Instagram ve Facebook reklamlarını kreatifiyle birlikte kuruyor, her gün takip ediyoruz. Reklamı yalnızca size gelebilecek kişilere gösteriyoruz.",
+    serviceName: "Meta Reklam Yönetimi",
+    city: "Mersin",
+    areaServed: ["Mersin", "Tarsus", "Mezitli", "Yenişehir", "Toroslar", "Akdeniz", "Erdemli", "Silifke"],
+    guide: {
+      eyebrow: "Mersin Meta Reklam",
+      sections: [
+        {
+          heading: "Mersin'de Meta reklamı neden işe yarar?",
+          paragraphs: [
+            "Meta reklamları Instagram, Facebook ve Messenger'da gösterilir ve hepsi tek panelden yönetilir. Mersin gibi Instagram'ın yoğun kullanıldığı bir şehirde, işletmenizi henüz sizi aramayan ama ilgilenebilecek kişilere göstermenin en hızlı yollarından biridir.",
+            "Google sizi zaten arayan kişiye ulaşır. Meta ise henüz aramayan kişiye. Bu yüzden görsel olarak anlatılan ürün ve hizmetlerde, yeni açılan işletmelerde ve kampanya dönemlerinde Meta reklamı çok güçlüdür.",
+          ],
+        },
+        {
+          heading: "Mersin'e özel Meta reklam kurulumu",
+          bullets: [
+            "İlçe hedefleme: Mezitli, Yenişehir, Toroslar, Akdeniz, Tarsus, Erdemli ve Silifke için ayrı ayrı plan yapabiliyoruz.",
+            "Yakın çevre: işletmenizin etrafındaki birkaç kilometreye reklam gösterebiliyoruz.",
+            "Sezon planı: yaz aylarında sahil ilçelerine gelen ziyaretçiler, kışın şehir merkezi. Kampanya takvimini buna göre kuruyoruz.",
+            "Doğru hedef: mesaj, arama, form ya da satış. İşinizin müşterisi nasıl geliyorsa kampanyayı ona göre seçiyoruz.",
+          ],
+        },
+        {
+          heading: "Meta reklam yönetimi sürecimiz",
+          bullets: [
+            "Ölçüm kurulumu: Meta Pixel, Conversion API ve dönüşüm olayları.",
+            "Kreatif üretimi: kaydırmayı durduran video, motion design ve görseller.",
+            "Kampanya kurulumu: doğru kampanya amacı, bütçe ve kitle.",
+            "Günlük takip: kötü giden reklamı durduruyor, iyi gideni büyütüyoruz.",
+            "Canlı panel: harcamayı ve sonuçları istediğiniz an görüyorsunuz.",
+          ],
+          paragraphs: [
+            "Kampanya türlerini ve neleri takip ettiğimizi [Instagram reklam ajansı](/hizmetler/meta-tiktok-reklamlari) sayfamızda ayrıntılı anlattık.",
+          ],
+        },
+        {
+          heading: "Mersin'de Meta reklamı ne kadar tutar?",
+          paragraphs: [
+            "Maliyet iki kalemdir: Meta'ya ödediğiniz reklam bütçesi ve yönetim ücreti. Reklam bütçesini kendi kartınızla ödersiniz, harcamanın tamamını kendi hesabınızda görürsünüz. Rekabet, sezon ve hedef kitle maliyeti etkiler.",
+            "Bütçeyi hedeften geriye doğru hesaplamanın yolunu [Instagram Reklam Fiyatları 2026](/blog/instagram-reklam-fiyatlari-2026) yazımızda örneklerle anlattık.",
+          ],
+        },
+        {
+          heading: "Mersin'de en sık gördüğümüz hatalar",
+          bullets: [
+            "Gönderiyi öne çıkar butonuna güvenmek: beğeni getirir, satış çoğu zaman getirmez.",
+            "Bütün Türkiye'ye göstermek: yerel işletmenin bütçesi boşa gider.",
+            "Pixel kurmadan reklam vermek: hangi reklamın satış getirdiği görülmez.",
+            "Tek görselle başlamak: test edecek bir şey kalmaz.",
+            "Mesajlara geç dönmek: reklamın getirdiği müşteri rakibe gider.",
+          ],
+          paragraphs: [
+            "Reklam verip sonuç alamıyorsanız [Reklam Verdim Satış Gelmiyor](/blog/reklam-verdim-satis-gelmiyor) yazımız iyi bir başlangıç. Tarsus'taki işletmeler için [Tarsus reklam ajansı](/tarsus-reklam-ajansi) sayfamıza da bakabilirsiniz.",
+          ],
+        },
+      ],
+      faqs: [
+        {
+          q: "Reklam bütçesi hizmet ücretine dahil mi?",
+          a: "Hayır. Bütçe doğrudan Meta'ya ödenir. Biz yalnızca yönetim hizmeti için ücret alırız.",
+        },
+        {
+          q: "Mersin'de yüz yüze görüşebilir miyiz?",
+          a: "Evet. Tarsus merkezliyiz, Mersin'deki işletmelerle gerektiğinde yüz yüze görüşüyoruz.",
+        },
+        {
+          q: "Sadece Mersin'in bir ilçesine reklam verebilir miyim?",
+          a: "Evet. Reklamı ilçeye ya da işletmenizin çevresindeki bir alana daraltabiliyoruz.",
+        },
+        {
+          q: "Mevcut reklam hesabımı kullanabilir miyiz?",
+          a: "Evet. Hesabınıza yönetici olarak ekleniriz. Hesap, pixel ve tüm veriler sizde kalır.",
+        },
+        {
+          q: "Ne zaman sonuç alırım?",
+          a: "İlk veriler genellikle birkaç hafta içinde netleşir. Sonuçlar sektöre, bütçeye ve teklife göre değiştiği için kesin rakam vaat etmiyoruz.",
+        },
+        {
+          q: "Ücretsiz reklam incelemesi nedir?",
           a: "Mevcut reklamlarınıza 20 dakika birlikte bakıyoruz. İşinize yarayacak bir şey bulamazsak kahveniz bizden.",
         },
       ],
