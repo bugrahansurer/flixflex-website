@@ -4,6 +4,11 @@ import Link from "next/link"
 import prisma from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
 import { EmailSettingsForm } from "./email-settings-form"
+import { requirePermission } from "@/lib/ai/api-utils"
+import { encryptSecret, isEncrypted } from "@/lib/crypto"
+
+/** Şifreli saklanan, tarayıcıya hiç gönderilmeyen ayarlar */
+const SECRET_KEYS = ["mail.resend.key", "mail.smtp.pass"]
 
 export const metadata: Metadata = {
   title: "E-posta Ayarları | FlixFlex Admin",
@@ -29,9 +34,15 @@ async function getEmailSettings() {
       },
     })
 
+    // Gizli değerler tarayıcıya gönderilmez; form yalnızca kayıtlı olup
+    // olmadığını bilir.
     const map: Record<string, string> = {}
     settings.forEach((s) => {
-      map[s.key] = s.value
+      if (SECRET_KEYS.includes(s.key)) {
+        if (s.value) map[`${s.key}.stored`] = "1"
+      } else {
+        map[s.key] = s.value
+      }
     })
     return map
   } catch (err) {
@@ -43,21 +54,23 @@ async function getEmailSettings() {
 async function saveEmailSettings(formData: FormData) {
   "use server"
 
+  // Server action doğrudan POST ile çağrılabilir — sayfanın görünmesi yetmez,
+  // ayarları değiştirme yetkisi burada ayrıca doğrulanır.
+  const gate = await requirePermission("settings", "update")
+  if (!gate.ok) throw new Error("Bu ayarları değiştirme yetkiniz yok.")
   if (!prisma) return
 
   try {
-    const keys = [
+    const plainKeys = [
       "mail.provider",
       "mail.from",
-      "mail.resend.key",
       "mail.smtp.host",
       "mail.smtp.port",
       "mail.smtp.user",
-      "mail.smtp.pass",
       "mail.smtp.secure",
     ]
 
-    for (const key of keys) {
+    for (const key of plainKeys) {
       const value = formData.get(key)
       if (typeof value === "string") {
         await prisma.siteSetting.upsert({
@@ -66,6 +79,23 @@ async function saveEmailSettings(formData: FormData) {
           create: { key, value, type: "string" },
         })
       }
+    }
+
+    // Gizli değerler şifreli saklanır. Alan boş gelirse kayıtlı değer korunur
+    // (form kayıtlı anahtarı hiç görmez); eski şifresiz kayıt bu sırada şifrelenir.
+    for (const key of SECRET_KEYS) {
+      const submitted = formData.get(key)
+      const incoming = typeof submitted === "string" ? submitted.trim() : ""
+      const stored = (await prisma.siteSetting.findUnique({ where: { key } }))?.value ?? ""
+      // Boş alan + zaten şifreli kayıt: hiç dokunma (başka ortamın anahtarıyla
+      // şifrelenmişse burada çözülemez; çözmeye çalışmak kaydı silerdi).
+      if (!incoming && (!stored || isEncrypted(stored))) continue
+      const value = encryptSecret(incoming || stored)
+      await prisma.siteSetting.upsert({
+        where: { key },
+        update: { value },
+        create: { key, value, type: "string" },
+      })
     }
 
     revalidatePath("/admin/ayarlar/email")

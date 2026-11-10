@@ -9,6 +9,8 @@ import net from "node:net"
 import dns from "node:dns/promises"
 import { requirePermission } from "@/lib/ai/api-utils"
 import nodemailer from "nodemailer"
+import { getSetting } from "@/lib/settings"
+import { decryptSecret } from "@/lib/crypto"
 
 // ── Request validation ─────────────────────────────────────
 const testEmailSchema = z.object({
@@ -77,7 +79,7 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       )
     }
-    const { provider, from, resendKey, smtpHost, smtpPort, smtpUser, smtpPass, smtpSecure, testEmail } = parsed.data
+    const { provider, from, resendKey, smtpHost, smtpPort, smtpUser, smtpPass: smtpPassInput, smtpSecure, testEmail } = parsed.data
 
     const fromAddress = from || "FlixFlex <onboarding@resend.dev>"
     const subject = `FlixFlex E-posta Entegrasyon Testi`
@@ -91,6 +93,10 @@ export async function POST(req: NextRequest) {
         </div>
       </div>
     `
+
+    // Formda boş bırakılan gizli alanlar için kayıtlı (şifreli) değer kullanılır —
+    // form kayıtlı değeri artık görmez.
+    const smtpPass = smtpPassInput || decryptSecret(await getSetting<string>("mail.smtp.pass", ""))
 
     if (provider === "smtp") {
       if (!smtpHost || !smtpUser || !smtpPass) {
@@ -140,7 +146,10 @@ export async function POST(req: NextRequest) {
     }
 
     if (provider === "resend") {
-      const apiKey = resendKey || process.env.RESEND_API_KEY
+      const apiKey =
+        resendKey ||
+        decryptSecret(await getSetting<string>("mail.resend.key", "")) ||
+        process.env.RESEND_API_KEY
       if (!apiKey) {
         return NextResponse.json({ success: false, error: "Resend API anahtarı boş." })
       }

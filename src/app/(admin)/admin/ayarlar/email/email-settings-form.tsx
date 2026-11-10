@@ -14,11 +14,14 @@ interface EmailSettingsFormProps {
 export function EmailSettingsForm({ initialSettings, saveAction }: EmailSettingsFormProps) {
   const [provider, setProvider] = useState(initialSettings["mail.provider"] || "mock")
   const [fromAddress, setFromAddress] = useState(initialSettings["mail.from"] || "FlixFlex <onboarding@resend.dev>")
-  const [resendKey, setResendKey] = useState(initialSettings["mail.resend.key"] || "")
+  // Gizli değerler sunucudan gelmez; boş bırakılırsa kayıtlı değer korunur.
+  const hasStoredResendKey = initialSettings["mail.resend.key.stored"] === "1"
+  const hasStoredSmtpPass = initialSettings["mail.smtp.pass.stored"] === "1"
+  const [resendKey, setResendKey] = useState("")
   const [smtpHost, setSmtpHost] = useState(initialSettings["mail.smtp.host"] || "")
   const [smtpPort, setSmtpPort] = useState(initialSettings["mail.smtp.port"] || "587")
   const [smtpUser, setSmtpUser] = useState(initialSettings["mail.smtp.user"] || "")
-  const [smtpPass, setSmtpPass] = useState(initialSettings["mail.smtp.pass"] || "")
+  const [smtpPass, setSmtpPass] = useState("")
   const [smtpSecure, setSmtpSecure] = useState(initialSettings["mail.smtp.secure"] || "false")
 
   const [isSaving, setIsSaving] = useState(false)
@@ -183,7 +186,8 @@ export function EmailSettingsForm({ initialSettings, saveAction }: EmailSettings
                   type="password"
                   value={smtpPass}
                   onChange={(e) => setSmtpPass(e.target.value)}
-                  placeholder="••••••••••••••"
+                  placeholder={hasStoredSmtpPass ? "Kayıtlı şifre var — değiştirmek için yenisini girin" : "••••••••••••••"}
+                  autoComplete="new-password"
                   className="w-full h-9 bg-transparent border border-[#CCCCCC] focus:border-[#ff4fd8] text-xs text-[#333333] placeholder:text-[#999999]"
                 />
               </div>
@@ -206,11 +210,14 @@ export function EmailSettingsForm({ initialSettings, saveAction }: EmailSettings
                   type="password"
                   value={resendKey}
                   onChange={(e) => setResendKey(e.target.value)}
-                  placeholder="re_••••••••••••••••••••••••"
+                  placeholder={hasStoredResendKey ? "Kayıtlı anahtar var — değiştirmek için yenisini yapıştırın" : "re_••••••••••••••••••••••••"}
+                  autoComplete="off"
                   className="w-full h-9 bg-transparent border border-[#CCCCCC] focus:border-[#ff4fd8] text-xs text-[#333333] placeholder:text-[#999999]"
                 />
                 <p className="text-[10px] text-[#666666] leading-relaxed pt-1">
-                  Resend.com panelinden aldığınız API anahtarını buraya girin. Eğer boş bırakırsanız, sunucu ortam değişkenlerindeki <code>RESEND_API_KEY</code> değeri kullanılır.
+                  {hasStoredResendKey
+                    ? "Anahtar şifreli olarak kayıtlı ve güvenlik için burada gösterilmez. Boş bırakırsanız kayıtlı anahtar kullanılmaya devam eder."
+                    : <>Resend.com panelinden aldığınız API anahtarını buraya girin. Eğer boş bırakırsanız, sunucu ortam değişkenlerindeki <code>RESEND_API_KEY</code> değeri kullanılır.</>}
                 </p>
               </div>
             </div>

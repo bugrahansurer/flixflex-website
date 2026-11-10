@@ -6,7 +6,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { requirePermission, jsonError } from "@/lib/ai/api-utils"
 import { getSetting, setSetting } from "@/lib/settings"
-import { encryptSecret, decryptSecret } from "@/lib/crypto"
+import { encryptSecret } from "@/lib/crypto"
 
 export async function GET() {
   // Secret-bearing settings — gate on the `settings` resource, NOT ai:create.
@@ -16,13 +16,12 @@ export async function GET() {
   const data = {
     provider:    await getSetting("mail.provider", "mock"),
     from:        await getSetting("mail.from", "FlixFlex <onboarding@resend.dev>"),
-    // Sensitive values are stored encrypted at rest; decrypt for the
-    // authenticated admin form (transparent for legacy plaintext rows).
-    resendKey:   decryptSecret(await getSetting("mail.resend.key", "")),
+    // Gizli değerler (şifreli saklanır) yanıtta hiç dönmez; yalnızca kayıtlı mı.
+    resendKeyStored: Boolean(await getSetting("mail.resend.key", "")),
     smtpHost:    await getSetting("mail.smtp.host", ""),
     smtpPort:    await getSetting("mail.smtp.port", "587"),
     smtpUser:    await getSetting("mail.smtp.user", ""),
-    smtpPass:    decryptSecret(await getSetting("mail.smtp.pass", "")),
+    smtpPassStored: Boolean(await getSetting("mail.smtp.pass", "")),
     smtpSecure:  await getSetting("mail.smtp.secure", "false"),
   }
 
