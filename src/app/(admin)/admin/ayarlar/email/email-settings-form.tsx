@@ -8,12 +8,14 @@ import { toast } from "sonner"
 
 interface EmailSettingsFormProps {
   initialSettings: Record<string, string>
-  saveAction: (formData: FormData) => Promise<void>
+  saveAction: (formData: FormData) => Promise<{ error?: string } | void>
 }
 
 export function EmailSettingsForm({ initialSettings, saveAction }: EmailSettingsFormProps) {
   const [provider, setProvider] = useState(initialSettings["mail.provider"] || "mock")
   const [fromAddress, setFromAddress] = useState(initialSettings["mail.from"] || "FlixFlex <onboarding@resend.dev>")
+  const [replyTo, setReplyTo] = useState(initialSettings["mail.replyTo"] || "")
+  const [meetingUrl, setMeetingUrl] = useState(initialSettings["appointments.meetingUrl"] || "")
   // Gizli değerler sunucudan gelmez; boş bırakılırsa kayıtlı değer korunur.
   const hasStoredResendKey = initialSettings["mail.resend.key.stored"] === "1"
   const hasStoredSmtpPass = initialSettings["mail.smtp.pass.stored"] === "1"
@@ -35,6 +37,8 @@ export function EmailSettingsForm({ initialSettings, saveAction }: EmailSettings
     const formData = new FormData()
     formData.append("mail.provider", provider)
     formData.append("mail.from", fromAddress)
+    formData.append("mail.replyTo", replyTo)
+    formData.append("appointments.meetingUrl", meetingUrl)
     formData.append("mail.resend.key", resendKey)
     formData.append("mail.smtp.host", smtpHost)
     formData.append("mail.smtp.port", smtpPort)
@@ -43,7 +47,11 @@ export function EmailSettingsForm({ initialSettings, saveAction }: EmailSettings
     formData.append("mail.smtp.secure", smtpSecure)
 
     try {
-      await saveAction(formData)
+      const result = await saveAction(formData)
+      if (result && "error" in result && result.error) {
+        toast.error(result.error)
+        return
+      }
       toast.success("E-posta ayarları başarıyla kaydedildi.")
     } catch (err) {
       console.error(err)
@@ -122,11 +130,39 @@ export function EmailSettingsForm({ initialSettings, saveAction }: EmailSettings
               <FFInput
                 value={fromAddress}
                 onChange={(e) => setFromAddress(e.target.value)}
-                placeholder="Örn: FlixFlex <onboarding@resend.dev>"
+                placeholder="Örn: FlixFlex <bildirim@flixflex.com.tr>"
                 className="w-full h-9 bg-transparent border border-[#CCCCCC] focus:border-[#ff4fd8] text-xs text-[#333333] placeholder:text-[#999999]"
               />
               <p className="text-[10px] text-[#666666] leading-relaxed pt-1">
-                Kullanıcılara giden e-postanın kimden geldiğini belirtir. SMTP ayarlarında kullanıcı adınızla uyuşmalıdır.
+                Kullanıcılara giden e-postanın kimden geldiğini belirtir. Resend&apos;de doğrulanmış alan adından olmalı (<code>@flixflex.com.tr</code>); Gmail adresinden gönderilemez. SMTP&apos;de kullanıcı adınızla uyuşmalıdır.
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[11px] font-bold text-[#333333]">Yanıt Adresi (Reply-To)</label>
+              <FFInput
+                type="email"
+                value={replyTo}
+                onChange={(e) => setReplyTo(e.target.value)}
+                placeholder="Örn: ornek@gmail.com"
+                className="w-full h-9 bg-transparent border border-[#CCCCCC] focus:border-[#ff4fd8] text-xs text-[#333333] placeholder:text-[#999999]"
+              />
+              <p className="text-[10px] text-[#666666] leading-relaxed pt-1">
+                Müşteri, kendisine giden e-postayı yanıtlarsa yanıt bu adrese gelir. Boşsa Bildirimler&apos;deki ilk alıcı kullanılır.
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[11px] font-bold text-[#333333]">Görüşme Linki (Google Meet)</label>
+              <FFInput
+                type="url"
+                value={meetingUrl}
+                onChange={(e) => setMeetingUrl(e.target.value)}
+                placeholder="Örn: https://meet.google.com/abc-defg-hij"
+                className="w-full h-9 bg-transparent border border-[#CCCCCC] focus:border-[#ff4fd8] text-xs text-[#333333] placeholder:text-[#999999]"
+              />
+              <p className="text-[10px] text-[#666666] leading-relaxed pt-1">
+                Onaylanan randevularda müşteriye gönderilen toplantı linki. Google Meet&apos;te kalıcı bir toplantı odası oluşturup linkini buraya yapıştırın. Boşsa e-postada &quot;bağlantı ayrıca iletilecek&quot; yazar.
               </p>
             </div>
           </div>

@@ -11,6 +11,7 @@ import { requirePermission } from "@/lib/ai/api-utils"
 import nodemailer from "nodemailer"
 import { getSetting } from "@/lib/settings"
 import { decryptSecret } from "@/lib/crypto"
+import { connectionTestEmail } from "@/lib/email/templates"
 
 // ── Request validation ─────────────────────────────────────
 const testEmailSchema = z.object({
@@ -82,17 +83,11 @@ export async function POST(req: NextRequest) {
     const { provider, from, resendKey, smtpHost, smtpPort, smtpUser, smtpPass: smtpPassInput, smtpSecure, testEmail } = parsed.data
 
     const fromAddress = from || "FlixFlex <onboarding@resend.dev>"
-    const subject = `FlixFlex E-posta Entegrasyon Testi`
-    const html = `
-      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #0A0A0A; padding: 40px; text-align: center;">
-        <div style="max-width: 500px; margin: 0 auto; background-color: #121212; border: 1px solid #222; padding: 40px; border-top: 4px solid #A134FF;">
-          <h1 style="color: #FFFFFF; font-size: 20px; font-weight: 800; margin-bottom: 10px;">Bağlantı Başarılı!</h1>
-          <p style="color: #A0A0A0; font-size: 13px; line-height: 1.6;">Tebrikler, FlixFlex e-posta yapılandırmanız sorunsuz çalışıyor. Artık randevu onayları otomatik olarak gönderilebilir.</p>
-          <hr style="border: none; border-top: 1px solid #222; margin: 24px 0;" />
-          <p style="color: #444; font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase;">© FlixFlex E-posta Test Servisi</p>
-        </div>
-      </div>
-    `
+    // Formdaki (henüz kaydedilmemiş olabilecek) sağlayıcı bilgileriyle, sitenin
+    // gerçek şablonu kullanılarak gönderilir.
+    const { subject, body } = await connectionTestEmail()
+    const html = body.html
+    const text = body.text
 
     // Formda boş bırakılan gizli alanlar için kayıtlı (şifreli) değer kullanılır —
     // form kayıtlı değeri artık görmez.
@@ -140,6 +135,7 @@ export async function POST(req: NextRequest) {
         to: testEmail,
         subject,
         html,
+        text,
       })
 
       return NextResponse.json({ success: true })
@@ -165,6 +161,7 @@ export async function POST(req: NextRequest) {
           to: [testEmail],
           subject,
           html,
+          text,
         }),
       })
 

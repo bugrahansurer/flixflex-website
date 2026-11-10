@@ -3,13 +3,15 @@
 // GET/POST /api/appointments — validate, save, query (admin only)
 // ═══════════════════════════════════════════════════════════
 
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest, NextResponse, after } from "next/server"
 import prisma from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 import { hasPermission } from "@/lib/rbac/permissions"
 import { checkLimit, getClientIp, rateLimitResponse, APPOINTMENT } from "@/lib/rate-limit"
 import { appointmentSchema } from "@/lib/validators/appointment-schema"
-import { notifyAdmins } from "@/lib/notify"
+import { notifyAdmins, notifyCustomer } from "@/lib/notify"
+import { appointmentReceivedEmail } from "@/lib/email/templates"
+import { formatTrDate } from "@/lib/email/layout"
 
 // Booking window guards: no past dates, max 3 months ahead.
 const MAX_LEAD_MS = 1000 * 60 * 60 * 24 * 90 // 90 days
@@ -140,21 +142,25 @@ export async function POST(req: NextRequest) {
       },
     })
 
-    // Notify admins (respects notifications settings; never blocks the user).
-    try {
+    // E-postalar yanıttan sonra gönderilir (form beklemez, hata kullanıcıyı etkilemez).
+    after(async () => {
+      const when = formatTrDate(parsedDate)
       await notifyAdmins("appointment", {
         title: "Yeni randevu talebi alındı",
+        customerName: name,
+        customerEmail: email,
+        dateLabel: when,
         rows: [
           { label: "Ad", value: name },
           { label: "E-posta", value: email },
           { label: "Telefon", value: phone },
           { label: "Konu", value: subject },
-          { label: "Tarih", value: parsedDate.toLocaleString("tr-TR", { dateStyle: "long", timeStyle: "short" }) },
+          { label: "Tarih", value: `${when} (TSİ)` },
+          ...(notes ? [{ label: "Not", value: notes }] : []),
         ],
       })
-    } catch (notifyErr) {
-      console.error("[FlixFlex Appointment] notify failed:", notifyErr)
-    }
+      await notifyCustomer(email, appointmentReceivedEmail({ name, subject, date: parsedDate }))
+    })
 
     return NextResponse.json(
       { ok: true, appointmentId: appointment.id },

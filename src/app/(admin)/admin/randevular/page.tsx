@@ -138,6 +138,12 @@ export default function AdminAppointmentsPage() {
           } else {
             toast.warning(`Randevu onaylandı fakat e-posta gönderilemedi! Hata: ${json.emailError || "Entegrasyon pasif veya SMTP ayarları hatalı."}`)
           }
+        } else if (updates.status === "cancelled" && (json.emailSent || json.emailError)) {
+          if (json.emailSent) {
+            toast.success("Randevu iptal edildi ve müşteriye bilgi e-postası gönderildi.")
+          } else {
+            toast.warning(`Randevu iptal edildi fakat e-posta gönderilemedi! Hata: ${json.emailError}`)
+          }
         } else {
           toast.success("Randevu güncellendi.")
         }

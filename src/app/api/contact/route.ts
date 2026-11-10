@@ -3,11 +3,12 @@
 // POST /api/contact — validate, simulate send, return ref
 // ═══════════════════════════════════════════════════════════
 
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest, NextResponse, after } from "next/server"
 import prisma from "@/lib/prisma"
-import { contactSchema } from "@/lib/validators/contact-schema"
+import { contactSchema, SERVICE_LABELS } from "@/lib/validators/contact-schema"
 import { checkLimit, getClientIp, rateLimitResponse, PUBLIC_FORM } from "@/lib/rate-limit"
-import { notifyAdmins } from "@/lib/notify"
+import { notifyAdmins, notifyCustomer } from "@/lib/notify"
+import { contactReceivedEmail } from "@/lib/email/templates"
 
 // ── Helper: short random ref ───────────────────────────────
 function generateRef(): string {
@@ -73,21 +74,25 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Notify admins (respects notifications settings; never blocks the user).
-    try {
+    // E-postalar yanıttan sonra gönderilir (form beklemez, hata kullanıcıyı etkilemez).
+    const serviceLabel = data.service ? SERVICE_LABELS[data.service] ?? String(data.service) : undefined
+    after(async () => {
       await notifyAdmins("contact", {
         title: "Yeni iletişim mesajı alındı",
+        customerName: data.name,
+        customerEmail: data.email,
         rows: [
           { label: "Ad", value: data.name },
           { label: "E-posta", value: data.email },
+          ...(data.phone ? [{ label: "Telefon", value: data.phone }] : []),
           ...(data.company ? [{ label: "Şirket", value: data.company }] : []),
-          ...(data.service ? [{ label: "Hizmet", value: String(data.service) }] : []),
-          { label: "Mesaj", value: storedMessage.slice(0, 500) },
+          ...(serviceLabel ? [{ label: "Hizmet", value: serviceLabel }] : []),
+          ...(data.budget ? [{ label: "Bütçe", value: data.budget }] : []),
+          { label: "Mesaj", value: data.message },
         ],
       })
-    } catch (notifyErr) {
-      console.error("[FlixFlex Contact] notify failed:", notifyErr)
-    }
+      await notifyCustomer(data.email, contactReceivedEmail({ name: data.name, service: serviceLabel }))
+    })
 
     const ref = generateRef()
 

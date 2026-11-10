@@ -10,6 +10,12 @@ import { encryptSecret, isEncrypted } from "@/lib/crypto"
 /** Şifreli saklanan, tarayıcıya hiç gönderilmeyen ayarlar */
 const SECRET_KEYS = ["mail.resend.key", "mail.smtp.pass"]
 
+/** Resend bu alan adlarından gönderemez (alan adı sahibi doğrulanamaz) */
+const FREE_MAIL_DOMAINS = new Set([
+  "gmail.com", "googlemail.com", "hotmail.com", "outlook.com", "live.com",
+  "yahoo.com", "icloud.com", "me.com", "yandex.com", "yandex.com.tr", "msn.com",
+])
+
 export const metadata: Metadata = {
   title: "E-posta Ayarları | FlixFlex Admin",
 }
@@ -26,6 +32,8 @@ async function getEmailSettings() {
       "mail.smtp.user",
       "mail.smtp.pass",
       "mail.smtp.secure",
+      "mail.replyTo",
+      "appointments.meetingUrl",
     ]
 
     const settings = await prisma.siteSetting.findMany({
@@ -51,14 +59,35 @@ async function getEmailSettings() {
   }
 }
 
-async function saveEmailSettings(formData: FormData) {
+async function saveEmailSettings(formData: FormData): Promise<{ error?: string } | void> {
   "use server"
 
   // Server action doğrudan POST ile çağrılabilir — sayfanın görünmesi yetmez,
   // ayarları değiştirme yetkisi burada ayrıca doğrulanır.
   const gate = await requirePermission("settings", "update")
-  if (!gate.ok) throw new Error("Bu ayarları değiştirme yetkiniz yok.")
+  if (!gate.ok) return { error: "Bu ayarları değiştirme yetkiniz yok." }
   if (!prisma) return
+
+  // ── Doğrulama ──
+  const field = (k: string) => {
+    const v = formData.get(k)
+    return typeof v === "string" ? v.trim() : ""
+  }
+  const provider = field("mail.provider")
+  const fromDomain = (field("mail.from").match(/@([^>\s]+)/)?.[1] ?? "").toLowerCase()
+  if (provider === "resend" && FREE_MAIL_DOMAINS.has(fromDomain)) {
+    return {
+      error: `Resend ${fromDomain} adresinden gönderemez. Gönderen adresi doğrulanmış alan adından olmalı, örn: FlixFlex <bildirim@flixflex.com.tr>`,
+    }
+  }
+  const replyTo = field("mail.replyTo")
+  if (replyTo && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(replyTo)) {
+    return { error: "Yanıt adresi geçerli bir e-posta olmalı." }
+  }
+  const meetingUrl = field("appointments.meetingUrl")
+  if (meetingUrl && !/^https:\/\/\S+$/i.test(meetingUrl)) {
+    return { error: "Görüşme linki https:// ile başlayan bir adres olmalı." }
+  }
 
   try {
     const plainKeys = [
@@ -68,6 +97,8 @@ async function saveEmailSettings(formData: FormData) {
       "mail.smtp.port",
       "mail.smtp.user",
       "mail.smtp.secure",
+      "mail.replyTo",
+      "appointments.meetingUrl",
     ]
 
     for (const key of plainKeys) {

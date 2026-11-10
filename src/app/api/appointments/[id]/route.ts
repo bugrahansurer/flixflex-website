@@ -7,14 +7,19 @@ import { NextRequest, NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 import { hasPermission } from "@/lib/rbac/permissions"
-import { sendAppointmentApprovedEmail } from "@/lib/mail"
+import { getSetting } from "@/lib/settings"
+import { sendEmail } from "@/lib/email/send"
+import { appointmentApprovedEmail, appointmentCancelledEmail } from "@/lib/email/templates"
 
-function generateGoogleMeetLink(): string {
-  const chars = "abcdefghijklmnopqrstuvwxyz"
-  const part1 = Array.from({ length: 3 }, () => chars[Math.floor(Math.random() * chars.length)]).join("")
-  const part2 = Array.from({ length: 4 }, () => chars[Math.floor(Math.random() * chars.length)]).join("")
-  const part3 = Array.from({ length: 3 }, () => chars[Math.floor(Math.random() * chars.length)]).join("")
-  return `https://meet.google.com/${part1}-${part2}-${part3}`
+/**
+ * Görüşme linki: Admin › Ayarlar › E-posta'daki sabit toplantı linki.
+ * (Eskiden rastgele harflerle sahte bir Meet linki üretiliyordu; Google'da
+ * böyle bir toplantı yoktu.) Ayar boşsa link gönderilmez, e-posta
+ * "bağlantı ayrıca iletilecek" der.
+ */
+async function getMeetingUrl(): Promise<string | null> {
+  const url = ((await getSetting<string>("appointments.meetingUrl", "")) || "").trim()
+  return /^https:\/\//i.test(url) ? url : null
 }
 
 export async function PATCH(
@@ -61,8 +66,11 @@ export async function PATCH(
     }
 
     const isApproving = status === "approved" && currentAppointment.status !== "approved"
-    if (isApproving) {
-      updateData.meetLink = currentAppointment.meetLink || generateGoogleMeetLink()
+    const isCancelling =
+      status === "cancelled" && ["pending", "approved"].includes(currentAppointment.status)
+    const meetingUrl = isApproving || isResending ? await getMeetingUrl() : null
+    if (isApproving || isResending) {
+      updateData.meetLink = meetingUrl
     }
 
     if (Object.keys(updateData).length === 0 && !isResending) {
@@ -80,14 +88,12 @@ export async function PATCH(
     let emailSent = false
     let emailError: string | undefined = undefined
 
-    if (isApproving || isResending) {
-      const emailRes = await sendAppointmentApprovedEmail({
-        name: updated.name,
-        email: updated.email,
-        subject: updated.subject,
-        date: updated.date,
-        meetLink: updated.meetLink!,
-      })
+    if (isApproving || isResending || isCancelling) {
+      const info = { name: updated.name, subject: updated.subject, date: updated.date }
+      const { subject, body } = isCancelling
+        ? await appointmentCancelledEmail(info)
+        : await appointmentApprovedEmail({ ...info, meetLink: meetingUrl })
+      const emailRes = await sendEmail({ to: updated.email, subject, body })
       emailSent = emailRes.success
       emailError = emailRes.error
     }
