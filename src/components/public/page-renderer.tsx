@@ -58,6 +58,7 @@ const WovenLightHero = dynamic(
 import { SectionWrapper } from "./section-wrapper"
 import { useUIStore, type HeaderTone } from "@/lib/ui-store"
 import { ArrowRight } from "@/lib/icons"
+import { BuilderPreviewContext } from "@/components/shared/builder-preview-context"
 
 /** Full-bleed heroes with a fixed dark background (video/image), so the
  *  transparent header sitting over them needs white text regardless of theme.
@@ -414,7 +415,10 @@ const SECTION_RENDERERS: Partial<Record<SectionType, (
   },
 }
 
-export function PageRenderer({ sections, portfolioItems, servicesItems, blogPosts, contactSettings }: PageRendererProps) {
+export function PageRenderer({ sections: savedSections, portfolioItems, servicesItems, blogPosts, contactSettings }: PageRendererProps) {
+  // Düzenleyicinin canlı önizlemesinde kaydedilmemiş bölümler gelir; sitede null.
+  const previewSections = React.useContext(BuilderPreviewContext)
+  const sections = previewSections ?? savedSections
   const { setMobileDockVisible } = useUIStore()
   const setHeaderTone = useUIStore((s) => s.setHeaderTone)
   const sectionRefs = React.useRef<Map<string, HTMLElement>>(new Map())

@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { usePathname } from "next/navigation"
+import { isSitePreviewPath, SITE_PREVIEW_THEME } from "@/lib/site-preview"
 
 type Theme = "dark" | "light"
 
@@ -51,8 +52,9 @@ export function ThemeProvider({
   // the server and may differ from the cookie).
   const [theme, setThemeState] = React.useState<Theme>(serverTheme)
   const pathname = usePathname()
-  const isAdmin = pathname?.startsWith("/admin")
-  const activeTheme = isAdmin ? "light" : theme
+  const isSitePreview = isSitePreviewPath(pathname)
+  const isAdmin = pathname?.startsWith("/admin") && !isSitePreview
+  const activeTheme = isSitePreview ? SITE_PREVIEW_THEME : isAdmin ? "light" : theme
 
   // After mount, if localStorage has a more-recent preference than the cookie
   // (e.g. user changed theme offline before cookie synced), honour it.

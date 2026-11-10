@@ -5,7 +5,7 @@
 // ═══════════════════════════════════════════════════════════
 
 import * as React from "react"
-import { useState, useMemo } from "react"
+import { useState, useMemo, useRef, useCallback, useEffect } from "react"
 import { Search, ChevronDown, ChevronRight } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 import { usePageBuilder } from "@/store/page-builder"
@@ -13,13 +13,47 @@ import {
   SECTION_CATEGORIES,
   getSectionsByCategory,
   type SectionCategory,
+  type SectionMeta,
 } from "@/lib/page-builder/section-registry"
 import type { SectionType } from "@/types/page-builder"
+import { SectionHoverCard, type HoverTarget } from "./section-hover-card"
+
+/** Fare kutucukta bu kadar ms durunca kart açılır (geçerken açılmasın) */
+const HOVER_DELAY_MS = 120
 
 export function SectionPanel() {
   const addSection = usePageBuilder((s) => s.addSection)
   const [query, setQuery] = useState("")
   const [collapsed, setCollapsed] = useState<Set<SectionCategory>>(new Set())
+  const [hover, setHover] = useState<HoverTarget | null>(null)
+  const panelRef = useRef<HTMLDivElement | null>(null)
+  const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const hoverShown = useRef(false)
+
+  const clearHoverTimer = () => {
+    if (hoverTimer.current) clearTimeout(hoverTimer.current)
+    hoverTimer.current = null
+  }
+
+  const showHover = useCallback((meta: SectionMeta, el: HTMLElement, immediate = false) => {
+    clearHoverTimer()
+    const open = () => {
+      const panelRight = panelRef.current?.getBoundingClientRect().right ?? el.getBoundingClientRect().right
+      hoverShown.current = true
+      setHover({ meta, rect: el.getBoundingClientRect(), panelRight })
+    }
+    // Kart zaten açıksa komşu kutucuğa geçişte beklemeden değişir
+    if (immediate || hoverShown.current) open()
+    else hoverTimer.current = setTimeout(open, HOVER_DELAY_MS)
+  }, [])
+
+  const hideHover = useCallback(() => {
+    clearHoverTimer()
+    hoverShown.current = false
+    setHover(null)
+  }, [])
+
+  useEffect(() => clearHoverTimer, [])
 
   const grouped = useMemo(() => getSectionsByCategory(), [])
 
@@ -47,7 +81,8 @@ export function SectionPanel() {
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div ref={panelRef} className="flex flex-col h-full">
+      <SectionHoverCard target={hover} />
       {/* Header */}
       <div className="px-4 py-3 border-b border-[#CCCCCC]">
         <p className="text-[10px] font-semibold text-[#666666] mb-2">
@@ -74,7 +109,7 @@ export function SectionPanel() {
       </div>
 
       {/* Groups */}
-      <div className="flex-1 overflow-y-auto py-2">
+      <div className="flex-1 overflow-y-auto py-2" onScroll={hover ? hideHover : undefined}>
         {SECTION_CATEGORIES.map((cat) => {
           const items = filteredGrouped[cat]
           if (!items || items.length === 0) return null
@@ -108,7 +143,14 @@ export function SectionPanel() {
                       <button
                         key={meta.type}
                         onClick={() => addSection(meta.type as SectionType)}
-                        title={meta.description}
+                        onPointerEnter={(e) => {
+                          if (e.pointerType === "mouse") showHover(meta, e.currentTarget)
+                        }}
+                        onPointerLeave={hideHover}
+                        onFocus={(e) => {
+                          if (e.currentTarget.matches(":focus-visible")) showHover(meta, e.currentTarget, true)
+                        }}
+                        onBlur={hideHover}
                         className={cn(
                           "ff-shape-container group flex flex-col items-center gap-2 p-2.5",
                           "border border-[#CCCCCC] bg-[#f7f7f5]",

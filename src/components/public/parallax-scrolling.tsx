@@ -65,8 +65,16 @@ function ParallaxLayerView({
 }
 
 // ── Main component ─────────────────────────────────────────
-export function ParallaxScrolling({
-  layers,
+export function ParallaxScrolling(props: ParallaxScrollingProps) {
+  // Katman da içerik de yoksa çizilecek bir şey yok. useScroll'u çağıran iç
+  // bileşen hiç kurulmaz: hedef ref'i DOM'a bağlanmadan useScroll çağrılırsa
+  // motion "Target ref is defined but not hydrated" hatasıyla sayfayı düşürür.
+  if ((!props.layers || props.layers.length === 0) && !props.children) return null
+  return <ParallaxScrollingInner {...props} />
+}
+
+function ParallaxScrollingInner({
+  layers = [],
   children,
   className,
 }: ParallaxScrollingProps) {
@@ -75,8 +83,6 @@ export function ParallaxScrolling({
     target: containerRef,
     offset: ["start end", "end start"],
   })
-
-  if (!layers || layers.length === 0) return null
 
   return (
     <div

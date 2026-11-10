@@ -16,6 +16,7 @@ import { NextResponse } from "next/server"
 import NextAuth from "next-auth"
 import { authConfig } from "@/lib/auth/config"
 import { hasPermission } from "@/lib/rbac/permissions"
+import { isSitePreviewPath } from "@/lib/site-preview"
 
 // Map an /admin sub-route prefix → the resource that gates it.
 // Routes not listed here (dashboard, profile) are open to any admin.
@@ -104,7 +105,9 @@ export default auth((req) => {
   }
 
   const requestHeaders = new Headers(req.headers)
-  requestHeaders.set("x-is-admin", "true")
+  // Canlı önizleme admin altında ama site gibi çizilir (sitenin teması)
+  if (isSitePreviewPath(pathname)) requestHeaders.set("x-site-preview", "true")
+  else requestHeaders.set("x-is-admin", "true")
   return NextResponse.next({
     request: {
       headers: requestHeaders,

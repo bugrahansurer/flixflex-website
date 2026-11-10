@@ -18,6 +18,7 @@ import {
   Layers,
   Layout,
   Settings,
+  Columns,
 } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
@@ -29,6 +30,8 @@ import { SectionPanel } from "./section-panel"
 import { SortableCanvas } from "./sortable-canvas"
 import { PropertyEditor } from "./property-editor"
 import { LivePreview } from "./live-preview"
+
+const LIVE_PANEL_KEY = "ff:builder:livePanel"
 
 interface PageBuilderProps {
   initialPage: PageData
@@ -60,7 +63,28 @@ export function PageBuilder({ initialPage }: PageBuilderProps) {
   const [isSaving, setIsSaving] = useState(false)
   const [showPreview, setShowPreview] = useState(false)
   // Below lg the 3-pane editor is tabbed — this picks the visible pane.
-  const [mobilePane, setMobilePane] = useState<"sections" | "canvas" | "properties">("canvas")
+  const [mobilePane, setMobilePane] = useState<"sections" | "canvas" | "properties" | "preview">("canvas")
+  // Geniş ekranda (xl+) sağdaki canlı önizleme paneli; tercih tarayıcıda hatırlanır.
+  // (Düzenleyici yalnızca istemcide çizilir; sunucuda varsayılan: açık.)
+  const [livePanel, setLivePanel] = useState(() => {
+    if (typeof window === "undefined") return true
+    try {
+      return localStorage.getItem(LIVE_PANEL_KEY) !== "0"
+    } catch {
+      return true
+    }
+  })
+
+  const toggleLivePanel = useCallback(() => {
+    setLivePanel((v) => {
+      try {
+        localStorage.setItem(LIVE_PANEL_KEY, v ? "0" : "1")
+      } catch {
+        /* yok say */
+      }
+      return !v
+    })
+  }, [])
 
   useEffect(() => {
     isDirtyRef.current = isDirty
@@ -272,6 +296,25 @@ export function PageBuilder({ initialPage }: PageBuilderProps) {
         <div className="hidden sm:block flex-1" />
 
         {/* Action buttons */}
+        {!showPreview && (
+          <button
+            type="button"
+            onClick={toggleLivePanel}
+            aria-pressed={livePanel}
+            title={livePanel ? "Sağdaki canlı önizlemeyi gizle" : "Sağda canlı önizlemeyi göster"}
+            className={cn(
+              "ff-shape-button shrink-0 hidden xl:flex items-center gap-1.5 px-4 py-2 text-[11px] font-medium",
+              "border transition-colors duration-150",
+              livePanel
+                ? "border-[#ff4fd8] text-[#ff4fd8] bg-[#ff4fd8]/10"
+                : "border-[#CCCCCC] text-[#666666] hover:border-[#ff4fd8] hover:text-[#ff4fd8]"
+            )}
+          >
+            <Columns size={12} />
+            Canlı Panel
+          </button>
+        )}
+
         <button
           onClick={() => setShowPreview((v) => !v)}
           className={cn(
@@ -320,6 +363,7 @@ export function PageBuilder({ initialPage }: PageBuilderProps) {
               { key: "sections", label: "Bölümler", Icon: Layers },
               { key: "canvas", label: "Tuval", Icon: Layout },
               { key: "properties", label: "Özellikler", Icon: Settings },
+              { key: "preview", label: "Önizleme", Icon: Eye },
             ] as const).map(({ key, label, Icon }) => (
               <button
                 key={key}
@@ -355,22 +399,38 @@ export function PageBuilder({ initialPage }: PageBuilderProps) {
               className={cn(
                 mobilePane === "canvas" ? "block" : "hidden",
                 "lg:block min-h-0 w-full lg:w-[450px] lg:flex-none",
+                livePanel && "xl:w-[300px] 2xl:w-[380px]",
                 "overflow-y-auto bg-[#f7f7f5] lg:border-r border-[#CCCCCC]",
               )}
             >
               <SortableCanvas />
             </main>
 
-            {/* Right: Property Editor — asıl düzenleme alanı (kalan tüm genişlik) */}
+            {/* Property Editor — canlı panel açıkken sabit genişlik, değilse kalan alan */}
             <aside
               className={cn(
                 mobilePane === "properties" ? "block" : "hidden",
                 "lg:block min-h-0 w-full flex-1 lg:min-w-0",
+                livePanel && "xl:flex-none xl:w-[360px] 2xl:w-[440px]",
                 "overflow-y-auto bg-[#f7f7f5] lg:border-r border-[#CCCCCC]",
               )}
             >
               <PropertyEditor />
             </aside>
+
+            {/* Right: Canlı önizleme — xl+ ekranda panel, mobilde "Önizleme" sekmesi.
+                Gizliyken iframe yüklenmez (genişlik 0). */}
+            <section
+              aria-label="Canlı önizleme"
+              className={cn(
+                mobilePane === "preview" ? "flex" : "hidden",
+                "lg:hidden",
+                livePanel ? "xl:flex" : "xl:hidden",
+                "flex-col min-h-0 min-w-0 flex-1",
+              )}
+            >
+              <LivePreview page={page} compact />
+            </section>
           </div>
         </>
       )}

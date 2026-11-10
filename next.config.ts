@@ -32,6 +32,9 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "cdn.pixabay.com" },
       { protocol: "https", hostname: "cdn.flixflex.com.tr" },
       { protocol: "https", hostname: "me7aitdbxq.ufs.sh" },
+      // 3D Şiir Hero bölümünün varsayılan görselleri (src/types/page-builder.ts)
+      { protocol: "https", hostname: "i.ibb.co", pathname: "/q3XSxR9W/**" },
+      { protocol: "https", hostname: "i.ibb.co", pathname: "/Y4FKvK38/**" },
     ],
     formats: ["image/avif", "image/webp"],
   },
@@ -66,6 +69,17 @@ const nextConfig: NextConfig = {
     // need it, so omit it there to shrink the script-src surface.
     const evalRule = isDev ? "'unsafe-eval' " : ""
 
+    const csp = (frameAncestors: string) =>
+      "default-src 'self'; " +
+      `script-src 'self' 'unsafe-inline' ${evalRule}https://www.gstatic.com https://www.googletagmanager.com https://*.google-analytics.com https://connect.facebook.net; ` +
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+      "font-src 'self' https://fonts.gstatic.com data:; " +
+      "img-src 'self' data: blob: https:; " +
+      `media-src 'self' blob: ${mediaOrigin}; ` +
+      `connect-src 'self' ${wsRules}${r2UploadOrigin} https://api.anthropic.com https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://connect.facebook.net https://www.facebook.com; ` +
+      "frame-src 'self' https://www.googletagmanager.com https://td.doubleclick.net; " +
+      `frame-ancestors ${frameAncestors};`
+
     return [
       {
         source: "/(.*)",
@@ -85,19 +99,16 @@ const nextConfig: NextConfig = {
           // (for the hydration runtime). Can be tightened with nonces
           // in a follow-up. R2 medya + Anthropic + Google Fonts
           // origins are allow-listed explicitly.
-          {
-            key: "Content-Security-Policy",
-            value:
-              "default-src 'self'; " +
-              `script-src 'self' 'unsafe-inline' ${evalRule}https://www.gstatic.com https://www.googletagmanager.com https://*.google-analytics.com https://connect.facebook.net; ` +
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
-              "font-src 'self' https://fonts.gstatic.com data:; " +
-              "img-src 'self' data: blob: https:; " +
-              `media-src 'self' blob: ${mediaOrigin}; ` +
-              `connect-src 'self' ${wsRules}${r2UploadOrigin} https://api.anthropic.com https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com https://connect.facebook.net https://www.facebook.com; ` +
-              "frame-src 'self' https://www.googletagmanager.com https://td.doubleclick.net; " +
-              "frame-ancestors 'none';",
-          },
+          { key: "Content-Security-Policy", value: csp("'none'") },
+        ],
+      },
+      {
+        // Sayfa düzenleyicinin canlı önizlemesi: yalnızca sitenin kendi
+        // sayfaları içinde iframe'e alınabilir (üstteki DENY'ı ezer).
+        source: "/admin/sayfalar/:slug/onizleme",
+        headers: [
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "Content-Security-Policy", value: csp("'self'") },
         ],
       },
       {

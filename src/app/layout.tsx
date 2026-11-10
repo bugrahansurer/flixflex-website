@@ -7,6 +7,7 @@ import { ActivePaletteStyle } from "@/lib/colors/palette-provider"
 import { cn } from "@/lib/utils";
 import { Toaster } from "sonner"
 import { getSetting } from "@/lib/settings"
+import { SITE_PREVIEW_THEME } from "@/lib/site-preview"
 
 // Aktif tema yalnızca Outfit + Inter kullanır; diğer aileler tanımlı kalır
 // (tema değişirse kullanılabilir) ama her sayfada önceden yüklenmez (preload:false).
@@ -81,11 +82,15 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const heads = await headers()
   const isAdmin = heads.get("x-is-admin") === "true"
+  const isSitePreview = heads.get("x-site-preview") === "true"
 
   const cookieStore = await cookies()
   const themeCookie = cookieStore.get("theme")?.value
-  // Accept only known values; fall back to "dark", force "light" for admin
-  const theme: "dark" | "light" = isAdmin ? "light" : (themeCookie === "light" ? "light" : "dark")
+  // Accept only known values; fall back to "dark", force "light" for admin.
+  // Düzenleyicinin canlı önizlemesi sitenin karanlık temasıyla çizilir.
+  const theme: "dark" | "light" = isSitePreview
+    ? SITE_PREVIEW_THEME
+    : isAdmin ? "light" : (themeCookie === "light" ? "light" : "dark")
 
   return (
     <html
